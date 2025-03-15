@@ -1,0 +1,96 @@
+.register {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 10, 0.65) 40%, rgba(0, 0, 0, 0.85) 66.66%), url('https://github.com/kal-kyokya/Futtech/blob/main/public/background.jpg?raw=true');
+    position: relative;
+
+    .top {
+	.wrapper {
+	    display: flex;
+	    align-items: center;
+	    justify-content: space-between;
+	    padding: 0px 50px;
+
+	    .logo {
+		height: 75px;
+		border-radius: 41px;
+	    }
+
+	    .signIn {
+		background-color: #05F283;
+		color: #002B56;
+		font-size: 14px;
+		font-weight: 700;
+		border-radius: 5px;
+ 		padding: 4px 16px;
+		cursor: pointer;
+	    }
+	}
+    }
+
+    .container {
+	display: flex;
+	align-items: center;
+	flex-direction: column;
+	justify-content: center;
+	position: absolute;
+	height: 100%;
+	width: 100%;
+    }
+
+    h1 {
+	font-size: 40px;
+	text-align: center;
+	width: 600px;
+    }
+
+    h2 {
+	margin: 20px;
+    }
+
+    p {
+	font-size: 18px;
+    }
+
+    .membership {
+	width: 50%;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 20px;
+	background-color: grey;
+	height: 50px;
+	border-radius: 5px;
+	background: rgba(0, 0, 0, 0.5);
+
+	input {
+	    flex: 8;
+	    height: 100%;
+	    border: none;
+	    padding: 0px 10px;
+	    font-size: 16px;
+	}
+
+	.getStarted {
+	    flex: 2;
+	    height: 100%;
+	    background-color: #05F283;
+	    color: #002B56;
+	    border-radius: 6px;
+	    font-size: 18px;
+	    cursor: pointer;
+	    font-weight: 700;
+	}
+
+	.finish {
+	    flex: 2;
+	    height: 100%;
+	    background-color: #05F283;
+	    color: #002B56;
+	    border-radius: 6px;
+	    font-size: 18px;
+	    font-weight: 700;
+	    cursor: pointer;
+	}
+    }
+}
