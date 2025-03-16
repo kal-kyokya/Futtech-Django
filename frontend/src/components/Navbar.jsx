@@ -3,6 +3,7 @@ import './navbar.scss';
 import SearchIcon from '@mui/icons-material/Search';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
+import { Link } from 'react-router-dom';
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -18,10 +19,18 @@ const Navbar = () => {
 		<div className='left'>
 		    <img src='../../public/logo.png'
 			 alt='Logo of the Futtech Company'/>
-		    <span>Home</span>
-		    <span>Drone Footages</span>
-		    <span>AI-driven Analysis</span>
-		    <span>New & Popular</span>
+		    <Link to='/' className='link'>
+			<span>Home</span>
+		    </Link>
+		    <Link to='/videos' className='link'>
+			<span>Drone Footages</span>
+		    </Link>
+		    <Link to='/analysis' className='link'>
+			<span>AI-driven Analysis</span>
+		    </Link>
+		    <Link to='/' className='link'>
+			<span>New & Popular</span>
+		    </Link>
 		</div>
 
 		<div className='right'>
