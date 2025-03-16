@@ -1,13 +1,13 @@
 import './featured.scss';
 
-const Featured = ({ type }) => {
+const Featured = ({ category }) => {
     return (
 	<div className='featured'>
-	    {type &&
+	    {category &&
 	     <div className='category'>
-		 <span>{ type === 'drone' ? 'Footages' : 'Analysis' }</span>
-		 <select name='type' id='type'>
-		     <option>Types</option>
+		 <span>{ category === 'video' ? 'Footages' : 'Analysis' }</span>
+		 <select name='category' id='category'>
+		     <option>Categories</option>
 		     <option value='training'>Training</option>
 		     <option value='game'>Games</option>
 		 </select>

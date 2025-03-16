@@ -6,10 +6,13 @@ import Watch from '../../pages/watch/Watch';
 import Register from '../../pages/register/Register';
 import Login from '../../pages/login/Login';
 
-const Home = () => {
+const Home = ({ category }) => {
     return (
 	<div className='home'>
-	    <Login />
+	    <Navbar />
+	    <Featured category={ category } />
+	    <List />
+	    <List />
 	</div>
     );
 }
