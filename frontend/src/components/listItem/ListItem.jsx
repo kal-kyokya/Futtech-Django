@@ -1,20 +1,38 @@
 import './listItem.scss';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import axios from 'axios';
 
-const ListItem = ({ index }) => {
+const ListItem = ({ videoId, index }) => {
     const [isHovered, setIsHovered] = useState(false);
-    const trailer = "https://vimeo.com/1064612829/1b2ea37094";
+    const [video, setVideo] = useState({});
 
+    useEffect(() => {
+	const getVideo = async () => {
+	    try {
+		const res = await axios.get('/videos/get/' + videoId,
+					    headers: {
+						token: ''
+					    });
+		setVideo({ res.data });
+	    } catch (err) {
+		console.log(err);
+	    }
+	};
+
+	getVideo();
+    }, [video]);
     return (
 	<div className='listItem'
 	     style={{ transform: isHovered ? "scale(1.2)" : "scale(1)", zIndex: isHovered ? 10 : 1 }}
 	     onMouseEnter={ () => setIsHovered(true) }
 	     onMouseLeave={ () => setIsHovered(false) }
 	>
-	    {!isHovered && <img src='../../../public/congo.JPEG'
-		 alt='Website Owner proudly holding the Congolese flag'
-	    />}
-	    {isHovered && <video src='../../../public/JP-CP.MOV' autoPlay={true} loop />}
+	    {!isHovered &&
+	     <img src={ video.thumbnail }
+		  alt='Website Owner proudly holding the Congolese flag'
+	     />}
+	    {isHovered &&
+	     <video src={ video.trailer } autoPlay={true} loop />}
 	</div>
     );
 }

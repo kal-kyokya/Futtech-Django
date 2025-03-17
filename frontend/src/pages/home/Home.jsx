@@ -10,7 +10,7 @@ import axios from 'axios';
 
 const Home = ({ category }) => {
     const [lists, setLists] = useState([]);
-    const [subCategory, setSubCategory] = useState([]);
+    const [subCategory, setSubCategory] = useState('');
 
     useEffect(() => {
 	const getRandomLists = async () => {
@@ -36,7 +36,7 @@ const Home = ({ category }) => {
 	    <Navbar />
 	    <Featured category={ category } />
 	    {lists.map((list) => {
-<List />
+		<List list={ list }/>
 	    })}
 	</div>
     );
