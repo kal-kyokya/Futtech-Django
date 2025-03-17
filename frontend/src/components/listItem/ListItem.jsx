@@ -9,11 +9,12 @@ const ListItem = ({ videoId, index }) => {
     useEffect(() => {
 	const getVideo = async () => {
 	    try {
-		const res = await axios.get('/videos/get/' + videoId,
+		const res = await axios.get('/videos/get/' + videoId, {
 					    headers: {
 						token: ''
-					    });
-		setVideo({ res.data });
+					    }
+		});
+		setVideo(res.data);
 	    } catch (err) {
 		console.log(err);
 	    }
@@ -23,6 +24,7 @@ const ListItem = ({ videoId, index }) => {
     }, [video]);
 
     return (
+	<Link to={ { pathname: '/watch', watch: video } }>
 	<div className='listItem'
 	     style={{ transform: isHovered ? "scale(1.2)" : "scale(1)", zIndex: isHovered ? 10 : 1 }}
 	     onMouseEnter={ () => setIsHovered(true) }
@@ -35,6 +37,7 @@ const ListItem = ({ videoId, index }) => {
 	    {isHovered &&
 	     <video src={ video.trailer } autoPlay={true} loop />}
 	</div>
+	</Link>
     );
 }
 
