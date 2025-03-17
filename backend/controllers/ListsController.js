@@ -34,8 +34,7 @@ export default class ListsController {
    */
   static async getList(req, res) {
     // Extract the list category
-    const { category } = req.query;
-    const { subCategory } = req.query;
+    const { category, subCategory } = req.query;
     let list = [];
 
     // Proceed with retrieval of a list
