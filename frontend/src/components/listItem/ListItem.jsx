@@ -21,6 +21,7 @@ const ListItem = ({ videoId, index }) => {
 
 	getVideo();
     }, [video]);
+
     return (
 	<div className='listItem'
 	     style={{ transform: isHovered ? "scale(1.2)" : "scale(1)", zIndex: isHovered ? 10 : 1 }}
@@ -28,7 +29,7 @@ const ListItem = ({ videoId, index }) => {
 	     onMouseLeave={ () => setIsHovered(false) }
 	>
 	    {!isHovered &&
-	     <img src={ video.thumbnail }
+	     <img src={ video.thumbnailSmall }
 		  alt='Website Owner proudly holding the Congolese flag'
 	     />}
 	    {isHovered &&

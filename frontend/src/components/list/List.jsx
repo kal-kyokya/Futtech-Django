@@ -33,8 +33,8 @@ const List = ({ list }) => {
 				     onClick={ () => handleClick('left') }
 				     style={{display: !isMoved && "none"}}/>
 		<div className='container' ref={listRef}>
-		    {list.content.map((video, index) => {
-			<ListItem video={ video }
+		    {list.content.map((videoId, index) => {
+			<ListItem videoId={ videoId }
 				  index={ index }/>
 		    })}
 		</div>
