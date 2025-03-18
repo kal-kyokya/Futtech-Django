@@ -1,6 +1,7 @@
 import './listItem.scss';
 import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 
 const ListItem = ({ videoId, index }) => {
     const [isHovered, setIsHovered] = useState(false);
@@ -14,6 +15,7 @@ const ListItem = ({ videoId, index }) => {
 						token: ''
 					    }
 		});
+
 		setVideo(res.data);
 	    } catch (err) {
 		console.log(err);
@@ -24,7 +26,12 @@ const ListItem = ({ videoId, index }) => {
     }, [video]);
 
     return (
-	<Link to={ { pathname: '/watch', watch: video } }>
+	<Link to={
+		  {
+		      pathname: '/watch',
+		      watch: video
+		  }
+	      }>
 	<div className='listItem'
 	     style={{ transform: isHovered ? "scale(1.2)" : "scale(1)", zIndex: isHovered ? 10 : 1 }}
 	     onMouseEnter={ () => setIsHovered(true) }

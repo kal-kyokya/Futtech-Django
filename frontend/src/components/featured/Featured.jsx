@@ -1,6 +1,27 @@
 import './featured.scss';
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 const Featured = ({ category }) => {
+    const [content, setContent] = useState();
+
+    useEffect(() => {
+	const getContent = async () => {
+	    try {
+		const res = await axios.get(`/videos/random?category=${ category }`, {
+		    headers: {
+			token: ''
+		    }
+		});
+		setContent(res.data[0]);
+	    } catch (err) {
+		console.log(err);
+	    }
+	}
+
+	getContent();
+    }, [category]);
+
     return (
 	<div className='featured'>
 	    {category &&
@@ -13,11 +34,11 @@ const Featured = ({ category }) => {
 		 </select>
 	     </div>
 	    }
-	    <img src='../../../public/poa.JPEG'
-		 alt='The website owner alighting from a bus, wide smile on his face, looking straight at the photographer with his thumb up.'/>
+
+	    <img src={ category ? content.thumbnail : '../../../public/poa.JPEG' }/>
 	    <div className='info'>
 		<span className='poppins-extrabold-italic'>
-		    "As an active footballer, I want to review recorded footage of my games & training sessions so that I can analyze my positioning, decision-making, and off-the-ball movement to improve my game."
+		    { content.desc }
 		</span>
 	    </div>
 	</div>
