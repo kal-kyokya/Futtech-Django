@@ -5,7 +5,7 @@ import { LineChart, Line,
 	 ResponsiveContainer
        } from 'recharts';
 
-const Chart = ({ title, data, grid, dataKey, lineKey1, lineKey2 }) => {
+const Chart = ({ title, data, grid, dataKey, lineKey1 }) => {
     return (
 	<div className='chart'>
 	    <h3 className='chartTitle'>{ title }</h3>
@@ -23,8 +23,6 @@ const Chart = ({ title, data, grid, dataKey, lineKey1, lineKey2 }) => {
 		    <Legend />
 		    <Line type='monotone' dataKey={ lineKey1 }
 		    stroke='#05F283' activeDot={{ r: 8 }} />
-		    <Line type='monotone' dataKey={ lineKey2 }
-		    stroke='#028ECA'/>
 		</LineChart>
 	    </ResponsiveContainer>	    
 	</div>
