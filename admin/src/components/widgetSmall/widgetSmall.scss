@@ -1,0 +1,62 @@
+.widgetSmall {
+    flex: 1;
+    padding: 19px;
+    margin-right: 20px;
+    box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.52);
+
+    .widgetSmallTitle {
+	font-size: 26px;
+	font-weight: 600;
+    }
+
+    .widgetSmallList {
+	margin: 0px;
+	padding: 0px;
+	list-style: none;
+
+	.widgetSmallItem {
+	    display: flex;
+	    align-items: center;
+	    justify-content: space-evenly;
+	    margin: 13px 0px;
+
+	    .profile {
+		width: 52px;
+		height: 52px;
+		border: 1px solid grey;
+		border-radius: 50%;
+		object-fit: contain;
+		cursor: pointer;
+		background-color: white;
+	    }
+
+	    .widgetSmallUser {
+		display: flex;
+		flex-direction: column;
+
+		.widgetSmallUsername {
+		    font-weight: 600;
+		}
+
+		.widgetSmallUserTitle {
+		    font-weight: 300;
+		}
+	    }
+
+	    .widgetSmallButton {
+		display: flex;
+		align-items: center;
+		border: none;
+		border-radius: 10px;
+		padding: 7px 9px;
+		background-color: rgba(0, 0, 0, 0.2);
+		color: #555;
+		cursor: pointer;
+
+		.widgetSmallIcon {
+		    margin-right: 6px;
+		}
+	    }
+	}
+    }
+}

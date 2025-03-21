@@ -1,0 +1,66 @@
+.topbar {
+    width: 100%;
+    height: 65px;
+    background-color: var(--main-color);
+    position: sticky;
+    top: 0px;
+    z-index: 999;
+
+    .topBarWrapper {
+	height: 100%;
+	padding: 0px 20px;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+
+	.topLeft {
+	    font-size: 20px;
+	    font-weight: 900;
+	    cursor: pointer;
+	    border-radius: 5px;
+
+	    .fut {
+		color: rgba(5, 242, 131, 0.78);
+	    }
+
+	    .tech {
+		color: rgba(2, 142, 202, 0.78);
+	    }
+	}
+
+	.topRight {
+	    display: flex;
+	    align-items: center;
+
+	    .topRightIcons {
+		position: relative;
+		margin-right: 7px;
+		cursor: pointer;
+
+		.topIconBadge {
+		    font-size: 12px;
+		    position: absolute;
+		    width: 14px;
+		    height: 14px;
+		    top: -4px;
+		    right: 2px;
+		    background-color: red;
+		    color: white;
+		    border-radius: 50%;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+		}
+	    }
+
+	    .profile {
+		width: 52px;
+		height: 52px;
+		border: 1px solid grey;
+		border-radius: 50%;
+		object-fit: fill;
+		cursor: pointer;
+	    }
+	}
+    }
+}

@@ -1,0 +1,49 @@
+.widget {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-evenly;
+
+    .widgetItems {
+	margin: 13px 0px;
+	padding: 13px;
+	border-radius: 6px;
+	cursor: pointer;
+	box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.52);
+
+	.widgetTitle {
+	    font-size: 19px;
+	}
+
+	.widgetData {
+	    display: flex;
+	    align-items: center;
+	    margin: 13px 0px;
+
+	    .widgetDataFigure {
+		font-size: 29px;
+		font-weight: 600;
+	    }
+
+	    .widgetDataPercent {
+		display: flex;
+		align-items: center;
+		margin-left: 13px
+	    }
+
+	    .widgetIcons {
+		color: green;
+		margin-left: 3px;
+
+		&.negative {
+		    color: red;
+		}
+	    }
+	}
+
+	.widgetText {
+	    font-size: 16px;
+	    color: gray;
+	}
+    }
+}

@@ -1,0 +1,88 @@
+.newUser {
+    flex: 4;
+    color: black;
+
+    .newUserForm {
+	display: flex;
+	justify-content: space-between;
+	margin-top: 19px;
+
+	.newUserLeft {
+	    display: flex;
+	    flex-wrap: wrap;
+
+	    .newUserItem {
+		display: flex;
+		flex-direction: column;
+		margin-top: 9px;
+		width: 276px;
+
+		label {
+		    margin-bottom: 5px;
+		    font-size: 13px;
+		}
+
+		.newUserInput {
+		    border: none;
+		    border: 1px solid grey;
+		    border-radius: 5px;
+		    width: 234px;
+		    height: 26px;
+		    padding: 3px;
+		}
+
+		.newUserSelect {
+		    width: 65%;
+		    height: 31px;
+		}
+
+		.newUserSex {
+
+		    input {
+			margin-top: 10px;
+		    }
+
+		    label {
+			margin: 8px;
+		    }
+		}
+	    }
+
+	    .newUserButton {
+		border: none;
+		border-radius: 5px;
+		background-color: var(--main-color);
+		color: white;
+		padding: 8px 31px;
+		cursor: pointer;
+		font-weight: 600;
+		margin-top: 8%;
+		margin-left: 36%;
+	    }
+	}
+
+	.newUserRight {
+	    display: flex;
+	    flex-direction: column;
+	    justify-content: space-between;
+
+	    .newUserUpload {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+
+		.newUserImg {
+		    width: 130px;
+		    height: 130px;
+		    object-fit: cover;
+		    border-radius: 13px;
+		    margin: 26px;
+		}
+
+		.newUserIcon {
+		    cursor: pointer;
+		}
+	    }
+	}
+    }
+}
