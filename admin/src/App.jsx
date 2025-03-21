@@ -6,6 +6,7 @@ import Insights from './pages/insights/Insights';
 import UserList from './pages/userList/UserList';
 import User from './pages/user/User';
 import NewUser from './pages/newUser/NewUser';
+import Videos from './pages/videos/Videos';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
@@ -20,6 +21,7 @@ function App() {
 		    <Route path='/newUser' element={<NewUser />} />
 		    <Route path='/user/:id' element={<User />} />
 		    <Route path='/insights' element={<Insights />} />
+		    <Route path='/videos' element={<Videos />} />
 		</Routes>
 	    </div>
 	</Router>
