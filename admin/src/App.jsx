@@ -7,11 +7,20 @@ import UserList from './pages/userList/UserList';
 import User from './pages/user/User';
 import NewUser from './pages/newUser/NewUser';
 import Videos from './pages/videos/Videos';
+import Support from './pages/support/Support';
+import Account from './pages/account/Account';
+import About from './pages/about/About';
+import Lists from './pages/lists/Lists';
+import Statistics from './pages/statistics/Statistics';
+import Login from './pages/login/Login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 
 function App() {
     return (
 	<Router>
+	    <Routes>
+		<Route path='/login' element={<Login /> } />
+	    </Routes>
 	    <Topbar />
 	    <div className='container'>
 		<Sidebar />
@@ -22,6 +31,11 @@ function App() {
 		    <Route path='/user/:id' element={<User />} />
 		    <Route path='/insights' element={<Insights />} />
 		    <Route path='/videos' element={<Videos />} />
+		    <Route path='/support' element={<Support />} />
+		    <Route path='/account' element={<Account />} />
+		    <Route path='/about' element={<About />} />
+		    <Route path='/lists' element={<Lists />} />
+		    <Route path='/statistics' element={<Statistics />} />
 		</Routes>
 	    </div>
 	</Router>

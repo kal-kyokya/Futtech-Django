@@ -75,7 +75,7 @@ const Sidebar = () => {
 				Account
 			    </li>
 			</Link>
-			<Link className='link' to='/help'>
+			<Link className='link' to='/support'>
 			    <li className='sidebarListItem'>
 				<HelpIcon className='icon' />
 				Help & Support

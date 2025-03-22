@@ -19,38 +19,37 @@ const WidgetSmall = () => {
 		console.log(err);
 	    }
 	};
-
+	
 	getNewUsers();
     }, [newUsers]);
-
-    const user = {
-	profilePic: '',
-	username: 'Username',
-	position: 'Position',
-    };
 
     return (
 	<div className='widgetSmall'>
 	    <span className='widgetSmallTitle'>New users</span>
 	    <ul className='widgetSmallList'>
-		<li className='widgetSmallItem'>
-		    <img className='profile'
-			 src={ user.profilePic || 'https://raw.githubusercontent.com/kal-kyokya/react-admin-panel/757001cfffa81dc9957e7dde0eea61417824d9d7/public/logo.png' }
-			 alt='User Profile'
-		    />
-		    <div className='widgetSmallUser'>
-			<span className='widgetSmallUsername'>
-			    { user.username }
-			</span>
-			<span className='widgetSmallUserTitle'>
-			    { user.position }
-			</span>
-		    </div>
-		    <button className='widgetSmallButton'>
-			<VisibilityIcon className='widgetSmallIcon' />
-			Display
-		    </button>
-		</li>
+		{
+		    newUsers.map((user) => (
+			<li className='widgetSmallItem'>
+			    <img className='profile'
+				 src={ user.profilePic || 'https://raw.githubusercontent.com/kal-kyokya/react-admin-panel/757001cfffa81dc9957e7dde0eea61417824d9d7/public/logo.png' }
+				 alt='User Profile'
+			    />
+			    <div className='widgetSmallUser'>
+				<span className='widgetSmallUsername'>
+				    { user.username }
+				</span>
+				<span className='widgetSmallUserTitle'>
+				    { user.position }
+				</span>
+			    </div>
+			    <button className='widgetSmallButton'>
+				<VisibilityIcon className='widgetSmallIcon' />
+				Display
+			    </button>
+			</li>
+
+		    ))
+		}
 	    </ul>
 	</div>
     );

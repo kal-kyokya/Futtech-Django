@@ -1,23 +1,14 @@
 import './login.scss';
-import { useState, useRef } from 'react';
+import { useState } from 'react';
 
 const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-
-    const emailRef = useRef();
-    const passwordRef = useRef();
-
-    const handleEmail = () => {
-	setEmail(emailRef.current.value);
-    }
-    const handlePassword = () => {
-	setPassword(passwordRef.current.value);
-    }
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
 
     const handleSignIn = (e) => {
 	e.preventDefault();
     };
+
     return (
 	<div className='login'>
 	    <div className='top'>
@@ -31,10 +22,12 @@ const Login = () => {
 	    <div className='container'>
 		<form>
 		    <h1>Sign In</h1>
-		    <input type='email'
-			   placeholder='Email address' />
-		    <input type='password'
-			   placeholder='Password'/>
+		    <input type='email' placeholder='Email address'
+			   onChange={(e) => setEmail(e.target.value)}
+		    />
+		    <input type='password' placeholder='Password'
+			   onChange={(e) => setPassword(e.target.value)}
+		    />
 		    <button onClick={handleSignIn}>
 			Sign In
 		    </button>

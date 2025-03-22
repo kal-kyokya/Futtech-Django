@@ -41,7 +41,7 @@ const Insights = () => {
 
     return (
 	<div className='insights'>
-	    <Chart title='Monthly Users Registration'
+	    <Chart title='Monthly User Registration'
 		   data={ userStats }
 		   grid
 		   dataKey='month'
