@@ -31,6 +31,9 @@ export default class AuthController {
       { expiresIn: '5d' },
     );
 
-    return res.status(200).send({ token });
+    const { password, ...details } = user._doc;
+
+    // Return all user data except the password
+    return res.status(201).send({ ...details, accessToken: token});
   }
 }

@@ -1,0 +1,17 @@
+/**
+ * A collection of callbacks returning objects
+ * tracking the stages of movie DB retrieval.
+ */
+
+export const getMoviesStart = () => ({
+    type: 'GET_MOVIES_START',
+});
+
+export const getMoviesSuccess = (movies) => ({
+    type: 'GET_MOVIES_SUCCESS',
+    payload: movies,
+});
+
+export const getMoviesFailure = () => ({
+    type: 'GET_MOVIES_FAILURE',
+});

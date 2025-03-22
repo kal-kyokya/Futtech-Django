@@ -54,7 +54,7 @@ export default class UsersController {
     const { password, ...details } = newUser._doc;
 
     // Return all user data except the password
-    res.status(201).send(details);
+    return res.status(201).send(details);
   }
 
   /**

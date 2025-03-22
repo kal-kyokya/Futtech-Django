@@ -5,7 +5,7 @@ const login = async (user, dispatch) => {
     dispatch(loginStart());
 
     try {
-	const res = await axios.post('/auth/signIn', user);
+	const res = await axios.post('/signIn', user);
 
 	res.data.isAdmin && dispatch(loginSuccess(res.data));
     } catch (err) {
