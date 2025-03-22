@@ -6,13 +6,15 @@ import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import PublishIcon from '@mui/icons-material/Publish';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 const Video = () => {
+    const { video } = useLocation();
+
     return (
 	<div className='video'>
 	    <div className='videoTopSection'>
-		<h1 className='videoEditTitle'>Video Profile</h1>
+		<h1 className='videoEditTitle'>Manage Video</h1>
 		<Link to='/newVideo'>
 		    <button className='videoCreateButton'>Create video</button>
 		</Link>
@@ -23,41 +25,28 @@ const Video = () => {
 
 		    <div className='videoDetailsTop'>
 			<img className='profile'
-			     src='https://raw.githubvideocontent.com/kal-kyokya/react-admin-panel/refs/heads/main/public/profile1.JPG'
-			     alt='Profile Pic'
+			     src='{movie.thumbnailSmall}'
+			     alt='Video Thumbnail'
 			/>
 			<div className='videoInfos'>
-			    <div className='videoNames'>Jean-Paul KYOKYA</div>
-			    <div className='videoTitle'>Software Engineer</div>
+			    <div className='videoName'>{ 'video.title' }</div>
+			    <div className='videoCategory'>{ 'video.category' }</div>
 			</div>
 		    </div>
 
 		    <div className='videoDetailsBottom'>
-			<span className='videoDetailsTitle'>Account details</span>
+			<span className='videoDetailsTitle'>Video details</span>
 			<div className='videoDetailsDiv'>
 			    <SportsSoccerIcon className='videoDetailsIcon' />
-			    <div className='videoDetailsContent'>Striker</div>
+			    <div className='videoDetailsContent'>{ 'video.desc' }</div>
 			</div>
 			<div className='videoDetailsDiv'>
 			    <PermIdentityIcon className='videoDetailsIcon' />
-			    <div className='videoDetailsContent'>kal-kyokya</div>
+			    <div className='videoDetailsContent'>{ 'video.isDrone' }</div>
 			</div>
 			<div className='videoDetailsDiv'>
 			    <CalendarMonthOutlinedIcon className='videoDetailsIcon' />
-			    <div className='videoDetailsContent'>15.03.1999</div>
-			</div>
-			<span className='videoDetailsTitle'>Contact details</span>
-			<div className='videoDetailsDiv'>
-			    <EmailOutlinedIcon className='videoDetailsIcon' />
-			    <div className='videoDetailsContent'>kalkyokya4@gmail.com</div>
-			</div>
-			<div className='videoDetailsDiv'>
-			    <LocalPhoneOutlinedIcon className='videoDetailsIcon' />
-			    <div className='videoDetailsContent'>+254798129095</div>
-			</div>
-			<div className='videoDetailsDiv'>
-			    <LocationOnOutlinedIcon className='videoDetailsIcon' />
-			    <div className='videoDetailsContent'>Nairobi | Kenya</div>
+			    <div className='videoDetailsContent'>{ 'video.date' }</div>
 			</div>
 		    </div>
 		</div>
@@ -65,46 +54,25 @@ const Video = () => {
 		<div className='videoUpdate'>
 		    <div className='videoUpdateTitle'>Edit</div>
 		    <form className='videoUpdateForm'>
-			<div className='videoUpdateLeft'>
+			<div className='videoUpdateTop'>
 			    <div className='videoUpdateItem'>
-				<label>Full Name</label>
+				<label>Video Title</label>
 				<input type='text'
-				       placeholder='Jean-Paul KYOKYA'
+				       placeholder={'video.title'}
 				       className='videoUpdateInput'
 				/>
 			    </div>
 			    <div className='videoUpdateItem'>
-				<label>Profession</label>
+				<label>Category</label>
 				<input type='text'
-				       placeholder='Software Engineer'
+				       placeholder={'video.category'}
 				       className='videoUpdateInput'
 				/>
 			    </div>
 			    <div className='videoUpdateItem'>
-				<label>Position</label>
+				<label>Drone Footage</label>
 				<input type='text'
-				       placeholder='Striker'
-				       className='videoUpdateInput'
-				/>
-			    </div>
-			    <div className='videoUpdateItem'>
-				<label>Videoname</label>
-				<input type='text'
-				       placeholder='kal-kyokya'
-				       className='videoUpdateInput'
-				/>
-			    </div>
-			    <div className='videoUpdateItem'>
-				<label>Email</label>
-				<input type='email'
-				       placeholder='kalkyokya4@gmail.com'
-				       className='videoUpdateInput'
-				/>
-			    </div>
-			    <div className='videoUpdateItem'>
-				<label>Phone</label>
-				<input type='text'
-				       placeholder='+254798129095'
+				       placeholder={'video.isDrone'}
 				       className='videoUpdateInput'
 				/>
 			    </div>
@@ -115,12 +83,19 @@ const Video = () => {
 				       className='videoUpdateInput'
 				/>
 			    </div>
+			    <div className='videoUpdateItem'>
+				<label>Description</label>
+				<input type='email'
+				       placeholder={'video.desc'}
+				       className='videoUpdateInput'
+				/>
+			    </div>
 			</div>
 
-			<div className='videoUpdateRight'>
+			<div className='videoUpdateBottom'>
 			    <div className='videoUpdateUpload'>
 				<img className='videoUpdateImg'
-				     src='https://raw.githubvideocontent.com/kal-kyokya/react-admin-panel/refs/heads/main/public/profile1.JPG'
+				     src='/logo.png'
 				     alt='Video Profile'
 				/>
 				<label htmlFor='file'>
