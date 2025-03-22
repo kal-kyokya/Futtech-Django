@@ -3,6 +3,8 @@
  * tracking the stages of Authentication.
  */
 
+// LOGIN
+
 export const loginStart = () => ({
     type: 'LOGIN_START',
 });
@@ -14,4 +16,10 @@ export const loginSuccess = (user) => ({
 
 export const loginFailure = () => ({
     type: 'LOGIN_FAILURE',
+});
+
+// LOGOUT
+
+export const logOut = () => ({
+    type: 'LOGOUT',
 });

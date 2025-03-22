@@ -14,30 +14,39 @@ import Lists from './pages/lists/Lists';
 import Statistics from './pages/statistics/Statistics';
 import Login from './pages/login/Login';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { useContext } from 'react';
+import { AuthContext } from './contexts/authContext/AuthContext';
 
 function App() {
+    const { user } = useContext(AuthContext);
     return (
 	<Router>
 	    <Routes>
-		<Route path='/login' element={<Login /> } />
+		<Route path='/login' element={user ? <Home /> : <Login /> } />
 	    </Routes>
-	    <Topbar />
-	    <div className='container'>
-		<Sidebar />
-		<Routes>
-		    <Route path='/' element={<Home />} />
-		    <Route path='/users' element={<UserList />} />
-		    <Route path='/newUser' element={<NewUser />} />
-		    <Route path='/user/:id' element={<User />} />
-		    <Route path='/insights' element={<Insights />} />
-		    <Route path='/videos' element={<Videos />} />
-		    <Route path='/support' element={<Support />} />
-		    <Route path='/account' element={<Account />} />
-		    <Route path='/about' element={<About />} />
-		    <Route path='/lists' element={<Lists />} />
-		    <Route path='/statistics' element={<Statistics />} />
-		</Routes>
-	    </div>
+
+	    {user ? (
+		<>
+		    <Topbar />
+		    <div className='container'>
+			<Sidebar />
+			<Routes>
+			    <Route path='/' element={<Home />} />
+			    <Route path='/users' element={<UserList />} />
+			    <Route path='/newUser' element={<NewUser />} />
+			    <Route path='/user/:id' element={<User />} />
+			    <Route path='/insights' element={<Insights />} />
+			    <Route path='/videos' element={<Videos />} />
+			    <Route path='/support' element={<Support />} />
+			    <Route path='/account' element={<Account />} />
+			    <Route path='/about' element={<About />} />
+			    <Route path='/lists' element={<Lists />} />
+			    <Route path='/statistics' element={<Statistics />} />
+			</Routes>
+		    </div>
+		</>
+	    ) : <Login />
+	    }
 	</Router>
     );
 }
