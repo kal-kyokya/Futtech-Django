@@ -53,13 +53,46 @@
 		}
 	    }
 
-	    .profile {
+	    .profileImg {
 		width: 52px;
 		height: 52px;
 		border: 1px solid grey;
 		border-radius: 50%;
 		object-fit: fill;
 		cursor: pointer;
+	    }
+
+	    .profile {
+		.icon {
+		    cursor: pointer;
+		    margin-left: 7px;
+		}
+
+		.hiddenOptions {
+		    display: none;
+		    background-color: var(--main-color);
+		    border-radius: 5px;
+
+		    .options {
+			padding: 3px;
+			cursor: pointer;
+		    }
+		}
+
+		&:hover {
+		    .hiddenOptions {
+			display: flex;
+			flex-direction: column;
+			position: absolute;
+			top: 45px;
+			right: 5px;
+		    }
+
+		    .options:hover {
+			background-color: rgba(255, 255, 255, 0.1);
+			border-radius: 5px;
+		    }
+		}
 	    }
 	}
     }

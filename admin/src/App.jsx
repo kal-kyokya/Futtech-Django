@@ -22,10 +22,10 @@ function App() {
     return (
 	<Router>
 	    <Routes>
-		<Route path='/login' element={user ? <Home /> : <Login /> } />
+		<Route path='/login' element={!user ? <Home /> : <Login /> } />
 	    </Routes>
 
-	    {user ? (
+	    {!user ? (
 		<>
 		    <Topbar />
 		    <div className='container'>

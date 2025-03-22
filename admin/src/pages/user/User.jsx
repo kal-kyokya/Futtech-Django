@@ -12,7 +12,7 @@ const User = () => {
     return (
 	<div className='user'>
 	    <div className='userTopSection'>
-		<h1 className='userEditTitle'>Edit User</h1>
+		<h1 className='userEditTitle'>User Profile</h1>
 		<Link to='/newUser'>
 		    <button className='userCreateButton'>Create user</button>
 		</Link>
