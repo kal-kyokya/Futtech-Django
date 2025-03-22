@@ -1,4 +1,4 @@
-import './video.scss';
+import './videos.scss';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
@@ -37,16 +37,16 @@ const Video = () => {
 		    <div className='videoDetailsBottom'>
 			<span className='videoDetailsTitle'>Video details</span>
 			<div className='videoDetailsDiv'>
-			    <SportsSoccerIcon className='videoDetailsIcon' />
-			    <div className='videoDetailsContent'>{ 'video.desc' }</div>
+			    <CalendarMonthOutlinedIcon className='videoDetailsIcon' />
+			    <div className='videoDetailsContent'>{ 'video.date' }</div>
 			</div>
 			<div className='videoDetailsDiv'>
 			    <PermIdentityIcon className='videoDetailsIcon' />
 			    <div className='videoDetailsContent'>{ 'video.isDrone' }</div>
 			</div>
 			<div className='videoDetailsDiv'>
-			    <CalendarMonthOutlinedIcon className='videoDetailsIcon' />
-			    <div className='videoDetailsContent'>{ 'video.date' }</div>
+			    <SportsSoccerIcon className='videoDetailsIcon' />
+			    <div className='videoDetailsContent'>{ 'video.desc' }</div>
 			</div>
 		    </div>
 		</div>
@@ -85,8 +85,22 @@ const Video = () => {
 			    </div>
 			    <div className='videoUpdateItem'>
 				<label>Description</label>
-				<input type='email'
+				<input type='text'
 				       placeholder={'video.desc'}
+				       className='videoUpdateInput'
+				/>
+			    </div>
+			    <div className='videoUpdateItem'>
+				<label>Trailer</label>
+				<input type='file'
+				       placeholder={'video.trailer'}
+				       className='videoUpdateInput'
+				/>
+			    </div>
+			    <div className='videoUpdateItem'>
+				<label>Video</label>
+				<input type='file'
+				       placeholder={'video.video'}
 				       className='videoUpdateInput'
 				/>
 			    </div>

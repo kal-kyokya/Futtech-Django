@@ -4,9 +4,9 @@ import Paper from '@mui/material/Paper';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { rows } from '../../dummyData';
 import { Link } from 'react-router-dom';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { getVideos, deleteVideo } from '../../contexts/videoContext/apiCalls';
-import { VideoContext } from '../../contexts/';
+import { VideoContext } from '../../contexts/videoContext/VideoContext';
 
 const VideoList = () => {
     const { videos, dispatch } = useContext(VideoContext);
@@ -20,8 +20,8 @@ const VideoList = () => {
     };
 
     const columns = [
-	{ field: '_id', headerName: 'ID', width: 91 },
-	{ field: 'video', headerName: 'Video', width: 143, renderCell: (params) => {
+	{ field: '_id', headerName: 'ID', width: 119 },
+	{ field: 'video', headerName: 'Video', width: 195, renderCell: (params) => {
 	    return (
 		<div className='videoListCell'>
 		    <img className='profile' src={ params.row.thumbnailSmall } alt='Video Thumbnail'/>
@@ -29,11 +29,11 @@ const VideoList = () => {
 		</div>
 	    );}
 	},
-	{ field: 'category', headerName: 'Category', width: 130 },
-	{ field: 'isDrone', headerName: 'Drone Footage', width: 130 },
-	{ field: 'date', headerName: 'Created', width: 90 },
+	{ field: 'category', headerName: 'Category', width: 121 },
+	{ field: 'isDrone', headerName: 'Drone Footage', width: 140 },
+	{ field: 'date', headerName: 'Created', width: 105 },
 	{
-	    field: 'desc', headerName: 'Description', width: 182, sortable: false,
+	    field: 'desc', headerName: 'Description', width: 223, sortable: false,
 	    description: 'This column has a lot of data and is not sortable.'
 	},
 	{

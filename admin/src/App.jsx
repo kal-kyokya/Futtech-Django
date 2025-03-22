@@ -4,9 +4,10 @@ import Sidebar from './components/sidebar/Sidebar';
 import Home from './pages/home/Home';
 import Insights from './pages/insights/Insights';
 import UserList from './pages/userList/UserList';
+import VideoList from './pages/videoList/VideoList';
 import User from './pages/user/User';
 import NewUser from './pages/newUser/NewUser';
-import Videos from './pages/videos/Videos';
+import Video from './pages/videos/Videos';
 import Support from './pages/support/Support';
 import Account from './pages/account/Account';
 import About from './pages/about/About';
@@ -33,10 +34,11 @@ function App() {
 			<Routes>
 			    <Route path='/' element={<Home />} />
 			    <Route path='/users' element={<UserList />} />
+			    <Route path='/videos' element={<VideoList />} />
 			    <Route path='/newUser' element={<NewUser />} />
 			    <Route path='/user/:id' element={<User />} />
+			    <Route path='/video/:id' element={<Video />} />
 			    <Route path='/insights' element={<Insights />} />
-			    <Route path='/videos' element={<Videos />} />
 			    <Route path='/support' element={<Support />} />
 			    <Route path='/account' element={<Account />} />
 			    <Route path='/about' element={<About />} />

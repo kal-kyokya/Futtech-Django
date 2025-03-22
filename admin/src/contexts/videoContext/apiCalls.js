@@ -1,7 +1,7 @@
 import axios from 'axios';
-import { getVideosStart } from './AuthActions';
+import { getVideosStart } from './VideoActions';
 
-const getVideos = async (dispatch) => {
+export const getVideos = async (dispatch) => {
     dispatch(getVideosStart());
 
     try {
@@ -19,8 +19,8 @@ const getVideos = async (dispatch) => {
     dispatch(getVideosFailure());
 };
 
-export const deleteVideos = async (id, dispatch) => {
-    dispatch(deleteVideosStart());
+export const deleteVideo = async (id, dispatch) => {
+    dispatch(deleteVideoStart());
 
     try {
 	await axios.delete('/videos/' + id, {
@@ -29,12 +29,10 @@ export const deleteVideos = async (id, dispatch) => {
 	    }
 	});
 
-	dispatch(deleteVideosSuccess(id));
+	dispatch(deleteVideoSuccess(id));
     } catch (err) {
 	console.log(err);
     }
 
-    dispatch(deleteVideosFailure());
+    dispatch(deleteVideoFailure());
 };
-
-export default getVideos;
