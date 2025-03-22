@@ -82,13 +82,13 @@ export default class UsersController {
   static async getAll(req, res) {
     // Extract the user's information
     const { isAdmin } = req.user_info;
-    const query = req.query.new;
+      const { newest } = req.query;
 
     // Proceed with deletion of user
     if (isAdmin) {
       try {
-        const users = query
-          ? await User.find().sort({ _id: -1 }).limit(10)
+        const users = newest
+          ? await User.find().sort({ _id: -1 }).limit(5)
           : await User.find();
         return res.status(201).send(users);
       } catch (err) {

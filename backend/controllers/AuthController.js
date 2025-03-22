@@ -10,16 +10,9 @@ export default class AuthController {
    * @param { Object } res - The response object
    */
   static async signingIn(req, res) {
-    // Sign in a user using 'Basic Authentication'
-    const header = req.headers.authorization;
-    if (!header) {
-      return res.status(401).send({ error: 'Unauthorized' });
-    }
-
-    // Extract user information from the encoded header
-    const credentials = Buffer.from(header.split(' ')[1], 'base64').toString('utf-8');
-    // const credentials = header.split(' ')[1];
-    const email = credentials.split(':')[0];
+    // Sign in a user using database password verification
+    // Extract user information from the request object
+    const { email, password } = req.body.user;
 
     // Ensure the DB contains a user with the input email
     const user = await User.findOne({ email });
@@ -27,7 +20,7 @@ export default class AuthController {
       return res.status(401).send({ error: 'Unauthorized' });
     }
 
-    if (user.password !== cryptoJS.AES.encrypt(credentials.split(':')[1], process.env.SECRET_KEY)) {
+    if (user.password !== cryptoJS.AES.encrypt(password)) {
       return res.status(401).send({ error: 'Unauthorized' });
     }
 
@@ -37,6 +30,7 @@ export default class AuthController {
       process.env.SECRET_KEY,
       { expiresIn: '5d' },
     );
+
     return res.status(200).send({ token });
   }
 }
