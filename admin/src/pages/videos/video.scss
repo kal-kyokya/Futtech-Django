@@ -1,0 +1,165 @@
+.video {
+    flex: 4;
+    padding: 19px;
+
+    .videoTopSection {
+	display:flex;
+	align-items: center;
+	justify-content: space-between;
+
+	.videoEditTitle {
+	    color: rgba(0, 0, 0, 0.39);
+	}
+
+	.videoCreateButton {
+	    border: none;
+	    padding: 6px 9px;
+	    border-radius: 6px;
+	    color: white;
+	    background-color: #028ECA;
+	    cursor: pointer;
+	    font-size: 15px;
+	    font-weight: 600;
+	}
+    }
+
+    .videoContainer {
+	display: flex;
+	color: black;
+	margin-top: 13px;
+
+	.videoDetails {
+	    flex: 1;
+	    padding: 13px;
+	    box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.52);
+	    margin-right: 13px;
+
+	    .videoDetailsTop {
+		display: flex;
+		align-items: center;
+
+		.profile {
+		    width: 52px;
+		    height: 52px;
+		    border: 1px solid grey;
+		    border-radius: 50%;
+		    object-fit: contain;
+		    cursor: pointer;
+		    background-color: white;
+		    margin-right: 13px;
+		}
+
+		.videoInfos {
+		    display: flex;
+		    flex-direction: column;
+
+		    .videoNames {
+			font-weight: 600;
+		    }
+
+		    .videoTitle {
+			font-weight: 300;
+		    }
+		}
+	    }
+
+	    .videoDetailsBottom {
+		margin-top: 13px;
+
+		.videoDetailsTitle {
+		    color: rgba(0, 0, 0, 0.65);
+		    font-weight: 300;
+		}
+
+		.videoDetailsDiv {
+		    display: flex;
+		    align-items: center;
+		    margin: 13px 0px;
+		    color: rgba(0, 0, 0, 0.84);
+
+		    .videoDetailsIcon {
+			margin-right: 10px;
+		    }
+
+		    .videoDetailsContent {
+			font-weight: 16px;
+		    }
+		}
+	    }
+	}
+
+	.videoUpdate {
+	    flex: 2;
+	    padding: 13px;
+	    box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.52);
+
+	    .videoUpdateTitle {
+		color: rgba(0, 0, 0, 0.65);
+		font-size: 23px;
+		font-weight: 600;
+		text-align: center;
+	    }
+
+	    .videoUpdateForm {
+		display: flex;
+		justify-content: space-between;
+		margin-top: 19px;
+
+		.videoUpdateLeft {
+
+		    .videoUpdateItem {
+			display: flex;
+			flex-direction: column;
+			margin-top: 9px;
+
+			label {
+			    margin-bottom: 5px;
+			    font-size: 13px;
+			}
+
+			.videoUpdateInput {
+			    border: none;
+			    border-bottom: 1px solid grey;
+			    width: 234px;
+			    height: 26px;
+			    padding: 3px;
+			}
+		    }
+		}
+
+		.videoUpdateRight {
+		    display: flex;
+		    flex-direction: column;
+		    justify-content: space-between;
+
+		    .videoUpdateUpload {
+			display: flex;
+			align-items: center;
+
+			.videoUpdateImg {
+			    width: 130px;
+			    height: 130px;
+			    object-fit: cover;
+			    border-radius: 13px;
+			    margin-right: 19px;
+			}
+
+			.videoUpdateIcon {
+			    cursor: pointer;
+			}
+		    }
+
+		    .videoUpdateButton {
+			border: none;
+			border-radius: 5px;
+			background-color: var(--main-color);
+			color: white;
+			padding: 10px;
+			cursor: pointer;
+			font-weight: 600;
+		    }
+		}
+	    }
+	}
+    }
+}
