@@ -7,6 +7,7 @@ import UserList from './pages/userList/UserList';
 import VideoList from './pages/videoList/VideoList';
 import User from './pages/user/User';
 import NewUser from './pages/newUser/NewUser';
+import NewVideo from './pages/newVideo/NewVideo';
 import Video from './pages/videos/Videos';
 import Support from './pages/support/Support';
 import Account from './pages/account/Account';
@@ -36,6 +37,7 @@ function App() {
 			    <Route path='/users' element={<UserList />} />
 			    <Route path='/videos' element={<VideoList />} />
 			    <Route path='/newUser' element={<NewUser />} />
+			    <Route path='/newVideo' element={<NewVideo />} />
 			    <Route path='/user/:id' element={<User />} />
 			    <Route path='/video/:id' element={<Video />} />
 			    <Route path='/insights' element={<Insights />} />

@@ -1,20 +1,20 @@
-.newUser {
+.newVideo {
     flex: 4;
     color: black;
 
-    .newUserForm {
+    .newVideoForm {
 	display: flex;
-	justify-content: space-between;
+	flex-direction: column;
 	margin-top: 19px;
 
-	.newUserLeft {
+	.newVideoTop {
 	    display: flex;
 	    flex-wrap: wrap;
 
-	    .newUserItem {
+	    .newVideoItem {
 		display: flex;
 		flex-direction: column;
-		margin-top: 26px;
+		margin: 26px 31px;
 		width: 276px;
 
 		label {
@@ -22,7 +22,7 @@
 		    font-size: 13px;
 		}
 
-		.newUserInput {
+		.newVideoInput {
 		    border: none;
 		    border: 1px solid grey;
 		    border-radius: 5px;
@@ -31,12 +31,12 @@
 		    padding: 3px;
 		}
 
-		.newUserSelect {
+		.newVideoSelect {
 		    width: 65%;
 		    height: 31px;
 		}
 
-		.newUserSex {
+		.newVideoDrone, .newVideoAI {
 
 		    input {
 			margin-top: 10px;
@@ -47,8 +47,13 @@
 		    }
 		}
 	    }
+	}
 
-	    .newUserButton {
+	.newVideoBottom {
+	    margin-top: 5.2%;
+	    align-self: center;
+
+	    .newVideoButton {
 		border: none;
 		border-radius: 5px;
 		background-color: var(--main-color);
@@ -56,33 +61,8 @@
 		padding: 8px 31px;
 		cursor: pointer;
 		font-weight: 600;
-		margin-top: 8%;
-		margin-left: 36%;
 	    }
-	}
 
-	.newUserRight {
-	    display: flex;
-	    flex-direction: column;
-	    justify-content: space-between;
-
-	    .newUserUpload {
-		display: flex;
-		flex-direction: column;
-		align-items: center;
-
-		.newUserImg {
-		    width: 130px;
-		    height: 130px;
-		    object-fit: cover;
-		    border-radius: 13px;
-		    margin: 26px;
-		}
-
-		.newUserIcon {
-		    cursor: pointer;
-		}
-	    }
 	}
     }
 }

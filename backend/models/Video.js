@@ -6,6 +6,7 @@ const VideoSchema = new mongoose.Schema(
     desc: { type: String },
     location: { type: String },
     isDrone: { type: Boolean, default: false },
+    isAiAnalysis: { type: Boolean, default: false },
     category: { type: String },
     date: { type: String },
     video: { type: String },
