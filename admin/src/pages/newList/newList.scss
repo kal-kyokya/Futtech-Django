@@ -1,0 +1,68 @@
+.newList {
+    flex: 4;
+    color: black;
+
+    .newListForm {
+	display: flex;
+	flex-direction: column;
+	margin-top: 19px;
+
+	.newListTop {
+	    display: flex;
+	    flex-wrap: wrap;
+
+	    .newListItem {
+		display: flex;
+		flex-direction: column;
+		margin: 26px 31px;
+		width: 276px;
+
+		label {
+		    margin-bottom: 5px;
+		    font-size: 13px;
+		}
+
+		.newListInput {
+		    border: none;
+		    border: 1px solid grey;
+		    border-radius: 5px;
+		    width: 234px;
+		    height: 26px;
+		    padding: 3px;
+		}
+
+		.newListSelect {
+		    width: 65%;
+		    height: 31px;
+		}
+
+		.newListDrone, .newListAI {
+
+		    input {
+			margin-top: 10px;
+		    }
+
+		    label {
+			margin: 8px;
+		    }
+		}
+	    }
+	}
+
+	.newListBottom {
+	    margin-top: 5.2%;
+	    align-self: center;
+
+	    .newListButton {
+		border: none;
+		border-radius: 5px;
+		background-color: var(--main-color);
+		color: white;
+		padding: 8px 31px;
+		cursor: pointer;
+		font-weight: 600;
+	    }
+
+	}
+    }
+}
