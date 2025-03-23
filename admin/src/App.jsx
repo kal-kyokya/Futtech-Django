@@ -8,7 +8,9 @@ import VideoList from './pages/videoList/VideoList';
 import User from './pages/user/User';
 import NewUser from './pages/newUser/NewUser';
 import NewVideo from './pages/newVideo/NewVideo';
+import NewList from './pages/newList/NewList';
 import Video from './pages/videos/Videos';
+import List from './pages/list/List';
 import Support from './pages/support/Support';
 import Account from './pages/account/Account';
 import About from './pages/about/About';
@@ -36,15 +38,17 @@ function App() {
 			    <Route path='/' element={<Home />} />
 			    <Route path='/users' element={<UserList />} />
 			    <Route path='/videos' element={<VideoList />} />
+			    <Route path='/lists' element={<Lists />} />
 			    <Route path='/newUser' element={<NewUser />} />
 			    <Route path='/newVideo' element={<NewVideo />} />
+			    <Route path='/newList' element={<NewList />} />
 			    <Route path='/user/:id' element={<User />} />
 			    <Route path='/video/:id' element={<Video />} />
+			    <Route path='/list/:id' element={<List />} />
 			    <Route path='/insights' element={<Insights />} />
 			    <Route path='/support' element={<Support />} />
 			    <Route path='/account' element={<Account />} />
 			    <Route path='/about' element={<About />} />
-			    <Route path='/lists' element={<Lists />} />
 			    <Route path='/statistics' element={<Statistics />} />
 			</Routes>
 		    </div>

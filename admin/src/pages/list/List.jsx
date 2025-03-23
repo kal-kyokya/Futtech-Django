@@ -1,12 +1,11 @@
-import './lists.scss';
+import './list.scss';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
-import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import PublishIcon from '@mui/icons-material/Publish';
 import { Link, useLocation } from 'react-router-dom';
+import ClassOutlinedIcon from '@mui/icons-material/ClassOutlined';
+import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 
 const List = () => {
     const { list } = useLocation();
@@ -25,7 +24,7 @@ const List = () => {
 
 		    <div className='listDetailsTop'>
 			<img className='profile'
-			     src='{movie.thumbnailSmall}'
+			     src='{list.thumbnail}'
 			     alt='List Thumbnail'
 			/>
 			<div className='listInfos'>
@@ -41,12 +40,12 @@ const List = () => {
 			    <div className='listDetailsContent'>{ 'list.date' }</div>
 			</div>
 			<div className='listDetailsDiv'>
-			    <PermIdentityIcon className='listDetailsIcon' />
-			    <div className='listDetailsContent'>{ 'list.isDrone' }</div>
+			    <ClassOutlinedIcon className='listDetailsIcon' />
+			    <div className='listDetailsContent'>{ 'list.subCategory' }</div>
 			</div>
 			<div className='listDetailsDiv'>
-			    <SportsSoccerIcon className='listDetailsIcon' />
-			    <div className='listDetailsContent'>{ 'list.desc' }</div>
+			    <ListOutlinedIcon className='listDetailsIcon' />
+			    <div className='listDetailsContent'>{ 'list.content' }</div>
 			</div>
 		    </div>
 		</div>
@@ -70,37 +69,9 @@ const List = () => {
 				/>
 			    </div>
 			    <div className='listUpdateItem'>
-				<label>Drone Footage</label>
+				<label>Sub-category</label>
 				<input type='text'
-				       placeholder={'list.isDrone'}
-				       className='listUpdateInput'
-				/>
-			    </div>
-			    <div className='listUpdateItem'>
-				<label>Location</label>
-				<input type='text'
-				       placeholder='Nairobi | Kenya'
-				       className='listUpdateInput'
-				/>
-			    </div>
-			    <div className='listUpdateItem'>
-				<label>Description</label>
-				<input type='text'
-				       placeholder={'list.desc'}
-				       className='listUpdateInput'
-				/>
-			    </div>
-			    <div className='listUpdateItem'>
-				<label>Trailer</label>
-				<input type='file'
-				       placeholder={'list.trailer'}
-				       className='listUpdateInput'
-				/>
-			    </div>
-			    <div className='listUpdateItem'>
-				<label>List</label>
-				<input type='file'
-				       placeholder={'list.list'}
+				       placeholder={'list.subCategory'}
 				       className='listUpdateInput'
 				/>
 			    </div>
