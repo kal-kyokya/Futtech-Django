@@ -1,5 +1,32 @@
 import axios from 'axios';
-import { getVideosStart } from './VideoActions';
+import {
+    createVideoStart, createVideoSuccess, createVideoFailure,
+    getVideosStart, getVideosSuccess, getVideosFailure,
+    updateVideoStart, updateVideoSuccess, updateVideoFailure,
+    deleteVideoStart, deleteVideoSuccess, deleteVideoFailure,
+} from './VideoActions';
+
+// CREATE
+
+export const createVideo = async (video, dispatch) => {
+    dispatch(createVideoStart());
+
+    try {
+	const res = await axios.post('/videos', video, {
+	    headers: {
+		token: 'Bearer ' + JSON.parse(localStorage.createItem('user')).accessToken,
+	    }
+	});
+
+	dispatch(createVideoSuccess(res.data));
+    } catch (err) {
+	console.log(err);
+    }
+
+    dispatch(createVideoFailure());
+};
+
+// GET
 
 export const getVideos = async (dispatch) => {
     dispatch(getVideosStart());
@@ -18,6 +45,8 @@ export const getVideos = async (dispatch) => {
 
     dispatch(getVideosFailure());
 };
+
+// DELETE
 
 export const deleteVideo = async (id, dispatch) => {
     dispatch(deleteVideoStart());
