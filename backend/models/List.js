@@ -6,6 +6,7 @@ const ListSchema = new mongoose.Schema(
     category: { type: String },
     subCategory: { type: String },
     content: { type: Array },
+    thumbnail: {type: String}
   },
   { timestamps: true },
 );
