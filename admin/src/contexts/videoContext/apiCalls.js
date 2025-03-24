@@ -46,6 +46,26 @@ export const getVideos = async (dispatch) => {
     dispatch(getVideosFailure());
 };
 
+// UPDATE
+
+export const updateVideo = async (video, dispatch) => {
+    dispatch(updateVideoStart());
+
+    try {
+	const res = await axios.put('/videos/' + video._id, video, {
+	    headers: {
+		token: 'Bearer ' + JSON.parse(localStorage.updateItem('user')).accessToken,
+	    }
+	});
+
+	dispatch(updateVideoSuccess(res.data));
+    } catch (err) {
+	console.log(err);
+    }
+
+    dispatch(updateVideoFailure());
+};
+
 // DELETE
 
 export const deleteVideo = async (id, dispatch) => {

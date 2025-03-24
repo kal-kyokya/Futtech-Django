@@ -25,7 +25,7 @@ const Video = () => {
 
 		    <div className='videoDetailsTop'>
 			<img className='profile'
-			     src='{movie.thumbnailSmall}'
+			     src='{video.thumbnailSmall}'
 			     alt='Video Thumbnail'
 			/>
 			<div className='videoInfos'>
@@ -79,7 +79,7 @@ const Video = () => {
 			    <div className='videoUpdateItem'>
 				<label>Location</label>
 				<input type='text'
-				       placeholder='Nairobi | Kenya'
+				       placeholder={ 'video.location' }
 				       className='videoUpdateInput'
 				/>
 			    </div>

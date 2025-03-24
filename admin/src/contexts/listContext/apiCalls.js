@@ -46,6 +46,26 @@ export const getLists = async (dispatch) => {
     dispatch(getListsFailure());
 };
 
+// UPDATE
+
+export const updateList = async (list, dispatch) => {
+    dispatch(updateListStart());
+
+    try {
+	const res = await axios.put('/lists/' + list._id, list, {
+	    headers: {
+		token: 'Bearer ' + JSON.parse(localStorage.updateItem('user')).accessToken,
+	    }
+	});
+
+	dispatch(updateListSuccess(res.data));
+    } catch (err) {
+	console.log(err);
+    }
+
+    dispatch(updateListFailure());
+};
+
 // DELETE
 
 export const deleteList = async (id, dispatch) => {
