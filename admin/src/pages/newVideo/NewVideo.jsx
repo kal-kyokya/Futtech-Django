@@ -1,7 +1,7 @@
 import './newVideo.scss';
 import { useState, useContext } from 'react';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
-import { storage } from '../../firebase';
+import storage from '../../firebase';
 import { createVideo } from '../../contexts/videoContext/apiCalls';
 
 const NewVideo = () => {

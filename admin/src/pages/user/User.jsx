@@ -6,9 +6,64 @@ import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import PublishIcon from '@mui/icons-material/Publish';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
+import { useState, useContext } from 'react';
+import { updateUser } from '../../contexts/userContext/apiCalls';
+import { UserContext } from '../../contexts/userContext/UserContext';
 
 const User = () => {
+    const { user } = useLocation();
+    const [updatedUser, setUpdatedUser] = useState(null);
+    const [profilePic, setProfilePic] = useState(null);
+    const { dispatch } = useContext(UserContext);
+
+    const handleChange = (e) => {
+	setUpdatedUser((prev) => {
+	    return ({ ...prev, [e.target.name]: e.target.value });
+	});
+    };
+
+    const firebaseUpload = (input) => {
+	const filename = input.name + updateUser.username || user.username;
+
+	const storageRef = storage.ref(`futtech-inputs/${filename}`);
+	const fileToFirebase = storageRef.put(input.file);
+
+	fileToFirebase.on(
+	    'state_changed',
+	    (snapshot) => {
+		const progress = (snapshot.bytesTransferred / snapshot.bytesTotal) * 100;
+		console.log('Upload is ' + Number(progress).toFixed(2) + '% done.');
+	    },
+	    (error) => {
+		console.log(error);
+	    },
+	    () => {
+		fileToFirebase.snapshot.ref.getDownloadURL()
+		    .then((url) => {
+			setUpdatedUser((prev) => {
+			    return { ...prev, [input.name]: url }
+			});
+		    });
+	    }
+	);
+    };
+
+    const handleUpload = (e) => {
+	e.preventDefault();
+	setProfilePic(e.targer.files[0]);
+
+	firebaseUpload([
+	    { file: profilePic, name: 'profilePic' },
+	]);
+    };
+
+    const handleSubmit = (e) => {
+	e.preventDefault();
+
+	updateUser(updatedUser, dispatch);
+    };
+
     return (
 	<div className='user'>
 	    <div className='userTopSection'>
@@ -67,10 +122,21 @@ const User = () => {
 		    <form className='userUpdateForm'>
 			<div className='userUpdateLeft'>
 			    <div className='userUpdateItem'>
-				<label>Full Name</label>
+				<label>First Name</label>
 				<input type='text'
-				       placeholder='Jean-Paul KYOKYA'
+				       placeholder='Jean-Paul'
 				       className='userUpdateInput'
+				       name='firstName'
+				       onChange={handleChange}
+				/>
+			    </div>
+			    <div className='userUpdateItem'>
+				<label>Last Name</label>
+				<input type='text'
+				       placeholder='KYOKYA'
+				       className='userUpdateInput'
+				       name='lastName'
+				       onChange={handleChange}
 				/>
 			    </div>
 			    <div className='userUpdateItem'>
@@ -78,6 +144,8 @@ const User = () => {
 				<input type='text'
 				       placeholder='Software Engineer'
 				       className='userUpdateInput'
+				       name='profession'
+				       onChange={handleChange}
 				/>
 			    </div>
 			    <div className='userUpdateItem'>
@@ -85,6 +153,8 @@ const User = () => {
 				<input type='text'
 				       placeholder='Striker'
 				       className='userUpdateInput'
+				       name='position'
+				       onChange={handleChange}
 				/>
 			    </div>
 			    <div className='userUpdateItem'>
@@ -92,6 +162,8 @@ const User = () => {
 				<input type='text'
 				       placeholder='kal-kyokya'
 				       className='userUpdateInput'
+				       name='username'
+				       onChange={handleChange}
 				/>
 			    </div>
 			    <div className='userUpdateItem'>
@@ -99,6 +171,8 @@ const User = () => {
 				<input type='email'
 				       placeholder='kalkyokya4@gmail.com'
 				       className='userUpdateInput'
+				       name='email'
+				       onChange={handleChange}
 				/>
 			    </div>
 			    <div className='userUpdateItem'>
@@ -106,6 +180,8 @@ const User = () => {
 				<input type='text'
 				       placeholder='+254798129095'
 				       className='userUpdateInput'
+				       name='phone'
+				       onChange={handleChange}
 				/>
 			    </div>
 			    <div className='userUpdateItem'>
@@ -113,6 +189,8 @@ const User = () => {
 				<input type='text'
 				       placeholder='Nairobi | Kenya'
 				       className='userUpdateInput'
+				       name='location'
+				       onChange={handleChange}
 				/>
 			    </div>
 			</div>
@@ -126,10 +204,18 @@ const User = () => {
 				<label htmlFor='file'>
 				    <PublishIcon className='userUpdateIcon' />
 				</label>
-				<input id='file' type='file'
-				       style={{ display: 'none' }}/>
+				<input id='file'
+				       type='file'
+				       style={{ display: 'none' }}
+				       name='profilePic'
+				       onChange={handleUpload}
+				/>
 			    </div>
-			    <button className='userUpdateButton'>Update</button>
+			    <button className='userUpdateButton'
+				    onClick={handleSubmit}
+			    >
+				Update
+			    </button>
 			</div>
 		    </form>
 		</div>

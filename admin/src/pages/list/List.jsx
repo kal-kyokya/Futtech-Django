@@ -6,7 +6,7 @@ import PublishIcon from '@mui/icons-material/Publish';
 import { Link, useLocation } from 'react-router-dom';
 import ClassOutlinedIcon from '@mui/icons-material/ClassOutlined';
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
-import { useState } from 'react';
+import { useState, useContext } from 'react';
 import { ListContext } from '../../contexts/listContext/ListContext';
 import { updateList } from '../../contexts/listContext/apiCalls';
 
