@@ -2,32 +2,34 @@ import './register.scss';
 import { useState, useRef, useContext } from 'react';
 import { AuthContext } from '../../contexts/authContext/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import { loginSuccess } from '../../contexts/authContext/AuthActions';
+
 
 const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
-    const { dispatch } = useContext(AuthContext);
+    const { dispatch, isFetching } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const emailRef = useRef();
-    const passwordRef = useRef();
-    const usernameRef = useRef();
 
     const handleEmail = () => {
 	setEmail(emailRef.current.value);
     }
 
     const handleRegister = async (e) => {
-	e.preventDefault();
-
-	setUsername(usernameRef.current.value);
-	setPassword(passwordRef.current.value);
+	e.preventDefault(); // Prevent form reload and allow data submission
 
 	try {
-	    const res = await axios.post('/users/signUp', { username, email, password });
+	    const res = await axios.post(
+		'http://127.0.0.1:8080/users/signUp',
+		{ username, email, password },
+		{ headers: {'content-type': 'application/json'} }
+	    );
 
-	    dispatch(createUserSuccess(res.data));
+	    dispatch(loginSuccess(res.data));
 	    navigate('/login');
 	} catch (err) {
 	    console.log(err);
@@ -56,14 +58,19 @@ const Register = () => {
 		    <form className='membership'>
 			<input type='username'
 			       placeholder='Username'
-			       ref={usernameRef}
+			       onChange={(e) => setUsername(e.target.value)}
 			/>
 			<input type='password'
 			       placeholder='Password'
-			       ref={passwordRef}
+			       autoComplete='password'
+			       onChange={(e) => setPassword(e.target.value)}
 			/>
 			<button className='finish'
-				onClick={handleRegister}>Start</button>
+				onClick={handleRegister}
+				disabled={isFetching}
+			>
+			    Start
+			</button>
 		    </form>
 		) : (
 		    <div className='membership'>

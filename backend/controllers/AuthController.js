@@ -12,7 +12,7 @@ export default class AuthController {
   static async signingIn(req, res) {
     // Sign in a user using database password verification
     // Extract user information from the request object
-    const { email, password } = req.body.user;
+    const { email, password: pwd } = req.body.user;
 
     // Ensure the DB contains a user with the input email
     const user = await User.findOne({ email });
@@ -20,7 +20,7 @@ export default class AuthController {
       return res.status(401).send({ error: 'Unauthorized' });
     }
 
-    if (user.password !== cryptoJS.AES.encrypt(password)) {
+    if (user.password !== cryptoJS.AES.encrypt(pwd)) {
       return res.status(401).send({ error: 'Unauthorized' });
     }
 

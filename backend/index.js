@@ -8,18 +8,21 @@ import routing from './routes/index';
 // Store an Express instance representing the app
 const app = express();
 
+// Ensure the app processes json data accordingly
+app.use(express.json());
+
+// To handle form data
+app.use(express.urlencoded({ extended: true }));
+
+// Initialize the app for Cross Origin Resource Sharing
+app.use(cors());
+
 // Enable access to the '.env' file
 dotenv.config();
 
 // Extract environment variables found in '.env'
 const PORT = process.env.EXPRESS_PORT || 8000;
 const URL = process.env.MONGO_URL;
-
-// Initialize the app
-app.use(cors());
-
-// Ensure the app processes json data accordingly
-app.use(express.json());
 
 // Handle routing inside a function that manipulates the app object
 routing(app);

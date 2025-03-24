@@ -5,8 +5,8 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
-import { AuthContext } from '../../contexts/authContext/AuthContext';
-import { logOut } from '../../contexts/authContext/AuthActions';
+import { AuthContext } from '../contexts/authContext/AuthContext';
+import { logOut } from '../contexts/authContext/AuthActions';
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
