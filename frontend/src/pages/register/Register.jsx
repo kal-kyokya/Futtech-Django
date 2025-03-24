@@ -1,19 +1,38 @@
 import './register.scss';
-import { useState, useRef } from 'react';
+import { useState, useRef, useContext } from 'react';
+import { AuthContext } from '../../contexts/authContext/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [username, setUsername] = useState("");
+    const { dispatch } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const emailRef = useRef();
     const passwordRef = useRef();
+    const usernameRef = useRef();
 
     const handleEmail = () => {
 	setEmail(emailRef.current.value);
     }
-    const handlePassword = () => {
+
+    const handleRegister = async (e) => {
+	e.preventDefault();
+
+	setUsername(usernameRef.current.value);
 	setPassword(passwordRef.current.value);
-    }
+
+	try {
+	    const res = await axios.post('/users/signUp', { username, email, password });
+
+	    dispatch(createUserSuccess(res.data));
+	    navigate('/login');
+	} catch (err) {
+	    console.log(err);
+	}
+    };
 
     return (
 	<div className='register'>
@@ -35,12 +54,16 @@ const Register = () => {
 
 		{ email ? (
 		    <form className='membership'>
+			<input type='username'
+			       placeholder='Username'
+			       ref={usernameRef}
+			/>
 			<input type='password'
 			       placeholder='Password'
 			       ref={passwordRef}
 			/>
 			<button className='finish'
-				onClick={handlePassword}>Start</button>
+				onClick={handleRegister}>Start</button>
 		    </form>
 		) : (
 		    <div className='membership'>

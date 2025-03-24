@@ -1,19 +1,21 @@
 import './login.scss';
-import { useState, useRef } from 'react';
+import { useState, useContext } from 'react';
+import login from '../../contexts/authContext/apiCalls.js';
+import { AuthContext } from '../../contexts/authContext/AuthContext';
 
 const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
+    const [email, setEmail] = useState('');
+    const [password, setPassword] = useState('');
+    const {dispatch, isFetching} = useContext(AuthContext);
 
-    const emailRef = useRef();
-    const passwordRef = useRef();
+    const handleSignIn = (e) => {
+	e.preventDefault();
 
-    const handleEmail = () => {
-	setEmail(emailRef.current.value);
-    }
-    const handlePassword = () => {
-	setPassword(passwordRef.current.value);
-    }
+	login(
+	    { email, password },
+	    dispatch,
+	);
+    };
 
     return (
 	<div className='login'>
@@ -29,10 +31,17 @@ const Login = () => {
 		<form>
 		    <h1>Sign In</h1>
 		    <input type='email'
-			   placeholder='Email address' />
+			   placeholder='Email address'
+			   onChange={(e) => setEmail(e.target.value)}
+		    />
 		    <input type='password'
-			   placeholder='Password'/>
-		    <button>Sign In</button>
+			   placeholder='Password'
+			   autoComplete='Password'
+			   onChange={(e) => setPassword(e.target.value)}
+		    />
+		    <button onClick={handleSignIn} disabled={isFetching}>
+			Sign In
+		    </button>
 		    <span className='resetPassword'>
 			Forgot Password?
 		    </span>
