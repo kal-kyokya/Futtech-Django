@@ -22,7 +22,7 @@ dotenv.config();
 
 // Extract environment variables found in '.env'
 const PORT = process.env.EXPRESS_PORT || 8000;
-const URL = process.env.MONGO_URL;
+const URI = process.env.MONGO_URI;
 
 // Handle routing inside a function that manipulates the app object
 routing(app);
@@ -33,7 +33,7 @@ app.listen(PORT, () => {
 });
 
 mongoose
-  .connect(URL, {
+  .connect(URI, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
   })

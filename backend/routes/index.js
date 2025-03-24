@@ -32,7 +32,7 @@ export default function routing(app) {
   app.use('/auth', authRouter);
 
   // AuthController
-  authRouter.get('/signIn', AuthController.signingIn);
+  authRouter.post('/signIn', AuthController.signingIn);
   /* authRouter.get('/signOut', AuthMiddleware.loginRequired, AuthController.signingOut); */
 
   // Create a 'router' instance for all 'video' API endpoints

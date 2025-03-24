@@ -1,20 +1,31 @@
 import './login.scss';
 import { useState, useContext } from 'react';
-import login from '../../contexts/authContext/apiCalls.js';
 import { AuthContext } from '../../contexts/authContext/AuthContext';
+import axios from 'axios';
+import { loginSuccess } from '../../contexts/authContext/AuthActions';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const {dispatch, isFetching} = useContext(AuthContext);
+    const navigate = useNavigate();
 
-    const handleSignIn = (e) => {
-	e.preventDefault();
+    const handleSignIn = async (e) => {
+	e.preventDefault(); // Prevent form reload and allow data submission
 
-	login(
-	    { email, password },
-	    dispatch,
-	);
+	try {
+	    const res = await axios.post(
+		'http://127.0.0.1:8080/auth/signIn',
+		{ email, password },
+		{ headers: {'content-type': 'application/json'} }
+	    );
+
+	    dispatch(loginSuccess(res.data));
+	    navigate('/');
+	} catch (err) {
+	    console.log(err);
+	}
     };
 
     return (

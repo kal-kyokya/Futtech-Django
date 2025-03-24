@@ -51,6 +51,8 @@ export default class UsersController {
       password: hashedPwd,
     });
 
+    await newUser.save();
+
     const { password, ...details } = newUser._doc;
 
     // Return all user data except the password

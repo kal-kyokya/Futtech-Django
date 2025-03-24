@@ -20,7 +20,7 @@ const App = () => {
 			   !user ? <Register /> : <Home />
 		       } />
 		<Route path='/login' element={
-			   !user ? <Login /> : <Home />
+			   user ? <Login /> : <Home />
 		       } />
 		{user && (
 		    <>
