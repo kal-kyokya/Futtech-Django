@@ -35,7 +35,7 @@ const Featured = ({ category }) => {
 	     </div>
 	    }
 
-	    <img src={ category ? content.thumbnail : '../../../public/poa.JPEG' }/>
+	    <img src={ category ? content.thumbnail : '/poa.JPEG' }/>
 	    <div className='info'>
 		<span className='poppins-extrabold-italic'>
 		    { 'content.desc' || '' }

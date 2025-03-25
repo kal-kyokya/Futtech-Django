@@ -17,10 +17,10 @@ const App = () => {
 			   user ? <Home /> : <Register />
 		       } />
 		<Route path='/register' element={
-			   !user ? <Register /> : <Home />
+			   user ? <Home /> : <Register />
 		       } />
 		<Route path='/login' element={
-			   user ? <Login /> : <Home />
+			   user ? <Home /> : <Login />
 		       } />
 		{user && (
 		    <>

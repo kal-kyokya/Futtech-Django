@@ -3,14 +3,14 @@ import { useState, useRef, useContext } from 'react';
 import { AuthContext } from '../../contexts/authContext/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { loginSuccess } from '../../contexts/authContext/AuthActions';
-
+import { loginSuccess, loginFailure } from '../../contexts/authContext/AuthActions';
+import { Link } from 'react-router-dom';
 
 const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
-    const { dispatch, isFetching } = useContext(AuthContext);
+    const { dispatch, isFetching, error: resError } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const emailRef = useRef();
@@ -22,18 +22,17 @@ const Register = () => {
     const handleRegister = async (e) => {
 	e.preventDefault(); // Prevent form reload and allow data submission
 
-	try {
-	    const res = await axios.post(
-		'http://127.0.0.1:8080/users/signUp',
-		{ username, email, password },
-		{ headers: {'content-type': 'application/json'} }
-	    );
-
+	const res = await axios.post(
+	    'http://127.0.0.1:8080/users/signUp',
+	    { username, email, password },
+	    { headers: {'content-type': 'application/json'} }
+	).then((res) => {
 	    dispatch(loginSuccess(res.data));
 	    navigate('/login');
-	} catch (err) {
-	    console.log(err);
-	}
+	}).catch((err) => {
+	    console.log(err.response.data.error);
+	    dispatch(loginFailure(err.response.data));
+	});
     };
 
     return (
@@ -45,14 +44,20 @@ const Register = () => {
 			src='../../../public/logo.png'
 			alt='Logo of the Futtech Company'
 		    />
-		    <button className='signIn'>Sign In</button>
+		    <Link to='/login' className='link'>
+			<button className='signIn'>
+			    <span>
+				Sign In
+			    </span>
+			</button>
+		    </Link>
 		</div>
 	    </div>
 
 	    <div className='container'>
 		<h1>Drone Footage, Tactical/Technical Analysis, and more</h1>
 		<h2>Check the Demo here.</h2>
-		<p>Want to register? Enter your email to create or restart your membership.</p>
+		<h4>Want to register? Enter your email to create or restart your membership.</h4>
 
 		{ email ? (
 		    <form className='membership'>
@@ -69,7 +74,9 @@ const Register = () => {
 				onClick={handleRegister}
 				disabled={isFetching}
 			>
-			    Start
+			    <span>
+				Start
+			    </span>
 			</button>
 		    </form>
 		) : (
@@ -79,7 +86,17 @@ const Register = () => {
 			       ref={emailRef}
 			/>
 			<button className='getStarted'
-				onClick={handleEmail}>Get Started</button>
+				onClick={handleEmail}>
+			    <span>
+				Get Started
+			    </span>
+			</button>
+		    </div>
+		)}
+
+		{ resError && (
+		    <div className='errorMessage'>
+			{resError.error}
 		    </div>
 		)}
 	    </div>

@@ -48,49 +48,30 @@
 		cursor: pointer;
 	    }
 
-	    .options {
-		display: none;
-		background-color: var(--main-color);
-		border-radius: 5px;
-
-		span {
-		    padding: 3px;
-		    cursor: pointer;
+	    .manage {
+		.hiddenOptions {
+		    display: none;
 		}
-	    }
 
-	    &:hover {
-		.options {
-		    display: flex;
-		    flex-direction: column;
-		    position: absolute;
-		}
-	    }
-
-	    .profile {
-		.icon {
+		.optionIcon {
 		    cursor: pointer;
 		    margin-left: 7px;
 		}
 
-		.hiddenOptions {
-		    display: none;
-		    background-color: var(--main-color);
-		    border-radius: 5px;
-
-		    .options {
-			padding: 3px;
-			cursor: pointer;
-		    }
+		.options {
+		    padding: 1px 3px;
+		    cursor: pointer;
 		}
 
 		&:hover {
+
 		    .hiddenOptions {
 			display: flex;
 			flex-direction: column;
 			position: absolute;
-			top: 45px;
-			right: 5px;
+			background-color: rgba(0, 0, 0, 0.65);
+			border-radius: 5px;
+			right: 2.6%;
 		    }
 
 		    .options:hover {
@@ -99,7 +80,6 @@
 		    }
 		}
 	    }
-
 	}
     }
 }

@@ -33,7 +33,6 @@ export default class AuthController {
 
     const { password, ...details } = user._doc;
 
-    console.log({ ...details, accessToken: token});
     // Return all user data except the password
     return res.status(201).send({ ...details, accessToken: token});
   }

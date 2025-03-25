@@ -21,7 +21,7 @@ const Navbar = () => {
 	<div className={isScrolled ? 'navbar scrolled' : 'navbar'}>
 	    <div className='container'>
 		<div className='left'>
-		    <img src='../../public/logo.png'
+		    <img src='/logo.png'
 			 alt='Logo of the Futtech Company'/>
 		    <Link to='/' className='link'>
 			<span>Home</span>
@@ -40,23 +40,21 @@ const Navbar = () => {
 		<div className='right'>
 		    <SearchIcon className='icon'/>
 		    <NotificationsNoneIcon className='icon'/>
-		    <img src='../../public/profile.JPG'
-			 alt='Icon categorizing user as player, coach or scout'/>
-		    <div className='profile0'>
-			<ArrowDropDownIcon className='icon0'/>
-			<div className='hiddenOptions0'>
-			    <Link className='link' to='/user/0'>
-				<div className='options0'>Profile</div>
-			    </Link>
-			    <div className='options0'
-				 onClick={() => dispatch(logOut())}>Logout</div>
-			</div>
-		    </div>
-		    <div className='profile'>
-			<ArrowDropDownIcon className='icon'/>
-			<div className='options'>
-			    <span>Settings</span>
-			    <span on>Logout</span>
+		    <img src='/profile.JPG'
+			 alt='Profile Picture'/>
+		    <div className='manage'>
+			<ArrowDropDownIcon className='optionIcon'/>
+			<div className='hiddenOptions'>
+			    <div className='options'>
+				<Link className='link' to='/user/0'>
+				    Profile
+				</Link>
+			    </div>
+
+			    <div className='options'
+				 onClick={() => dispatch(logOut())}>
+				    Logout
+			    </div>
 			</div>
 		    </div>
 		</div>
