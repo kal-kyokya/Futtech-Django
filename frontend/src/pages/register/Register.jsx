@@ -10,7 +10,10 @@ const Register = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
-    const { dispatch, isFetching, error: resError } = useContext(AuthContext);
+    const { dispatch,
+	    isFetching,
+	    loggedOut,
+	    error: resError } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const emailRef = useRef();
@@ -95,8 +98,14 @@ const Register = () => {
 		)}
 
 		{ resError && (
-		    <div className='errorMessage'>
-			{resError.error}
+		    <div className='userPrompt'>
+			{resError.error}.
+		    </div>
+		)}
+
+		{ loggedOut && (
+		    <div className='userPrompt'>
+			You have successfully logged out.
 		    </div>
 		)}
 	    </div>
