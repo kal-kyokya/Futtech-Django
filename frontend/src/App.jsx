@@ -20,7 +20,7 @@ const App = () => {
 			   user ? <Home /> : <Register />
 		       } />
 		<Route path='/login' element={
-			   user ? <Home /> : <Login />
+			   user && user.accessToken ? <Home /> : <Login />
 		       } />
 		{user && (
 		    <>

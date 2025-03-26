@@ -19,23 +19,46 @@ const Register = () => {
     const emailRef = useRef();
 
     const handleEmail = () => {
-	setEmail(emailRef.current.value);
+	const emailRegEx = /^[a-zA-Z0-9_.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+
+	if (emailRegEx.test(emailRef.current.value)) {
+	    resError.error = 'Valid Email';
+	    setEmail(emailRef.current.value);
+	} else {
+	    dispatch(loginFailure({ error: 'Invalid Email' }));
+	}
     }
+
+    const handleUsername = (e) => {
+	setUsername(e.target.value);
+    };
+
+    const handlePassword = (e) => {
+	setPassword(e.target.value);
+    };
 
     const handleRegister = async (e) => {
 	e.preventDefault(); // Prevent form reload and allow data submission
 
-	const res = await axios.post(
-	    'http://127.0.0.1:8080/users/signUp',
-	    { username, email, password },
-	    { headers: {'content-type': 'application/json'} }
-	).then((res) => {
-	    dispatch(loginSuccess(res.data));
-	    navigate('/login');
-	}).catch((err) => {
-	    console.log(err.response.data.error);
-	    dispatch(loginFailure(err.response.data));
-	});
+	if (username && password) {
+	    const res = await axios.post(
+		'http://127.0.0.1:8080/users/signUp',
+		{ username, email, password },
+		{ headers: {'content-type': 'application/json'} }
+	    ).then((res) => {
+		dispatch(loginSuccess(res.data));
+		navigate('/login');
+	    }).catch((err) => {
+		console.log(err.response.data.error);
+		dispatch(loginFailure(err.response.data));
+	    });
+	} else {
+	    if (!username) {
+		dispatch(loginFailure({ error: 'Username required' }));
+	    } else {
+		dispatch(loginFailure({ error: 'Password required' }));
+	    }
+	}
     };
 
     return (
@@ -59,19 +82,27 @@ const Register = () => {
 
 	    <div className='container'>
 		<h1>Drone Footage, Tactical/Technical Analysis, and more</h1>
-		<h2>Check the Demo here.</h2>
+		<h2>
+		    Check the Demo <Link className='link'
+					 to='/demo'
+				   >
+				       <u>here</u>.
+				   </Link>
+		</h2>
 		<h4>Want to register? Enter your email to create or restart your membership.</h4>
 
 		{ email ? (
 		    <form className='membership'>
 			<input type='username'
 			       placeholder='Username'
-			       onChange={(e) => setUsername(e.target.value)}
+			       onChange={handleUsername}
+			       required
 			/>
 			<input type='password'
 			       placeholder='Password'
 			       autoComplete='password'
-			       onChange={(e) => setPassword(e.target.value)}
+			       onChange={handlePassword}
+			       required
 			/>
 			<button className='finish'
 				onClick={handleRegister}
@@ -87,6 +118,7 @@ const Register = () => {
 			<input type='email'
 			       placeholder='Email address'
 			       ref={emailRef}
+			       required
 			/>
 			<button className='getStarted'
 				onClick={handleEmail}>
