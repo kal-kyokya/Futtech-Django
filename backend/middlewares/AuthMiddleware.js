@@ -12,7 +12,7 @@ export default class AuthMiddleWare {
     // Extract the Authentication token
     const token = req.headers['auth-token'];
     if (!token) {
-      return res.status(401).send({ error: 'Unauthorized' });
+      return res.status(401).send({ error: 'Auth-token Required' });
     }
 
     // Validate the token sent
@@ -21,7 +21,7 @@ export default class AuthMiddleWare {
       process.env.SECRET_KEY,
       (err, userInfo) => {
         if (err) {
-          return res.status(401).send({ error: 'Unauthorized' });
+          return res.status(401).send({ error: 'Invalid Auth-token' });
         }
         req.userInfo = userInfo;
         return next();

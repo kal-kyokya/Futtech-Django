@@ -2,30 +2,29 @@ import './login.scss';
 import { useState, useContext } from 'react';
 import { AuthContext } from '../../contexts/authContext/AuthContext';
 import axios from 'axios';
-import { loginSuccess } from '../../contexts/authContext/AuthActions';
-import { useNavigate } from 'react-router-dom';
+import { loginSuccess, loginFailure } from '../../contexts/authContext/AuthActions';
+import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const {dispatch, isFetching} = useContext(AuthContext);
+    const {dispatch, isFetching, error: resError } = useContext(AuthContext);
     const navigate = useNavigate();
 
     const handleSignIn = async (e) => {
 	e.preventDefault(); // Prevent form reload and allow data submission
 
-	try {
-	    const res = await axios.post(
-		'http://127.0.0.1:8080/auth/signIn',
-		{ email, password },
-		{ headers: {'content-type': 'application/json'} }
-	    );
-
+	const res = await axios.post(
+	    'http://127.0.0.1:8080/auth/signIn',
+	    { email, password },
+	    { headers: {'content-type': 'application/json'} }
+	).then((res) => {
 	    dispatch(loginSuccess(res.data));
 	    navigate('/');
-	} catch (err) {
-	    console.log(err);
-	}
+	}).catch((err) => {
+	    console.log(err.response.data.error);
+	    dispatch(loginFailure(err.response.data));
+	});
     };
 
     return (
@@ -53,11 +52,23 @@ const Login = () => {
 		    <button onClick={handleSignIn} disabled={isFetching}>
 			Sign In
 		    </button>
+
+		    {resError && (
+			<div className='userPrompt'>
+			    {resError.error}.
+			</div>
+		    )}
+
 		    <span className='resetPassword'>
-			Forgot Password?
+			<Link to='/reset-password' className='link'>
+			    <u>Forgot Password?</u>
+			</Link>
 		    </span>
 		    <span className='text'>
-			New to Futtech? <b>Sign up now</b>.
+			New to Futtech? Sign up 
+			<Link to='/register' className='link'>
+				<b> here</b>.
+			</Link>
 		    </span>
 		    <div className='captcha'>
 			<p className='small-1'>

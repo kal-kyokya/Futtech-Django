@@ -35,31 +35,32 @@ export default class ListsController {
   static async getList(req, res) {
     // Extract the list category
     const { category, subCategory } = req.query;
-    let list = [];
+    let lists = [];
 
     // Proceed with retrieval of a list
     try {
       if (category) {
         if (subCategory) {
-          list = await List.aggregate([
+          lists = await List.aggregate([
             { $match: { category, subCategory } },
             { $sample: { size: 3 } },
           ]);
         } else {
-          list = await List.aggregate([
+          lists = await List.aggregate([
             { $match: { category } },
             { $sample: { size: 3 } },
           ]);
         }
       } else {
-        list = await List.aggregate([{ $sample: { size: 3 } }]);
+        lists = await List.aggregate([{ $sample: { size: 3 } }]);
       }
-      res.status(201).send(list);
+
+      res.status(201).send(lists);
     } catch (err) {
       return res.status(500).send({ error: err });
     }
 
-    return res.status(403).send({ error: 'Forbidden' });
+    return res.status(403).send({ error: 'List Retrieval failed' });
   }
 
   /**

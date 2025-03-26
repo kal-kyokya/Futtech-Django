@@ -1,22 +1,23 @@
 import './featured.scss';
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useContext } from 'react';
+import { AuthContext } from '../../contexts/authContext/AuthContext';
 
 const Featured = ({ category }) => {
     const [content, setContent] = useState();
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
 	const getContent = async () => {
-	    try {
-		const res = await axios.get(`/videos/random?category=${ category }`, {
-		    headers: {
-			token: ''
-		    }
-		});
+	    const res = await axios.get(`/videos/random?category=${ category }`, {
+		headers: {
+		    'auth-token': user.accessToken
+		}
+	    }).then((res) => {
 		setContent(res.data[0]);
-	    } catch (err) {
+	    }).catch((err) => {
 		console.log(err);
-	    }
+	    });
 	}
 
 	getContent();
@@ -38,7 +39,7 @@ const Featured = ({ category }) => {
 	    <img src={ category ? content.thumbnail : '/poa.JPEG' }/>
 	    <div className='info'>
 		<span className='poppins-extrabold-italic'>
-		    { 'content.desc' || '' }
+		    { 'As an active footballer, I want to review footage of my games & training sessions. Analyze my: positioning, off-the-ball movement, decision-making and improve my game.' || 'content.desc' }
 		</span>
 	    </div>
 	</div>

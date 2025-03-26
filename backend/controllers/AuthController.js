@@ -17,11 +17,11 @@ export default class AuthController {
     // Ensure the DB contains a user with the input email
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(401).send({ error: 'Unauthorized' });
+      return res.status(401).send({ error: 'Invalid Email' });
     }
 
       if (cryptoJS.AES.decrypt(user.password, process.env.SECRET_KEY).toString(cryptoJS.enc.Utf8) !== pwd) {
-      return res.status(401).send({ error: 'Unauthorized' });
+      return res.status(401).send({ error: 'Incorrect Password' });
     }
 
     // Generate a Json Web Token associated to the user

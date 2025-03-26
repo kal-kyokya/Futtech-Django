@@ -12,7 +12,7 @@ const Demo = () => {
 		</div>
 	    </Link>
 	    <video className='video'
-		   src=''
+		   src='turf.mp4'
 		   autoPlay
 		   progress
 		   controls

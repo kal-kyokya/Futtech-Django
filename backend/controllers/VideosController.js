@@ -69,7 +69,7 @@ export default class VideosController {
       return res.status(500).send({ error: err });
     }
 
-    return res.status(403).send({ error: 'Forbidden' });
+    return res.status(403).send({ error: 'Video Retrieval Failed' });
   }
 
   /**

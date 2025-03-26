@@ -3,6 +3,7 @@ import Home from './pages/home/Home';
 import Register from './pages/register/Register';
 import Watch from './pages/watch/Watch';
 import Login from './pages/login/Login';
+import Demo from './pages/demo/Demo';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useContext } from 'react';
 import { AuthContext } from './contexts/authContext/AuthContext';
@@ -22,6 +23,7 @@ const App = () => {
 		<Route path='/login' element={
 			   user && user.accessToken ? <Home /> : <Login />
 		       } />
+		<Route path='/demo' element={<Demo />} />
 		{user && (
 		    <>
 			<Route path='/videos' element={<Home category='video'/>} />
