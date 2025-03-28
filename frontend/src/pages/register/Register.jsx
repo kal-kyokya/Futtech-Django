@@ -3,7 +3,7 @@ import { useState, useRef, useContext } from 'react';
 import { AuthContext } from '../../contexts/authContext/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { loginSuccess, loginFailure } from '../../contexts/authContext/AuthActions';
+import { loginStart, loginFailure } from '../../contexts/authContext/AuthActions';
 import { Link } from 'react-router-dom';
 
 const Register = () => {
@@ -39,6 +39,7 @@ const Register = () => {
 
     const handleRegister = async (e) => {
 	e.preventDefault(); // Prevent form reload and allow data submission
+	dispatch(loginStart());
 
 	if (username && password) {
 	    const res = await axios.post(
@@ -46,7 +47,6 @@ const Register = () => {
 		{ username, email, password },
 		{ headers: {'content-type': 'application/json'} }
 	    ).then((res) => {
-		dispatch(loginSuccess(res.data));
 		navigate('/login');
 	    }).catch((err) => {
 		console.log(err.response.data.error);

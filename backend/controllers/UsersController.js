@@ -53,10 +53,8 @@ export default class UsersController {
 
     await newUser.save();
 
-    const { password, ...details } = newUser._doc;
-
     // Return all user data except the password
-    return res.status(201).send(details);
+    return res.status(201).send({ message: 'Registration success' });
   }
 
   /**
@@ -133,7 +131,7 @@ export default class UsersController {
    */
   static async updateUser(req, res) {
     // Extract the user's information
-    const { id, isAdmin } = req.user_info;
+    const { id, isAdmin } = req.userInfo;
 
     // Proceed with updation of user details
     if (id === req.params.id || isAdmin) {

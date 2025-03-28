@@ -21,14 +21,14 @@ export default class AuthMiddleWare {
       process.env.SECRET_KEY,
       (err, userInfo) => {
         if (err) {
-          return res.status(401).send({ error: 'Invalid Auth-token' });
+            return res.status(401).send({ error: 'Invalid Auth-token', token });
         }
         req.userInfo = userInfo;
         return next();
       },
     );
 
-    return res.status(401).send({ error: 'Unauthorized' });
+    return res.status(401).send({ error: 'JWT Verification Failed' });
   }
 
   /**

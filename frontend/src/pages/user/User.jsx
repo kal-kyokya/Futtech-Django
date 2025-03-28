@@ -11,6 +11,10 @@ import { useState, useContext } from 'react';
 import { updateUser } from '../../contexts/userContext/apiCalls';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import Navbar from '../../components/Navbar';
+import axios from 'axios';
+import {
+    updateUserStart, updateUserSuccess, updateUserFailure,
+} from '../../contexts/userContext/UserActions';
 
 const User = () => {
     const [updatedUser, setUpdatedUser] = useState(null);
@@ -58,10 +62,23 @@ const User = () => {
 	]);
     };
 
-    const handleSubmit = (e) => {
+    const handleSubmit = async (e) => {
 	e.preventDefault();
+	dispatch(updateUserStart());
 
-	updateUser(updatedUser, dispatch);
+	try {
+	    const res = await axios.put('/users/' + user._id, updatedUser, {
+		headers: {
+		    'auth-token': user.accessToken,
+		}
+	    });
+
+	    dispatch(updateUserSuccess(res.data));
+	} catch (err) {
+	    console.log(err);
+	}
+
+	dispatch(updateUserFailure());
     };
 
     return (
@@ -80,7 +97,7 @@ const User = () => {
 
 			<div className='userDetailsTop'>
 			    <img className='profile'
-				 src={user.profilePic || '/BlankProfile.png'}
+				 src={user.profilePic}
 				 alt='Profile Pic'
 			    />
 			    <div className='userInfos'>
@@ -92,12 +109,12 @@ const User = () => {
 			<div className='userDetailsBottom'>
 			    <span className='userDetailsTitle'>Account details</span>
 			    <div className='userDetailsDiv'>
-				<SportsSoccerIcon className='userDetailsIcon' />
-				<div className='userDetailsContent'>{ user.position }</div>
-			    </div>
-			    <div className='userDetailsDiv'>
 				<PermIdentityIcon className='userDetailsIcon' />
 				<div className='userDetailsContent'>{ user.username }</div>
+			    </div>
+			    <div className='userDetailsDiv'>
+				<SportsSoccerIcon className='userDetailsIcon' />
+				<div className='userDetailsContent'>{ user.position }</div>
 			    </div>
 			    <div className='userDetailsDiv'>
 				<CalendarMonthOutlinedIcon className='userDetailsIcon' />
@@ -126,7 +143,7 @@ const User = () => {
 				<div className='userUpdateItem'>
 				    <label>First Name</label>
 				    <input type='text'
-					   placeholder='Jean-Paul'
+					   placeholder={ user.firstName }
 					   className='userUpdateInput'
 					   name='firstName'
 					   onChange={handleChange}
@@ -135,52 +152,43 @@ const User = () => {
 				<div className='userUpdateItem'>
 				    <label>Last Name</label>
 				    <input type='text'
-					   placeholder='KYOKYA'
+					   placeholder={ user.lastName }
 					   className='userUpdateInput'
 					   name='lastName'
 					   onChange={handleChange}
 				    />
 				</div>
 				<div className='userUpdateItem'>
-				    <label>Profession</label>
-				    <input type='text'
-					   placeholder='Software Engineer'
-					   className='userUpdateInput'
-					   name='profession'
-					   onChange={handleChange}
-				    />
-				</div>
-				<div className='userUpdateItem'>
-				    <label>Position</label>
-				    <input type='text'
-					   placeholder='Striker'
-					   className='userUpdateInput'
-					   name='position'
-					   onChange={handleChange}
-				    />
-				</div>
-				<div className='userUpdateItem'>
 				    <label>Username</label>
 				    <input type='text'
-					   placeholder='kal-kyokya'
+					   placeholder={ user.username }
 					   className='userUpdateInput'
 					   name='username'
 					   onChange={handleChange}
 				    />
 				</div>
 				<div className='userUpdateItem'>
-				    <label>Email</label>
-				    <input type='email'
-					   placeholder='kalkyokya4@gmail.com'
+				    <label>Position</label>
+				    <input type='text'
+					   placeholder={ user.position }
 					   className='userUpdateInput'
-					   name='email'
+					   name='position'
+					   onChange={handleChange}
+				    />
+				</div>
+				<div className='userUpdateItem'>
+				    <label>Profession</label>
+				    <input type='text'
+					   placeholder={ user.profession }
+					   className='userUpdateInput'
+					   name='profession'
 					   onChange={handleChange}
 				    />
 				</div>
 				<div className='userUpdateItem'>
 				    <label>Phone</label>
 				    <input type='text'
-					   placeholder='+254798129095'
+					   placeholder={ user.phone }
 					   className='userUpdateInput'
 					   name='phone'
 					   onChange={handleChange}
@@ -189,18 +197,30 @@ const User = () => {
 				<div className='userUpdateItem'>
 				    <label>Location</label>
 				    <input type='text'
-					   placeholder='Nairobi | Kenya'
+					   placeholder={ user.location }
 					   className='userUpdateInput'
 					   name='location'
 					   onChange={handleChange}
 				    />
+				</div>
+				<div className='userUpdateItem'>
+				    <label>Active Footballer?</label>
+				    <select className='userUpdateInput'
+					    name='career'
+					    onChange={handleChange}
+					    id='career'
+				    >
+					<option>Select</option>
+					<option value='true'>Yes</option>
+					<option value='false'>No</option>
+				    </select>
 				</div>
 			    </div>
 
 			    <div className='userUpdateRight'>
 				<div className='userUpdateUpload'>
 				    <img className='userUpdateImg'
-					 src={user.profilePic || '/BlankProfile.png'}
+					 src={user.profilePic}
 					 alt='User Profile'
 				    />
 				    <label htmlFor='file'>

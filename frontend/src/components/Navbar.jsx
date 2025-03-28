@@ -40,7 +40,7 @@ const Navbar = () => {
 		<div className='right'>
 		    <SearchIcon className='icon'/>
 		    <NotificationsNoneIcon className='icon'/>
-		    <img src={user.profilePic || '/BlankProfile.png'}
+		    <img src={user.profilePic}
 			 alt='Profile Picture'/>
 		    <div className='manage'>
 			<ArrowDropDownIcon className='optionIcon'/>

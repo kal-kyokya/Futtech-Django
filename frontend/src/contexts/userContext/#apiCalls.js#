@@ -6,7 +6,6 @@ import {
 // UPDATE
 
 export const updateUser = async (user, token, dispatch) => {
-    console.log(dispatch);
     dispatch(updateUserStart());
 
     try {

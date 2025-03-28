@@ -27,10 +27,18 @@ const App = () => {
 		<Route path='/demo' element={<Demo />} />
 		{user && (
 		    <>
-			<Route path='/videos' element={<Home category='video'/>} />
-			<Route path='/analysis' element={<Home category='analysis'/>} />
-			<Route path='/watch' element={<Watch />} />
-			<Route path='/user' element={<User />} />
+			<Route path='/videos' element={
+				   user ? <Home category='video'/> : <Login />
+			       } />
+			<Route path='/analysis' element={
+				   user ? <Home category='analysis'/> : <Login />
+			       } />
+			<Route path='/watch' element={
+				   user ? <Watch /> : <Login />
+			       } />
+			<Route path='/user' element={
+				   user ? <User /> : <Login />
+			       } />
 		    </>
 		)}
 	    </Routes>
