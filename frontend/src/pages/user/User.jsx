@@ -15,7 +15,7 @@ import Navbar from '../../components/Navbar';
 const User = () => {
     const [updatedUser, setUpdatedUser] = useState(null);
     const [profilePic, setProfilePic] = useState(null);
-    const { dispatch } = useContext(UserContext);
+    const { user, dispatch } = useContext(UserContext);
 
     const handleChange = (e) => {
 	setUpdatedUser((prev) => {
@@ -80,12 +80,12 @@ const User = () => {
 
 			<div className='userDetailsTop'>
 			    <img className='profile'
-				 src='https://raw.githubusercontent.com/kal-kyokya/react-admin-panel/refs/heads/main/public/profile1.JPG'
+				 src={user.profilePic || '/BlankProfile.png'}
 				 alt='Profile Pic'
 			    />
 			    <div className='userInfos'>
-				<div className='userNames'>Jean-Paul KYOKYA</div>
-				<div className='userTitle'>Software Engineer</div>
+				<div className='userNames'>{ `${user.firstName} ${user.lastName}` }</div>
+				<div className='userTitle'>{ user.profession }</div>
 			    </div>
 			</div>
 
@@ -93,28 +93,28 @@ const User = () => {
 			    <span className='userDetailsTitle'>Account details</span>
 			    <div className='userDetailsDiv'>
 				<SportsSoccerIcon className='userDetailsIcon' />
-				<div className='userDetailsContent'>Striker</div>
+				<div className='userDetailsContent'>{ user.position }</div>
 			    </div>
 			    <div className='userDetailsDiv'>
 				<PermIdentityIcon className='userDetailsIcon' />
-				<div className='userDetailsContent'>kal-kyokya</div>
+				<div className='userDetailsContent'>{ user.username }</div>
 			    </div>
 			    <div className='userDetailsDiv'>
 				<CalendarMonthOutlinedIcon className='userDetailsIcon' />
-				<div className='userDetailsContent'>15.03.1999</div>
+				<div className='userDetailsContent'>{ user.birthday }</div>
 			    </div>
 			    <span className='userDetailsTitle'>Contact details</span>
 			    <div className='userDetailsDiv'>
 				<EmailOutlinedIcon className='userDetailsIcon' />
-				<div className='userDetailsContent'>kalkyokya4@gmail.com</div>
+				<div className='userDetailsContent'>{ user.email }</div>
 			    </div>
 			    <div className='userDetailsDiv'>
 				<LocalPhoneOutlinedIcon className='userDetailsIcon' />
-				<div className='userDetailsContent'>+254798129095</div>
+				<div className='userDetailsContent'>{ user.phone }</div>
 			    </div>
 			    <div className='userDetailsDiv'>
 				<LocationOnOutlinedIcon className='userDetailsIcon' />
-				<div className='userDetailsContent'>Nairobi | Kenya</div>
+				<div className='userDetailsContent'>{ user.location }</div>
 			    </div>
 			</div>
 		    </div>
@@ -200,7 +200,7 @@ const User = () => {
 			    <div className='userUpdateRight'>
 				<div className='userUpdateUpload'>
 				    <img className='userUpdateImg'
-					 src='https://raw.githubusercontent.com/kal-kyokya/react-admin-panel/refs/heads/main/public/profile1.JPG'
+					 src={user.profilePic || '/BlankProfile.png'}
 					 alt='User Profile'
 				    />
 				    <label htmlFor='file'>

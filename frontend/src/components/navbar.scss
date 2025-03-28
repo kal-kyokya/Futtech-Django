@@ -35,12 +35,13 @@
 	    align-items: center;
 
 	    img {
-		width: 45px;
-		height: 45px;
+		width: 52px;
+		height: 52px;
 		border-radius: 3px;
-		object-fit: cover;
+		object-fit: contain;
 		cursor: pointer;
 		margin-right: 15px;
+		border-radius: 50%;
 	    }
 
 	    .icon {

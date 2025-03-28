@@ -2,8 +2,8 @@ import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema(
   {
-    firstName: { type: String },
-    lastName: { type: String },
+    firstName: { type: String, default: '' },
+    lastName: { type: String, default: '' },
     username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -15,6 +15,7 @@ const UserSchema = new mongoose.Schema(
     location: { type: String, default: '' },
     sex: { type: String, default: '' },
     isAdmin: { type: Boolean, default: false },
+    birthday: { type: Date, default: null },
   },
   { timestamps: true },
 );
