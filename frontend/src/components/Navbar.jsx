@@ -46,9 +46,15 @@ const Navbar = () => {
 			<ArrowDropDownIcon className='optionIcon'/>
 			<div className='hiddenOptions'>
 			    <div className='options'>
-				<Link className='link' to='/user/0'>
-				    Profile
-				</Link>
+				{ window.location.pathname !== '/user' ? (
+				    <Link className='link' to='/user'>
+					Profile
+				    </Link>
+				) : (
+				    <Link className='link' to='/'>
+					Home
+				    </Link>
+				)}
 			    </div>
 
 			    <div className='options'

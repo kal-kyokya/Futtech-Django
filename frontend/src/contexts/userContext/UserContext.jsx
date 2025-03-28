@@ -19,7 +19,7 @@ export const UserContextProvider = ({ children }) => {
     return (
 	<UserContext.Provider
 	    value={{
-		users: state.users,
+		user: state.user,
 		isFetching: state.isFetching,
 		error: state.error,
 		dispatch

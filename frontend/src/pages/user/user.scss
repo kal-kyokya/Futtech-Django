@@ -1,15 +1,14 @@
 .user {
     flex: 4;
     padding: 19px;
+    background-color: var(--main-color);
+    color: white;
 
     .userTopSection {
 	display:flex;
 	align-items: center;
 	justify-content: space-between;
-
-	.userEditTitle {
-	    color: rgba(0, 0, 0, 0.39);
-	}
+	margin-top: 65px;
 
 	.userCreateButton {
 	    border: none;
@@ -25,13 +24,13 @@
 
     .userContainer {
 	display: flex;
-	color: black;
+	color: white;
 	margin-top: 13px;
 
 	.userDetails {
 	    flex: 1;
 	    padding: 13px;
-	    box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.52);
+	    box-shadow: 0px 2px 15px 0px rgba(255, 255, 255, 0.52);
 	    margin-right: 13px;
 
 	    .userDetailsTop {
@@ -67,7 +66,7 @@
 		margin-top: 13px;
 
 		.userDetailsTitle {
-		    color: rgba(0, 0, 0, 0.65);
+		    color: rgba(255, 255, 255, 0.65);
 		    font-weight: 300;
 		}
 
@@ -75,7 +74,7 @@
 		    display: flex;
 		    align-items: center;
 		    margin: 13px 0px;
-		    color: rgba(0, 0, 0, 0.84);
+		    color: rgba(255, 255, 255, 0.84);
 
 		    .userDetailsIcon {
 			margin-right: 10px;
@@ -91,10 +90,10 @@
 	.userUpdate {
 	    flex: 2;
 	    padding: 13px;
-	    box-shadow: 0px 2px 15px 0px rgba(0, 0, 0, 0.52);
+	    box-shadow: 0px 2px 15px 0px rgba(255, 255, 255, 0.52);
 
 	    .userUpdateTitle {
-		color: rgba(0, 0, 0, 0.65);
+		color: rgba(255, 255, 255, 0.65);
 		font-size: 23px;
 		font-weight: 600;
 		text-align: center;
@@ -152,7 +151,7 @@
 		    .userUpdateButton {
 			border: none;
 			border-radius: 5px;
-			background-color: var(--main-color);
+			background-color: #028ECA;
 			color: white;
 			padding: 10px;
 			cursor: pointer;
