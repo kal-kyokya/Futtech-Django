@@ -5,12 +5,12 @@ import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { Link } from 'react-router-dom';
 import { useContext } from 'react';
-import { AuthContext } from '../contexts/authContext/AuthContext';
-import { logOut } from '../contexts/authContext/AuthActions';
+import { UserContext } from '../contexts/userContext/UserContext';
+import { logOut } from '../contexts/userContext/UserActions';
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
-    const { user, dispatch } = useContext(AuthContext);
+    const { user, dispatch } = useContext(UserContext);
 
     window.onscroll = () => {
 	setIsScrolled(window.pageYOffset === 0 ? false : true);

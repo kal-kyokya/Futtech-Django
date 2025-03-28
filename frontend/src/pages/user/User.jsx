@@ -75,7 +75,7 @@ const User = () => {
 
 	    dispatch(updateUserSuccess(res.data));
 	} catch (err) {
-	    console.log(err);
+	    console.log(err.response.data);
 	}
 
 	dispatch(updateUserFailure());
@@ -87,9 +87,6 @@ const User = () => {
 	    <div className='user'>
 		<div className='userTopSection'>
 		    <h1 className='userEditTitle'>User Profile</h1>
-		    <Link to='/newUser'>
-			<button className='userCreateButton'>Create user</button>
-		    </Link>
 		</div>
 
 		<div className='userContainer'>

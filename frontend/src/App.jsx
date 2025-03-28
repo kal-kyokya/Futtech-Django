@@ -7,10 +7,10 @@ import Demo from './pages/demo/Demo';
 import User from './pages/user/User';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { useContext } from 'react';
-import { AuthContext } from './contexts/authContext/AuthContext';
+import { UserContext } from './contexts/userContext/UserContext';
 
 const App = () => {
-    const { user } = useContext(AuthContext);
+    const { user } = useContext(UserContext);
 
     return (
 	<Router>
@@ -25,21 +25,18 @@ const App = () => {
 			   user && user.accessToken ? <Home /> : <Login />
 		       } />
 		<Route path='/demo' element={<Demo />} />
-		{user && (
-		    <>
-			<Route path='/videos' element={
-				   user ? <Home category='video'/> : <Login />
-			       } />
-			<Route path='/analysis' element={
-				   user ? <Home category='analysis'/> : <Login />
-			       } />
-			<Route path='/watch' element={
-				   user ? <Watch /> : <Login />
-			       } />
-			<Route path='/user' element={
-				   user ? <User /> : <Login />
-			       } />
-		    </>
+		<Route path='/videos' element={
+			   user ? <Home category='video'/> : <Login />
+		       } />
+		<Route path='/analysis' element={
+			   user ? <Home category='analysis'/> : <Login />
+		       } />
+		<Route path='/watch' element={
+			   user ? <Watch /> : <Login />
+		       } />
+		<Route path='/user' element={
+			   user ? <User /> : <Login />
+		       } />
 		)}
 	    </Routes>
 	</Router>

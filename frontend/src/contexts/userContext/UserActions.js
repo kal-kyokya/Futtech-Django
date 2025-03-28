@@ -17,3 +17,9 @@ export const updateUserSuccess = (user) => ({
 export const updateUserFailure = () => ({
     type: 'UPDATE_USER_FAILURE',
 });
+
+// LOGOUT
+
+export const logOut = () => ({
+    type: 'LOGOUT',
+});

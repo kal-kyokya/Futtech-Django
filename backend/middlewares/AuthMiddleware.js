@@ -27,8 +27,6 @@ export default class AuthMiddleWare {
         return next();
       },
     );
-
-    return res.status(401).send({ error: 'JWT Verification Failed' });
   }
 
   /**
