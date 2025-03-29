@@ -3,7 +3,8 @@ import { useState, useRef, useContext } from 'react';
 import { AuthContext } from '../../contexts/authContext/AuthContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import { loginStart, loginFailure } from '../../contexts/authContext/AuthActions';
+import {
+    loginStart, loginSuccess, loginFailure } from '../../contexts/authContext/AuthActions';
 import { Link } from 'react-router-dom';
 
 const Register = () => {
@@ -42,11 +43,13 @@ const Register = () => {
 	dispatch(loginStart());
 
 	if (username && password) {
-	    const res = await axios.post(
+	    await axios.post(
 		'http://127.0.0.1:8080/users/signUp',
 		{ username, email, password },
 		{ headers: {'content-type': 'application/json'} }
 	    ).then((res) => {
+		console.log(res.data);
+		dispatch(loginSuccess(res.data));
 		navigate('/login');
 	    }).catch((err) => {
 		console.log(err.response.data.error);

@@ -13,8 +13,14 @@ import { UserContext } from '../../contexts/userContext/UserContext';
 import Navbar from '../../components/Navbar';
 import axios from 'axios';
 import {
-    updateUserStart, updateUserSuccess, updateUserFailure,
-} from '../../contexts/userContext/UserActions';
+    updateUserStart,
+    updateUserSuccess,
+    updateUserFailure } from '../../contexts/userContext/UserActions';
+import storage from '../../firebase';
+import {
+    getDowloadURL,
+    ref as storageRef,
+    uploadBytes } from 'firebase/storage';
 
 const User = () => {
     const [updatedUser, setUpdatedUser] = useState(null);
@@ -29,33 +35,27 @@ const User = () => {
 
     const firebaseUpload = (input) => {
 	const filename = input.name + updateUser.username || user.username;
+	const imageRef = storageRef(storage, `futtech-inputs/${filename}`);
 
-	const storageRef = storage.ref(`futtech-inputs/${filename}`);
-	const fileToFirebase = storageRef.put(input.file);
-
-	fileToFirebase.on(
-	    'state_changed',
-	    (snapshot) => {
-		const progress = (snapshot.bytesTransferred / snapshot.bytesTotal) * 100;
-		console.log('Upload is ' + Number(progress).toFixed(2) + '% done.');
-	    },
-	    (error) => {
-		console.log(error);
-	    },
-	    () => {
-		fileToFirebase.snapshot.ref.getDownloadURL()
+	uploadBytes(imageRef, profilePic)
+	    .then((snapshot) => {
+		getDownloadURL(snapshot.ref)
 		    .then((url) => {
-			setUpdatedUser((prev) => {
-			    return { ...prev, [input.name]: url }
-			});
+			saveData(url);
+		    })
+		    .catch((err) => {
+			console.log(err);
 		    });
-	    }
-	);
+	    })
+	    .catch((err) => {
+		console.log(err);
+	    });
     };
 
     const handleUpload = (e) => {
 	e.preventDefault();
-	setProfilePic(e.targer.files[0]);
+	setProfilePic(e.target.files[0]);
+	console.log(e.target.files[0]);
 
 	firebaseUpload([
 	    { file: profilePic, name: 'profilePic' },
@@ -73,7 +73,12 @@ const User = () => {
 		}
 	    });
 
-	    dispatch(updateUserSuccess(res.data));
+	    dispatch(updateUserSuccess(
+		{
+		    ...res.data,
+		    accessToken: user.accessToken
+		}
+	    ));
 	} catch (err) {
 	    console.log(err.response.data);
 	}

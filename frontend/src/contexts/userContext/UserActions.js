@@ -3,6 +3,22 @@
  * tracking the stages of user CRUD operations.
  */
 
+// SIGNIN
+
+export const signinStart = () => ({
+    type: 'SIGNIN_START',
+});
+
+export const signinSuccess = (user) => ({
+    type: 'SIGNIN_SUCCESS',
+    payload: user,
+});
+
+export const signinFailure = (error) => ({
+    type: 'SIGNIN_FAILURE',
+    payload: error,
+});
+
 // UPDATE
 
 export const updateUserStart = () => ({

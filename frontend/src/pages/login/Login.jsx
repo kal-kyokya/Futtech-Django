@@ -1,29 +1,38 @@
 import './login.scss';
 import { useState, useContext } from 'react';
 import { AuthContext } from '../../contexts/authContext/AuthContext';
+import { UserContext } from '../../contexts/userContext/UserContext';
 import axios from 'axios';
-import { loginSuccess, loginFailure } from '../../contexts/authContext/AuthActions';
+import {
+    loginStart, loginSuccess, loginFailure } from '../../contexts/authContext/AuthActions';
+import { signinSuccess } from '../../contexts/userContext/UserActions';
 import { useNavigate, Link } from 'react-router-dom';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
-    const {dispatch, isFetching, error: resError } = useContext(AuthContext);
+    const { dispatch, isFetching, error: resError } = useContext(AuthContext);
     const navigate = useNavigate();
+    const { dispatch: userDispatch } = useContext(UserContext);
 
     const handleSignIn = async (e) => {
 	e.preventDefault(); // Prevent form reload and allow data submission
+	dispatch(loginStart());
 
-	const res = await axios.post(
+	await axios.post(
 	    'http://127.0.0.1:8080/auth/signIn',
 	    { email, password },
 	    { headers: {'content-type': 'application/json'} }
 	).then((res) => {
+	    console.log(res.data);
 	    dispatch(loginSuccess(res.data));
-	    navigate('/');
+	    userDispatch(signinSuccess(res.data));
 	}).catch((err) => {
 	    console.log(err.response.data.error);
 	    dispatch(loginFailure(err.response.data));
+	}).finally((res) => {
+	    console.log('\n\n' + res);
+	    navigate('/user', { replace: true });
 	});
     };
 
