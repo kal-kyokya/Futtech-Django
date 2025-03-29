@@ -76,7 +76,7 @@ const Login = () => {
 		    <span className='text'>
 			New to Futtech? Sign up 
 			<Link to='/register' className='link'>
-				<b> here</b>.
+				<b> <u>here</u></b>.
 			</Link>
 		    </span>
 		    <div className='captcha'>

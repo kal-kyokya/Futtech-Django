@@ -19,7 +19,7 @@ import storage from '../../firebase';
 import {
     getDownloadURL,
     ref as storageRef,
-    uploadBytesResumable } from 'firebase/storage';
+    uploadBytes } from 'firebase/storage';
 
 const User = () => {
     const [updatedUser, setUpdatedUser] = useState(null);
@@ -27,8 +27,6 @@ const User = () => {
     const [url, setUrl] = useState(null);
     const { user, dispatch } = useContext(UserContext);
     const navigate = useNavigate();
-    const [uploadProgress, setUploadProgress] = useState(0);
-    const [isUploading, setIsUploading] = useState(false);
 
     const handleChange = (e) => {
 	setUpdatedUser((prev) => {
@@ -41,36 +39,26 @@ const User = () => {
 	    console.error('No profile picture uploaded');
 	}
 
-	setIsUploading(true);
-
 	const username = updatedUser?.username || user?.username || 'anonymous';
 	const date = new Date().toLocaleDateString('de-DE');
 	const pictureName = file.name.split('.')[0];
-
 	const filename = `profile_${username}_${date}_${pictureName}`;
 	const imageRef = storageRef(storage, `futtech-files/${filename}`);
 
-	const uploadTask = uploadBytesResumable(imageRef, file);
-
-	uploadTask.on(
-	    'state_changed',
-	    (snapshot) => {
-		const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-		setUploadProgress(progress.toFixed(0));
-	    },
-	    (err) => {
-		console.error(err);
-		setIsUploading(false);
-	    },
-	    () => {
-		getDownloadURL(uploadTask.snapshot.ref)
-		    .then((firebaseUrl) => {
-			setUrl(firebaseUrl);
-			setIsUploading(false);
+	uploadBytes(imageRef, file)
+	    .then((snapshot) => {
+		getDownloadURL(snapshot.ref)
+		    .then((url) => {
+			setUrl(url);
+		    })
+		    .catch((err) => {
+			console.error(err);
 		    });
-	    }
-	);
-    }
+	    })
+	    .catch((err) => {
+		console.error(err);
+	    });
+    };
 
     const handleUpload = (e) => {
 	e.preventDefault();
@@ -125,24 +113,10 @@ const User = () => {
 		    <div className='userDetails'>
 
 			<div className='userDetailsTop'>
-			    { isUploading ? (
-			     <div>
-				 <label htmlFor='progress-bar'>
-				     Upload Progress: {uploadProgress}
-				 </label>
-				 <progress id='progress-bar'
-					   value={uploadProgress}
-					   max='100'
-				 >
-				 </progress>
-			     </div>
-			    ) : (
-				    <img className='profile'
-					 src={url || user.profilePic}
-					 alt='Profile Pic'
-				    />
-			    )}
-
+			    <img className='profile'
+				 src={user.profilePic}
+				 alt='Profile Pic'
+			    />
 			    <div className='userInfos'>
 				<div className='userNames'>{ `${user.firstName} ${user.lastName}` }</div>
 				<div className='userTitle'>{ user.profession }</div>
@@ -161,9 +135,7 @@ const User = () => {
 			    </div>
 			    <div className='userDetailsDiv'>
 				<CalendarMonthOutlinedIcon className='userDetailsIcon' />
-				<div className='userDetailsContent'>
-				    { user?.birthday?.split('T')[0] }
-				</div>
+				<div className='userDetailsContent'>{ user.birthday }</div>
 			    </div>
 			    <span className='userDetailsTitle'>Contact details</span>
 			    <div className='userDetailsDiv'>
@@ -231,15 +203,6 @@ const User = () => {
 				    />
 				</div>
 				<div className='userUpdateItem'>
-				    <label>Birthday</label>
-				    <input type='date'
-					   placeholder={ user.birthday }
-					   className='userUpdateInput'
-					   name='birthday'
-					   onChange={handleChange}
-				    />
-				</div>
-				<div className='userUpdateItem'>
 				    <label>Phone</label>
 				    <input type='text'
 					   placeholder={ user.phone }
@@ -273,36 +236,20 @@ const User = () => {
 
 			    <div className='userUpdateRight'>
 				<div className='userUpdateUpload'>
-				    { isUploading ? (
-					<div>
-					    <div>
-						Upload Progress: {uploadProgress}
-					    </div>
-					    <progress id='progress-bar'
-						      value={uploadProgress}
-						      max='100'
-					    >
-					    </progress>
-					</div>
-				    ) : (
-					<>
-					    <img className='userUpdateImg'
-						 src={url || user.profilePic}
-						 alt='User Profile'
-					    />
-					    <label htmlFor='file'>
-						<PublishIcon className='userUpdateIcon' />
-					    </label>
-					    <input id='file'
-						   type='file'
-						   style={{ display: 'none' }}
-						   name='profilePic'
-						   onChange={handleUpload}
-					    />
-					</>
-				    )}
+				    <img className='userUpdateImg'
+					 src={user.profilePic}
+					 alt='User Profile'
+				    />
+				    <label htmlFor='file'>
+					<PublishIcon className='userUpdateIcon' />
+				    </label>
+				    <input id='file'
+					   type='file'
+					   style={{ display: 'none' }}
+					   name='profilePic'
+					   onChange={handleUpload}
+				    />
 				</div>
-
 				<button className='userUpdateButton'
 					onClick={handleSubmit}
 				>
