@@ -24,7 +24,7 @@ const User = () => {
     };
 
     const firebaseUpload = (input) => {
-	const filename = input.name + updateUser.username || user.username;
+	const filename = input.name + updatedUser.username || user.username;
 
 	const storageRef = storage.ref(`futtech-inputs/${filename}`);
 	const fileToFirebase = storageRef.put(input.file);
