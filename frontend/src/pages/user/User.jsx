@@ -6,9 +6,8 @@ import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import PublishIcon from '@mui/icons-material/Publish';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
-import { updateUser } from '../../contexts/userContext/apiCalls';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import Navbar from '../../components/Navbar';
 import axios from 'axios';
@@ -18,14 +17,16 @@ import {
     updateUserFailure } from '../../contexts/userContext/UserActions';
 import storage from '../../firebase';
 import {
-    getDowloadURL,
+    getDownloadURL,
     ref as storageRef,
     uploadBytes } from 'firebase/storage';
 
 const User = () => {
     const [updatedUser, setUpdatedUser] = useState(null);
     const [profilePic, setProfilePic] = useState(null);
+    const [url, setUrl] = useState(null);
     const { user, dispatch } = useContext(UserContext);
+    const navigate = useNavigate();
 
     const handleChange = (e) => {
 	setUpdatedUser((prev) => {
@@ -33,46 +34,57 @@ const User = () => {
 	});
     };
 
-    const firebaseUpload = (input) => {
-	const filename = input.name + updatedUser.username || user.username;
-	const imageRef = storageRef(storage, `futtech-inputs/${filename}`);
+    const firebaseUpload = (file) => {
+	if (!file) {
+	    console.error('No profile picture uploaded');
+	}
 
-	uploadBytes(imageRef, input.file)
+	const username = updatedUser?.username || user?.username || 'anonymous';
+	const date = new Date().toLocaleDateString('de-DE');
+	const pictureName = file.name.split('.')[0];
+	const filename = `profile_${username}_${date}_${pictureName}`;
+	const imageRef = storageRef(storage, `futtech-files/${filename}`);
+
+	uploadBytes(imageRef, file)
 	    .then((snapshot) => {
 		getDownloadURL(snapshot.ref)
 		    .then((url) => {
-			saveData(url);
+			setUrl(url);
 		    })
 		    .catch((err) => {
-			console.log(err);
+			console.error(err);
 		    });
 	    })
 	    .catch((err) => {
-		console.log(err);
+		console.error(err);
 	    });
     };
 
     const handleUpload = (e) => {
 	e.preventDefault();
-	setProfilePic(e.target.files[0]);
-	console.log(e.target.files[0]);
+	const file = e.target.files[0];
 
-	firebaseUpload({
-	    file: profilePic,
-	    name: 'profilePic'
-	});
-    };
+	if (file) {
+	    setProfilePic(file);
+	    firebaseUpload(file);
+	};
+    }
 
     const handleSubmit = async (e) => {
 	e.preventDefault();
 	dispatch(updateUserStart());
 
 	try {
-	    const res = await axios.put('/users/' + user._id, updatedUser, {
-		headers: {
-		    'auth-token': user.accessToken,
-		}
-	    });
+	    const res = await axios.put(`/users/${user._id}`,
+					{
+					    ...updatedUser,
+					    'profilePic': url
+					},
+					{
+					    headers: {
+						'auth-token': user.accessToken,
+					    }
+					});
 
 	    dispatch(updateUserSuccess(
 		{
@@ -80,6 +92,8 @@ const User = () => {
 		    accessToken: user.accessToken
 		}
 	    ));
+
+	    navigate('/user');
 	} catch (err) {
 	    console.log(err.response.data);
 	}
