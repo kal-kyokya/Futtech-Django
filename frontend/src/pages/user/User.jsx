@@ -34,10 +34,10 @@ const User = () => {
     };
 
     const firebaseUpload = (input) => {
-	const filename = input.name + updateUser.username || user.username;
+	const filename = input.name + updatedUser.username || user.username;
 	const imageRef = storageRef(storage, `futtech-inputs/${filename}`);
 
-	uploadBytes(imageRef, profilePic)
+	uploadBytes(imageRef, input.file)
 	    .then((snapshot) => {
 		getDownloadURL(snapshot.ref)
 		    .then((url) => {
@@ -57,9 +57,10 @@ const User = () => {
 	setProfilePic(e.target.files[0]);
 	console.log(e.target.files[0]);
 
-	firebaseUpload([
-	    { file: profilePic, name: 'profilePic' },
-	]);
+	firebaseUpload({
+	    file: profilePic,
+	    name: 'profilePic'
+	});
     };
 
     const handleSubmit = async (e) => {
