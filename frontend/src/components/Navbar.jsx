@@ -21,8 +21,11 @@ const Navbar = () => {
 	<div className={isScrolled ? 'navbar scrolled' : 'navbar'}>
 	    <div className='container'>
 		<div className='left'>
-		    <img src='/logo.png'
-			 alt='Logo of the Futtech Company'/>
+		    <Link className='link' to='/'>
+			<img src='/logo.png'
+			     alt='Logo of the Futtech Company'
+			/>
+		    </Link>
 		    <Link to='/' className='link'>
 			<span>Home</span>
 		    </Link>
@@ -40,8 +43,12 @@ const Navbar = () => {
 		<div className='right'>
 		    <SearchIcon className='icon'/>
 		    <NotificationsNoneIcon className='icon'/>
-		    <img src={user.profilePic}
-			 alt='Profile Picture'/>
+		    <Link className='link'
+			  to='/user'>
+			<img src={user.profilePic}
+			     alt='Profile Picture'
+			/>
+		    </Link>
 		    <div className='manage'>
 			<ArrowDropDownIcon className='optionIcon'/>
 			<div className='hiddenOptions'>
