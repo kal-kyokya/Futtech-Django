@@ -1,14 +1,13 @@
 .user {
-    flex: 4;
     padding: 19px;
     background-color: var(--main-color);
     color: white;
+    margin-top: 78px;
 
     .userTopSection {
 	display:flex;
 	align-items: center;
 	justify-content: center;
-	margin-top: 78px;
     }
 
     .userContainer {

@@ -46,10 +46,9 @@ const User = () => {
 	const username = updatedUser?.username || user?.username || 'anonymous';
 	const date = new Date().toLocaleDateString('de-DE');
 	const pictureName = file.name.split('.')[0];
+	const filename = `${username}_${date}_${pictureName}`;
 
-	const filename = `profile_${username}_${date}_${pictureName}`;
-	const imageRef = storageRef(storage, `futtech-files/${filename}`);
-
+	const imageRef = storageRef(storage, `futtech-files/profiles/${filename}`);
 	const uploadTask = uploadBytesResumable(imageRef, file);
 
 	uploadTask.on(
@@ -107,7 +106,7 @@ const User = () => {
 
 	    navigate('/user');
 	} catch (err) {
-	    console.log(err.response.data);
+	    console.error(err.response.data);
 	}
 
 	dispatch(updateUserFailure());

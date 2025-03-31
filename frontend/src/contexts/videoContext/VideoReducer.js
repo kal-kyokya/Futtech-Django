@@ -7,6 +7,8 @@
 
 const VideoReducer = (state, action) => {
     switch (action.type) {
+
+      // CREATE
       case 'CREATE_VIDEO_START':
 	return {
 	    ...state,
@@ -28,6 +30,7 @@ const VideoReducer = (state, action) => {
 	    error: true,
 	};
 
+      // GET
       case 'GET_VIDEOS_START':
 	return {
 	    videos: [],
@@ -49,6 +52,7 @@ const VideoReducer = (state, action) => {
 	    error: true,
 	};
 
+      // UPDATE
       case 'UPDATE_VIDEO_START':
 	return {
 	    ...state,
@@ -72,6 +76,7 @@ const VideoReducer = (state, action) => {
 	    error: true,
 	};
 
+      // DELETE
       case 'DELETE_VIDEO_START':
 	return {
 	    ...state,

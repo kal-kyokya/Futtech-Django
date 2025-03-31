@@ -1,11 +1,12 @@
 .newVideo {
-    flex: 4;
     padding: 13px;
     background-color: var(--main-color);
     color: rgba(255, 255, 255, 0.78);
+    margin-top: 78px;
 
     .newVideoTitle {
 	color: rgba(255, 255, 255, 0.65);
+	text-align: center;
     }
 
     .newVideoForm {
@@ -16,6 +17,7 @@
 	.newVideoTop {
 	    display: flex;
 	    flex-wrap: wrap;
+	    margin-left: 26px;
 
 	    .newVideoItem {
 		display: flex;
