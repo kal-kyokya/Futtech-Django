@@ -90,7 +90,7 @@ const User = () => {
 	    const res = await axios.put(`/users/${user._id}`,
 					{
 					    ...updatedUser,
-					    'profilePic': url
+					    'profilePic': url || user.profilePic
 					},
 					{
 					    headers: {
@@ -157,7 +157,9 @@ const User = () => {
 			    </div>
 			    <div className='userDetailsDiv'>
 				<SportsSoccerIcon className='userDetailsIcon' />
-				<div className='userDetailsContent'>{ user.position }</div>
+				<div className='userDetailsContent'>
+				    { user.position }{ (user.sex !== 'Sex') && ` | ${user.sex}` }
+				</div>
 			    </div>
 			    <div className='userDetailsDiv'>
 				<CalendarMonthOutlinedIcon className='userDetailsIcon' />
@@ -229,6 +231,18 @@ const User = () => {
 					   name='profession'
 					   onChange={handleChange}
 				    />
+				</div>
+				<div className='userUpdateItem'>
+				    <label>Sex</label>
+				    <select className='userUpdateInput'
+					    name='sex'
+					    onChange={handleChange}
+					    id='sex'
+				    >
+					<option value='Sex'>Select</option>
+					<option value='Male'>Male</option>
+					<option value='Female'>Female</option>
+				    </select>
 				</div>
 				<div className='userUpdateItem'>
 				    <label>Birthday</label>

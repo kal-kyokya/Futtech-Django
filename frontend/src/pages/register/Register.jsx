@@ -1,10 +1,12 @@
 import './register.scss';
 import { useState, useRef, useContext } from 'react';
 import { AuthContext } from '../../contexts/authContext/AuthContext';
+import { UserContext } from '../../contexts/userContext/UserContext';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import {
     loginStart, loginSuccess, loginFailure } from '../../contexts/authContext/AuthActions';
+import { logOut } from '../../contexts/userContext/UserActions';
 import { Link } from 'react-router-dom';
 
 const Register = () => {
@@ -13,9 +15,9 @@ const Register = () => {
     const [username, setUsername] = useState("");
     const { dispatch,
 	    isFetching,
-	    loggedOut,
 	    error: resError } = useContext(AuthContext);
     const navigate = useNavigate();
+    const { loggedOut, dispatch: userDispatch } = useContext(UserContext);
 
     const emailRef = useRef();
 

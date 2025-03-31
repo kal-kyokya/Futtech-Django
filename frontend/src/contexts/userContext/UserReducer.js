@@ -36,6 +36,7 @@ const UserReducer = (state, action) => {
 	    ...state,
 	    isFetching: true,
 	    error: false,
+	    loggedOut: false,
 	};
 
       case 'UPDATE_USER_SUCCESS':
@@ -43,6 +44,7 @@ const UserReducer = (state, action) => {
 	    user: action.payload,
 	    isFetching: false,
 	    error: false,
+	    loggedOut: false,
 	};
 
       case 'UPDATE_USER_FAILURE':
@@ -50,6 +52,7 @@ const UserReducer = (state, action) => {
 	    ...state,
 	    isFetching: false,
 	    error: true,
+	    loggedOut: false,
 	};
 
       case 'LOGOUT':
@@ -57,6 +60,7 @@ const UserReducer = (state, action) => {
 	    user: null,
 	    isFetching: false,
 	    error: null,
+	    loggedOut: true,
 	};
 
       default:

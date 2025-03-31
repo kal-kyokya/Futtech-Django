@@ -13,7 +13,7 @@ const Login = () => {
     const [password, setPassword] = useState('');
     const { dispatch, isFetching, error: resError } = useContext(AuthContext);
     const navigate = useNavigate();
-    const { dispatch: userDispatch } = useContext(UserContext);
+    const { loggedOut, dispatch: userDispatch } = useContext(UserContext);
 
     const handleSignIn = async (e) => {
 	e.preventDefault(); // Prevent form reload and allow data submission
@@ -24,14 +24,12 @@ const Login = () => {
 	    { email, password },
 	    { headers: {'content-type': 'application/json'} }
 	).then((res) => {
-	    console.log(res.data);
 	    dispatch(loginSuccess(res.data));
 	    userDispatch(signinSuccess(res.data));
 	}).catch((err) => {
 	    console.log(err.response.data.error);
 	    dispatch(loginFailure(err.response.data));
-	}).finally((res) => {
-	    console.log('\n\n' + res);
+	}).finally(() => {
 	    navigate('/user', { replace: true });
 	});
     };
@@ -65,6 +63,12 @@ const Login = () => {
 		    {resError && (
 			<div className='userPrompt'>
 			    {resError.error}.
+			</div>
+		    )}
+
+		    {loggedOut && (
+			<div className='userPrompt'>
+			    You have been successfully logged out.
 			</div>
 		    )}
 
