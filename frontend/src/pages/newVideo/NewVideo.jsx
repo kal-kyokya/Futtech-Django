@@ -60,6 +60,7 @@ const NewVideo = () => {
 				return { ...prev, [input.name]: firebaseUrl }
 			    });
 
+			    console.log(video);
 			    setIsUploading(false);
 			    setUploaded((prevCount) => prevCount + 1);
 			});
@@ -211,12 +212,11 @@ const NewVideo = () => {
 		    <div className='newVideoBottom'>
 			{isUploading && (
 			    <>
-				<label htmlFor='progress-bar'>
+				<div>
 				    Upload Progress: {uploadProgress}
-				</label>
+				</div>
 				<progress value={uploadProgress}
 					  max='100'
-					  id='progress-bar'
 				>
 				</progress>
 			    </>
