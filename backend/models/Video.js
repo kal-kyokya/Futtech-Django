@@ -2,17 +2,17 @@ import mongoose from 'mongoose';
 
 const VideoSchema = new mongoose.Schema(
   {
-    title: { type: String, required: true, unique: true },
-    desc: { type: String },
-    location: { type: String },
-    isDrone: { type: Boolean, default: false },
-    isAiAnalysis: { type: Boolean, default: false },
-    category: { type: String },
-    date: { type: String },
-    video: { type: String },
-    trailer: { type: String },
-    thumbnail: { type: String },
-    thumbnailSmall: { type: String },
+    title: { type: String, required: true, unique: true, default: '' },
+    desc: { type: String, required: true },
+    location: { type: String, default: '' },
+    isDrone: { type: Boolean, required: true },
+    isAiAnalysis: { type: Boolean, required: true },
+    category: { type: String, required: true },
+    date: { type: String, default: new Date().toJSON() },
+    video: { type: String, required: true },
+    trailer: { type: String, default: 'turf.mp4' },
+    thumbnail: { type: String, default: 'logo.png' },
+    thumbnailSmall: { type: String, default: 'logo.png' },
   },
   { timestamps: true },
 );
