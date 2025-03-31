@@ -88,7 +88,7 @@ const NewVideo = () => {
 	console.log(uploaded);
 
 	try {
-	    const res = await axios.post('/videos', video,
+	    const res = await axios.post('/videos/', video,
 					 {
 					     headers: {
 						 'auth-token': user.accessToken,
@@ -181,14 +181,6 @@ const NewVideo = () => {
 				   name='content'
 				   onChange={(e) => setContent(e.target.files[0])}
 			    />
-			    {isUploading && (
-				<>
-				    <label htmlFor='progress-bar'>Upload Progress: {uploadProgress}</label>
-				    <progress value={uploadProgress} max='100' id='progress-bar'>
-					
-				    </progress>
-				</>
-			    )}
 			</div>
 			<div className='newVideoItem'>
 			    <label>Trailer</label>
@@ -197,14 +189,6 @@ const NewVideo = () => {
 				   name='trailer'
 				   onChange={(e) => setTrailer(e.target.files[0])}
 			    />
-			    {isUploading && (
-				<>
-				    <label htmlFor='progress-bar'>Upload Progress: {uploadProgress}</label>
-				    <progress value={uploadProgress} max='100' id='progress-bar'>
-					
-				    </progress>
-				</>
-			    )}
 			</div>
 			<div className='newVideoItem'>
 			    <label>Main Thumbnail</label>
@@ -213,14 +197,6 @@ const NewVideo = () => {
 				   name='thumbnail'
 				   onChange={(e) => setThumbnail(e.target.files[0])}
 			    />
-			    {isUploading && (
-				<>
-				    <label htmlFor='progress-bar'>Upload Progress: {uploadProgress}</label>
-				    <progress value={uploadProgress} max='100' id='progress-bar'>
-					
-				    </progress>
-				</>
-			    )}
 			</div>
 			<div className='newVideoItem'>
 			    <label>Smaller Thumbnail</label>
@@ -229,23 +205,34 @@ const NewVideo = () => {
 				   name='thumbnailSmall'
 				   onChange={(e) => setThumbnailSmall(e.target.files[0])}
 			    />
-			    {isUploading && (
-				<>
-				    <label htmlFor='progress-bar'>Upload Progress: {uploadProgress}</label>
-				    <progress value={uploadProgress} max='100' id='progress-bar'>
-					
-				    </progress>
-				</>
-			    )}
 			</div>
 		    </div>
+
 		    <div className='newVideoBottom'>
+			{isUploading && (
+			    <>
+				<label htmlFor='progress-bar'>
+				    Upload Progress: {uploadProgress}
+				</label>
+				<progress value={uploadProgress}
+					  max='100'
+					  id='progress-bar'
+				>
+				</progress>
+			    </>
+			)}
+
 			{uploaded !== 4 ? (
-			    <button className='newVideoButton'
-				    onClick={handleUpload}
-			    >
-				Upload files
-			    </button>
+			    <>
+				<div className='userPrompt'>
+				    {uploaded}/4 uploaded.
+				</div>
+				<button className='newVideoButton'
+					onClick={handleUpload}
+				>
+				    Upload files
+				</button>
+			    </>
 			) : (
 			    <button className='newVideoButton'
 				    onClick={handleSubmit}
