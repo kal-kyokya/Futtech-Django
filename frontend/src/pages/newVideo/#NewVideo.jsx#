@@ -13,6 +13,7 @@ import {
     createVideoSuccess,
     createVideoFailure } from '../../contexts/videoContext/VideoActions';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const NewVideo = () => {
     const [video, setVideo] = useState(null);
@@ -23,6 +24,7 @@ const NewVideo = () => {
     const [uploaded, setUploaded] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    const navigate = useNavigate();
 
     const { dispatch } = useContext(VideoContext);
     const { user } = useContext(UserContext);
@@ -95,6 +97,7 @@ const NewVideo = () => {
 					     }
 					 });
 	    dispatch(createVideoSuccess(res.data));
+	    navigate('/');
 	} catch (err) {
 	    console.error(err);
 	}
