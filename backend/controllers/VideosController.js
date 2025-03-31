@@ -8,23 +8,19 @@ export default class VideosController {
    * @param { Object } res - The response object
    */
   static async createNewVideo(req, res) {
-    // Extract the user's information
-    const { isAdmin } = req.user_info;
-
     // Create the video
     const newVideo = new Video(req.body);
 
     // Proceed with upload of the video
-    if (isAdmin) {
-      try {
-        const savedVideo = await newVideo.save();
-        return res.status(201).send(savedVideo);
-      } catch (err) {
-        return res.status(500).send({ error: err });
-      }
+    try {
+      const savedVideo = await newVideo.save();
+      return res.status(201).send(savedVideo);
+    } catch (err) {
+      return res.status(500).send({ error: err });
     }
 
-    return res.status(403).send({ error: 'Forbidden' });
+    return res.status(403).send({ error: 'Failed to create the new video',
+				    video:  newVideo });
   }
 
   /**

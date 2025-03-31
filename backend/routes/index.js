@@ -42,7 +42,7 @@ export default function routing(app) {
   app.use('/videos', videoRouter);
 
   // VideosController
-  videoRouter.post('/', VideosController.createNewVideo);
+  videoRouter.post('/', AuthMiddleware.loginRequired, VideosController.createNewVideo);
   videoRouter.get('/get/:id', AuthMiddleware.loginRequired, VideosController.getVideo);
   videoRouter.get('/random', AuthMiddleware.loginRequired, VideosController.getRandomVideo);
   videoRouter.get('/all', AuthMiddleware.loginRequired, VideosController.getAll);
