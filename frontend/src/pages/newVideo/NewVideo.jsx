@@ -16,7 +16,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const NewVideo = () => {
-    const [video, setVideo] = useState(null);
+    const { dispatch } = useContext(VideoContext);
+    const { user } = useContext(UserContext);
+
+    const [video, setVideo] = useState({ 'owner': user._id });
     const [content, setContent] = useState(null);
     const [trailer, setTrailer] = useState(null);
     const [thumbnail, setThumbnail] = useState(null);
@@ -25,9 +28,6 @@ const NewVideo = () => {
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const navigate = useNavigate();
-
-    const { dispatch } = useContext(VideoContext);
-    const { user } = useContext(UserContext);
 
     const handleChange = (e) => {
 	setVideo((prevVideo) => {

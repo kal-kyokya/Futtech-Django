@@ -121,13 +121,6 @@ const User = () => {
 		<div className='userTopSection'>
 		    <h1 className='userEditTitle'>User Profile</h1>
 
-		    <Link className='link'
-			  to='/newVideo'
-		    >
-			<button className='createVideoButton'>
-			    Upload videos
-			</button>
-		    </Link>
 		</div>
 
 		<div className='userContainer'>
@@ -193,7 +186,7 @@ const User = () => {
 			    >
 				Manage
 			    </span>
-			    <Link className='link' to='/videos'>
+			    <Link className='link' to='/videoList'>
 				<div className='userDetailsLinks'>
 				    <VideoLibraryIcon className='userDetailsIcon' />
 				    Videos

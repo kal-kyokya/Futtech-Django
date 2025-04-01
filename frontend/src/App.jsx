@@ -9,6 +9,7 @@ import Login from './pages/login/Login';
 import Demo from './pages/demo/Demo';
 import User from './pages/user/User';
 import NewVideo from './pages/newVideo/NewVideo';
+import VideoList from './pages/videoList/VideoList';
 
 const App = () => {
     const { user } = useContext(UserContext);
@@ -41,7 +42,7 @@ const App = () => {
 			   user && user.accessToken ?
 			       <Watch /> : <Navigate to='/' />
 		       } />
-		<Route path='/user' element={
+		<Route path='/me' element={
 			   user && user.accessToken ?
 			       <User /> : <Navigate to='/' />
 		       } />
@@ -49,9 +50,14 @@ const App = () => {
 			   user && user.accessToken ?
 			       <NewVideo /> : <Navigate to='/' />
 		       } />
+		<Route path='/videoList' element={
+			   user && user.accessToken ?
+			       <VideoList /> : <Navigate to='/' />
+		       } />
 		<Route path='*' element={ <Navigate to='/' />} />
 	    </Routes>
 	</Router>
+
     );
 };
 

@@ -53,7 +53,7 @@ const Navbar = () => {
 		    <SearchIcon className='icon'/>
 		    <NotificationsNoneIcon className='icon'/>
 		    <Link className='link'
-			  to='/user'>
+			  to='/me'>
 			<img src={user.profilePic}
 			     alt='Profile Picture'
 			/>
@@ -62,8 +62,8 @@ const Navbar = () => {
 			<ArrowDropDownIcon className='optionIcon'/>
 			<div className='hiddenOptions'>
 			    <div className='options'>
-				{ window.location.pathname !== '/user' ? (
-				    <Link className='link' to='/user'>
+				{ window.location.pathname !== '/me' ? (
+				    <Link className='link' to='/me'>
 					Profile
 				    </Link>
 				) : (

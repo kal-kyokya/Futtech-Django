@@ -1,11 +1,11 @@
 import './featured.scss';
 import axios from 'axios';
 import { useState, useEffect, useContext } from 'react';
-import { AuthContext } from '../../contexts/authContext/AuthContext';
+import { UserContext } from '../../contexts/userContext/UserContext';
 
 const Featured = ({ category }) => {
-    const [content, setContent] = useState();
-    const { user } = useContext(AuthContext);
+    const [content, setContent] = useState(null);
+    const { user } = useContext(UserContext);
 
     useEffect(() => {
 	const getContent = async () => {
@@ -36,7 +36,7 @@ const Featured = ({ category }) => {
 	     </div>
 	    }
 
-	    <img src={ category ? content.thumbnail : '/poa.JPEG' }/>
+	    <img src={ category ? content?.thumbnail : '/poa.JPEG' }/>
 	    <div className='info'>
 		<span className='poppins-extrabold-italic'>
 		    { 'As an active footballer, I want to review footage of my games & training sessions. Analyze my: positioning, off-the-ball movement, decision-making and improve my game.' || 'content.desc' }
