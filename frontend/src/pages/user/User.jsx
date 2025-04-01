@@ -6,6 +6,8 @@ import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import PublishIcon from '@mui/icons-material/Publish';
+import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
+import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
 import { UserContext } from '../../contexts/userContext/UserContext';
@@ -118,6 +120,14 @@ const User = () => {
 	    <div className='user'>
 		<div className='userTopSection'>
 		    <h1 className='userEditTitle'>User Profile</h1>
+
+		    <Link className='link'
+			  to='/newVideo'
+		    >
+			<button className='createVideoButton'>
+			    Upload videos
+			</button>
+		    </Link>
 		</div>
 
 		<div className='userContainer'>
@@ -126,11 +136,10 @@ const User = () => {
 			<div className='userDetailsTop'>
 			    { isUploading ? (
 			     <div>
-				 <label htmlFor='progress-bar'>
+				 <div>
 				     Upload Progress: {uploadProgress}
-				 </label>
-				 <progress id='progress-bar'
-					   value={uploadProgress}
+				 </div>
+				 <progress value={uploadProgress}
 					   max='100'
 				 >
 				 </progress>
@@ -179,6 +188,19 @@ const User = () => {
 				<LocationOnOutlinedIcon className='userDetailsIcon' />
 				<div className='userDetailsContent'>{ user.location }</div>
 			    </div>
+			    <span className='userDetailsTitle'>Manage</span>
+			    <Link className='link' to='/videos'>
+				<div className='userDetailsLinks'>
+				    <VideoLibraryIcon className='userDetailsIcon' />
+				    Videos
+				</div>
+			    </Link>
+			    <Link className='link' to='/lists'>
+				<div className='userDetailsLinks'>
+				    <PlaylistPlayIcon className='userDetailsIcon' />
+				    Lists
+				</div>
+			    </Link>
 			</div>
 		    </div>
 

@@ -13,6 +13,7 @@ import {
     createVideoSuccess,
     createVideoFailure } from '../../contexts/videoContext/VideoActions';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const NewVideo = () => {
     const [video, setVideo] = useState(null);
@@ -23,6 +24,7 @@ const NewVideo = () => {
     const [uploaded, setUploaded] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
+    const navigate = useNavigate();
 
     const { dispatch } = useContext(VideoContext);
     const { user } = useContext(UserContext);
@@ -95,6 +97,7 @@ const NewVideo = () => {
 					     }
 					 });
 	    dispatch(createVideoSuccess(res.data));
+	    navigate('/watch');
 	} catch (err) {
 	    console.error(err);
 	}
@@ -212,7 +215,7 @@ const NewVideo = () => {
 			{isUploading && (
 			    <>
 				<div>
-				    Upload Progress: {uploadProgress}
+				    Processing files: {uploadProgress}
 				</div>
 				<progress value={uploadProgress}
 					  max='100'
@@ -224,7 +227,7 @@ const NewVideo = () => {
 			{uploaded !== 4 ? (
 			    <>
 				<div className='userPrompt'>
-				    Overall upload: {uploadProgress}% done.
+				    Upload: {uploadProgress}% done.
 				</div>
 				<button className='newVideoButton'
 					onClick={handleUpload}

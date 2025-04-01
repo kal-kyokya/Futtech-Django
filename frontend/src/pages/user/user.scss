@@ -7,7 +7,17 @@
     .userTopSection {
 	display:flex;
 	align-items: center;
-	justify-content: center;
+	justify-content: space-between;
+
+	.createVideoButton {
+	    border: none;
+	    border-radius: 5px;
+	    background-color: #028ECA;
+	    color: white;
+	    padding: 10px;
+	    cursor: pointer;
+	    font-weight: 600;
+	}
     }
 
     .userContainer {
@@ -39,6 +49,7 @@
 		.userInfos {
 		    display: flex;
 		    flex-direction: column;
+		    margin-left: 13px;
 
 		    .userNames {
 			font-weight: 600;
@@ -72,6 +83,27 @@
 			font-weight: 16px;
 		    }
 		}
+
+		.userDetailsLinks {
+		    display: flex;
+		    align-items: center;
+		    margin: 8px 0px;
+		    color: rgba(255, 255, 255, 0.78);
+
+		    .userDetailsIcon {
+			margin-right: 10px;
+		    }
+
+		    .userDetailsContent {
+			font-weight: 16px;
+		    }
+
+		    &:hover {
+			border-radius: 5px;
+			background-color: rgba(255, 255, 255, 0.13);
+		    }
+		}
+
 	    }
 	}
 
