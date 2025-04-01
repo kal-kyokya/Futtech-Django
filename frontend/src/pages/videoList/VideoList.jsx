@@ -35,9 +35,8 @@ const VideoList = () => {
 		dispatch(getVideosSuccess(res.data));
 	    } catch (err) {
 		console.log(err);
+		dispatch(getVideosFailure());
 	    }
-
-	    dispatch(getVideosFailure());
 	};
 
 	getVideos();
@@ -62,8 +61,8 @@ const VideoList = () => {
     };
 
     const columns = [
-	{ field: '_id', headerName: 'ID', width: 119 },
-	{ field: 'video', headerName: 'Video', width: 195, renderCell: (params) => {
+	{ field: '_id', headerName: 'ID', width: 231 },
+	{ field: 'video', headerName: 'Video', width: 205, renderCell: (params) => {
 	    return (
 		<div className='videoListCell'>
 		    <img className='profile' src={ params.row.thumbnailSmall } alt='Video Thumbnail'/>
@@ -71,15 +70,15 @@ const VideoList = () => {
 		</div>
 	    );}
 	},
-	{ field: 'category', headerName: 'Category', width: 121 },
+	{ field: 'category', headerName: 'Category', width: 101 },
 	{ field: 'isDrone', headerName: 'Drone Footage', width: 140 },
-	{ field: 'date', headerName: 'Created', width: 105 },
+	{ field: 'date', headerName: 'Created', width: 140 },
 	{
-	    field: 'desc', headerName: 'Description', width: 223, sortable: false,
+	    field: 'desc', headerName: 'Description', width: 335, sortable: false,
 	    description: 'This column has a lot of data and is not sortable.'
 	},
 	{
-	    field: 'manage', headerName: 'Manage', width: 91, renderCell: (params) => {
+	    field: 'manage', headerName: 'Manage', width: 101, renderCell: (params) => {
 		return (
 		    <div className='manageVideo'>
 			<Link to={ '/videos/get' + params.row._id }

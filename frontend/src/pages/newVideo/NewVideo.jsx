@@ -100,9 +100,8 @@ const NewVideo = () => {
 	    navigate('/watch', { state: { video: res.data.content } });
 	} catch (err) {
 	    console.error(err);
+	    dispatch(createVideoFailure());
 	}
-
-	dispatch(createVideoFailure());
     };
 
     return (
@@ -215,7 +214,7 @@ const NewVideo = () => {
 			{isUploading ? (
 			    <div className='userPrompt'>
 				<div>
-				    Processing files: {uploadProgress}
+				    Processing: {uploadProgress}%
 				</div>
 				<progress value={uploadProgress}
 					  max='100'
@@ -224,7 +223,7 @@ const NewVideo = () => {
 			    </div>
 			) : (
 				<div className='userPrompt'>
-				    Upload: {uploadProgress}% done.
+				    Uploading: {uploadProgress}%
 				</div>
 			)}
 
