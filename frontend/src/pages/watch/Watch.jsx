@@ -13,17 +13,17 @@ const Watch = () => {
     return (
 	<div className='watch'>
 	    <div className='options'>
-		<Link to='/videoList'>
-		    <div className='icon'>
+		<Link className='link' to='/videoList'>
+		    <div className='iconLeft'>
 			<ArrowBackIcon className='arrow'/>
 			Videos
 		    </div>
 		</Link>
 
-		<Link to='/'>
-		    <div className='icon'>
-			<ArrowForwardIcon className='arrow'/>
+		<Link className='link' to='/'>
+		    <div className='iconRight'>
 			Home
+			<ArrowForwardIcon className='arrow'/>
 		    </div>
 		</Link>
 	    </div>

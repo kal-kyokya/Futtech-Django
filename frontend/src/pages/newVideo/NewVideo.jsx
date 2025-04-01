@@ -211,20 +211,24 @@ const NewVideo = () => {
 		    </div>
 
 		    <div className='newVideoBottom'>
-			{isUploading ? (
+			{isUploading && (
 			    <div className='userPrompt'>
 				<div>
-				    Processing: {uploadProgress}%
+				    Processing files: {uploadProgress}%
+				</div>
+			    </div>
+			)}
+
+			{ uploaded === 2 && (
+			    <div className='userPrompt'>
+				<div>
+				    Uploading: {uploadProgress}%
 				</div>
 				<progress value={uploadProgress}
 					  max='100'
 				>
 				</progress>
 			    </div>
-			) : (
-				<div className='userPrompt'>
-				    Uploading: {uploadProgress}%
-				</div>
 			)}
 
 			{uploaded !== 4 ? (
