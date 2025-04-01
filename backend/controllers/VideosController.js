@@ -97,7 +97,7 @@ export default class VideosController {
    */
   static async getStats(req, res) {
     // Extract the users's information
-    const { isAdmin } = req.video_info;
+    const { isAdmin } = req.videoInfo;
 
     // Proceed with report compilation
     if (isAdmin) {
@@ -120,7 +120,7 @@ export default class VideosController {
    */
   static async updateVideo(req, res) {
     // Extract the user's information
-    const { isAdmin } = req.user_info;
+    const { isAdmin } = req.userInfo;
 
     // Proceed with updation of the video
     if (isAdmin) {
@@ -144,7 +144,7 @@ export default class VideosController {
    */
   static async deleteVideo(req, res) {
     // Extract the user's information
-    const { isAdmin } = req.user_info;
+    const { isAdmin } = req.userInfo;
 
     // Proceed with deletion of video
     if (isAdmin) {
