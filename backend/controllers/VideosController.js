@@ -70,12 +70,19 @@ export default class VideosController {
    */
   static async getAll(req, res) {
     // Extract the user's information
-    const { isAdmin } = req.user_info;
+    const { id, isAdmin } = req.userInfo;
 
     // Proceed with deletion of video
     if (isAdmin) {
       try {
         const videos = await Video.find();
+        return res.status(201).send(videos.reverse());
+      } catch (err) {
+        return res.status(500).send({ error: err });
+      }
+    } else {
+      try {
+        const videos = await Video.find( { owner: id } );
         return res.status(201).send(videos.reverse());
       } catch (err) {
         return res.status(500).send({ error: err });
