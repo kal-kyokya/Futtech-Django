@@ -97,7 +97,7 @@ const NewVideo = () => {
 					     }
 					 });
 	    dispatch(createVideoSuccess(res.data));
-	    navigate('/watch');
+	    navigate('/watch', { state: { video: res.data.content } });
 	} catch (err) {
 	    console.error(err);
 	}
@@ -212,8 +212,8 @@ const NewVideo = () => {
 		    </div>
 
 		    <div className='newVideoBottom'>
-			{isUploading && (
-			    <>
+			{isUploading ? (
+			    <div className='userPrompt'>
 				<div>
 				    Processing files: {uploadProgress}
 				</div>
@@ -221,25 +221,24 @@ const NewVideo = () => {
 					  max='100'
 				>
 				</progress>
-			    </>
-			)}
-
-			{uploaded !== 4 ? (
-			    <>
+			    </div>
+			) : (
 				<div className='userPrompt'>
 				    Upload: {uploadProgress}% done.
 				</div>
-				<button className='newVideoButton'
+			)}
+
+			{uploaded !== 4 ? (
+				<button className='uploadButton'
 					onClick={handleUpload}
 				>
 				    Upload files
 				</button>
-			    </>
 			) : (
 			    <button className='newVideoButton'
 				    onClick={handleSubmit}
 			    >
-				Create
+				Create video
 			    </button>
 			)}
 		    </div>

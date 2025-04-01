@@ -4,7 +4,7 @@ import { useLocation } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 
 const Watch = () => {
-    const { watch } = useLocation();
+    const location = useLocation();
 
     return (
 	<div className='watch'>
@@ -15,7 +15,7 @@ const Watch = () => {
 		</div>
 	    </Link>
 	    <video className='video'
-		   src={ watch.video }
+		   src={ location.state?.video || 'turf.mp4' }
 		   autoPlay
 		   progress
 		   controls

@@ -188,7 +188,11 @@ const User = () => {
 				<LocationOnOutlinedIcon className='userDetailsIcon' />
 				<div className='userDetailsContent'>{ user.location }</div>
 			    </div>
-			    <span className='userDetailsTitle'>Manage</span>
+			    <span className='userDetailsTitle'
+				  style={{'color': '#05F283'}}
+			    >
+				Manage
+			    </span>
 			    <Link className='link' to='/videos'>
 				<div className='userDetailsLinks'>
 				    <VideoLibraryIcon className='userDetailsIcon' />
@@ -272,6 +276,7 @@ const User = () => {
 					   className='userUpdateInput'
 					   name='birthday'
 					   onChange={handleChange}
+					   
 				    />
 				</div>
 				<div className='userUpdateItem'>
