@@ -41,6 +41,15 @@ const Navbar = () => {
 		</div>
 
 		<div className='right'>
+		    {window.location.pathname !== '/newVideo' && (
+			<Link className='link'
+			      to='/newVideo'
+			>
+			    <button className='newVideoButton'>
+				Upload video
+			    </button>
+			</Link>
+		    )}
 		    <SearchIcon className='icon'/>
 		    <NotificationsNoneIcon className='icon'/>
 		    <Link className='link'
