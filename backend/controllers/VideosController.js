@@ -18,9 +18,6 @@ export default class VideosController {
     } catch (err) {
       return res.status(500).send({ error: err });
     }
-
-    return res.status(403).send({ error: 'Failed to create the new video',
-				    video:  newVideo });
   }
 
   /**
@@ -64,8 +61,6 @@ export default class VideosController {
     } catch (err) {
       return res.status(500).send({ error: err });
     }
-
-    return res.status(403).send({ error: 'Video Retrieval Failed' });
   }
 
   /**
@@ -86,8 +81,6 @@ export default class VideosController {
         return res.status(500).send({ error: err });
       }
     }
-
-    return res.status(403).send({ error: 'Forbidden' });
   }
 
   /**
@@ -111,8 +104,6 @@ export default class VideosController {
         return res.status(500).send({ error: err });
       }
     }
-
-    return res.status(403).send({ error: 'Forbidden' });
   }
 
   /**
@@ -137,8 +128,6 @@ export default class VideosController {
         return res.status(500).send({ error: err });
       }
     }
-
-    return res.status(403).send({ error: 'Forbidden' });
   }
 
   /**
@@ -159,7 +148,5 @@ export default class VideosController {
         return res.status(500).send({ error: err });
       }
     }
-
-    return res.status(403).send({ error: 'Forbidden' });
   }
 }
