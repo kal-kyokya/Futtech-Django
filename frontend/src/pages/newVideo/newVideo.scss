@@ -32,11 +32,11 @@
 
 		.newVideoInput {
 		    border: none;
-		    border: 1px solid grey;
-		    border-radius: 5px;
+		    border-bottom: 1px solid grey;
 		    width: 234px;
 		    height: 26px;
 		    padding: 3px;
+		    background-color: var(--main-color);
 		}
 
 		.newVideoSelect {

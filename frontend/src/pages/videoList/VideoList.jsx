@@ -21,7 +21,6 @@ const VideoList = () => {
     useEffect(() => {
 	const getVideos = async () => {
 	    dispatch(getVideosStart());
-	    console.log(videos);
 
 	    try {
 		const res = await axios.get('/videos/all', {
@@ -30,8 +29,6 @@ const VideoList = () => {
 		    }
 		});
 
-		console.log(res.data);
-		console.log(user._id);
 		dispatch(getVideosSuccess(res.data));
 	    } catch (err) {
 		console.log(err);
@@ -61,7 +58,7 @@ const VideoList = () => {
     };
 
     const columns = [
-	{ field: '_id', headerName: 'ID', width: 231 },
+	{ field: '_id', headerName: 'ID', width: 221 },
 	{ field: 'video', headerName: 'Video', width: 205, renderCell: (params) => {
 	    return (
 		<div className='videoListCell'>
@@ -70,18 +67,19 @@ const VideoList = () => {
 		</div>
 	    );}
 	},
-	{ field: 'category', headerName: 'Category', width: 101 },
-	{ field: 'isDrone', headerName: 'Drone Footage', width: 140 },
-	{ field: 'date', headerName: 'Created', width: 140 },
+	{ field: 'category', headerName: 'Category', width: 91 },
+	{ field: 'isDrone', headerName: 'Drone Footage', width: 130 },
+	{ field: 'date', headerName: 'Created', width: 110 },
 	{
-	    field: 'desc', headerName: 'Description', width: 335, sortable: false,
+	    field: 'desc', headerName: 'Description', width: 375, sortable: false,
 	    description: 'This column has a lot of data and is not sortable.'
 	},
 	{
-	    field: 'manage', headerName: 'Manage', width: 101, renderCell: (params) => {
+	    field: 'manage', headerName: 'Manage', width: 111, renderCell: (params) => {
 		return (
 		    <div className='manageVideo'>
-			<Link to={ '/videos/get' + params.row._id }
+			<Link to={ '/videos/get/' + params.row._id }
+			      state={ { video: params.row } }
 			      className='link'>
 			    <button className='manageVideoButton'>Edit</button>
 			</Link>
@@ -108,7 +106,7 @@ const VideoList = () => {
 			checkboxSelection		    
 			initialState={{ pagination: { paginationModel } }}
 			pageSizeOptions={[10, 15]}
-			sx={{ border: 0 }}
+			sx={{ border: 5 }}
 			getRowId={(r) => r._id}
 		    />
 		</Paper>

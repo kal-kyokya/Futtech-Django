@@ -182,6 +182,7 @@ const NewVideo = () => {
 				   id='content'
 				   name='content'
 				   onChange={(e) => setContent(e.target.files[0])}
+				   className='newVideoInput'
 			    />
 			</div>
 			<div className='newVideoItem'>
@@ -190,6 +191,7 @@ const NewVideo = () => {
 				   id='trailer'
 				   name='trailer'
 				   onChange={(e) => setTrailer(e.target.files[0])}
+				   className='newVideoInput'
 			    />
 			</div>
 			<div className='newVideoItem'>
@@ -198,6 +200,7 @@ const NewVideo = () => {
 				   id='thumbnail'
 				   name='thumbnail'
 				   onChange={(e) => setThumbnail(e.target.files[0])}
+				   className='newVideoInput'
 			    />
 			</div>
 			<div className='newVideoItem'>
@@ -206,6 +209,7 @@ const NewVideo = () => {
 				   id='thumbnailSmall'
 				   name='thumbnailSmall'
 				   onChange={(e) => setThumbnailSmall(e.target.files[0])}
+				   className='newVideoInput'
 			    />
 			</div>
 		    </div>

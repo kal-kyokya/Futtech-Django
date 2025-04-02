@@ -10,6 +10,7 @@ import Demo from './pages/demo/Demo';
 import User from './pages/user/User';
 import NewVideo from './pages/newVideo/NewVideo';
 import VideoList from './pages/videoList/VideoList';
+import Video from './pages/video/Video';
 
 const App = () => {
     const { user } = useContext(UserContext);
@@ -53,6 +54,10 @@ const App = () => {
 		<Route path='/videoList' element={
 			   user && user.accessToken ?
 			       <VideoList /> : <Navigate to='/' />
+		       } />
+		<Route path='/videos/get/:id' element={
+			   user && user.accessToken ?
+			       <Video /> : <Navigate to='/' />
 		       } />
 		<Route path='*' element={ <Navigate to='/' />} />
 	    </Routes>
