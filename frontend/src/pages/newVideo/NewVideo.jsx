@@ -159,8 +159,8 @@ const NewVideo = () => {
 				    id='isDrone'
 			    >
 				<option>Select</option>
-				<option value='true'>Yes</option>
-				<option value='false'>No</option>
+				<option value='Yes'>Yes</option>
+				<option value='No'>No</option>
 			    </select>
 			</div>
 			<div className='newVideoItem'>
@@ -171,8 +171,8 @@ const NewVideo = () => {
 				    id='isAiAnalysis'
 			    >
 				<option>Select</option>
-				<option value='true'>Yes</option>
-				<option value='false'>No</option>
+				<option value='Yes'>Yes</option>
+				<option value='No'>No</option>
 			    </select>
 			</div>
 

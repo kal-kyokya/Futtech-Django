@@ -1,22 +1,22 @@
 .watch {
-    width: 100vw;
-    height: 100vh;
+    width: 97.1vw;
+    height: 78vh;
 
     .options {
-	width: 100vw;
+	width: 100%;
 	display: flex;
 	align-itemns: center;
-	justify-content: space-around;
+	justify-content: space-between;
+	position: absolute;
+	margin-top: 78px;
+	color: black;
+	cursor: pointer;
+	z-index: 10;
 
 	.iconLeft {
-	    display: flex;
-	    align-items: center;
-	    position: absolute;
-	    top: 10px;
 	    left: 10px;
-	    color: white;
-	    cursor: pointer;
-	    z-index: 10;
+	    display: flex;
+	    align-itemns: center;
 
 	    .arrow {
 		margin-right: 3px;
@@ -24,14 +24,9 @@
 	}
 
 	.iconRight {
-	    display: flex;
-	    align-items: center;
-	    position: absolute;
-	    top: 10px;
 	    right: 10px;
-	    color: white;
-	    cursor: pointer;
-	    z-index: 10;
+	    display: flex;
+	    align-itemns: center;
 
 	    .arrow {
 		margin-left: 3px;
@@ -40,8 +35,77 @@
     }
     
     video {
-	width: 100%;
+	width: 103%;
 	height: 100%;
 	object-fit: cover;
+	padding: 0;
+    }
+
+    .videoContainer {
+	display: flex;
+	flex-direction: column;
+	color: white;
+	margin-top: -7px;
+	background-color: black;
+	width: 100vw;
+
+	.videoDetails {
+	    flex: 1;
+	    padding: 0px 39px;
+	    margin-bottom: 39px;
+
+	    .videoDetailsTop {
+		display: flex;
+		align-items: center;
+
+		.profile {
+		    width: 91px;
+		    height: 91px;
+		    border: 1px solid grey;
+		    border-radius: 50%;
+		    object-fit: contain;
+		    cursor: pointer;
+		    background-color: white;
+		    margin-right: 13px;
+		}
+
+		.videoInfos {
+		    display: flex;
+		    flex-direction: column;
+
+		    .videoName {
+			font-weight: 600;
+		    }
+
+		    .videoCategory {
+			font-weight: 300;
+		    }
+		}
+	    }
+
+	    .videoDetailsBottom {
+		margin-top: 13px;
+
+		.videoDetailsTitle {
+		    color: rgba(255, 255, 255, 0.52);
+		    font-weight: 300;
+		}
+
+		.videoDetailsDiv {
+		    display: flex;
+		    align-items: center;
+		    margin: 13px 0px;
+		    color: rgba(255, 255, 255, 0.78);
+
+		    .videoDetailsIcon {
+			margin-right: 15px;
+		    }
+
+		    .videoDetailsContent {
+			font-weight: 16px;
+		    }
+		}
+	    }
+	}
     }
 }

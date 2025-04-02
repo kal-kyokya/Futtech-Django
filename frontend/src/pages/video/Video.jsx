@@ -11,7 +11,7 @@ import Navbar from '../../components/Navbar';
 
 const Video = () => {
     const location = useLocation();
-    console.log(location);
+    const { video } = location.state;
 
     return (
 	<>
@@ -32,12 +32,17 @@ const Video = () => {
 
 			<div className='videoDetailsTop'>
 			    <img className='profile'
-				 src='{video.thumbnailSmall}'
+				 src={ video.thumbnailSmall }
 				 alt='Video Thumbnail'
 			    />
 			    <div className='videoInfos'>
-				<div className='videoName'>{ 'video.title' }</div>
-				<div className='videoCategory'>{ 'video.category' }</div>
+				<Link to='/watch'
+				      state={ { video } }
+				      className='link'
+				>
+				    <h2 className='videoName'>{ video.title }</h2>
+				</Link>
+				<h3 className='videoCategory'>{ video.category }</h3>
 			    </div>
 			</div>
 
@@ -45,15 +50,15 @@ const Video = () => {
 			    <span className='videoDetailsTitle'>Video details</span>
 			    <div className='videoDetailsDiv'>
 				<CalendarMonthOutlinedIcon className='videoDetailsIcon' />
-				<div className='videoDetailsContent'>{ 'video.date' }</div>
+				<div className='videoDetailsContent'>{ video.date }</div>
 			    </div>
 			    <div className='videoDetailsDiv'>
 				<PermIdentityIcon className='videoDetailsIcon' />
-				<div className='videoDetailsContent'>{ 'video.isDrone' }</div>
+				<div className='videoDetailsContent'>{ video.isDrone.toString() }</div>
 			    </div>
 			    <div className='videoDetailsDiv'>
 				<SportsSoccerIcon className='videoDetailsIcon' />
-				<div className='videoDetailsContent'>{ 'video.desc' }</div>
+				<div className='videoDetailsContent'>{ video.desc }</div>
 			    </div>
 			</div>
 		    </div>
@@ -65,49 +70,49 @@ const Video = () => {
 				<div className='videoUpdateItem'>
 				    <label>Video Title</label>
 				    <input type='text'
-					   placeholder={'video.title'}
+					   placeholder={ video.title }
 					   className='videoUpdateInput'
 				    />
 				</div>
 				<div className='videoUpdateItem'>
 				    <label>Category</label>
 				    <input type='text'
-					   placeholder={'video.category'}
+					   placeholder={ video.category }
 					   className='videoUpdateInput'
 				    />
 				</div>
 				<div className='videoUpdateItem'>
 				    <label>Drone Footage</label>
 				    <input type='text'
-					   placeholder={'video.isDrone'}
+					   placeholder={ video.isDrone.toString() }
 					   className='videoUpdateInput'
 				    />
 				</div>
 				<div className='videoUpdateItem'>
 				    <label>Location</label>
 				    <input type='text'
-					   placeholder={ 'video.location' }
+					   placeholder={ video.location }
 					   className='videoUpdateInput'
 				    />
 				</div>
 				<div className='videoUpdateItem'>
 				    <label>Description</label>
 				    <input type='text'
-					   placeholder={'video.desc'}
+					   placeholder={ video.desc }
 					   className='videoUpdateInput'
 				    />
 				</div>
 				<div className='videoUpdateItem'>
 				    <label>Trailer</label>
 				    <input type='file'
-					   placeholder={'video.trailer'}
+					   placeholder={ video.trailer }
 					   className='videoUpdateInput'
 				    />
 				</div>
 				<div className='videoUpdateItem'>
 				    <label>Video</label>
 				    <input type='file'
-					   placeholder={'video.video'}
+					   placeholder={ video.content }
 					   className='videoUpdateInput'
 				    />
 				</div>
