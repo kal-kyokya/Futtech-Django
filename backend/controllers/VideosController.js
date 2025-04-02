@@ -120,7 +120,7 @@ export default class VideosController {
    */
   static async updateVideo(req, res) {
     // Extract the user's information
-    const { isAdmin } = req.userInfo;
+    const { id, isAdmin } = req.userInfo;
 
     // Proceed with updation of the video
     if (isAdmin) {
@@ -134,7 +134,20 @@ export default class VideosController {
       } catch (err) {
         return res.status(500).send({ error: err });
       }
+    } else if (id === req.body.owner) {
+      try {
+        const updatedVideo = await Video.findByIdAndUpdate(
+          req.params.id,
+          { $set: req.body },
+          { new: true },
+        );
+        return res.status(201).send(updatedVideo);
+      } catch (err) {
+        return res.status(500).send({ error: err });
+      }
     }
+
+      return res.status(500).send({ error: 'Failed to update the video' });
   }
 
   /**
