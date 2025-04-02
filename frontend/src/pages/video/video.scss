@@ -12,15 +12,30 @@
 	    color: rgba(255, 255, 255, 0.65);
 	}
 
-	.videoCreateButton {
-	    border: none;
-	    padding: 8px;
-	    border-radius: 6px;
-	    color: white;
-	    background-color: rgb(130, 0, 0);
-	    cursor: pointer;
-	    font-size: 15px;
-	    font-weight: 600;
+	.options {
+
+	    .videoWatchButton {
+		border: none;
+		padding: 5px;
+		border-radius: 6px;
+		color: var(--main-color);
+		background-color: #05F283;
+		cursor: pointer;
+		font-size: 15px;
+		font-weight: 600;
+	    }
+
+	    .videoDeleteButton {
+		border: none;
+		padding: 5px;
+		border-radius: 6px;
+		color: white;
+		background-color: rgb(130, 0, 0);
+		cursor: pointer;
+		font-size: 15px;
+		font-weight: 600;
+		margin-left: 15px;
+	    }
 	}
     }
 
@@ -142,8 +157,8 @@
 			align-items: center;
 
 			.videoUpdateImg {
-			    width: 130px;
-			    height: 130px;
+			    width: 156px;
+			    height: 156px;
 			    object-fit: cover;
 			    border-radius: 13px;
 			    margin-right: 19px;

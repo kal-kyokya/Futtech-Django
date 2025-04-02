@@ -8,6 +8,7 @@ import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import PublishIcon from '@mui/icons-material/Publish';
 import { Link, useLocation } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
+import DescriptionIcon from '@mui/icons-material/Description';
 
 const Video = () => {
     const location = useLocation();
@@ -20,11 +21,21 @@ const Video = () => {
 	    <div className='video'>
 		<div className='videoTopSection'>
 		    <h1 className='videoEditTitle'>Manage Video</h1>
-		    <button className='videoCreateButton'
-			    onClick={() => dispatch(videoDelete())}
-		    >
-			Delete video
-		    </button>
+		    <div className='options'>
+			<Link to='/watch'
+			      state={ { video } }
+			      className='link'
+			>
+			    <button className='videoWatchButton'>
+				Watch
+			    </button>
+			</Link>
+			<button className='videoDeleteButton'
+				onClick={() => dispatch(videoDelete())}
+			>
+			    Delete
+			</button>
+		    </div>
 		</div>
 
 		<div className='videoContainer'>
@@ -50,14 +61,18 @@ const Video = () => {
 			    <span className='videoDetailsTitle'>Video details</span>
 			    <div className='videoDetailsDiv'>
 				<CalendarMonthOutlinedIcon className='videoDetailsIcon' />
-				<div className='videoDetailsContent'>{ video.date }</div>
+				<div className='videoDetailsContent'>
+				    { video.date.split('T')[0] }
+				</div>
 			    </div>
 			    <div className='videoDetailsDiv'>
-				<PermIdentityIcon className='videoDetailsIcon' />
-				<div className='videoDetailsContent'>{ video.isDrone.toString() }</div>
+				<LocationOnOutlinedIcon className='videoDetailsIcon' />
+				<div className='videoDetailsContent'>
+				    { video.location }
+				</div>
 			    </div>
 			    <div className='videoDetailsDiv'>
-				<SportsSoccerIcon className='videoDetailsIcon' />
+				<DescriptionIcon className='videoDetailsIcon' />
 				<div className='videoDetailsContent'>{ video.desc }</div>
 			    </div>
 			</div>
@@ -121,7 +136,7 @@ const Video = () => {
 			    <div className='videoUpdateBottom'>
 				<div className='videoUpdateUpload'>
 				    <img className='videoUpdateImg'
-					 src='/logo.png'
+					 src={ video.thumbnailSmall }
 					 alt='Video Profile'
 				    />
 				    <label htmlFor='file'>

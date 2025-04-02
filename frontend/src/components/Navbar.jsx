@@ -46,7 +46,7 @@ const Navbar = () => {
 			      to='/newVideo'
 			>
 			    <button className='newVideoButton'>
-				Upload video
+				Create video
 			    </button>
 			</Link>
 		    ) : (
