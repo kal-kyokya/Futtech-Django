@@ -68,7 +68,7 @@ const VideoList = () => {
 	    );}
 	},
 	{ field: 'category', headerName: 'Category', width: 91 },
-	{ field: 'isDrone', headerName: 'Drone Footage', width: 130 },
+	{ field: 'location', headerName: 'Location', width: 130 },
 	{ field: 'date', headerName: 'Created', width: 110 },
 	{
 	    field: 'desc', headerName: 'Description', width: 375, sortable: false,

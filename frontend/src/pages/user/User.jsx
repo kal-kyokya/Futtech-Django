@@ -71,7 +71,7 @@ const User = () => {
 		    });
 	    }
 	);
-    }
+    };
 
     const handleUpload = (e) => {
 	e.preventDefault();
@@ -80,8 +80,8 @@ const User = () => {
 	if (file) {
 	    setProfilePic(file);
 	    firebaseUpload(file);
-	};
-    }
+	}
+    };
 
     const handleSubmit = async (e) => {
 	e.preventDefault();

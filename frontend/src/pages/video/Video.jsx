@@ -16,15 +16,70 @@ import {
 import { useState, useContext } from 'react';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import { UserContext } from '../../contexts/userContext/UserContext';
+import storage from '../../firebase';
+import {
+    getDownloadURL,
+    ref as storageRef,
+    uploadBytesResumable } from 'firebase/storage';
 
 const Video = () => {
     const location = useLocation();
     const { video } = location.state;
+
     const { dispatch } = useContext(VideoContext);
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
+    const [thumbnail, setThumbnail] = useState(null);
+    const [url, setUrl] = useState(null);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [isUploading, setIsUploading] = useState(false);
+    const [Uploaded, setUploaded] = useState(0);
 
     const [ updatedVideo, setUpdatedVideo ] = useState({ 'owner': video.owner });
+
+    const firebaseUpload = (file) => {
+	setIsUploading(true);
+
+	const date = new Date().toJSON().split('.');
+	const filename =  `${date}_thumbnail_${file.name.split('.')[0]}`;
+
+	const fileRef = storageRef(storage, `futtech-files/videos/${filename}`);
+	const uploadTask = uploadBytesResumable(fileRef, file);
+
+	uploadTask.on(
+	    'state_changed',
+	    (snapshot) => {
+		const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+		console.log(progress.toFixed(0) + '% done.');
+		setUploadProgress(progress.toFixed(0));
+	    },
+	    (err) => {
+		console.error(error);
+		setIsUploading(false);
+	    },
+	    () => {
+		getDownloadURL(uploadTask.snapshot.ref)
+		    .then((firebaseUrl) => {
+			setUpdatedVideo((prev) => {
+			    return { ...prev, 'thumbnail': firebaseUrl }
+			});
+
+			setUploaded((prevCount) => prevCount + 1);
+			setIsUploading(false);
+		    });
+	    }
+	);
+    };
+
+    const handleUpload = (e) => {
+	e.preventDefault();
+	const file = e.target.files[0];
+
+	if (file) {
+	    setThumbnail(file);
+	    firebaseUpload(file);
+	}
+    };
 
     const handleUpdate = async (e) => {
 	e.preventDefault();
@@ -76,7 +131,7 @@ const Video = () => {
 
 			<div className='videoDetailsTop'>
 			    <img className='profile'
-				 src={ video.thumbnailSmall }
+				 src={ video.thumbnail }
 				 alt='Video Thumbnail'
 			    />
 			    <div className='videoInfos'>
@@ -144,23 +199,6 @@ const Video = () => {
 				    />
 				</div>
 				<div className='videoUpdateItem'>
-				    <label>Drone Footage</label>
-				    <select className='videoUpdateInput'
-					    name='isDrone'
-					    onChange={(e) => {
-						setUpdatedVideo((prev) => {
-						    return { ...prev,
-							     [e.target.name]: e.target.value
-							   }
-						})
-					    }}
-				    >
-					<option>Select</option>
-					<option value='Yes'>Yes</option>
-					<option value='No'>No</option>
-				    </select>
-				</div>
-				<div className='videoUpdateItem'>
 				    <label>Location</label>
 				    <input type='text'
 					   placeholder={ video.location }
@@ -188,33 +226,38 @@ const Video = () => {
 					   }}
 				    />
 				</div>
-				<div className='videoUpdateItem'>
-				    <label>Trailer</label>
-				    <input type='file'
-					   placeholder={ video.trailer }
-					   className='videoUpdateInput'
-				    />
-				</div>
-				<div className='videoUpdateItem'>
-				    <label>Video</label>
-				    <input type='file'
-					   placeholder={ video.content }
-					   className='videoUpdateInput'
-				    />
-				</div>
 			    </div>
 
 			    <div className='videoUpdateBottom'>
 				<div className='videoUpdateUpload'>
-				    <img className='videoUpdateImg'
-					 src={ video.thumbnailSmall }
-					 alt='Video Profile'
-				    />
-				    <label htmlFor='file'>
-					<PublishIcon className='videoUpdateIcon' />
-				    </label>
-				    <input id='file' type='file'
-					   style={{ display: 'none' }}/>
+				    { isUploading ? (
+					<div>
+					    <div>
+						Upload Progress: {uploadProgress}
+					    </div>
+					    <progress id='progress-bar'
+						      value={uploadProgress}
+						      max='100'
+					    >
+					    </progress>
+					</div>
+				    ) : (
+					<>
+					    <img className='videoUpdateImg'
+						 src={ video.thumbnail }
+						 alt='Video Thumbnail'
+					    />
+					    <label htmlFor='file'>
+						<PublishIcon className='videoUpdateIcon' />
+					    </label>
+					    <input id='file'
+						   type='file'
+						   style={{ display: 'none' }}
+						   name='thumbnail'
+						   onChange={handleUpload}
+					    />
+					</>
+				    )}
 				</div>
 				<button className='videoUpdateButton'
 					onClick={(e) => handleUpdate(e)}>Update</button>
