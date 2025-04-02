@@ -78,7 +78,7 @@ const VideoList = () => {
 	    field: 'manage', headerName: 'Manage', width: 111, renderCell: (params) => {
 		return (
 		    <div className='manageVideo'>
-			<Link to={ '/videos/get/' + params.row._id }
+			<Link to={ '/video/' + params.row._id }
 			      state={ { video: params.row } }
 			      className='link'>
 			    <button className='manageVideoButton'>Edit</button>
@@ -97,6 +97,7 @@ const VideoList = () => {
     return (
 	<>
 	    <Navbar />
+
 	    <div className='videoList'>
 		<Paper sx={{ height: '100%', width: '100%' }}>
 		    <DataGrid

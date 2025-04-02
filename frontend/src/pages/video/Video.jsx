@@ -6,13 +6,46 @@ import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import PublishIcon from '@mui/icons-material/Publish';
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import Navbar from '../../components/Navbar';
 import DescriptionIcon from '@mui/icons-material/Description';
+import axios from 'axios';
+import {
+    updateVideoStart, updateVideoSuccess, updateVideoFailure
+} from '../../contexts/videoContext/VideoActions';
+import { useState, useContext } from 'react';
+import { VideoContext } from '../../contexts/videoContext/VideoContext';
+import { UserContext } from '../../contexts/userContext/UserContext';
 
 const Video = () => {
     const location = useLocation();
     const { video } = location.state;
+    const { dispatch } = useContext(VideoContext);
+    const { user } = useContext(UserContext);
+    const navigate = useNavigate();
+
+    const [ updatedVideo, setUpdatedVideo ] = useState({ 'owner': video.owner });
+
+    const handleUpdate = async (e) => {
+	e.preventDefault();
+	dispatch(updateVideoStart());
+
+	try {
+	    await axios.put(`/videos/${video._id}`, updatedVideo,
+					{
+					    headers: {
+						'auth-token': user.accessToken
+					    }
+					}).then((res) => {
+					    dispatch(updateVideoSuccess(res.data));
+					    navigate('/videoList');
+					});
+
+	} catch (err) {
+	    console.error(err);
+	    dispatch(updateVideoFailure());
+	}
+    };
 
     return (
 	<>
@@ -87,6 +120,13 @@ const Video = () => {
 				    <input type='text'
 					   placeholder={ video.title }
 					   className='videoUpdateInput'
+					   name='title'
+					   onChange={(e) => {
+					       setUpdatedVideo((prev) => {
+						   return { ...prev,
+							    [e.target.name]: e.target.value }
+					       })
+					   }}
 				    />
 				</div>
 				<div className='videoUpdateItem'>
@@ -94,20 +134,44 @@ const Video = () => {
 				    <input type='text'
 					   placeholder={ video.category }
 					   className='videoUpdateInput'
+					   name='category'
+					   onChange={(e) => {
+					       setUpdatedVideo((prev) => {
+						   return { ...prev,
+							    [e.target.name]: e.target.value }
+					       })
+					   }}
 				    />
 				</div>
 				<div className='videoUpdateItem'>
 				    <label>Drone Footage</label>
-				    <input type='text'
-					   placeholder={ video.isDrone.toString() }
-					   className='videoUpdateInput'
-				    />
+				    <select className='videoUpdateInput'
+					    name='isDrone'
+					    onChange={(e) => {
+						setUpdatedVideo((prev) => {
+						    return { ...prev,
+							     [e.target.name]: e.target.value
+							   }
+						})
+					    }}
+				    >
+					<option>Select</option>
+					<option value='Yes'>Yes</option>
+					<option value='No'>No</option>
+				    </select>
 				</div>
 				<div className='videoUpdateItem'>
 				    <label>Location</label>
 				    <input type='text'
 					   placeholder={ video.location }
 					   className='videoUpdateInput'
+					   name='location'
+					   onChange={(e) => {
+					       setUpdatedVideo((prev) => {
+						   return { ...prev,
+							    [e.target.name]: e.target.value }
+					       })
+					   }}
 				    />
 				</div>
 				<div className='videoUpdateItem'>
@@ -115,6 +179,13 @@ const Video = () => {
 				    <input type='text'
 					   placeholder={ video.desc }
 					   className='videoUpdateInput'
+					   name='desc'
+					   onChange={(e) => {
+					       setUpdatedVideo((prev) => {
+						   return { ...prev,
+							    [e.target.name]: e.target.value }
+					       })
+					   }}
 				    />
 				</div>
 				<div className='videoUpdateItem'>
@@ -145,7 +216,8 @@ const Video = () => {
 				    <input id='file' type='file'
 					   style={{ display: 'none' }}/>
 				</div>
-				<button className='videoUpdateButton'>Update</button>
+				<button className='videoUpdateButton'
+					onClick={(e) => handleUpdate(e)}>Update</button>
 			    </div>
 			</form>
 		    </div>

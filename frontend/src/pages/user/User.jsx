@@ -106,12 +106,11 @@ const User = () => {
 		}
 	    ));
 
-	    navigate('/user');
+	    navigate('/me');
 	} catch (err) {
 	    console.error(err.response.data);
+	    dispatch(updateUserFailure());
 	}
-
-	dispatch(updateUserFailure());
     };
 
     return (
@@ -298,8 +297,8 @@ const User = () => {
 					    id='career'
 				    >
 					<option>Select</option>
-					<option value='true'>Yes</option>
-					<option value='false'>No</option>
+					<option value='Yes'>Yes</option>
+					<option value='No'>No</option>
 				    </select>
 				</div>
 			    </div>

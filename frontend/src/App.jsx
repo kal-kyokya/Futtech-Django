@@ -55,7 +55,7 @@ const App = () => {
 			   user && user.accessToken ?
 			       <VideoList /> : <Navigate to='/' />
 		       } />
-		<Route path='/videos/get/:id' element={
+		<Route path='/video/:id' element={
 			   user && user.accessToken ?
 			       <Video /> : <Navigate to='/' />
 		       } />
