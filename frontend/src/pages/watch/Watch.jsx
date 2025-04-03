@@ -55,8 +55,8 @@ const Watch = () => {
 				 alt='Video Thumbnail'
 			    />
 			    <div className='videoInfos'>
-				<Link to={ '/videos/get/' + video._id }
-				      state={ { video } }
+				<Link to={ '/video/' + video._id }
+				      state={ { 'input': video } }
 				      className='link'
 				>
 				    <h2 className='videoName'>

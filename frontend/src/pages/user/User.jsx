@@ -151,7 +151,7 @@ const User = () => {
 
 			<div className='userDetailsBottom'>
 			    <span className='userDetailsTitle'
-				  style={{'color': '#028ECA', 'font-weight': '500'}}
+				  style={{'color': '#028ECA', 'fontWeight': '500'}}
 			    >
 				Manage
 			    </span>

@@ -207,6 +207,21 @@ const Video = () => {
 			<form className='videoUpdateForm'>
 			    <div className='videoUpdateTop'>
 				<div className='videoUpdateItem'>
+				    <label>Date</label>
+				    <input type='date'
+					   className='videoUpdateInput'
+					   name='date'
+					   onChange={(e) => {
+					       setUpdatedVideo((prev) => {
+						   return { ...prev,
+							    [e.target.name]: e.target.value
+							  }
+					       })
+					   }}
+					   
+				    />
+				</div>
+				<div className='videoUpdateItem'>
 				    <label>Category</label>
 				    <select className='videoUpdateInput'
 					    name='category'
@@ -214,7 +229,8 @@ const Video = () => {
 					    onChange={(e) => {
 						setUpdatedVideo((prev) => {
 						    return { ...prev,
-							     [e.target.name]: e.target.value }
+							     [e.target.name]: e.target.value
+							   }
 						})
 					    }}
 				    >
