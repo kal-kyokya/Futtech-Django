@@ -13,7 +13,7 @@ import axios from 'axios';
 import {
     updateVideoStart, updateVideoSuccess, updateVideoFailure
 } from '../../contexts/videoContext/VideoActions';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import storage from '../../firebase';
@@ -24,9 +24,10 @@ import {
 
 const Video = () => {
     const location = useLocation();
-    const { video } = location.state;
+    const videoId = location.pathname.split('/')[2];
+    const { state } = location;
 
-    const { dispatch } = useContext(VideoContext);
+    const { videos, dispatch } = useContext(VideoContext);
     const { user } = useContext(UserContext);
     const navigate = useNavigate();
     const [thumbnail, setThumbnail] = useState(null);
@@ -35,7 +36,14 @@ const Video = () => {
     const [isUploading, setIsUploading] = useState(false);
     const [Uploaded, setUploaded] = useState(0);
 
-    const [ updatedVideo, setUpdatedVideo ] = useState({ 'owner': video.owner });
+    const input = state?.input || null;
+    const [video, setVideo] = useState(input);
+
+    useEffect(() => {
+	videos.filter((item) => item._id === (video?._id || input?._id) && setVideo(item));
+    }, [videos]);
+
+    const [ updatedVideo, setUpdatedVideo ] = useState({ 'owner': (video?.owner || input?.owner) });
 
     const firebaseUpload = (file) => {
 	setIsUploading(true);
@@ -84,16 +92,21 @@ const Video = () => {
     const handleUpdate = async (e) => {
 	e.preventDefault();
 	dispatch(updateVideoStart());
+	console.log(input);
+	console.log(video);
+	console.log(updatedVideo);
+	console.log(location);
 
 	try {
-	    await axios.put(`/videos/${video._id}`, updatedVideo,
+	    await axios.put(`/videos/${video?._id || input?._id}`, updatedVideo,
 					{
 					    headers: {
 						'auth-token': user.accessToken
 					    }
 					}).then((res) => {
 					    dispatch(updateVideoSuccess(res.data));
-					    navigate('/videoList');
+					    console.log(video);
+					    navigate(`/video/${video?._id || input?._id}`);
 					});
 
 	} catch (err) {
@@ -130,18 +143,31 @@ const Video = () => {
 		    <div className='videoDetails'>
 
 			<div className='videoDetailsTop'>
-			    <img className='profile'
-				 src={ video.thumbnail }
-				 alt='Video Thumbnail'
-			    />
+			    { isUploading ? (
+				<div>
+				    <div>
+					Upload Progress: {uploadProgress}
+				    </div>
+				    <progress id='progress-bar'
+					      value={uploadProgress}
+					      max='100'
+				    >
+				    </progress>
+				</div>
+			    ) : (
+				<img className='profile'
+				     src={ video?.thumbnail || input?.thumbnail }
+				     alt='Video Thumbnail'
+				/>
+			    )}
 			    <div className='videoInfos'>
 				<Link to='/watch'
 				      state={ { video } }
 				      className='link'
 				>
-				    <h2 className='videoName'>{ video.title }</h2>
+				    <h2 className='videoName'>{ video?.title || input?.title }</h2>
 				</Link>
-				<h3 className='videoCategory'>{ video.category }</h3>
+				<h3 className='videoCategory'>{ video?.category || input?.category }</h3>
 			    </div>
 			</div>
 
@@ -150,18 +176,18 @@ const Video = () => {
 			    <div className='videoDetailsDiv'>
 				<CalendarMonthOutlinedIcon className='videoDetailsIcon' />
 				<div className='videoDetailsContent'>
-				    { video.date.split('T')[0] }
+				    { video?.date.split('T')[0] || input?.date.split('T')[0] }
 				</div>
 			    </div>
 			    <div className='videoDetailsDiv'>
 				<LocationOnOutlinedIcon className='videoDetailsIcon' />
 				<div className='videoDetailsContent'>
-				    { video.location }
+				    { video?.location || input?.location }
 				</div>
 			    </div>
 			    <div className='videoDetailsDiv'>
 				<DescriptionIcon className='videoDetailsIcon' />
-				<div className='videoDetailsContent'>{ video.desc }</div>
+				<div className='videoDetailsContent'>{ video?.desc || input?.desc }</div>
 			    </div>
 			</div>
 		    </div>
@@ -173,7 +199,7 @@ const Video = () => {
 				<div className='videoUpdateItem'>
 				    <label>Video Title</label>
 				    <input type='text'
-					   placeholder={ video.title }
+					   placeholder={ video?.title || input?.title }
 					   className='videoUpdateInput'
 					   name='title'
 					   onChange={(e) => {
@@ -187,7 +213,7 @@ const Video = () => {
 				<div className='videoUpdateItem'>
 				    <label>Category</label>
 				    <input type='text'
-					   placeholder={ video.category }
+					   placeholder={ video?.category || input?.category }
 					   className='videoUpdateInput'
 					   name='category'
 					   onChange={(e) => {
@@ -201,7 +227,7 @@ const Video = () => {
 				<div className='videoUpdateItem'>
 				    <label>Location</label>
 				    <input type='text'
-					   placeholder={ video.location }
+					   placeholder={ video?.location || input?.location }
 					   className='videoUpdateInput'
 					   name='location'
 					   onChange={(e) => {
@@ -215,7 +241,7 @@ const Video = () => {
 				<div className='videoUpdateItem'>
 				    <label>Description</label>
 				    <input type='text'
-					   placeholder={ video.desc }
+					   placeholder={ video?.desc || input?.desc }
 					   className='videoUpdateInput'
 					   name='desc'
 					   onChange={(e) => {
@@ -244,7 +270,7 @@ const Video = () => {
 				    ) : (
 					<>
 					    <img className='videoUpdateImg'
-						 src={ video.thumbnail }
+						 src={ video?.thumbnail || input?.thumbnail }
 						 alt='Video Thumbnail'
 					    />
 					    <label htmlFor='file'>

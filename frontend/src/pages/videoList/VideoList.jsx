@@ -79,7 +79,7 @@ const VideoList = () => {
 		return (
 		    <div className='manageVideo'>
 			<Link to={ '/video/' + params.row._id }
-			      state={ { video: params.row } }
+			      state={ { input: params.row } }
 			      className='link'>
 			    <button className='manageVideoButton'>Edit</button>
 			</Link>
