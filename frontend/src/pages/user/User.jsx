@@ -264,7 +264,6 @@ const User = () => {
 				<div className='userUpdateItem'>
 				    <label>Birthday</label>
 				    <input type='date'
-					   placeholder={ user.birthday }
 					   className='userUpdateInput'
 					   name='birthday'
 					   onChange={handleChange}

@@ -121,15 +121,6 @@ const NewVideo = () => {
 			    />
 			</div>
 			<div className='newVideoItem'>
-			    <label>Description</label>
-			    <input type='text'
-				   placeholder={ 'video.description' }
-				   className='newVideoInput'
-				   name='desc'
-				   onChange={handleChange}
-			    />
-			</div>
-			<div className='newVideoItem'>
 			    <label>Location</label>
 			    <input type='text'
 				   placeholder={ 'video.location' }
@@ -218,6 +209,15 @@ const NewVideo = () => {
 				   name='thumbnailSmall'
 				   onChange={(e) => setThumbnailSmall(e.target.files[0])}
 				   className='newVideoInput'
+			    />
+			</div>
+			<div className='newVideoItem'>
+			    <label>Description</label>
+			    <textarea type='text'
+				   placeholder={ 'video.description' }
+				   className='newVideoInputDesc'
+				   name='desc'
+				   onChange={handleChange}
 			    />
 			</div>
 		    </div>

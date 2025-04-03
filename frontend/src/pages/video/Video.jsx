@@ -253,9 +253,9 @@ const Video = () => {
 				</div>
 				<div className='videoUpdateItem'>
 				    <label>Description</label>
-				    <input type='text'
+				    <textarea type='text'
 					   placeholder={ video?.desc || input?.desc }
-					   className='videoUpdateInput'
+					   className='videoUpdateInputDesc'
 					   name='desc'
 					   onChange={(e) => {
 					       setUpdatedVideo((prev) => {
@@ -263,7 +263,7 @@ const Video = () => {
 							    [e.target.name]: e.target.value }
 					       })
 					   }}
-				    />
+				    ></textarea>
 				</div>
 			    </div>
 
