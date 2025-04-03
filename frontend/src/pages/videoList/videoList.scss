@@ -4,14 +4,13 @@
 
 .videoListCell {
     display: flex;
-    align-items: center;
 
     .profile {
 	width: 45px;
 	height: 45px;
 	border: 1px solid grey;
 	border-radius: 50%;
-	object-fit: contain;
+	object-fit: cover;
 	cursor: pointer;
 	background-color: white;
 	margin-right: 10px;

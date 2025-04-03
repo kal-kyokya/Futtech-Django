@@ -3,7 +3,7 @@ import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { rows } from '../../dummyData';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useState, useContext, useEffect } from 'react';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import { UserContext } from '../../contexts/userContext/UserContext';
@@ -17,6 +17,12 @@ import Navbar from '../../components/Navbar';
 const VideoList = () => {
     const { videos, dispatch } = useContext(VideoContext);
     const { user } = useContext(UserContext);
+    const [data, setData] = useState(videos);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+	setData(videos);
+    }, [videos]);
 
     useEffect(() => {
 	const getVideos = async () => {
@@ -39,17 +45,21 @@ const VideoList = () => {
 	getVideos();
     }, []);
 
-    const handleDelete = async (id) => {
+    const handleDelete = async (id, owner) => {
 	dispatch(deleteVideoStart());
+	console.log(user);
 
 	try {
-	    await axios.delete('/videos/' + id, {
-		headers: {
-		    'auth-token': user.accessToken,
-		}
-	    });
+	    await axios.delete(`/videos/${id}`,
+			       {
+				   headers: {
+				       'auth-token': user.accessToken,
+				       owner
+				   }
+			       });
 
 	    dispatch(deleteVideoSuccess(id));
+	    navigate('/videoList');
 	} catch (err) {
 	    console.log(err);
 	}
@@ -62,8 +72,17 @@ const VideoList = () => {
 	{ field: 'video', headerName: 'Video', width: 205, renderCell: (params) => {
 	    return (
 		<div className='videoListCell'>
-		    <img className='profile' src={ params.row.thumbnailSmall } alt='Video Thumbnail'/>
-		    { params.row.title }
+		    <Link to='/watch'
+			  state={ { video: params.row } }
+			  className='link'
+			  style={{ 'display': 'flex' }}
+		    >
+			<img className='profile'
+			     src={ params.row.thumbnail }
+			     alt='Video Thumbnail'
+			/>
+			<span> { params.row.title } </span>
+		    </Link>
 		</div>
 	    );}
 	},
@@ -84,7 +103,7 @@ const VideoList = () => {
 			    <button className='manageVideoButton'>Edit</button>
 			</Link>
 			<DeleteOutlineIcon className='deleteIcon'
-					   onClick={ () => handleDelete(params.row._id) }/>
+					   onClick={ () => handleDelete(params.row._id, params.row.owner) }/>
 		    </div>
 		);
 	    }
@@ -101,7 +120,7 @@ const VideoList = () => {
 	    <div className='videoList'>
 		<Paper sx={{ height: '100%', width: '100%' }}>
 		    <DataGrid
-			rows={ videos }
+			rows={ data }
 			columns={ columns }
 			disableRowSelectionOnClick
 			checkboxSelection		    

@@ -150,6 +150,23 @@ const User = () => {
 			</div>
 
 			<div className='userDetailsBottom'>
+			    <span className='userDetailsTitle'
+				  style={{'color': '#028ECA', 'font-weight': '500'}}
+			    >
+				Manage
+			    </span>
+			    <Link className='link' to='/videoList'>
+				<div className='userDetailsLinks'>
+				    <VideoLibraryIcon className='userDetailsIcon' />
+				    Videos
+				</div>
+			    </Link>
+			    <Link className='link' to='/lists'>
+				<div className='userDetailsLinks'>
+				    <PlaylistPlayIcon className='userDetailsIcon' />
+				    Lists
+				</div>
+			    </Link>
 			    <span className='userDetailsTitle'>Account details</span>
 			    <div className='userDetailsDiv'>
 				<PermIdentityIcon className='userDetailsIcon' />
@@ -180,23 +197,6 @@ const User = () => {
 				<LocationOnOutlinedIcon className='userDetailsIcon' />
 				<div className='userDetailsContent'>{ user.location }</div>
 			    </div>
-			    <span className='userDetailsTitle'
-				  style={{'color': '#05F283'}}
-			    >
-				Manage
-			    </span>
-			    <Link className='link' to='/videoList'>
-				<div className='userDetailsLinks'>
-				    <VideoLibraryIcon className='userDetailsIcon' />
-				    Videos
-				</div>
-			    </Link>
-			    <Link className='link' to='/lists'>
-				<div className='userDetailsLinks'>
-				    <PlaylistPlayIcon className='userDetailsIcon' />
-				    Lists
-				</div>
-			    </Link>
 			</div>
 		    </div>
 

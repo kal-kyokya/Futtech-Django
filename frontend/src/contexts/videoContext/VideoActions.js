@@ -54,9 +54,9 @@ export const deleteVideoStart = () => ({
     type: 'DELETE_VIDEO_START',
 });
 
-export const deleteVideoSuccess = (video) => ({
+export const deleteVideoSuccess = (videoId) => ({
     type: 'DELETE_VIDEO_SUCCESS',
-    payload: video,
+    payload: videoId,
 });
 
 export const deleteVideoFailure = () => ({

@@ -34,7 +34,8 @@ const Video = () => {
     const [url, setUrl] = useState(null);
     const [uploadProgress, setUploadProgress] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
-    const [Uploaded, setUploaded] = useState(0);
+    const [uploaded, setUploaded] = useState(0);
+    const [prompt, setPrompt] = useState('Press to complete');
 
     const input = state?.input || null;
     const [video, setVideo] = useState(input);
@@ -68,6 +69,7 @@ const Video = () => {
 	    () => {
 		getDownloadURL(uploadTask.snapshot.ref)
 		    .then((firebaseUrl) => {
+			setUrl(firebaseUrl);
 			setUpdatedVideo((prev) => {
 			    return { ...prev, 'thumbnail': firebaseUrl }
 			});
@@ -82,6 +84,8 @@ const Video = () => {
     const handleUpload = (e) => {
 	e.preventDefault();
 	const file = e.target.files[0];
+	setUploaded(0);
+	setPrompt('Press to complete');
 
 	if (file) {
 	    setThumbnail(file);
@@ -92,10 +96,6 @@ const Video = () => {
     const handleUpdate = async (e) => {
 	e.preventDefault();
 	dispatch(updateVideoStart());
-	console.log(input);
-	console.log(video);
-	console.log(updatedVideo);
-	console.log(location);
 
 	try {
 	    await axios.put(`/videos/${video?._id || input?._id}`, updatedVideo,
@@ -105,7 +105,7 @@ const Video = () => {
 					    }
 					}).then((res) => {
 					    dispatch(updateVideoSuccess(res.data));
-					    console.log(video);
+					    setPrompt('Update Completed');
 					    navigate(`/video/${video?._id || input?._id}`);
 					});
 
@@ -155,11 +155,12 @@ const Video = () => {
 				    </progress>
 				</div>
 			    ) : (
-				<img className='profile'
-				     src={ video?.thumbnail || input?.thumbnail }
-				     alt='Video Thumbnail'
-				/>
+				  <img className='profile'
+				       src={ url || video?.thumbnail || input?.thumbnail }
+				       alt='Video Thumbnail'
+				  />
 			    )}
+
 			    <div className='videoInfos'>
 				<Link to='/watch'
 				      state={ { video } }
@@ -193,29 +194,41 @@ const Video = () => {
 		    </div>
 
 		    <div className='videoUpdate'>
-			<div className='videoUpdateTitle'>Edit</div>
+			<div className='videoUpdateBlock'>
+			    <div className='videoUpdateTitle'>
+				Edit | <Link to='/videoList'
+					     style={{'color': '#028ECA'}}
+				       >
+					   Manage Videos
+				       </Link>
+			    </div>
+			</div>
+
 			<form className='videoUpdateForm'>
 			    <div className='videoUpdateTop'>
+				<div className='videoUpdateItem'>
+				    <label>Category</label>
+				    <select className='videoUpdateInput'
+					    name='category'
+					    id='category'
+					    onChange={(e) => {
+						setUpdatedVideo((prev) => {
+						    return { ...prev,
+							     [e.target.name]: e.target.value }
+						})
+					    }}
+				    >
+					<option>Select</option>
+					<option value='Game'>Game</option>
+					<option value='Training'>Training</option>
+				    </select>
+				</div>
 				<div className='videoUpdateItem'>
 				    <label>Video Title</label>
 				    <input type='text'
 					   placeholder={ video?.title || input?.title }
 					   className='videoUpdateInput'
 					   name='title'
-					   onChange={(e) => {
-					       setUpdatedVideo((prev) => {
-						   return { ...prev,
-							    [e.target.name]: e.target.value }
-					       })
-					   }}
-				    />
-				</div>
-				<div className='videoUpdateItem'>
-				    <label>Category</label>
-				    <input type='text'
-					   placeholder={ video?.category || input?.category }
-					   className='videoUpdateInput'
-					   name='category'
 					   onChange={(e) => {
 					       setUpdatedVideo((prev) => {
 						   return { ...prev,
@@ -270,7 +283,7 @@ const Video = () => {
 				    ) : (
 					<>
 					    <img className='videoUpdateImg'
-						 src={ video?.thumbnail || input?.thumbnail }
+						 src={ url || video?.thumbnail || input?.thumbnail }
 						 alt='Video Thumbnail'
 					    />
 					    <label htmlFor='file'>
@@ -285,6 +298,12 @@ const Video = () => {
 					</>
 				    )}
 				</div>
+				{ uploaded === 1 && (
+				    <div className='userPrompt'>
+					{ prompt }
+				    </div>
+				)}
+
 				<button className='videoUpdateButton'
 					onClick={(e) => handleUpdate(e)}>Update</button>
 			    </div>
