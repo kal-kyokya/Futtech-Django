@@ -62,7 +62,7 @@
 		    height: 91px;
 		    border: 1px solid grey;
 		    border-radius: 50%;
-		    object-fit: contain;
+		    object-fit: cover;
 		    cursor: pointer;
 		    background-color: white;
 		    margin-right: 13px;
@@ -74,6 +74,7 @@
 
 		    .videoName {
 			font-weight: 600;
+			color: #028ECA;
 		    }
 
 		    .videoCategory {

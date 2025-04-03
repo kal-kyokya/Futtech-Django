@@ -49,7 +49,6 @@ const NewVideo = () => {
 		'state_changed',
 		(snapshot) => {
 		    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-		    console.log(progress.toFixed(0) + '% done.');
 		    setUploadProgress(progress.toFixed(0));
 		},
 		(err) => {
@@ -97,7 +96,7 @@ const NewVideo = () => {
 					     }
 					 });
 	    dispatch(createVideoSuccess(res.data));
-	    navigate('/watch', { state: { video: res.data.content } });
+	    navigate('/watch', { state: { video: res.data } });
 	} catch (err) {
 	    console.error(err);
 	    dispatch(createVideoFailure());
@@ -124,7 +123,7 @@ const NewVideo = () => {
 			<div className='newVideoItem'>
 			    <label>Description</label>
 			    <input type='text'
-				   placeholder={ 'video.desc' }
+				   placeholder={ 'video.description' }
 				   className='newVideoInput'
 				   name='desc'
 				   onChange={handleChange}
@@ -137,6 +136,15 @@ const NewVideo = () => {
 				   className='newVideoInput'
 				   name='location'
 				   onChange={handleChange}
+			    />
+			</div>
+			<div className='newVideoItem'>
+			    <label>Date</label>
+			    <input type='date'
+				   className='newVideoInput'
+				   name='date'
+				   onChange={handleChange}
+				   
 			    />
 			</div>
 			<div className='newVideoItem'>

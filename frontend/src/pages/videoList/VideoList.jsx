@@ -59,9 +59,10 @@ const VideoList = () => {
 			       });
 
 	    dispatch(deleteVideoSuccess(id));
+	    setData(videos.filter((video) => video._id !== i));
 	    navigate('/videoList');
 	} catch (err) {
-	    console.log(err);
+	    console.error(err);
 	}
 
 	dispatch(deleteVideoFailure());

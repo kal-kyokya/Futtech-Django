@@ -51,7 +51,7 @@ const Watch = () => {
 
 			<div className='videoDetailsTop'>
 			    <img className='profile'
-				 src={ video.thumbnailSmall }
+				 src={ video.thumbnail }
 				 alt='Video Thumbnail'
 			    />
 			    <div className='videoInfos'>
@@ -59,7 +59,9 @@ const Watch = () => {
 				      state={ { video } }
 				      className='link'
 				>
-				    <h2 className='videoName'>{ video.title }</h2>
+				    <h2 className='videoName'>
+					<u>{ video.title }</u>
+				    </h2>
 				</Link>
 				<h3 className='videoCategory'>{ video.category }</h3>
 			    </div>
