@@ -11,6 +11,7 @@ export default class AuthMiddleWare {
   static async loginRequired(req, res, next) {
     // Extract the Authentication token
     const token = req.headers['auth-token'];
+
     if (!token) {
       return res.status(401).send({ error: 'Auth-token Required' });
     }

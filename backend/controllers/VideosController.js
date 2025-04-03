@@ -147,7 +147,7 @@ export default class VideosController {
       }
     }
 
-      return res.status(500).send({ error: 'Failed to update the video' });
+    return res.status(500).send({ error: 'Failed to update the video' });
   }
 
   /**
@@ -157,7 +157,7 @@ export default class VideosController {
    */
   static async deleteVideo(req, res) {
     // Extract the user's information
-    const { isAdmin } = req.userInfo;
+    const { id, isAdmin } = req.userInfo;
 
     // Proceed with deletion of video
     if (isAdmin) {
@@ -167,6 +167,15 @@ export default class VideosController {
       } catch (err) {
         return res.status(500).send({ error: err });
       }
+    } else if (id === req.headers.owner) {
+      try {
+        await Video.findByIdAndDelete(req.params.id);
+        return res.status(204);
+      } catch (err) {
+        return res.status(500).send({ error: err });
+      }
     }
+
+    return res.status(500).send({ error: 'Failed to delete the video' });
   }
 }
