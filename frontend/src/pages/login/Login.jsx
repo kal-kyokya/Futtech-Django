@@ -7,6 +7,10 @@ import {
     loginStart, loginSuccess, loginFailure } from '../../contexts/authContext/AuthActions';
 import { signinSuccess } from '../../contexts/userContext/UserActions';
 import { useNavigate, Link } from 'react-router-dom';
+import { VideoContext } from '../../contexts/videoContext/VideoContext';
+import {
+    getVideosStart, getVideosSuccess, getVideosFailure,
+} from '../../contexts/videoContext/VideoActions';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -14,18 +18,38 @@ const Login = () => {
     const { dispatch, isFetching, error: resError } = useContext(AuthContext);
     const navigate = useNavigate();
     const { loggedOut, dispatch: userDispatch } = useContext(UserContext);
+    const { dispatch: videoDispatch } = useContext(VideoContext);
 
     const handleSignIn = async (e) => {
 	e.preventDefault(); // Prevent form reload and allow data submission
 	dispatch(loginStart());
+	videoDispatch(getVideosStart());
 
 	await axios.post(
 	    'http://127.0.0.1:8080/auth/signIn',
 	    { email, password },
 	    { headers: {'content-type': 'application/json'} }
-	).then((res) => {
-	    dispatch(loginSuccess(res.data));
-	    userDispatch(signinSuccess(res.data));
+	).then((userRes) => {
+	    const getVideos = async () => {
+		videoDispatch(getVideosStart());
+
+		try {
+		    const res = await axios.get('/videos/all', {
+			headers: {
+			    'auth-token': userRes.data.accessToken,
+			}
+		    });
+
+		    videoDispatch(getVideosSuccess(res.data));
+		} catch (err) {
+		    console.error(err);
+		    videoDispatch(getVideosFailure());
+		}
+	    };
+
+	    getVideos();
+	    dispatch(loginSuccess(userRes.data));
+	    userDispatch(signinSuccess(userRes.data));
 	}).catch((err) => {
 	    console.log(err.response.data.error);
 	    dispatch(loginFailure(err.response.data));
