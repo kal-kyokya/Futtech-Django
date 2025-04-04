@@ -42,7 +42,7 @@ const Watch = () => {
 		<video className='video'
 		       src={ location.state?.video.content || videos[0].content || 'turf.mp4' }
 		       autoPlay
-		       progress
+		       progress='true'
 		       controls
 		/>
 
