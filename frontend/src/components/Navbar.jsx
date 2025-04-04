@@ -17,6 +17,11 @@ const Navbar = () => {
 	return () => (window.onscroll = null);
     };
 
+    const handleLogOut = () => {
+	localStorage.setItem('videos', JSON.stringify([]));
+	dispatch(logOut());
+    };
+
     return (
 	<div className={isScrolled ? 'navbar scrolled' : 'navbar'}>
 	    <div className='container'>
@@ -41,23 +46,20 @@ const Navbar = () => {
 		</div>
 
 		<div className='right'>
-		    {window.location.pathname !== '/newVideo' ? (
 			<Link className='link'
 			      to='/newVideo'
 			>
 			    <button className='newVideoButton'>
-				Create video
+				Create
 			    </button>
 			</Link>
-		    ) : (
 			<Link className='link'
 			      to='/videoList'
 			>
 			    <button className='newVideoButton'>
-				Manage videos
+				Manage
 			    </button>
 			</Link>
-		    )}
 		    <SearchIcon className='icon'/>
 		    <NotificationsNoneIcon className='icon'/>
 		    <Link className='link'
@@ -82,7 +84,7 @@ const Navbar = () => {
 			    </div>
 
 			    <div className='options'
-				 onClick={() => dispatch(logOut())}>
+				 onClick={handleLogOut}>
 				    Logout
 			    </div>
 			</div>
