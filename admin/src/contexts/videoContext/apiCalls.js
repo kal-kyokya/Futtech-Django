@@ -40,7 +40,7 @@ export const getVideos = async (dispatch) => {
 
 	dispatch(getVideosSuccess(res.data));
     } catch (err) {
-	console.log(err);
+	console.error(err);
     }
 
     dispatch(getVideosFailure());
@@ -74,7 +74,7 @@ export const deleteVideo = async (id, dispatch) => {
     try {
 	await axios.delete('/videos/' + id, {
 	    headers: {
-		token: 'Bearer ' + JSON.parse(localStorage.deleteItem('user')).accessToken,
+		token: 'Bearer ' + JSON.parse(localStorage.getItem('user')).accessToken,
 	    }
 	});
 
