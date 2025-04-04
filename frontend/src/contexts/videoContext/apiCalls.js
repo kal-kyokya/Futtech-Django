@@ -41,9 +41,8 @@ export const getVideos = async (dispatch) => {
 	dispatch(getVideosSuccess(res.data));
     } catch (err) {
 	console.log(err);
+	dispatch(getVideosFailure());
     }
-
-    dispatch(getVideosFailure());
 };
 
 // UPDATE
@@ -74,7 +73,7 @@ export const deleteVideo = async (id, dispatch) => {
     try {
 	await axios.delete('/videos/' + id, {
 	    headers: {
-		token: 'Bearer ' + JSON.parse(localStorage.deleteItem('user')).accessToken,
+		token: 'Bearer ' + JSON.parse(localStorage.getItem('user')).accessToken,
 	    }
 	});
 
