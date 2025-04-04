@@ -40,10 +40,6 @@ const Video = () => {
     const input = state?.input || null;
     const [video, setVideo] = useState(input);
 
-    useEffect(() => {
-	videos.filter((item) => item._id === (video?._id || input?._id) && setVideo(item));
-    }, [videos]);
-
     const [ updatedVideo, setUpdatedVideo ] = useState({ 'owner': (video?.owner || input?.owner) });
 
     const firebaseUpload = (file) => {
@@ -104,6 +100,7 @@ const Video = () => {
 						'auth-token': user.accessToken
 					    }
 					}).then((res) => {
+					    console.log(res.data);
 					    dispatch(updateVideoSuccess(res.data));
 					    setPrompt('Update Completed');
 					    navigate(`/video/${video?._id || input?._id}`);
