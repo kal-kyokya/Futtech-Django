@@ -28,6 +28,7 @@ const NewVideo = () => {
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
     const navigate = useNavigate();
+    const [prompt, setPrompt] = useState(null);
 
     const handleChange = (e) => {
 	setVideo((prevVideo) => {
@@ -98,6 +99,8 @@ const NewVideo = () => {
 	    dispatch(createVideoSuccess(res.data));
 	    navigate('/watch', { state: { video: res.data } });
 	} catch (err) {
+	    err.response.data.error.keyValue && setPrompt(err.response.data.error.keyValue);
+
 	    console.error(err);
 	    dispatch(createVideoFailure());
 	}
@@ -243,6 +246,12 @@ const NewVideo = () => {
 			    </div>
 			)}
 
+			{ prompt && (
+			    <div className='userPrompt'>
+				    "{ prompt.title }" already taken.
+			    </div>
+			)}
+
 			{uploaded !== 4 ? (
 				<button className='uploadButton'
 					onClick={handleUpload}
@@ -250,11 +259,13 @@ const NewVideo = () => {
 				    Upload files
 				</button>
 			) : (
-			    <button className='newVideoButton'
-				    onClick={handleSubmit}
-			    >
-				Create video
-			    </button>
+			    <div>
+				<button className='newVideoButton'
+					onClick={handleSubmit}
+				>
+				    Create video
+				</button>
+			    </div>
 			)}
 		    </div>
 		</form>

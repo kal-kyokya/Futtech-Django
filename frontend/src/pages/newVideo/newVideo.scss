@@ -69,7 +69,10 @@
 
 	.newVideoBottom {
 	    margin-top: 5.2%;
-	    align-self: center;
+	    margin-bottom: 52px;
+	    width: 100%;
+	    display: flex;
+	    justify-content: space-evenly;
 
 	    .userPrompt {
 		color: #05F283;
@@ -78,6 +81,7 @@
 	    }
 
 	    .uploadButton {
+		position: absolute;
 		border: none;
 		border-radius: 5px;
 		color: rgba(0, 0, 0, 0.78);
@@ -88,6 +92,7 @@
 	    }
 
 	    .newVideoButton {
+		position: absolute;
 		border: none;
 		border-radius: 5px;
 		color: white;
