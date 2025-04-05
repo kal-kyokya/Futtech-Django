@@ -21,9 +21,7 @@ const NewVideo = () => {
 
     const [video, setVideo] = useState({ 'owner': user._id });
     const [content, setContent] = useState(null);
-    const [trailer, setTrailer] = useState(null);
     const [thumbnail, setThumbnail] = useState(null);
-    const [thumbnailSmall, setThumbnailSmall] = useState(null);
     const [uploaded, setUploaded] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
     const [uploadProgress, setUploadProgress] = useState(0);
@@ -50,6 +48,7 @@ const NewVideo = () => {
 		'state_changed',
 		(snapshot) => {
 		    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+		    console.log(progress.toFixed(0) + '% done.');
 		    setUploadProgress(progress.toFixed(0));
 		},
 		(err) => {
@@ -75,11 +74,9 @@ const NewVideo = () => {
     const handleUpload = (e) => {
 	e.preventDefault();
 
-	if (thumbnail && thumbnailSmall && trailer && content) {
+	if (thumbnail && content) {
 	    firebaseUpload([
 		{ file: thumbnail, name: 'thumbnail' },
-		{ file: thumbnailSmall, name: 'thumbnailSmall' },
-		{ file: trailer, name: 'trailer' },
 		{ file: content, name: 'content' },
 	    ]);
 	}
@@ -188,29 +185,11 @@ const NewVideo = () => {
 			    />
 			</div>
 			<div className='newVideoItem'>
-			    <label>Trailer</label>
-			    <input type='file'
-				   id='trailer'
-				   name='trailer'
-				   onChange={(e) => setTrailer(e.target.files[0])}
-				   className='newVideoInput'
-			    />
-			</div>
-			<div className='newVideoItem'>
-			    <label>Main Thumbnail</label>
+			    <label>Thumbnail</label>
 			    <input type='file'
 				   id='thumbnail'
 				   name='thumbnail'
 				   onChange={(e) => setThumbnail(e.target.files[0])}
-				   className='newVideoInput'
-			    />
-			</div>
-			<div className='newVideoItem'>
-			    <label>Smaller Thumbnail</label>
-			    <input type='file'
-				   id='thumbnailSmall'
-				   name='thumbnailSmall'
-				   onChange={(e) => setThumbnailSmall(e.target.files[0])}
 				   className='newVideoInput'
 			    />
 			</div>
@@ -226,15 +205,19 @@ const NewVideo = () => {
 		    </div>
 
 		    <div className='newVideoBottom'>
-			{isUploading && (
+			{ uploaded !== 2 && uploaded < 1 && (
 			    <div className='userPrompt'>
-				<div>
-				    Processing files: {uploadProgress}%
-				</div>
+				Ensure you upload files
 			    </div>
 			)}
 
-			{ uploaded === 2 && (
+			{isUploading && (
+			    <div className='userPrompt'>
+				    Processing files: {uploadProgress}%
+			    </div>
+			)}
+
+			{ uploaded === 1 && (
 			    <div className='userPrompt'>
 				<div>
 				    Uploading: {uploadProgress}%
@@ -252,11 +235,11 @@ const NewVideo = () => {
 			    </div>
 			)}
 
-			{uploaded !== 4 ? (
+			{uploaded !== 2 ? (
 				<button className='uploadButton'
 					onClick={handleUpload}
 				>
-				    Upload files
+				    File Upload ({uploaded})
 				</button>
 			) : (
 			    <div>
