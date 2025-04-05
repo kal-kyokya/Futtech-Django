@@ -44,6 +44,7 @@ const Watch = () => {
 		       autoPlay
 		       progress='true'
 		       controls
+		       loop
 		/>
 
 		<div className='videoContainer'>
