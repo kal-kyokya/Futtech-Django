@@ -40,7 +40,10 @@ const Video = () => {
     const input = state?.input || null;
     const [video, setVideo] = useState(input);
 
-    const [ updatedVideo, setUpdatedVideo ] = useState({ 'owner': (video?.owner || input?.owner) });
+    const [ updatedVideo, setUpdatedVideo ] = useState(
+	{ 'owner': (video?.owner || input?.owner),
+	  'content': (video?.content || input?.content)
+	});
 
     const firebaseUpload = (file) => {
 	setIsUploading(true);
@@ -121,7 +124,7 @@ const Video = () => {
 		    <h1 className='videoEditTitle'>Manage Video</h1>
 		    <div className='options'>
 			<Link to='/watch'
-			      state={ { video } }
+			      state={ { video: videos.filter((item) => item._id === video._id)[0] } }
 			      className='link'
 			>
 			    <button className='videoWatchButton'>
@@ -163,9 +166,19 @@ const Video = () => {
 				      state={ { video } }
 				      className='link'
 				>
-				    <h2 className='videoName'>{ video?.title || input?.title }</h2>
+				    <h2 className='videoName'>
+					{ updatedVideo?.title
+					  || video?.title
+					  || input?.title
+					}
+				    </h2>
 				</Link>
-				<h3 className='videoCategory'>{ video?.category || input?.category }</h3>
+				<h3 className='videoCategory'>
+				    { updatedVideo?.category
+				      || video?.category
+				      || input?.category
+				    }
+				</h3>
 			    </div>
 			</div>
 
@@ -174,18 +187,28 @@ const Video = () => {
 			    <div className='videoDetailsDiv'>
 				<CalendarMonthOutlinedIcon className='videoDetailsIcon' />
 				<div className='videoDetailsContent'>
-				    { video?.date.split('T')[0] || input?.date.split('T')[0] }
+				    { updatedVideo?.date?.split('T')[0]
+				      || video?.date?.split('T')[0]
+				      || input?.date?.split('T')[0]
+				    }
 				</div>
 			    </div>
 			    <div className='videoDetailsDiv'>
 				<LocationOnOutlinedIcon className='videoDetailsIcon' />
 				<div className='videoDetailsContent'>
-				    { video?.location || input?.location }
+				    { updatedVideo?.location
+				      ||video?.location
+				      || input?.location }
 				</div>
 			    </div>
 			    <div className='videoDetailsDiv'>
 				<DescriptionIcon className='videoDetailsIcon' />
-				<div className='videoDetailsContent'>{ video?.desc || input?.desc }</div>
+				<div className='videoDetailsContent'>
+				    { updatedVideo?.desc
+				      || video?.desc
+				      || input?.desc
+				    }
+				</div>
 			    </div>
 			</div>
 		    </div>
@@ -311,11 +334,10 @@ const Video = () => {
 					</>
 				    )}
 				</div>
-				{ uploaded === 1 && (
-				    <div className='userPrompt'>
-					{ prompt }
-				    </div>
-				)}
+
+				<div className='userPrompt'>
+				    { prompt }
+				</div>
 
 				<button className='videoUpdateButton'
 					onClick={(e) => handleUpdate(e)}>Update</button>
