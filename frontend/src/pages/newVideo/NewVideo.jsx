@@ -205,7 +205,7 @@ const NewVideo = () => {
 		    </div>
 
 		    <div className='newVideoBottom'>
-			{ uploaded !== 2 && uploaded < 1 && (
+			{ !isUploading && uploaded !== 2 && uploaded < 1 && (
 			    <div className='userPrompt'>
 				Ensure you upload files
 			    </div>
