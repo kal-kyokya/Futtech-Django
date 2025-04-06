@@ -8,6 +8,7 @@ export default defineConfig({
 	proxy: {
 	    '/users': 'http://localhost:8080',
 	    '/videos': 'http://localhost:8080',
+	    '/lists': 'http://localhost:8080',
 	}
     }
 })
