@@ -9,8 +9,10 @@ import Login from './pages/login/Login';
 import Demo from './pages/demo/Demo';
 import User from './pages/user/User';
 import NewVideo from './pages/newVideo/NewVideo';
+import NewList from './pages/newList/NewList';
 import VideoList from './pages/videoList/VideoList';
 import Video from './pages/video/Video';
+import Lists from './pages/lists/Lists';
 
 const App = () => {
     const { user } = useContext(UserContext);
@@ -51,6 +53,10 @@ const App = () => {
 			   user && user.accessToken ?
 			       <NewVideo /> : <Navigate to='/' />
 		       } />
+		<Route path='/newList' element={
+			   user && user.accessToken ?
+			       <NewList /> : <Navigate to='/' />
+		       } />
 		<Route path='/videoList' element={
 			   user && user.accessToken ?
 			       <VideoList /> : <Navigate to='/' />
@@ -58,6 +64,10 @@ const App = () => {
 		<Route path='/video/:id' element={
 			   user && user.accessToken ?
 			       <Video /> : <Navigate to='/' />
+		       } />
+		<Route path='/lists' element={
+			   user && user.accessToken ?
+			       <Lists /> : <Navigate to='/' />
 		       } />
 		<Route path='*' element={ <Navigate to='/' />} />
 	    </Routes>

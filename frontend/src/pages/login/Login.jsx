@@ -8,9 +8,13 @@ import {
 import { signinSuccess } from '../../contexts/userContext/UserActions';
 import { useNavigate, Link } from 'react-router-dom';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
+import { ListContext } from '../../contexts/listContext/ListContext';
 import {
     getVideosStart, getVideosSuccess, getVideosFailure,
 } from '../../contexts/videoContext/VideoActions';
+import {
+    getListsStart, getListsSuccess, getListsFailure,
+} from '../../contexts/listContext/ListActions';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -19,11 +23,13 @@ const Login = () => {
     const navigate = useNavigate();
     const { loggedOut, dispatch: userDispatch } = useContext(UserContext);
     const { dispatch: videoDispatch } = useContext(VideoContext);
+    const { dispatch: listDispatch } = useContext(ListContext);
 
     const handleSignIn = async (e) => {
 	e.preventDefault(); // Prevent form reload and allow data submission
 	dispatch(loginStart());
 	videoDispatch(getVideosStart());
+	listDispatch(getListsStart());
 
 	await axios.post(
 	    'http://127.0.0.1:8080/auth/signIn',
@@ -47,7 +53,25 @@ const Login = () => {
 		}
 	    };
 
+	    const getLists = async () => {
+		listDispatch(getListsStart());
+
+		try {
+		    const res = await axios.get('/lists', {
+			headers: {
+			    'auth-token': userRes.data.accessToken,
+			}
+		    });
+
+		    listDispatch(getListsSuccess(res.data));
+		} catch (err) {
+		    console.error(err);
+		    listDispatch(getListsFailure());
+		}
+	    };
+
 	    getVideos();
+	    getLists();
 	    dispatch(loginSuccess(userRes.data));
 	    userDispatch(signinSuccess(userRes.data));
 	}).catch((err) => {

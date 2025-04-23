@@ -31,13 +31,21 @@ const List = ({ list }) => {
 	    <div className='wrapper'>
 		<ArrowBackIosNewIcon className='sliderArrow left'
 				     onClick={ () => handleClick('left') }
-				     style={{display: !isMoved && "none"}}/>
+				     style={ { display: !isMoved && "none" } }
+		/>
+
 		<div className='container' ref={listRef}>
-		    {list.content.map((videoId, index) => {
-			<ListItem videoId={ videoId }
-				  index={ index }/>
-		    })}
+		    {
+			list.content.map((videoId, index) => {
+			    return (
+				<ListItem videoId={ videoId }
+					  index={ index }
+				/>
+			    )
+			})
+		    }
 		</div>
+
 		<ArrowForwardIosIcon className='sliderArrow right'
 				     onClick={ () => handleClick('right') }/>
 	    </div>

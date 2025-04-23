@@ -36,10 +36,20 @@ const Featured = ({ category }) => {
 	     </div>
 	    }
 
-	    <img src={ category ? content?.thumbnail : '/poa.JPEG' }/>
+	    <img src={
+		     category ?
+			 content ? content.thumbnail :
+			 category === 'video' ? 'drone.jpg' : 'balltech.png'
+		     : '/poa.JPEG' }
+	    />
+
 	    <div className='info'>
 		<span className='poppins-extrabold-italic'>
-		    { 'As an active footballer, I want to review footage of my games & training sessions. Analyze my: positioning, off-the-ball movement, decision-making and improve my game.' || 'content.desc' }
+		    { category ?
+		      category === 'video' ?
+		      'Bird’s-eye tactical view of players and team decision-making, off-the-ball movement, and positioning—for post-training and post-game analysis.' :
+		      'Processed training and game footage—highlighting areas of improvements in team formations, tactics, player movements, and decision-making.'
+		      : 'As an active footballer, I want to review footage of my games & training sessions. Analyze my: positioning, off-the-ball movement, decision-making and improve my game.' }
 		</span>
 	    </div>
 	</div>

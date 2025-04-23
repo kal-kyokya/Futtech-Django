@@ -7,16 +7,18 @@ import Register from '../../pages/register/Register';
 import Login from '../../pages/login/Login';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import { AuthContext } from '../../contexts/authContext/AuthContext';
+import { UserContext } from '../../contexts/userContext/UserContext';
+import { VideoContext } from '../../contexts/videoContext/VideoContext';
 
 const Home = ({ category }) => {
     const [lists, setLists] = useState([]);
     const [subCategory, setSubCategory] = useState('');
-    const { user } = useContext(AuthContext);
+    const { user } = useContext(UserContext);
+    const { videos } = useContext(VideoContext);
 
     useEffect(() => {
 	const getRandomLists = async () => {
-	    const res = await axios.get(
+	    await axios.get(
 		`lists${category ? '?category=' + category : ''}${
 		    subCategory ? '?subCategory=' + subCategory : ''
 		  }`,
@@ -24,9 +26,9 @@ const Home = ({ category }) => {
 		    headers: { 'auth-token': user.accessToken }
 		}
 	    ).then((res) => {
-		setLists(res.data());
+		setLists(res.data);
 	    }).catch((err) => {
-		console.log(err);
+		console.error(err);
 	    });
 	}
 
@@ -37,9 +39,17 @@ const Home = ({ category }) => {
 	<div className='home'>
 	    <Navbar />
 	    <Featured category={ category } />
-	    {lists.map((list) => {
-		<List list={ list }/>
-	    })}
+
+	    {
+		lists.length ? lists.map((list) => {
+		    <List list={ list }/>
+		})
+		    : <List list={{
+				'title': 'Watch List',
+				'content': videos.slice(-10).map(video => video._id)
+			    }}
+		      />
+	    }
 	</div>
     );
 }
