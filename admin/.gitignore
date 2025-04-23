@@ -2,6 +2,7 @@
 
 # firebase config file
 firebase.js
+dist
 
 # dependencies
 /node_modules
