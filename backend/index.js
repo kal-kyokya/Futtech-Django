@@ -5,10 +5,10 @@ import mongoose from 'mongoose';
 import dotenv from 'dotenv';
 import routing from './routes/index';
 
-// Store an Express instance representing the app
+// Initialize an Express instance representing the app
 const app = express();
 
-// Ensure the app processes json data accordingly
+// Makes the app capable of processing JSON data from req.body
 app.use(express.json());
 
 // To handle form data

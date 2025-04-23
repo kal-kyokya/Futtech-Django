@@ -23,8 +23,6 @@ export default class ListsController {
         return res.status(500).send({ error: err });
       }
     }
-
-    return res.status(403).send({ error: 'Forbidden' });
   }
 
   /**
@@ -59,8 +57,6 @@ export default class ListsController {
     } catch (err) {
       return res.status(500).send({ error: err });
     }
-
-    return res.status(403).send({ error: 'List Retrieval failed' });
   }
 
   /**
@@ -84,8 +80,6 @@ export default class ListsController {
         return res.status(500).send({ error: err });
       }
     }
-
-    return res.status(403).send({ error: 'Forbidden' });
   }
 
   /**
@@ -106,7 +100,5 @@ export default class ListsController {
         return res.status(500).send({ error: err });
       }
     }
-
-    return res.status(403).send({ error: 'Forbidden' });
   }
 }

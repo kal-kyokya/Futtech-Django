@@ -82,7 +82,7 @@ export default class UsersController {
   static async getAll(req, res) {
     // Extract the user's information
     const { isAdmin } = req.user_info;
-      const { newest } = req.query;
+    const { newest } = req.query;
 
     // Proceed with deletion of user
     if (isAdmin) {
