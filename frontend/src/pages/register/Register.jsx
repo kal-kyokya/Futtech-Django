@@ -72,7 +72,7 @@ const Register = () => {
 		<div className='wrapper'>
 		    <img
 			className='logo'
-			src='../../../public/logo.png'
+			src='/logo.png'
 			alt='Logo of the Futtech Company'
 		    />
 		    <Link to='/login' className='link'>
