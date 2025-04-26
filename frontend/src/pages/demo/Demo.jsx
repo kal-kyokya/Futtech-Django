@@ -11,7 +11,7 @@ const Demo = () => {
 		    Home
 		</div>
 	    </Link>
-	    <video className='video'
+	    <video className='videoDemo'
 		   src='turf.mp4'
 		   autoPlay
 		   progress

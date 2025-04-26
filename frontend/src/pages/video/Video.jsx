@@ -119,7 +119,7 @@ const Video = () => {
 	<>
 	    <Navbar />
 
-	    <div className='video'>
+	    <div className='videoStyle'>
 		<div className='videoTopSection'>
 		    <h1 className='videoEditTitle'>Manage Video</h1>
 		    <div className='options'>

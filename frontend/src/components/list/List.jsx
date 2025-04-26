@@ -40,6 +40,7 @@ const List = ({ list }) => {
 			    return (
 				<ListItem videoId={ videoId }
 					  index={ index }
+					  key={ index }
 				/>
 			    )
 			})
