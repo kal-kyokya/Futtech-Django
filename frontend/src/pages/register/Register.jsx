@@ -88,7 +88,7 @@ const Register = () => {
 	    <div className='container'>
 		<h1>Drone Footage, Tactical/Technical Analysis, and more</h1>
 		<h2>
-		    Check the Demo <Link className='link'
+		    Learn more <Link className='link'
 					 to='/demo'
 				   >
 				       <u>here</u>.
