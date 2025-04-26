@@ -89,7 +89,7 @@ const Register = () => {
 		<h1>Drone Footage, Tactical/Technical Analysis, and more</h1>
 		<h2>
 		    Learn more <Link className='link'
-					 to='/demo'
+					 to='/about'
 				   >
 				       <u>here</u>.
 				   </Link>

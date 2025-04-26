@@ -6,7 +6,7 @@ import Home from './pages/home/Home';
 import Register from './pages/register/Register';
 import Watch from './pages/watch/Watch';
 import Login from './pages/login/Login';
-import Demo from './pages/demo/Demo';
+import About from './pages/about/About';
 import User from './pages/user/User';
 import NewVideo from './pages/newVideo/NewVideo';
 import NewList from './pages/newList/NewList';
@@ -32,7 +32,7 @@ const App = () => {
 			   user && user.accessToken ?
 			       <Home /> : <Login />
 		       } />
-		<Route path='/demo' element={<Demo />} />
+		<Route path='/about' element={<About />} />
 		<Route path='/videos' element={
 			   user && user.accessToken ?
 			       <Home category='video'/> : <Navigate to='/' />
