@@ -6,7 +6,7 @@ const About = () => {
     return (
 	<>
 	    <Link className='link' to='/'>
-		<div className="top">
+		<div className="aboutTop">
 		    <div className='iconLeft'>
 			<ArrowBackIcon className='arrow'/>
 			Home
