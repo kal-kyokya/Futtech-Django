@@ -1,3 +1,27 @@
+.top {
+    background-color: rgba(13, 28, 35, 0.9);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    .iconLeft {
+	position: relative;
+	padding: .5em 1em;
+	display: flex;
+	align-items: center;
+
+	.arrow {
+	    margin-right: 3px;
+	}
+    }
+
+    .socials {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+    }
+}
+
 .about {
     padding: 0% 20%;
     line-height: 1.6;
