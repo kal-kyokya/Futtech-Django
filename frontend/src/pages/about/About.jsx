@@ -1,26 +1,42 @@
 import './about.scss';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
+import ArrowCircleUpOutlinedIcon from '@mui/icons-material/ArrowCircleUpOutlined';
 import { Link } from 'react-router-dom';
+import { useState } from 'react';
 
 const About = () => {
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    window.onscroll = () => {
+	setIsScrolled(window.pageYOffset === 0 ? false : true);
+
+	return () => (window.onscroll = null);
+    };
+
     return (
-	<>
-	    <Link className='link' to='/'>
-		<div className="aboutTop">
-		    <div className='iconLeft'>
+	<div id="page-top">
+	    { isScrolled && (
+		<a  className='link aboutAnchor' href="#page-top">
+		    <ArrowCircleUpOutlinedIcon className='aboutAnchorArrow'/>
+		</a>
+	    )}
+
+	    <nav className={ isScrolled ? "aboutNav scrolled" : "aboutNav"}>
+		<Link className='link' to='/'>
+		    <span className='iconLeft'>
 			<ArrowBackIcon className='arrow'/>
 			Home
-		    </div>
-		    <div className="socials">
-			<h4>Detailed version:&ensp;</h4>
-			<a href="https://medium.com/@kal-kyokya"
-			   target="_blank">
-			    <img alt="Medium badge"
-	   			 src="https://img.shields.io/badge/Medium-black?logo=medium&logoColor=white"/>
-			</a>
-		    </div>
+		    </span>
+		</Link>
+		<div className="socials">
+		    <span>Detailed version:&ensp;</span>
+		    <a href="https://medium.com/@kal-kyokya"
+		       target="_blank">
+			<img alt="Medium badge"
+	   		     src="https://img.shields.io/badge/Medium-black?logo=medium&logoColor=white"/>
+		    </a>
 		</div>
-	    </Link>
+	    </nav>
 
 	    <div className='about'>
 		<div className="aboutTitle">
@@ -31,19 +47,19 @@ const About = () => {
 		<img src="/registerPage.png"
 		     alt="Futtech Register page"/>
 		<p>Futtech is a startup that helps football players and coaches gain tactical awareness of their strengths and weaknesses through online provision of drone footage and Artificial Intelligent targeted feedback.<br />
-		    As an engineering problem, I focused on three objectives: creating a web and mobile-friendly experience, building a cost-effective camera-equipped drone, and designing a reliable AI model.<br />
-		As of writing,I have developed the online platform onto which drone footage is to be uploaded before AI analysis and feedback generation—check it out <a href="http://www.futtech.kalkyokya.tech">here</a>.</p>
+		    As an engineering problem, It focuses on three objectives: creating a web and mobile-friendly experience, building a cost-effective camera-equipped drone, and designing a reliable AI model.<br />
+		This is the <i>web and mobile-friendly</i> online platform, onto which drone footage is to be uploaded before AI analysis and feedback generation—<a href="http://www.futtech.kalkyokya.tech">here</a>.</p>
 
 		<h3>WHY FUTTECH</h3>
 		<p>Being a big fan of Football, this was an easy project focus to commit to. I am a hobbyist footballer, and recently learned that my father, and his father before him, played for the great <a href="https://en.wikipedia.org/wiki/TP_Mazembe#Honours">TP Mazembe</a> in Congo, DRC.<br />
-		    Over a year of training sessions revealed a frustrating pattern: <b>tactical lessons often get lost, forgotten</b> between sessions. Without tools to track my movements, analyze my positioning and replay my actions, <b>mistakes were repeated</b>.<br />
+		    Over a year of training sessions revealed a frustrating pattern: <b>tactical lessons often get lost</b> between sessions. Without tools to track movements, analyze positioning and replay my actions, <b>I repeated mistakes</b>.<br />
 		Instead of complaining, I decided to <b>build a solution</b>.</p>
 
 		<h3>RESULTS</h3>
 		<h4>Flow of Data through the System</h4>
 		<img src="/futtechArchitectureDiagram.png"
 		     alt="Futtech's Architectural Diagram"/>
-		<p><em>The drone captures video data, which is sent to an AI processing unit—it analyzes footage and generates feedback on player positioning, movement, and decision-making. The data is uploaded to the web platform for user (players & coaches) access.</em></p>
+		<p><em>The drone captures video data, which is asynchronously sent to an AI processing unit—it analyzes footage and generates feedback on player positioning, movement, and decision-making. The data is uploaded to the web platform for user (players & coaches) access.</em></p>
 
 		<h4>Technology Used</h4>
 		<p>Futtech is a MERN Stack Application.<br /> I chose this stack to grow my backend skills while learning React and <a href="https://www.w3schools.com/sass/sass_intro.asp">Sass</a> for building functional, scalable client-side interfaces.</p>
@@ -57,7 +73,7 @@ const About = () => {
 
 		<h3>MOST DIFFICULT TECHNICAL CHALLENGE</h3>
 		<p>I acquired the domain 'kalkyokya.tech' in July 2024.<br />
-		    In January 2025, I set up Futtech as its subdomain, but after weeks building it as a full MERN application, deployment on my Ubuntu VPS presented challenges, delaying the initial timeline.<br />
+		    In January 2025, I set up Futtech as its subdomain, but after weeks building it using MERN, deployment on my Ubuntu VPS presented challenges, delaying the initial timeline.<br />
 		    I invested two days intensively learning deployment through articles and YouTube tutorials. Armed with new knowledge, I successfully deployed Futtech using PM2, Nginx, SSL (Let's Encrypt), and proper directory management.<br /><br />
 		    <em>
 			Check <a href="https://medium.com/blockchain-research-lab-akgec/the-ultimate-beginners-guide-to-deploying-a-mern-stack-on-ubuntu-with-nginx-pm2-and-ssl-by-let-s-50d3d1c355ef">
@@ -68,7 +84,8 @@ const About = () => {
 
 		<h3>LESSONS LEARNED</h3>
 		<h4>Technical Takeaways</h4>
-		<p>The MERN stack offers a satisfying full-stack experience. <a href="https://www.w3schools.com/sass/sass_intro.asp">Sass</a> improved my frontend understanding, and working through deployment deepened my backend expertise.</p>
+		<p>The MERN stack offers a satisfying full-stack experience.<br />
+		<a href="https://www.w3schools.com/sass/sass_intro.asp">Sass</a> improved my frontend understanding, and working through deployment deepened my backend expertise.</p>
 
 		<h4>What I Might Do Differently</h4>
 		<p>I would design automated test scripts to avoid overreliance on manual testing and debugging.</p>
@@ -111,7 +128,7 @@ const About = () => {
 		<img src="/poa.JPEG"
 		     alt="Futtech Register page"/>
 	    </div>
-	</>
+	</div>
     );
 };
 
