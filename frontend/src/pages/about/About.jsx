@@ -47,8 +47,8 @@ const About = () => {
 		<img src="/registerPage.png"
 		     alt="Futtech Register page"/>
 		<p>Futtech is a startup that helps football players and coaches gain tactical awareness of their strengths and weaknesses through online provision of drone footage and Artificial Intelligent targeted feedback.<br />
-		    As an engineering problem, It focuses on three objectives: creating a web and mobile-friendly experience, building a cost-effective camera-equipped drone, and designing a reliable AI model.<br />
-		This is the <i>web and mobile-friendly</i> online platform, onto which drone footage is to be uploaded before AI analysis and feedback generation—<a href="http://www.futtech.kalkyokya.tech">here</a>.</p>
+		    As an engineering problem, It focuses on three objectives: creating a web and mobile-friendly experience, building cost-effective camera-equipped drones, and designing a reliable AI model.<br />
+		This is the <i>web and mobile-friendly</i> online platform, onto which drone footage is to be uploaded before AI analysis and feedback generation—<a href="http://www.futtech.kalkyokya.tech">Demo here</a>.</p>
 
 		<h3>WHY FUTTECH</h3>
 		<p>Being a big fan of Football, this was an easy project focus to commit to. I am a hobbyist footballer, and recently learned that my father, and his father before him, played for the great <a href="https://en.wikipedia.org/wiki/TP_Mazembe#Honours">TP Mazembe</a> in Congo, DRC.<br />
@@ -62,7 +62,8 @@ const About = () => {
 		<p><em>The drone captures video data, which is asynchronously sent to an AI processing unit—it analyzes footage and generates feedback on player positioning, movement, and decision-making. The data is uploaded to the web platform for user (players & coaches) access.</em></p>
 
 		<h4>Technology Used</h4>
-		<p>Futtech is a MERN Stack Application.<br /> I chose this stack to grow my backend skills while learning React and <a href="https://www.w3schools.com/sass/sass_intro.asp">Sass</a> for building functional, scalable client-side interfaces.</p>
+		<p>Futtech is a MERN Stack Application.<br />
+		I chose this stack to grow my backend skills while learning React and <a href="https://www.w3schools.com/sass/sass_intro.asp">Sass</a> for building functional, scalable client-side interfaces.</p>
 
 		<h4>Notable Features</h4>
 		<ul>
@@ -101,7 +102,7 @@ const About = () => {
 		    "Once you know what it is in life that you want to do, then the world basically becomes your library. Everything you view, you can view from that perspective, which makes everything a learning asset for you."<br />
 		    — Kobe Bryant
 		</blockquote>
-		<p>This startup shows me the deep personal growth that occurs when you are fully committed to solving a problem you care about.</p>
+		<p>This startup shows me the commitment and deep personal growth that occurs when you are fully committed to solving a problem you care about.</p>
 
 		<h4>Confirming or Questioning Prior Beliefs</h4>
 		<p>I reaffirmed that simple lines of code, combined thoughtfully, build powerful systems.<br />
@@ -109,8 +110,8 @@ const About = () => {
 
 		<h3>Closing Thoughts</h3>
 		<p>The journey toward completing Futtech and Everything IoT excites me.<br />
-		    There’s much more to learn, and I look forward to growing both as an engineer and as a football player.<br /><br />
-		    Thank you for reading!<br />
+		    There’s much more to learn—I look forward to growing as a person, an engineer and as footballer.<br /><br />
+		    Thank you for your time!<br />
 		— Jean-Paul De Marie KYOKYA Kalulu</p>
 
 		<p>
