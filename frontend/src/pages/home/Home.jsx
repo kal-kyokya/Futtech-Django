@@ -41,10 +41,10 @@ const Home = ({ category }) => {
 	    <Featured category={ category } />
 
 	    {
-		lists.length ? lists.map((list) => {
+		lists.length ? console.log(lists) && lists.map((list) => {
 		    <List list={ list }/>
 		})
-		    : <List list={{
+		    : videos.length && <List list={{
 				'title': 'Watch List',
 				'content': videos.slice(-10).map(video => video._id)
 			    }}
