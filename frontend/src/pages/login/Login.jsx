@@ -114,12 +114,6 @@ const Login = () => {
 			</div>
 		    )}
 
-		    {loggedOut && (
-			<div className='userPrompt'>
-			    You have been successfully logged out.
-			</div>
-		    )}
-
 		    <span className='resetPassword'>
 			<Link to='/reset-password' className='link'>
 			    <u>Forgot Password?</u>
