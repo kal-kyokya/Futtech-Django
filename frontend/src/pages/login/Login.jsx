@@ -87,7 +87,7 @@ const Login = () => {
 	    <div className='top'>
 		<img
 		    className='logo'
-		    src='../../../public/logo.png'
+		    src='/logo.png'
 		    alt='Logo of the Futtech Company'
 		/>
 	    </div>
