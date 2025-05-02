@@ -13,7 +13,7 @@ const ListItem = ({ videoId, index }) => {
 
     return (
 	<Link to='/watch'
-	      state={ { video } }
+	      state={ { video, origin: "list" } }
 	      className='link'
 	>
 	    <div className='listItem'

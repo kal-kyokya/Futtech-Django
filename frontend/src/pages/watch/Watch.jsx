@@ -16,25 +16,27 @@ import DescriptionIcon from '@mui/icons-material/Description';
 
 const Watch = () => {
     const location = useLocation();
-    const { video } = location.state;
+    const { video, origin } = location.state;
     const { videos } = useContext(VideoContext);
 
     return (
 	<>
-	    <Navbar />
-
 	    <div className='watch'>
 		<div className='options'>
-		    <Link className='link' to='/videoList'>
+		    <Link className='link'
+			  to={ origin === 'list' ? '/' : '/videoList' }
+		    >
 			<div className='iconLeft'>
 			    <ArrowBackIcon className='arrow'/>
-			    Videos
+			    { origin === 'list' ? <span>Home</span> : <span>Videos</span> }
 			</div>
 		    </Link>
 
-		    <Link className='link' to='/'>
+		    <Link className='link'
+			  to={ origin === 'list' ? '/videoList' : '/' }
+		    >
 			<div className='iconRight'>
-			    Home
+			    { origin === 'list' ? <span>Videos</span> : <span>Home</span> }
 			    <ArrowForwardIcon className='arrow'/>
 			</div>
 		    </Link>
