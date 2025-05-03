@@ -9,12 +9,14 @@ import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import { useState, useContext } from 'react';
 import { ListContext } from '../../contexts/listContext/ListContext';
 import { UserContext } from '../../contexts/userContext/UserContext';
+import axios from 'axios';
 
 const List = () => {
     const { list } = useLocation();
     const [updatedList, setUpdatedList] = useState(null);
     const { dispatch } = useContext(ListContext);
     const { user } = useContext(UserContext);
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     const handleChange = (e) => {
 	setUpdatedList({ ...updatedList, [e.target.name]: e.target.value });
@@ -26,7 +28,7 @@ const List = () => {
 	dispatch(updateListStart());
 
 	try {
-	    const res = await axios.put('/lists/' + list._id, list, {
+	    const res = await axios.put(`${baseURL}/lists/` + list._id, list, {
 		headers: {
 		    'auth-token': user.accessToken
 		}
