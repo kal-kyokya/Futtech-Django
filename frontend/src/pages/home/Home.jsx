@@ -41,7 +41,7 @@ const Home = ({ category }) => {
 	    <Featured category={ category } />
 
 	    {
-		lists.length ? console.log(lists) && lists.map((list) => {
+		lists.length ? lists.map((list) => {
 		    <List list={ list }/>
 		})
 		    : videos.length && <List list={{
