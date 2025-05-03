@@ -31,6 +31,7 @@ const User = () => {
     const navigate = useNavigate();
     const [uploadProgress, setUploadProgress] = useState(0);
     const [isUploading, setIsUploading] = useState(false);
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     const handleChange = (e) => {
 	setUpdatedUser((prev) => {
@@ -88,7 +89,7 @@ const User = () => {
 	dispatch(updateUserStart());
 
 	try {
-	    const res = await axios.put(`/users/${user._id}`,
+	    const res = await axios.put(`${baseURL}/users/${user._id}`,
 					{
 					    ...updatedUser,
 					    'profilePic': url || user.profilePic

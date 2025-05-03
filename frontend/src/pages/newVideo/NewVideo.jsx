@@ -18,6 +18,7 @@ import { useNavigate } from 'react-router-dom';
 const NewVideo = () => {
     const { dispatch } = useContext(VideoContext);
     const { user } = useContext(UserContext);
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     const [video, setVideo] = useState({ 'owner': user._id });
     const [content, setContent] = useState(null);
@@ -87,7 +88,7 @@ const NewVideo = () => {
 	dispatch(createVideoStart());
 
 	try {
-	    const res = await axios.post('/videos/', video,
+	    const res = await axios.post(`${baseURL}/videos`, video,
 					 {
 					     headers: {
 						 'auth-token': user.accessToken,
@@ -239,7 +240,7 @@ const NewVideo = () => {
 				<button className='uploadButton'
 					onClick={handleUpload}
 				>
-				    File Upload ({uploaded})
+				    File Uploaded ({uploaded})
 				</button>
 			) : (
 			    <div>

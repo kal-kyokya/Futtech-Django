@@ -17,12 +17,13 @@ import Navbar from '../../components/Navbar';
 const VideoList = () => {
     const { videos, dispatch } = useContext(VideoContext);
     const { user } = useContext(UserContext);
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     const handleDelete = async (id, owner) => {
 	dispatch(deleteVideoStart());
 
 	try {
-	    await axios.delete(`/videos/${id}`,
+	    await axios.delete(`${baseURL}/videos/${id}`,
 			       {
 				   headers: {
 				       'auth-token': user.accessToken,

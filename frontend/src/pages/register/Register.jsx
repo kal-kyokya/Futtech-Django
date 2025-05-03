@@ -18,6 +18,7 @@ const Register = () => {
 	    error: resError } = useContext(AuthContext);
     const navigate = useNavigate();
     const { loggedOut, dispatch: userDispatch } = useContext(UserContext);
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     const emailRef = useRef();
 
@@ -46,7 +47,7 @@ const Register = () => {
 
 	if (username && password) {
 	    await axios.post(
-		'http://127.0.0.1:8080/users/signUp',
+		`${baseURL}/users/signUp`,
 		{ username, email, password },
 		{ headers: {'content-type': 'application/json'} }
 	    ).then((res) => {

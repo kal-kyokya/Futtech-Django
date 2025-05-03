@@ -26,6 +26,7 @@ const Video = () => {
     const location = useLocation();
     const videoId = location.pathname.split('/')[2];
     const { state } = location;
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     const { videos, dispatch } = useContext(VideoContext);
     const { user } = useContext(UserContext);
@@ -97,7 +98,7 @@ const Video = () => {
 	dispatch(updateVideoStart());
 
 	try {
-	    await axios.put(`/videos/${video?._id || input?._id}`, updatedVideo,
+	    await axios.put(`${baseURL}/videos/${video?._id || input?._id}`, updatedVideo,
 					{
 					    headers: {
 						'auth-token': user.accessToken
