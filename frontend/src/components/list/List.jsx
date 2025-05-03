@@ -36,7 +36,7 @@ const List = ({ list }) => {
 
 		<div className='container' ref={listRef}>
 		    {
-			list.content.map((videoId, index) => {
+			Array.isArray(list.content) && list.content.map((videoId, index) => {
 			    return (
 				<ListItem videoId={ videoId }
 					  index={ index }
