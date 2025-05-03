@@ -40,8 +40,8 @@ const Navbar = () => {
 		    <Link to='/analysis' className='link'>
 			<span>AI-driven Analysis</span>
 		    </Link>
-		    <Link to='/' className='link'>
-			<span>New & Popular</span>
+		    <Link to='/about' className='link'>
+			<span>About</span>
 		    </Link>
 		</div>
 
