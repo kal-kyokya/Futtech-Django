@@ -15,11 +15,12 @@ const Home = ({ category }) => {
     const [subCategory, setSubCategory] = useState('');
     const { user } = useContext(UserContext);
     const { videos } = useContext(VideoContext);
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     useEffect(() => {
 	const getRandomLists = async () => {
 	    await axios.get(
-		`lists${category ? '?category=' + category : ''}${
+		`${baseURL}/lists${category ? '?category=' + category : ''}${
 		    subCategory ? '?subCategory=' + subCategory : ''
 		  }`,
 		{
