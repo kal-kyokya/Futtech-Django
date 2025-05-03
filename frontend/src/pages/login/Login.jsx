@@ -24,6 +24,7 @@ const Login = () => {
     const { loggedOut, dispatch: userDispatch } = useContext(UserContext);
     const { dispatch: videoDispatch } = useContext(VideoContext);
     const { dispatch: listDispatch } = useContext(ListContext);
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     const handleSignIn = async (e) => {
 	e.preventDefault(); // Prevent form reload and allow data submission
@@ -32,7 +33,7 @@ const Login = () => {
 	listDispatch(getListsStart());
 
 	await axios.post(
-	    'http://127.0.0.1:8080/auth/signIn',
+	    `${baseURL}/auth/signIn`,
 	    { email, password },
 	    { headers: {'content-type': 'application/json'} }
 	).then((userRes) => {
@@ -40,7 +41,7 @@ const Login = () => {
 		videoDispatch(getVideosStart());
 
 		try {
-		    const res = await axios.get('/videos/all', {
+		    const res = await axios.get(`${baseURL}/videos/all`, {
 			headers: {
 			    'auth-token': userRes.data.accessToken,
 			}
@@ -57,7 +58,7 @@ const Login = () => {
 		listDispatch(getListsStart());
 
 		try {
-		    const res = await axios.get('/lists', {
+		    const res = await axios.get(`${baseURL}/lists`, {
 			headers: {
 			    'auth-token': userRes.data.accessToken,
 			}
