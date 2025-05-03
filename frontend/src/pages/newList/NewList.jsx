@@ -103,11 +103,15 @@ const NewList = () => {
 					onChange={handleSelect}
 					style={ { height: '260px' } }
 				>
-				    {videos.length && videos.map((video, index) => (
-					<option key="index" value="video._id">
-					    {video.title}
-					</option>
-				    ))}
+				    {
+					Array.isArray(videos) &&
+					    videos.length &&
+					    videos.map((video, index) => (
+						<option key="index" value="video._id">
+						    {video.title}
+						</option>
+					    ))
+				    }
 				</select>
 			    </div>
 			</div>
