@@ -11,16 +11,18 @@ import {
     getListsStart, getListsSuccess, getListsFailure
 } from '../../contexts/listContext/ListActions';
 import Navbar from '../../components/Navbar';
+import axios from 'axios';
 
 const Lists = () => {
     const { lists, dispatch } = useContext(ListContext);
     const { user } = useContext(UserContext);
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     const handleDelete = async (id) => {
 	dispatch(deleteListStart());
 
 	try {
-	    await axios.delete('/lists/' + id, {
+	    await axios.delete(`${baseURL}/lists/` + id, {
 		headers: {
 		    'auth-token': user.accessToken
 		}
