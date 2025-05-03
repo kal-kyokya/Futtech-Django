@@ -38,7 +38,7 @@ export default function routing(app) {
   // Create a 'router' instance for all 'video' API endpoints
   const videoRouter = new Router();
 
-  // Mount the router on '/auth' and all subsequent paths
+  // Mount the router on '/videos' and all subsequent paths
   app.use('/videos', videoRouter);
 
   // VideosController

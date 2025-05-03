@@ -3,7 +3,7 @@ import express from 'express';
 import cors from 'cors';
 import mongoose from 'mongoose';
 import dotenv from 'dotenv';
-import routing from './routes/index';
+import routing from './routes/index.js';
 
 // Initialize an Express instance representing the app
 const app = express();
@@ -15,7 +15,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 // Initialize the app for Cross Origin Resource Sharing
-app.use(cors());
+app.use(cors({
+    origin: ['http://localhost:5174', 'https:futtech.kalkyokya.tech'],
+    credentials: true, // Because we are using cookies
+}));
 
 // Enable access to the '.env' file
 dotenv.config();
