@@ -64,7 +64,8 @@ const Navbar = () => {
 		    <NotificationsNoneIcon className='icon'/>
 		    <Link className='link'
 			  to='/me'>
-			<img src={user.profilePic}
+			<img className='navbarImg'
+			     src={user.profilePic}
 			     alt='Profile Picture'
 			/>
 		    </Link>
