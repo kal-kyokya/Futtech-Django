@@ -8,10 +8,12 @@ import {
 } from '../../contexts/listContext/ListActions';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import Navbar from '../../components/Navbar';
+import axios from 'axios';
 
 const NewList = () => {
     const [list, setList] = useState(null);
     const navigate = useNavigate();
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     const { dispatch } = useContext(ListContext);
     const { videos } = useContext(VideoContext);
@@ -32,7 +34,7 @@ const NewList = () => {
 	dispatch(createListStart());
 
 	try {
-	    const res = await axios.post('/lists', list, {
+	    const res = await axios.post(`{baseURL}/lists`, list, {
 		headers: {
 		    'auth-token': user.accessToken,
 		}
