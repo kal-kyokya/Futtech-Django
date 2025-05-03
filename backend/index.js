@@ -8,17 +8,19 @@ import routing from './routes/index.js';
 // Initialize an Express instance representing the app
 const app = express();
 
+// Initialize the app for Cross Origin Resource Sharing
+app.use(cors({
+    origin: ['http://localhost:5174', 'https:futtech.kalkyokya.tech'],
+    methods: ['GET', 'POST', 'PUT','DELETE', 'PATCH', 'HEAD', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Origin', 'X-Request-Width', 'Accept', 'x-client-key', 'x-client-token', 'x-client-secret', 'Authorization'],
+    credentials: true, // Because we are using cookies
+}));
+
 // Makes the app capable of processing JSON data from req.body
 app.use(express.json());
 
 // To handle form data
 app.use(express.urlencoded({ extended: true }));
-
-// Initialize the app for Cross Origin Resource Sharing
-app.use(cors({
-    origin: ['http://localhost:5174', 'https:futtech.kalkyokya.tech'],
-    credentials: true, // Because we are using cookies
-}));
 
 // Enable access to the '.env' file
 dotenv.config();
@@ -36,9 +38,6 @@ app.listen(PORT, () => {
 });
 
 mongoose
-  .connect(URI, {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
+  .connect(URI)
   .then(() => console.log('\nDB Connection - Success'))
   .catch((err) => console.log(err));

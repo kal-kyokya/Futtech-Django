@@ -1,5 +1,5 @@
 // This is a Script containing a class whose methods handle API routes
-import Video from '../models/Video';
+import Video from '../models/Video.js';
 
 export default class VideosController {
   /**

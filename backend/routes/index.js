@@ -1,10 +1,10 @@
 // This file contain all the app's API endpoints
 import { Router } from 'express';
-import AuthController from '../controllers/AuthController';
-import AuthMiddleware from '../middlewares/AuthMiddleware';
-import UsersController from '../controllers/UsersController';
-import VideosController from '../controllers/VideosController';
-import ListsController from '../controllers/ListsController';
+import AuthController from '../controllers/AuthController.js';
+import AuthMiddleware from '../middlewares/AuthMiddleware.js';
+import UsersController from '../controllers/UsersController.js';
+import VideosController from '../controllers/VideosController.js';
+import ListsController from '../controllers/ListsController.js';
 
 /**
  * Function routing endpoints to request handlers

@@ -1,6 +1,6 @@
 // This is a Script containing a class whose methods handle API routes
 import cryptoJS from 'crypto-js';
-import User from '../models/User';
+import User from '../models/User.js';
 
 export default class UsersController {
   /**

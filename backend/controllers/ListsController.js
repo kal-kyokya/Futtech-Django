@@ -1,5 +1,5 @@
 // This is a Script containing a class whose methods handle API routes
-import List from '../models/List';
+import List from '../models/List.js';
 
 export default class ListsController {
   /**

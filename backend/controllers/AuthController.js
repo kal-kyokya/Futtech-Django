@@ -1,7 +1,7 @@
 // File containing endpoints authenticating a user
 import cryptoJS from 'crypto-js';
 import jwt from 'jsonwebtoken';
-import User from '../models/User';
+import User from '../models/User.js';
 
 export default class AuthController {
   /**
