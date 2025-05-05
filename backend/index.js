@@ -10,13 +10,11 @@ const app = express();
 
 // Initialize the app for Cross Origin Resource Sharing
 app.use(cors({
-    origin: ['http://localhost:5174', 'https:futtech.kalkyokya.tech'],
-    methods: ['GET', 'POST', 'PUT', 'DELETE',
-	      'PATCH', 'HEAD', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Origin', 'X-Request-Width',
-		     'Accept', 'x-client-key', 'auth-token',
-		     'x-client-secret', 'Authorization'],
-    credentials: true, // Because we are using cookies
+    origin: ['http://localhost:5174', 'https://futtech.kalkyokya.tech'], // Only people allowed
+    methods: ['GET', 'POST', 'PUT',
+	      'DELETE', 'OPTIONS'], // Only type of interaction allowed
+    allowedHeaders: ['Content-Type', 'auth-token'], // Only 'extra luggage' allowed
+    credentials: true, // For usage of cookies or HTTP auth
 }));
 
 // Makes the app capable of processing JSON data from req.body
