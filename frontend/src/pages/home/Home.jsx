@@ -46,7 +46,7 @@ const Home = ({ category }) => {
 		    <List list={ list }/>
 		})
 		    : Array.isArray(videos) && videos.length && <List list={{
-				'title': 'Watch List',
+				'title': 'Recommendations',
 				'content': videos.slice(-10).map(video => video._id)
 			    }}
 		      />
