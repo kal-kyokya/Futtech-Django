@@ -74,8 +74,9 @@ const About = () => {
 
 		<h3>MOST DIFFICULT TECHNICAL CHALLENGE</h3>
 		<p>I acquired the domain 'kalkyokya.tech' in July 2024.<br />
-		    In January 2025, I set up Futtech as its subdomain, but after weeks building it using MERN, deployment on my Ubuntu VPS presented challenges, delaying the initial timeline.<br />
-		    I invested two days intensively learning deployment through articles and YouTube tutorials. Armed with new knowledge, I successfully deployed Futtech using PM2, Nginx, SSL (Let's Encrypt), and proper directory management.<br /><br />
+		    In January 2025, I set up Futtech as its subdomain, but after weeks building it, deployment on my Ubuntu VPS presented challenges, delaying the initial timeline.<br />
+		    I invested two days intensively learning deployment through articles and YouTube tutorials. Armed with new knowledge, I successfully deployed Futtech using PM2, Nginx, SSL (Let's Encrypt).<br />
+		    This immediately gave rise to a new challenge; Cross-Origin Resource Sharing (<a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS" target="_blank">CORS</a>). It took another two days to go through the documentation, stackoverflow and YouTube tutorials to understand the bugs.<br /><br />
 		    <em>
 			Check <a href="https://medium.com/blockchain-research-lab-akgec/the-ultimate-beginners-guide-to-deploying-a-mern-stack-on-ubuntu-with-nginx-pm2-and-ssl-by-let-s-50d3d1c355ef"
 				 target="_blank"
@@ -88,7 +89,7 @@ const About = () => {
 		<h3>LESSONS LEARNED</h3>
 		<h4>Technical Takeaways</h4>
 		<p>The MERN stack offers a satisfying full-stack experience.<br />
-		<a href="https://www.w3schools.com/sass/sass_intro.asp" target="_blank">Sass</a> improved my frontend understanding, and working through deployment deepened my backend expertise.</p>
+		Sass improved my frontend understanding, and working through deployment deepened my backend expertise.</p>
 
 		<h4>What I Might Do Differently</h4>
 		<p>I would design automated test scripts to avoid overreliance on manual testing and debugging.</p>
