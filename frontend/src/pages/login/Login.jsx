@@ -46,6 +46,7 @@ const Login = () => {
 			    'auth-token': userRes.data.accessToken,
 			}
 		    });
+		    console.log(res);
 
 		    videoDispatch(getVideosSuccess(res.data));
 		} catch (err) {
