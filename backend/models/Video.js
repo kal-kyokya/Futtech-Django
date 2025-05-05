@@ -3,6 +3,7 @@ import mongoose from 'mongoose';
 const VideoSchema = new mongoose.Schema(
   {
     owner: { type: String, required: true },
+    isPublic: { type: String, required: true },
     title: { type: String, required: true, unique: true },
     desc: { type: String, required: true },
     location: { type: String, default: '' },
