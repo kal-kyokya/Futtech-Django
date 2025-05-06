@@ -9,13 +9,16 @@ import routing from './routes/index.js';
 const app = express();
 
 // Initialize the app for Cross Origin Resource Sharing
-app.use(cors({
-    origin: ['http://localhost:5174', 'https://futtech.kalkyokya.tech'], // Only people allowed
+const corsOptions = {
+    origin: ['http://localhost:5174', 'https://futtech.kalkyokya.tech'], //Allowed origins
     methods: ['GET', 'POST', 'PUT',
-	      'DELETE', 'OPTIONS'], // Only type of interaction allowed
-    allowedHeaders: ['Content-Type', 'auth-token'], // Only 'extra luggage' allowed
+	      'DELETE', 'OPTIONS'], // Allowed HTTP Verbs
+    allowedHeaders: ['Content-Type', 'auth-token'], // Allowed non-standard headers
     credentials: true, // For usage of cookies or HTTP auth
-}));
+}
+
+app.use(cors(corsOptions));
+app.options('*', corsOptions);
 
 // Makes the app capable of processing JSON data from req.body
 app.use(express.json());
