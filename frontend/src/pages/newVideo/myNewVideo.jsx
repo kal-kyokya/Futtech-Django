@@ -179,6 +179,7 @@ const NewVideo = () => {
 			<div className='newVideoItem'>
 			    <label>Video</label>
 			    <input type='file'
+				   accept='video/*'
 				   id='content'
 				   name='content'
 				   onChange={(e) => setContent(e.target.files[0])}
