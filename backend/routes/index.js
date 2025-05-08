@@ -43,6 +43,8 @@ export default function routing(app) {
 
   // VideosController
   videoRouter.post('/', AuthMiddleware.loginRequired, VideosController.createNewVideo);
+  videoRouter.post('/mux', AuthMiddleware.loginRequired, VideosController.uploadVideo);
+  videoRouter.get('/playback/:id', AuthMiddleware.loginRequired, VideosController.getPlaybackId);
   videoRouter.get('/get/:id', AuthMiddleware.loginRequired, VideosController.getVideo);
   videoRouter.get('/random', AuthMiddleware.loginRequired, VideosController.getRandomVideo);
   videoRouter.get('/all', AuthMiddleware.loginRequired, VideosController.getAll);
