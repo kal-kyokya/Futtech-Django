@@ -16,6 +16,7 @@ const UserSchema = new mongoose.Schema(
     sex: { type: String, default: 'Sex' },
     isAdmin: { type: Boolean, default: false },
     birthday: { type: Date, default: new Date().toJSON() },
+    uploads: { type: Array, default: [] },
   },
   { timestamps: true },
 );
