@@ -75,6 +75,11 @@ const NewVideo = () => {
     };
 
     const pollForPlaybackId = (uploadId) => {
+	if (!uploadId) {
+	    console.error('No Upload ID');
+	    return;
+	}
+
 	const interval = setInterval(async () => {
 	    try {
 		const res = await axios.get(`${baseURL}/videos/playback/${uploadId}`);

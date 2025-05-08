@@ -18,7 +18,6 @@ const corsOptions = {
 }
 
 app.use(cors(corsOptions));
-app.options('*', corsOptions);
 
 // Makes the app capable of processing JSON data from req.body
 app.use(express.json());
@@ -39,6 +38,13 @@ routing(app);
 // Run the server on the designated port
 app.listen(PORT, () => {
   console.log(`Server running on port: ${PORT}\n`);
+}).on('error', (err) => {
+    if (err.code === 'EADDRINUSE') {
+	console.error(`Port ${PORT} is already in use...`);
+	process.exit(1);
+    } else {
+	throw err;
+    }
 });
 
 mongoose
