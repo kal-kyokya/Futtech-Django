@@ -1,9 +1,92 @@
 // This is a Script containing a class whose methods handle API routes
 import Video from '../models/Video.js';
+import { Uploads } from '@mux/mux-node';
+import { Video } from '@mux/mux-node';
+import User from '../models/User.js';
 
 export default class VideosController {
+  const muxTokenId = process.env.MUX_TOKEN_ID;
+  const muxTokenSecret = process.env.MUX_TOKEN_SECRET;
+
   /**
-   * Uploads a video to the database
+   * Uploads a video to MUX
+   * @param { Object } req - The request object
+   * @param { Object } res - The response object
+   */
+  static async uploadVideo(req, res) {
+    // Extract the user's information
+    const { id } = req.userInfo;
+
+    // Initialize Mux
+    const mux = new Uploads({
+	tokenId: muxTokenId,
+	tokenSecret: muxTokenSecret,
+    });
+
+    // Proceed with upload of the video
+    try {
+      // Create a direct upload URL
+      const upload = await mux.uploads.create({
+	  new_asset_settings: { playback_policy: 'public' },
+	  cors_origin: 'https://www.futtech.kalkyokya.tech',
+      });
+
+      const user = await User.findOne({ id });
+      user.uploads.push(upload.id);
+      res.status(201).send({ uploadUrl: upload.url, uploadId: upload.id });
+    } catch (err) {
+      console.error('Mux upload URL creation error - ', err);
+      return res.status(500).send({ error: err });
+    }
+  }
+
+  /**
+   * Get a video's playback ID from MUX
+   * @param { Object } req - The request object
+   * @param { Object } res - The response object
+   */
+  static async getPlaybackId(req, res) {
+    const { uploadId } = req.params;
+
+    // Extract the user's information
+    const { id } = req.userInfo;
+    const user = await User.findOne({ id });
+
+    // Initialize Mux
+    const mux = new Video({
+	tokenId: muxTokenId,
+	tokenSecret: muxTokenSecret,
+    });
+
+    // Proceed with retrieval of the playback ID
+    try {
+      if (!user.uploads.includes(uploadId)) {
+	return res.status(404).send({ error: 'Upload not found' });
+      }
+
+      // Check upload status from Mux
+      const muxUpload = await mux.uploads.get({ uploadId });
+      if (!muxUpload.asset_id) {
+          res.status(202).send({ message: 'Mux asset not ready yet' });
+      }
+
+      // Check asset playback ID
+      const asset = await mux.assets.get(muxUpload.asset_id);
+
+      const playbackId = asset.playback_ids?.[0]?.id;
+      if (!playback) {
+          res.status(202).send({ message: 'Playback ID not ready yet' });
+      }
+
+      res.status(200).send({ playbackId });
+    } catch (err) {
+      console.error('Error fetching playback ID ', err);
+      return res.status(500).send({ error: err });
+    }
+  }
+
+  /**
+   * Uploads a video's metadata to the database
    * @param { Object } req - The request object
    * @param { Object } res - The response object
    */
