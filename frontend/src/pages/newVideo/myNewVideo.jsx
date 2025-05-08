@@ -24,14 +24,10 @@ const NewVideo = () => {
     const [content, setContent] = useState(null);
     const [thumbnail, setThumbnail] = useState(null);
     const [uploaded, setUploaded] = useState(0);
-    const [contentIsUploading, setContentIsUploading] = useState(false);
-    const [imgIsUploading, setImgIsUploading] = useState(false);
-    const [contentUploadProgress, setContentUploadProgress] = useState(0);
-    const [imgUploadProgress, setImgUploadProgress] = useState(0);
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
     const navigate = useNavigate();
     const [prompt, setPrompt] = useState(null);
-    const [playbackId, setPlaybackId] = useState(null);
-    const [uploadId, setUploadId] = useState(null);
 
     const handleChange = (e) => {
 	setVideo((prevVideo) => {
@@ -39,96 +35,52 @@ const NewVideo = () => {
 	});
     };
 
-    const firebaseUpload = (input) => {
-	setImgIsUploading(true);
+    const firebaseUpload = (inputs) => {
+	inputs.forEach((input) => {
+	    setIsUploading(true);
 
-	const date = new Date().toJSON().split('.');
-	const filename =  `${date}_${input.name}_${input.file.name}`;
+	    const date = new Date().toJSON().split('.');
+	    const filename =  `${date}_${input.name}_${input.file.name}`;
 
-	const fileRef = storageRef(storage, `futtech-files/videos/${filename}`);
-	const uploadTask = uploadBytesResumable(fileRef, input.file);
+	    const fileRef = storageRef(storage, `futtech-files/videos/${filename}`);
+	    const uploadTask = uploadBytesResumable(fileRef, input.file);
 
-	uploadTask.on(
-	    'state_changed',
-	    (snapshot) => {
-		const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-		console.log(progress.toFixed(0) + '% done.');
-		setImgUploadProgress(progress.toFixed(0));
-	    },
-	    (err) => {
-		console.error(error);
-		setIsUploading(false);
-	    },
-	    () => {
-		getDownloadURL(uploadTask.snapshot.ref)
-		    .then((firebaseUrl) => {
-			setVideo((prev) => {
-			    return { ...prev, [input.name]: firebaseUrl }
+	    uploadTask.on(
+		'state_changed',
+		(snapshot) => {
+		    const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+		    console.log(progress.toFixed(0) + '% done.');
+		    setUploadProgress(progress.toFixed(0));
+		},
+		(err) => {
+		    console.error(error);
+		    setIsUploading(false);
+		},
+		() => {
+		    getDownloadURL(uploadTask.snapshot.ref)
+			.then((firebaseUrl) => {
+			    setVideo((prev) => {
+				return { ...prev, [input.name]: firebaseUrl }
+			    });
+
+			    setUploaded((prevCount) => prevCount + 1);
+			    setIsUploading(false);
 			});
-
-			setUploaded((prevCount) => prevCount + 1);
-			setImgIsUploading(false);
-		    });
-	    }
-	);
-
-    };
-
-    const pollForPlaybackId = (uploadId) => {
-	const interval = setInterval(async () => {
-	    try {
-		const res = await axios.get(`/videos/playback/${uploadId}`);
-
-		if (res.status === 200 && res.data.playbackId) {
-		    setPlaybackId(res.data.playbackId);
-		    setVideo((prevVideo) => {
-			return { ...prevVideo, 'content': playbackId };
-		    });
-
-		    clearInterval(interval);
-		    setContentIsUploading(false);
 		}
-	    } catch (err) {
-		console.error('Polling error: ', err);
-	    }
-	}, 5000);
+	    );
+
+	});
     };
 
-    const handleUpload = async (e) => {
+    const handleUpload = (e) => {
 	e.preventDefault();
 
-	if (content) {
-	    setContentIsUploading(true);
-
-	    try {
-		// Get Mux upload URL
-		const muxRes = await axios.post('/videos/mux');
-		const { uploadUrl, uploadId } = muxRes.data;
-		setUploadId(uploadId);
-
-		// Upload video to Mux
-		await axios.put(uploadUrl, content, {
-		    headers: {
-			'Content-Type': content.type,
-		    },
-		    onUploadProgress: (progressEvent) => {
-			const percent = Math.round(
-			    (progressEvent.loaded * 100) / progressEvent.total
-			);
-			setVideoUploadedProgress(percent);
-		    },
-		});
-	    } catch (err) {
-		console.error('Upload to Mux error:', err);
-		setContentIsUploading(true);		
-	    }
+	if (thumbnail && content) {
+	    firebaseUpload([
+		{ file: thumbnail, name: 'thumbnail' },
+		{ file: content, name: 'content' },
+	    ]);
 	}
-
-	if (thumbnail) {
-	    firebaseUpload({ file: thumbnail, name: 'thumbnail' });
-	}
-
-	pollForPlaybackId(uploadId);
     };
 
     const handleSubmit = async (e) => {
@@ -227,7 +179,6 @@ const NewVideo = () => {
 			<div className='newVideoItem'>
 			    <label>Video</label>
 			    <input type='file'
-				   accept='video/*'
 				   id='content'
 				   name='content'
 				   onChange={(e) => setContent(e.target.files[0])}
@@ -246,39 +197,33 @@ const NewVideo = () => {
 			<div className='newVideoItem'>
 			    <label>Description</label>
 			    <textarea type='text'
-				      placeholder={ 'video.description' }
-				      className='newVideoInputDesc'
-				      name='desc'
-				      onChange={handleChange}
+				   placeholder={ 'video.description' }
+				   className='newVideoInputDesc'
+				   name='desc'
+				   onChange={handleChange}
 			    />
 			</div>
 		    </div>
 
 		    <div className='newVideoBottom'>
-			{ !imgIsUploading && !contentIsUploading && (
+			{ !isUploading && uploaded !== 2 && uploaded < 1 && (
 			    <div className='userPrompt'>
 				Ensure you upload files
 			    </div>
 			)}
 
-			{ imgIsUploading && (
+			{isUploading && (
 			    <div className='userPrompt'>
-				<div>
-				    Uploading thumbnail: {imgUploadProgress}%
-				</div>
-				<progress value={imgUploadProgress}
-					  max='100'
-				>
-				</progress>
+				    Processing files: {uploadProgress}%
 			    </div>
 			)}
 
-			{ contentIsUploading && (
+			{ uploaded === 1 && (
 			    <div className='userPrompt'>
 				<div>
-				    Uploading video: {contentUploadProgress}%
+				    Uploading: {uploadProgress}%
 				</div>
-				<progress value={contentUploadProgress}
+				<progress value={uploadProgress}
 					  max='100'
 				>
 				</progress>
@@ -287,16 +232,16 @@ const NewVideo = () => {
 
 			{ prompt && (
 			    <div className='userPrompt'>
-				"{ prompt.title }" already taken.
+				    "{ prompt.title }" already taken.
 			    </div>
 			)}
 
 			{uploaded !== 2 ? (
-			    <button className='uploadButton'
-				    onClick={handleUpload}
-			    >
-				File Uploaded ({uploaded})
-			    </button>
+				<button className='uploadButton'
+					onClick={handleUpload}
+				>
+				    File Uploaded ({uploaded})
+				</button>
 			) : (
 			    <div>
 				<button className='newVideoButton'
