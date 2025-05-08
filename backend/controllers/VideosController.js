@@ -1,13 +1,9 @@
 // This is a Script containing a class whose methods handle API routes
 import Video from '../models/Video.js';
-import { Uploads } from '@mux/mux-node';
-import { Video } from '@mux/mux-node';
+import Mux from '@mux/mux-node';
 import User from '../models/User.js';
 
 export default class VideosController {
-  const muxTokenId = process.env.MUX_TOKEN_ID;
-  const muxTokenSecret = process.env.MUX_TOKEN_SECRET;
-
   /**
    * Uploads a video to MUX
    * @param { Object } req - The request object
@@ -17,8 +13,11 @@ export default class VideosController {
     // Extract the user's information
     const { id } = req.userInfo;
 
+    const muxTokenId = process.env.MUX_TOKEN_ID;
+    const muxTokenSecret = process.env.MUX_TOKEN_SECRET;
+
     // Initialize Mux
-    const mux = new Uploads({
+    const mux = new Mux({
 	tokenId: muxTokenId,
 	tokenSecret: muxTokenSecret,
     });
@@ -27,7 +26,10 @@ export default class VideosController {
     try {
       // Create a direct upload URL
       const upload = await mux.uploads.create({
-	  new_asset_settings: { playback_policy: 'public' },
+	  new_asset_settings: {
+	      playback_policy: [ 'public' ],
+	      video_quality: 'basic'
+	  },
 	  cors_origin: 'https://www.futtech.kalkyokya.tech',
       });
 
@@ -52,8 +54,11 @@ export default class VideosController {
     const { id } = req.userInfo;
     const user = await User.findOne({ id });
 
+    const muxTokenId = process.env.MUX_TOKEN_ID;
+    const muxTokenSecret = process.env.MUX_TOKEN_SECRET;
+
     // Initialize Mux
-    const mux = new Video({
+    const mux = new Mux({
 	tokenId: muxTokenId,
 	tokenSecret: muxTokenSecret,
     });
