@@ -52,7 +52,6 @@ const NewVideo = () => {
 	    'state_changed',
 	    (snapshot) => {
 		const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-		console.log(progress.toFixed(0) + '% done.');
 		setImgUploadProgress(progress.toFixed(0));
 	    },
 	    (err) => {
@@ -82,7 +81,12 @@ const NewVideo = () => {
 
 	const interval = setInterval(async () => {
 	    try {
-		const res = await axios.get(`${baseURL}/videos/playback/${uploadId}`);
+		const res = await axios.get(`${baseURL}/videos/playback/${uploadId}`,
+					    {
+						headers: {
+						    'auth-token': user.accessToken,
+						}
+					    });
 
 		if (res.status === 200 && res.data.playbackId) {
 		    setPlaybackId(res.data.playbackId);
@@ -107,8 +111,12 @@ const NewVideo = () => {
 
 	    try {
 		// Get Mux upload URL
-		console.log(`${baseURL}/videos/mux`);
-		const muxRes = await axios.post(`${baseURL}/videos/mux`);
+		const muxRes = await axios.post(`${baseURL}/videos/mux`, { data: {} },
+						{
+						    headers: {
+							'auth-token': user.accessToken,
+						    }
+						});
 		console.log(muxRes);
 		const { uploadUrl, uploadId } = muxRes.data;
 		setUploadId(uploadId);
