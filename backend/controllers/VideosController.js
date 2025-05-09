@@ -2,10 +2,6 @@
 import Video from '../models/Video.js';
 import Mux from '@mux/mux-node';
 import User from '../models/User.js';
-import dotenv from 'dotenv';
-
-// Enable access to the '.env' file
-dotenv.config();
 
 export default class VideosController {
   /**
@@ -25,12 +21,11 @@ export default class VideosController {
 	tokenId: muxTokenId,
 	tokenSecret: muxTokenSecret,
     });
-    console.log(mux);
 
     // Proceed with upload of the video
     try {
       // Create a direct upload URL
-      const upload = await mux.uploads.create({
+      const upload = await mux.video.uploads.create({
 	  new_asset_settings: {
 	      playback_policy: [ 'public' ],
 	      video_quality: 'basic'
@@ -38,8 +33,10 @@ export default class VideosController {
 	  cors_origin: 'https://www.futtech.kalkyokya.tech',
       });
 
-      const user = await User.findOne({ id });
+      const user = await User.findById(id);
       user.uploads.push(upload.id);
+      await user.save();
+
       res.status(201).send({ uploadUrl: upload.url, uploadId: upload.id });
     } catch (err) {
       console.error('Mux upload URL creation error - ', err);
@@ -53,11 +50,11 @@ export default class VideosController {
    * @param { Object } res - The response object
    */
   static async getPlaybackId(req, res) {
-    const { uploadId } = req.params;
+    const { id : uploadId } = req.params;
 
     // Extract the user's information
     const { id } = req.userInfo;
-    const user = await User.findOne({ id });
+    const user = await User.findById(id);
 
     const muxTokenId = process.env.MUX_TOKEN_ID;
     const muxTokenSecret = process.env.MUX_TOKEN_SECRET;
@@ -70,22 +67,22 @@ export default class VideosController {
 
     // Proceed with retrieval of the playback ID
     try {
-      if (!user.uploads.includes(uploadId)) {
+      if (!user.uploads.includes(`${uploadId}`)) {
 	return res.status(404).send({ error: 'Upload not found' });
       }
 
       // Check upload status from Mux
-      const muxUpload = await mux.uploads.get({ uploadId });
+      const muxUpload = await mux.video.uploads.retrieve(uploadId);
       if (!muxUpload.asset_id) {
-          res.status(202).send({ message: 'Mux asset not ready yet' });
+        return res.status(202).send({ message: 'Mux asset not ready yet' });
       }
 
       // Check asset playback ID
-      const asset = await mux.assets.get(muxUpload.asset_id);
+      const asset = await mux.video.assets.retrieve(muxUpload.asset_id);
 
       const playbackId = asset.playback_ids?.[0]?.id;
-      if (!playback) {
-          res.status(202).send({ message: 'Playback ID not ready yet' });
+      if (!playbackId) {
+        return res.status(202).send({ message: 'Playback ID not ready yet' });
       }
 
       res.status(200).send({ playbackId });
