@@ -2,6 +2,10 @@
 import Video from '../models/Video.js';
 import Mux from '@mux/mux-node';
 import User from '../models/User.js';
+import dotenv from 'dotenv';
+
+// Enable access to the '.env' file
+dotenv.config();
 
 export default class VideosController {
   /**
@@ -21,6 +25,7 @@ export default class VideosController {
 	tokenId: muxTokenId,
 	tokenSecret: muxTokenSecret,
     });
+    console.log(mux);
 
     // Proceed with upload of the video
     try {

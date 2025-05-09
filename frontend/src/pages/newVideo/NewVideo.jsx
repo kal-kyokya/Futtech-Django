@@ -135,7 +135,7 @@ const NewVideo = () => {
 		});
 	    } catch (err) {
 		console.error('Upload to Mux error:', err);
-		setContentIsUploading(true);		
+		setContentIsUploading(false);		
 	    }
 	}
 
