@@ -31,7 +31,6 @@ const NewVideo = () => {
     const navigate = useNavigate();
     const [prompt, setPrompt] = useState(null);
     const [playbackId, setPlaybackId] = useState(null);
-    const [uploadId, setUploadId] = useState(null);
 
     const handleChange = (e) => {
 	setVideo((prevVideo) => {
@@ -67,6 +66,7 @@ const NewVideo = () => {
 
 			setUploaded((prevCount) => prevCount + 1);
 			setImgIsUploading(false);
+			console.log(uploaded);
 		    });
 	    }
 	);
@@ -75,7 +75,7 @@ const NewVideo = () => {
 
     const pollForPlaybackId = (uploadId) => {
 	if (!uploadId) {
-	    console.error('No Upload ID');
+	    console.error('No Upload ID - ', uploadId);
 	    return;
 	}
 
@@ -88,15 +88,15 @@ const NewVideo = () => {
 						}
 					    });
 
-		if (res.status === 200 && res.data.playbackId) {
-		    setPlaybackId(res.data.playbackId);
-		    setVideo((prevVideo) => {
-			return { ...prevVideo, 'content': playbackId };
-		    });
+		setPlaybackId(res.data.playbackId);
+		setVideo((prevVideo) => {
+		    return { ...prevVideo, 'content': playbackId };
+		});
 
-		    clearInterval(interval);
-		    setContentIsUploading(false);
-		}
+		setUploaded((prevCount) => prevCount + 1);
+		clearInterval(interval);
+		setContentIsUploading(false);
+		console.log(uploaded);
 	    } catch (err) {
 		console.error('Polling error: ', err);
 	    }
@@ -106,7 +106,11 @@ const NewVideo = () => {
     const handleUpload = async (e) => {
 	e.preventDefault();
 
-	if (content) {
+	if (thumbnail && imgUploadProgress === 0) {
+	    firebaseUpload({ file: thumbnail, name: 'thumbnail' });
+	}
+
+	if (content && contentUploadProgress === 0) {
 	    setContentIsUploading(true);
 
 	    try {
@@ -119,7 +123,6 @@ const NewVideo = () => {
 						});
 		console.log(muxRes);
 		const { uploadUrl, uploadId } = muxRes.data;
-		setUploadId(uploadId);
 
 		// Upload video to Mux
 		await axios.put(uploadUrl, content, {
@@ -130,20 +133,17 @@ const NewVideo = () => {
 			const percent = Math.round(
 			    (progressEvent.loaded * 100) / progressEvent.total
 			);
-			setVideoUploadedProgress(percent);
+			setContentUploadProgress(percent);
 		    },
 		});
+
+		pollForPlaybackId(uploadId);
 	    } catch (err) {
 		console.error('Upload to Mux error:', err);
-		setContentIsUploading(false);		
+	    } finally {
+		setContentIsUploading(false);
 	    }
 	}
-
-	if (thumbnail) {
-	    firebaseUpload({ file: thumbnail, name: 'thumbnail' });
-	}
-
-	pollForPlaybackId(uploadId);
     };
 
     const handleSubmit = async (e) => {
@@ -240,21 +240,21 @@ const NewVideo = () => {
 			</div>
 
 			<div className='newVideoItem'>
+			    <label>Thumbnail</label>
+			    <input type='file'
+				   id='thumbnail'
+				   name='thumbnail'
+				   onChange={(e) => setThumbnail(e.target.files[0])}
+				   className='newVideoInput'
+			    />
+			</div>
+			<div className='newVideoItem'>
 			    <label>Video</label>
 			    <input type='file'
 				   accept='video/*'
 				   id='content'
 				   name='content'
 				   onChange={(e) => setContent(e.target.files[0])}
-				   className='newVideoInput'
-			    />
-			</div>
-			<div className='newVideoItem'>
-			    <label>Thumbnail</label>
-			    <input type='file'
-				   id='thumbnail'
-				   name='thumbnail'
-				   onChange={(e) => setThumbnail(e.target.files[0])}
 				   className='newVideoInput'
 			    />
 			</div>
@@ -270,7 +270,7 @@ const NewVideo = () => {
 		    </div>
 
 		    <div className='newVideoBottom'>
-			{ !imgIsUploading && !contentIsUploading && (
+			{ contentUploadProgress !== 100 && imgUploadProgress !== 100 && (
 			    <div className='userPrompt'>
 				Ensure you upload files
 			    </div>
