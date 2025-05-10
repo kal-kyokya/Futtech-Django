@@ -64,9 +64,7 @@ const NewVideo = () => {
 			    return { ...prev, [input.name]: firebaseUrl }
 			});
 
-			setUploaded((prevCount) => prevCount + 1);
 			setImgIsUploading(false);
-			console.log(uploaded);
 		    });
 	    }
 	);
@@ -93,10 +91,8 @@ const NewVideo = () => {
 		    return { ...prevVideo, 'content': playbackId };
 		});
 
-		setUploaded((prevCount) => prevCount + 1);
 		clearInterval(interval);
 		setContentIsUploading(false);
-		console.log(uploaded);
 	    } catch (err) {
 		console.error('Polling error: ', err);
 	    }
@@ -121,7 +117,6 @@ const NewVideo = () => {
 							'auth-token': user.accessToken,
 						    }
 						});
-		console.log(muxRes);
 		const { uploadUrl, uploadId } = muxRes.data;
 
 		// Upload video to Mux
@@ -144,6 +139,8 @@ const NewVideo = () => {
 		setContentIsUploading(false);
 	    }
 	}
+
+	setUploaded(2);
     };
 
     const handleSubmit = async (e) => {
@@ -270,7 +267,7 @@ const NewVideo = () => {
 		    </div>
 
 		    <div className='newVideoBottom'>
-			{ contentUploadProgress !== 100 && imgUploadProgress !== 100 && (
+			{ uploaded != 2 && !imgIsUploading && !contentIsUploading && (
 			    <div className='userPrompt'>
 				Ensure you upload files
 			    </div>
