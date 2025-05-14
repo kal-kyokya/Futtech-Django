@@ -2,7 +2,7 @@
 
 # Build the MERN APP for production and reload Nginx
 
-sudo npm run build
+sudo NODE_OPTIONS='--max-old-space-size=4096' npm run build --debug
 sudo cp -R dist/ /var/www/Futtech/frontend/
 sudo nginx -t
 sudo systemctl reload nginx
