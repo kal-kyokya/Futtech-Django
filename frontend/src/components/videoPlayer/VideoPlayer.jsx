@@ -16,7 +16,16 @@ const VideoPlayer = ({ playbackId, videoTitle = 'Untitled', userId = 'anonymous'
     }, [playbackId, videoTitle, userId, videoId]);
 
     return (
-
+	    <mux-player
+	ref={ref}
+	style={{
+	    width: '100%',
+	    maxWidth: '800px',
+	    aspectRatio: '16 / 9',
+	    borderRadius: '10px',
+	    boxShadow: '0 4px 12px rgba(0, 0, 0, 0.1)',
+	}}
+	    ></mux-player>
     );
 };
 
