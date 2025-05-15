@@ -146,14 +146,16 @@ const NewVideo = () => {
     const handleSubmit = async (e) => {
 	e.preventDefault();
 	dispatch(createVideoStart());
+	console.log(video);
 
 	try {
-	    const res = await axios.post(`${baseURL}/videos`, video,
+	    const res = await axios.post(`${baseURL}/videos/`, video,
 					 {
 					     headers: {
 						 'auth-token': user.accessToken,
 					     }
 					 });
+	    console.log(res.data);
 	    dispatch(createVideoSuccess(res.data));
 	    navigate('/watch', { state: { video: res.data } });
 	} catch (err) {
