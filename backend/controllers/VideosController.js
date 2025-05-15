@@ -106,6 +106,8 @@ export default class VideosController {
       const savedVideo = await newVideo.save();
       return res.status(201).send(savedVideo);
     } catch (err) {
+      console.error('Error storing video metadata', req.body);
+      console.error('Error storing video metadata', err);
       return res.status(500).send({ error: err });
     }
   }
