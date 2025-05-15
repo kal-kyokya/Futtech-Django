@@ -2,7 +2,7 @@ import './watch.scss';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
 import { Link, useLocation } from 'react-router-dom';
-import { useContext, lazy, Suspense } from 'react';
+import { useContext } from 'react';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import Navbar from '../../components/Navbar';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
@@ -13,8 +13,7 @@ import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import PublishIcon from '@mui/icons-material/Publish';
 import DescriptionIcon from '@mui/icons-material/Description';
-
-const MuxPlayer = lazy(() => import('@mux/mux-player-react'));
+import VideoPlayer from '../../components/videoPlayer/VideoPlayer';
 
 const Watch = () => {
     const location = useLocation();
@@ -44,14 +43,10 @@ const Watch = () => {
 		    </Link>
 		</div>
 
-		<Suspense fallback={ <div>Loading video player...</div> }>
-		    <MuxPlayer
-			playbackId={ location.state?.video.content }
-			streamType='on-demand'
-			primaryColor='#0D1C23'
-			controls
-		    />
-		</Suspense>
+		<VideoPlayer
+		    playbackId={ location.state?.video.content }
+		    videoTitle={ location.state?.video.title }
+		/>
 
 		<div className='videoContainer'>
 		    <div className='videoDetails'>
