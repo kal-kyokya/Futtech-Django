@@ -2,6 +2,21 @@
   --main-color: #0D1C23;
   color: white;
   scroll-behavior: smooth;
+  box-sizing: border-box;
+}
+
+.main-wrapper {
+    max-width: 1200px;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    box-sizing: border-box;
+}
+
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
 }
 
 .link {
@@ -9,8 +24,9 @@
     color: inherit;
 }
 
-* {
+*, *::before, *::after {
   font-family: 'Poppins', sans-serif !important;
   margin: 0;
+  box-sizing: inherit;
 }
 
