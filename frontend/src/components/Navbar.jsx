@@ -49,14 +49,14 @@ const Navbar = () => {
 			<Link className='link'
 			      to='/newVideo'
 			>
-			    <button className='newVideoButton'>
+			    <button className='navbarButton'>
 				Create
 			    </button>
 			</Link>
 			<Link className='link'
 			      to='/videoList'
 			>
-			    <button className='newVideoButton'>
+			    <button className='navbarButton'>
 				Manage
 			    </button>
 			</Link>
