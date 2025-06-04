@@ -4,7 +4,11 @@
     width: 100%;
     z-index: 999;
     color: white;
-    background: linear-gradient(to top, transparent 0%, rgb(0, 0, 0, 0.4) 33%);
+    background: linear-gradient(
+	to top,
+	transparent 0%,
+	rgb(0, 0, 0, 0.4) 33%
+    );
 
     &.scrolled {
 	background-color: var(--main-color);
