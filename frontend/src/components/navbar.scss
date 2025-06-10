@@ -170,5 +170,12 @@
 	.desktop-nav-item {
 	    display: none !important; // Hide these elements on mobile
 	}
+
+	// Show hamburger menu
+	.hamburger-menu {
+	    display: flex; // Show the hamburger icon on mobile
+	    // No margin-left auto needed if container flex is space-between and hamburger is last in left
+	}
     }
+
 }
