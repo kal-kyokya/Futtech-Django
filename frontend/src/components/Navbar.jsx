@@ -46,7 +46,7 @@ const Navbar = () => {
     };
 
     // Helper function to navigate and close menu
-    const handleNavLinkClick = () => {
+    const handleNavLinkClick = (path) => {
 	navigate(path);
 	setIsMobileMenuOpen(false); // Close mobile menu after navigation
     };
@@ -146,8 +146,38 @@ const Navbar = () => {
 		    </div>
 		</div>
 	    </div>
+
+	    {/* Mobile Navigation Menu - Conditionally rendered/styled based on isMobileMenuOpen state */}
+	    <div className={`mobile-menu ${isMobileMenuOpen ? [cite_start]'active' : ''}`}>
+		<ul>
+		    <li>
+			<a onClick={() => handleNavLinkClick('/')}>Home</a>
+		    </li>
+		    <li>
+			<a onClick={() => handleNavLinkClick('/videos')}>Drone Footages</a>
+		    </li>
+		    <li>
+			<a onClick={() => handleNavLinkClick('/analysis')}>AI-driven Analysis</a>
+		    </li>
+		    <li>
+			<a onClick={() => handleNavLinkClick('/about')}>About</a>
+		    </li>
+		    <li>
+			<a onClick={() => handleNavLinkClick('/newVideo')}>Create Video</a>
+		    </li>
+		    <li>
+			<a onClick={() => handleNavLinkClick('/videoList')}>Manage Videos</a>
+		    </li>
+		</ul>
+
+		<a onClick={handleLogOut}
+		   className='mobile-connect-button'
+		>
+		    Logout
+		</a>
+	    </div>
 	</>
     );
-}
+};
 
 export default Navbar;
