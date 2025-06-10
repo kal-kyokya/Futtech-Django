@@ -35,6 +35,17 @@ const Navbar = () => {
     const handleLogOut = () => {
 	localStorage.setItem('videos', JSON.stringify([]));
 	dispatch(logOut());
+	setIsMobileMenuOpen(false); // Close Mobile menu on logout
+    };
+
+    const toggleMobileMenu = () => {
+	setIsMobileMenuOpen(!isMobileMenuOpen); // Toggle the state
+    };
+
+    // Helper function to navigate and close menu
+    const handleNavLinkClick = () => {
+	navigate(path);
+	setIsMobileMenuOpen(false); // Close mobile menu after navigation
     };
 
     return (
