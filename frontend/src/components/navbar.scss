@@ -14,7 +14,7 @@
     transition: background-color 0.3s ease; // Smooth transition for scroll effect
 
     &.scrolled {
-	background-color: var(--main-color);
+	background-color: var(--main-color, #028ECA); // Fallback color
     }
 
     .container {
