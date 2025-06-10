@@ -14,12 +14,15 @@ const Navbar = () => {
     const { user, dispatch } = useContext(UserContext);
     const navigate = useNavigate();
 
-    """window.onscroll = () => {
-        setIsScrolled(window.pageYOffset === 0 ? false : true);
-        return () => (window.onscroll = null);
-    };"""
+    /*
+      window.onscroll = () => {
+      	setIsScrolled(window.pageYOffset === 0 ? false : true);
+      	return () => (window.onscroll = null);
+      };
+    */
 
-    // Using useEffect for window.onscroll to prevent potential memory leaks and ensure cleanup
+    // Using useEffect for window.onscroll to prevent
+    // potential memory leaks and ensure cleanup
     useEffect(() => {
 	const handleScroll = () => {
 	    setIsScrolled(window.pageYOffset === 0 ? false : true);
@@ -49,76 +52,101 @@ const Navbar = () => {
     };
 
     return (
-	<div className={isScrolled ? 'navbar scrolled' : 'navbar'}>
-	    <div className='container'>
-		<div className='left'>
-		    <Link className='link' to='/'>
-			<img src='/logo.png'
-			     alt='Logo of the Futtech Company'
-			/>
-		    </Link>
-		    <Link to='/' className='link'>
-			<span>Home</span>
-		    </Link>
-		    <Link to='/videos' className='link'>
-			<span>Drone Footages</span>
-		    </Link>
-		    <Link to='/analysis' className='link'>
-			<span>AI-driven Analysis</span>
-		    </Link>
-		    <Link to='/about' className='link'>
-			<span>About</span>
-		    </Link>
-		</div>
+	<> {/* Use a React Fragment to wrap multiple top-level elements */}
+	    <div className={isScrolled ? 'navbar scrolled' : 'navbar'}>
+		<div className='container'>
+		    <div className='left'>
+			<Link className='link' to='/'>
+			    <img src='/logo.png'
+				 alt='Logo of the Futtech Company'
+			    />
+			</Link>
 
-		<div className='right'>
-			<Link className='link'
+			{/* Desktop Navigation Links - These will be hidden by CSS on mobile */}
+			<Link to='/' className='link desktop-nav-item'> {/* Add a class for specific hiding */}
+			    <span>Home</span>
+			</Link>
+			<Link to='/videos' className='link desktop-nav-item'>
+			    <span>Drone Footages</span>
+			</Link>
+			<Link to='/analysis' className='link desktop-nav-item'>
+			    <span>AI-driven Analysis</span>
+			</Link>
+			<Link to='/about' className='link desktop-nav-item'>
+			    <span>About</span>
+			</Link>
+		    </div>
+
+		    {/* Hamburger Menu Icon - Visible on mobile via CSS */}
+		    <div className='hamburger-menu'
+			 onClick={toggleMobileMenu}
+		    >
+			<span></span>
+			<span></span>
+			<span></span>
+		    </div>
+
+		    {/* Hide CRUD operation buttons */}
+		    <div className='right'>
+			<Link className='link desktop-nav-item'
 			      to='/newVideo'
 			>
 			    <button className='navbarButton'>
 				Create
 			    </button>
 			</Link>
-			<Link className='link'
+			<Link className='link desktop-nav-item'
 			      to='/videoList'
 			>
 			    <button className='navbarButton'>
 				Manage
 			    </button>
 			</Link>
-		    <SearchIcon className='icon'/>
-		    <NotificationsNoneIcon className='icon'/>
-		    <Link className='link'
-			  to='/me'>
-			<img className='navbarImg'
-			     src={user.profilePic}
-			     alt='Profile Picture'
-			/>
-		    </Link>
-		    <div className='manage'>
-			<ArrowDropDownIcon className='optionIcon'/>
-			<div className='hiddenOptions'>
-			    <div className='options'>
-				{ window.location.pathname !== '/me' ? (
-				    <Link className='link' to='/me'>
-					Profile
-				    </Link>
-				) : (
-				    <Link className='link' to='/'>
-					Home
-				    </Link>
-				)}
-			    </div>
 
-			    <div className='options'
-				 onClick={handleLogOut}>
+			{/* Hide search and Notification on Mobile */}
+			<SearchIcon className='icon desktop-nav-item'/>
+			<NotificationsNoneIcon className='icon desktop-nav-item'/>
+
+			<Link className='link'
+			      to='/me'>
+			    <img className='navbarImg'
+				 src={user?.profilePic || '/BlankProfile.png'}
+				 alt='Profile Picture'
+			    />
+			</Link>
+
+			<div className='manage'>
+			    <ArrowDropDownIcon className='optionIcon'/>
+			    <div className='hiddenOptions'>
+				<div className='options'>
+				    { window.location.pathname !== '/me' ? (
+					<Link className='link'
+					      to='/me'
+					      onClick={() => setIsMobileMenuOpen(false)} {/* Close menu if open */}
+					>
+					    Profile
+					</Link>
+				    ) : (
+					<Link className='link'
+					      to='/'
+					      onClick={() => setIsMobileMenuOpen(false)} {/* Close menu if open */}
+					>
+					    Home
+					</Link>
+				    )}
+				</div>
+
+				<div className='options'
+				     onClick={handleLogOut}
+				>
 				    Logout
+				</div>
 			    </div>
 			</div>
 		    </div>
 		</div>
 	    </div>
-	</div>
+	</>
     );
 }
 
