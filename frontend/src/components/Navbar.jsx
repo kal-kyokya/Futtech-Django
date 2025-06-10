@@ -122,15 +122,13 @@ const Navbar = () => {
 				    { window.location.pathname !== '/me' ? (
 					<Link className='link'
 					      to='/me'
-					      onClick={() => setIsMobileMenuOpen(false)} {/* Close menu if open */}
-					>
+					      onClick={() => setIsMobileMenuOpen(false)}>  {/* Close menu if open */}
 					    Profile
 					</Link>
 				    ) : (
 					<Link className='link'
 					      to='/'
-					      onClick={() => setIsMobileMenuOpen(false)} {/* Close menu if open */}
-					>
+					      onClick={() => setIsMobileMenuOpen(false)}>  {/* Close menu if open */}
 					    Home
 					</Link>
 				    )}
@@ -148,7 +146,7 @@ const Navbar = () => {
 	    </div>
 
 	    {/* Mobile Navigation Menu - Conditionally rendered/styled based on isMobileMenuOpen state */}
-	    <div className={`mobile-menu ${isMobileMenuOpen ? [cite_start]'active' : ''}`}>
+	    <div className={`mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
 		<ul>
 		    <li>
 			<a onClick={() => handleNavLinkClick('/')}>Home</a>
