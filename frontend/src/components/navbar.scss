@@ -178,4 +178,20 @@
 	}
     }
 
+    .navbar .right {
+	// Adjust spacing for right-side elements and ensure only necessary ones are shown
+	// .desktop-nav-item will handle hiding buttons/icons here
+	.navbarImg {
+	    width: 2.5rem; // Smaller profile image
+	    height: 2.5rem;
+	    margin-right: 0.5rem; // reduced margin
+	}
+
+	.manage {
+	    .optionIcon {
+		margin-left: 0.5rem; // Keep small margin
+		font-size: 1.2rem; // Adjust icon size
+	    }
+	}
+    }
 }
