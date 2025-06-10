@@ -192,6 +192,20 @@
 		margin-left: 0.5rem; // Keep small margin
 		font-size: 1.2rem; // Adjust icon size
 	    }
+
+	    .hiddenOptions {
+		// Adjust dropdown position for mobile
+		right: 1rem; // Fixed right offset, more reliable on mobile
+		left: unset; // Ensure no left offset if accidentally applied
+		min-width: 120px; // Slightly smaller min-width for mobile dropdown
+
+		.options {
+		    padding: 0.4rem 0.8rem; // Adjust padding
+		    font-size: 0.9rem; // Smaller font size
+		}
+	    }
 	}
     }
+
+    // Mobile Navigation Menu (hidden by default, toggled by JS)
 }
