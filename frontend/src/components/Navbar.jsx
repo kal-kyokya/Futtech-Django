@@ -12,7 +12,7 @@ const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { user, dispatch } = useContext(UserContext);
-    const navigate = useNavigate();
+    const navigate = useNavigate(); // Initialize useNavigate hook
 
     /*
       window.onscroll = () => {
@@ -147,6 +147,7 @@ const Navbar = () => {
 
 	    {/* Mobile Navigation Menu - Conditionally rendered/styled based on isMobileMenuOpen state */}
 	    <div className={`mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+		{console.log(isMobileMenuOpen)}
 		<ul>
 		    <li>
 			<a onClick={() => handleNavLinkClick('/')}>Home</a>

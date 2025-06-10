@@ -159,16 +159,16 @@
 	}
     }
 
+    // Hide desktop specific navigation items and icons
+    .desktop-nav-item {
+	display: none !important; // Hide these elements on mobile
+    }
+
     .navbar .left {
 	//Adjust logo and show hamburger
 	img {
 	    height: 3rem; // Smaller logo height
 	    margin-right: 0.8rem; // Reduced margin
-	}
-
-	// Hide desktop specific navigation items and icons
-	.desktop-nav-item {
-	    display: none !important; // Hide these elements on mobile
 	}
 
 	// Show hamburger menu
