@@ -1,3 +1,5 @@
+/* --- frontend/src/components/navbar.scss ---*/
+
 .navbar {
     position: fixed;
     top: 0;
@@ -9,6 +11,7 @@
 	transparent 0%,
 	rgb(0, 0, 0, 0.4) 33%
     );
+    transition: background-color 0.3s ease; // Smooth transition for scroll effect
 
     &.scrolled {
 	background-color: var(--main-color);
