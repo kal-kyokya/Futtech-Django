@@ -229,6 +229,61 @@
 
 	ul {
 	    list-style: none;
+	    padding: 0;
+	    margin: 0;
+	    display: flex;
+	    flex-direction: column;
+	    align-items: center;
+	    width: 100%;
 	}
+
+	li {
+	    margin: 15px 0;
+	    width: 80%; // Make list items take width for padding
+	    text-align: center;
+	}
+
+	a {
+	    color: white;
+	    text-decoration: none;
+	    font-size: 1.5rem; // Larger font for touch
+	    padding: 10px 0;
+	    display: block; // Make entire area clickable
+	    width: 100%;
+	    transition: background-color 0.3s ease;
+
+	    &.hover {
+		background-color: rgba(255, 255, 255, 0.1);
+		border-radius: 5px;
+	    }
+	}
+
+	.mobile-connect-button { // Styles for the logout button in mobile menu
+	    margin-top: 30px;
+	    background-color: #028ECA;
+	    color: white;
+	    padding: 12px 25px;
+	    border-radius: 5px;
+	    text-decoration: none;
+	    font-size: 1.2rem;
+	    transition: background-color 0.3s ease;
+
+	    &:hover {
+		background-color: darken(#028ECA, 10%);
+	    }
+	}
+    }
+}
+
+// Styles for Hamburger Icon animation to an "X"
+.hamburger-menu.active {
+    span:nth-child(1) {
+	transform: rotate(-45deg) translate(-5px, 6px);
+    }
+    span:nth-child(2) {
+	opacity: 0;
+    }
+    span:nth-child(3) {
+	transform: rotate(45deg) translate(-5px, -6px);
     }
 }
