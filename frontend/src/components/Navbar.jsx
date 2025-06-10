@@ -147,6 +147,8 @@ const Navbar = () => {
 
 	    {/* Mobile Navigation Menu - Conditionally rendered/styled based on isMobileMenuOpen state */}
 	    <div className={`mobile-menu ${isMobileMenuOpen ? 'active' : ''}`}>
+		{console.log(`mobile-menu ${isMobileMenuOpen ? 'active' : ''}`)}
+		{console.log(`mobile-menu ${isMobileMenuOpen ? '' : 'active'}`)}
 		{console.log(isMobileMenuOpen)}
 		<ul>
 		    <li>
