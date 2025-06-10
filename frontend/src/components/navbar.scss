@@ -146,3 +146,20 @@
 	}
     }
 }
+
+/*--- Media Queries for Mobile Responsiveness (Max-width: 767px) --- */
+@media (max-width: 767px) {
+    .navbar {
+	height: 60px; // Slightly smaller navbar height for mobile
+
+	.container {
+	    height: 100%; // Ensure conatiner fills new navbar height
+	    padding: 0 1rem; // Much smaller padding for mobile screens
+	    justify-content: space-between; // Maintain space between left and right
+	}
+    }
+
+    .navbar .left {
+	//Adjust logo and show hamburger
+    }
+}
