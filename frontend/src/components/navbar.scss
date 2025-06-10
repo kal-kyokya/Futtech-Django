@@ -208,4 +208,27 @@
     }
 
     // Mobile Navigation Menu (hidden by default, toggled by JS)
+    .mobile-menu {
+	position: fixed;
+	top: 60px; // Position below the mobile navbar
+	left: 0;
+	width: 100%;
+	height: calc(100% - 60px); // Full height minus navbar height
+	background-color: rgba(0, 0, 0, 0.95); // Dark overlay
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	transform: translateX(100%); // Start off-screen to the right
+	transition: transform 0.3s ease-in-out;
+	z-index: 98; // Below main navbar but above index
+
+	&.active {
+	    transform: translateX(0); // Slide into view
+	}
+
+	ul {
+	    list-style: none;
+	}
+    }
 }
