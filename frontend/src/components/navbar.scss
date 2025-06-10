@@ -147,6 +147,12 @@
     }
 }
 
+.mobile-menu {
+    &.hidden {
+	display: none;
+    }
+}
+
 /*--- Media Queries for Mobile Responsiveness (Max-width: 767px) --- */
 @media (max-width: 767px) {
     .navbar {
