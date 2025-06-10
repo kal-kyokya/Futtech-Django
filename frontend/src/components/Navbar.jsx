@@ -7,6 +7,8 @@ import { Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../contexts/userContext/UserContext';
 import { logOut } from '../contexts/userContext/UserActions';
+import MenuIcon from '@mui/icons-material/Menu';
+
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -77,17 +79,17 @@ const Navbar = () => {
 			</Link>
 		    </div>
 
-		    {/* Hamburger Menu Icon - Visible on mobile via CSS */}
-		    <div className='hamburger-menu'
-			 onClick={toggleMobileMenu}
-		    >
-			<span></span>
-			<span></span>
-			<span></span>
-		    </div>
-
 		    {/* Hide CRUD operation buttons */}
 		    <div className='right'>
+
+			{/* Hamburger Menu Icon - Visible on mobile via CSS */}
+			<div className='hamburger-menu'
+				  onClick={toggleMobileMenu}
+			>
+			    <MenuIcon />
+			    <span>Menu</span>
+			</div>
+
 			<Link className='link desktop-nav-item'
 			      to='/newVideo'
 			>
@@ -147,8 +149,6 @@ const Navbar = () => {
 
 	    {/* Mobile Navigation Menu - Conditionally rendered/styled based on isMobileMenuOpen state */}
 	    <div className={`mobile-menu ${isMobileMenuOpen ? 'active' : 'hidden'}`}>
-		{console.log(`mobile-menu ${isMobileMenuOpen ? 'active' : 'hidden'}`)}
-		{console.log(isMobileMenuOpen)}
 		<ul>
 		    <li>
 			<a onClick={() => handleNavLinkClick('/')}>Home</a>
