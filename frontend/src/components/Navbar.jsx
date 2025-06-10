@@ -1,21 +1,36 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import './navbar.scss';
 import SearchIcon from '@mui/icons-material/Search';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../contexts/userContext/UserContext';
 import { logOut } from '../contexts/userContext/UserActions';
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { user, dispatch } = useContext(UserContext);
+    const navigate = useNavigate();
 
-    window.onscroll = () => {
-	setIsScrolled(window.pageYOffset === 0 ? false : true);
-	return () => (window.onscroll = null);
-    };
+    """window.onscroll = () => {
+        setIsScrolled(window.pageYOffset === 0 ? false : true);
+        return () => (window.onscroll = null);
+    };"""
+
+    // Using useEffect for window.onscroll to prevent potential memory leaks and ensure cleanup
+    useEffect(() => {
+	const handleScroll = () => {
+	    setIsScrolled(window.pageYOffset === 0 ? false : true);
+	};
+
+	window.addEventListener('scroll', handleScroll);
+
+	return () => {
+	    window.removeEventListener('scroll', handleScroll); // Cleanup on unmount
+	};
+    }, []);
 
     const handleLogOut = () => {
 	localStorage.setItem('videos', JSON.stringify([]));
