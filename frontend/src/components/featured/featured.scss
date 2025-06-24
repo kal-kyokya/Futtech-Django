@@ -1,24 +1,32 @@
+/* --- frontend/src/components/featured/featured.scss --- */
+
 .featured {
-    height: 96vh;
+    height: 96vh; // Default height for desktop
     position: relative;
+    overflow: hidden; // Ensures nothing spills outside if content goes beyond bounds
 
     .category {
 	position: absolute;
+	top: 130px; // Fixed 'top' for desktop
+	left: 50px; // Fixed 'left' for desktop
 	display: flex;
-	top: 130px;
-	left: 50px;
 	align-items: center;
-	font-size: 25px;
+	font-size: 25px; // Fixed font-size for desktop
 	font-weight: 500;
+
+	span {
+	    color: white; // Ensure text color is defined
+	}
     }
 
     select {
-	margin-left: 25px;
+	margin-left: 25px; // Fixed 'margin' for desktop
 	border: 1px solid #05F283;
 	color: white;
 	background-color: var(--main-color);
 	padding: 5px;
 	cursor: pointer;
+	border-radius: 5px; // Add 'border-radius' for consistency
     }
 
     img {
