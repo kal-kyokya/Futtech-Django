@@ -1,7 +1,7 @@
 /* --- frontend/src/components/featured/featured.scss --- */
 
 .featured {
-    height: 96vh; // Default height for desktop
+    height: 81vh; // Default height for desktop
     position: relative;
     overflow: hidden; // Ensures nothing spills outside if content goes beyond bounds
 
@@ -49,5 +49,89 @@
 	justify-content: center;
 	align-items: flex-start; // Align text to the left
 	box-shadow: 0 0 16px 10px rgb(211, 211, 211, 0.26); // Subtle shadow for depth
+
+	span {
+	    font-size: 1.2rem; // Base font size for info text
+	    line-height: 1.4; // Improve readability
+	    text-align: left;
+	}
+
+	h4 {
+	    margin: 0; // Remove default h4 margin
+	    padding: 0;
+	    font-size: 1.2rem; // Default font size for h4 in info box
+	    font-weight: bold; // Reset default bold for h4 if not needed
+	}
     }
 }
+
+/* --- Media Queries for Mobile Responsiveness (Max-width: 767px) ---*/
+@media (max-width: 767px) {
+    .featured {
+	height: 72vh; // Reduce height significantly on mobile to allow more content on screen
+	max-height: 676px; // Cap the height for consistency across very different aspect ratios
+    }
+
+    .featured .category {
+	top: 80px; // Adjust 'top' to be below the mobile navbar
+	left: 1rem; // Use 'rem' for 'left' padding
+	font-size: 1.2rem; // Smaller font size for category text
+
+	select { // Ensure select is also smaller
+	    margin-left: 1rem; // Use rem for margin
+	    padding: 3px; // Smaller padding for select
+	    font-size: 0.9rem; // Smaller font size for select options
+	}
+    }
+
+    .featured .info {
+	width: calc(100% - 2rem); // Take up almost full width, minus 1rem padding on each side
+	left: 1rem; // Use 'rem' for 'left' padding
+	padding: 0.8rem; // Smaller padding for info box
+	border-radius: 10px; // Smaller border-radius
+
+	span {
+	    font-size: 1rem; // Slightly smaller font for main info text
+	}
+
+	h4 {
+	    font-size: 0.9rem; // Smaller font for the descriptive text
+	}
+    }
+}
+
+
+/* --- Media Query for very small phone (Max-width: 480px) --- */
+/*
+@media (max-width: 480px) {
+    .featured {
+	height: 45vh; // Even smaller height for very small screens
+	max-height: 300px; // Cap height for very compact displays
+    }
+
+    .featured .category {
+	top: 60px; // Further adjust top for very small screens
+	font-size: 1rem;
+
+	select {
+	    margin-left: 0.5rem;
+	    font-size: 0.8rem;
+	}
+    }
+
+    .featured .info {
+	width: calc(100% - 1rem); // Even tighter width
+	left: 0.5rem; // Even smaller left padding
+	padding: 0.5rem;
+	border-radius: 8px;
+
+	span {
+	    font-size: 0.9rem;
+	}
+
+	h4 {
+	    font-size: 0.8rem;
+	}
+    }
+}
+*/
