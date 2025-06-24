@@ -255,10 +255,12 @@
 	}
 
 	.mobile-connect-button { // Styles for the logout button in mobile menu
+	    display: flex;
+	    justify-content: center;
 	    margin-top: 30px;
 	    background-color: #028ECA;
 	    color: white;
-	    padding: 12px 25px;
+	    padding: 12px 0px;
 	    border-radius: 5px;
 	    text-decoration: none;
 	    font-size: 1.2rem;
