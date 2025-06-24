@@ -37,12 +37,17 @@
 
     .info {
 	position: absolute;
-	width: 35%;
+	width: 35%; // Percentage width for desktop
 	bottom: 1rem;
-	left: 8px;
-	background-color: #D3D3D3;
-	padding: 15px 10px;
-	border-radius: 15px;
-	color: #0D1C23;
+	left: 8px; // Small fixed 'left' for desktop
+	background-color: rgba(211, 211, 211, 0.9); // Slightly transparent background
+	padding: 15px 10px; // Fixed padding for desktop
+	border-radius: 15px; // Fixed border-radius for desktop
+	color: #0D1C23; // Dark text on light background
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start; // Align text to the left
+	box-shadow: 0 0 16px 10px rgb(211, 211, 211, 0.26); // Subtle shadow for depth
     }
 }
