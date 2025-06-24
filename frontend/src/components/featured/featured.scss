@@ -1,7 +1,7 @@
 /* --- frontend/src/components/featured/featured.scss --- */
 
 .featured {
-    height: 81vh; // Default height for desktop
+    height: 93vh; // Default height for desktop
     position: relative;
     overflow: hidden; // Ensures nothing spills outside if content goes beyond bounds
 
@@ -59,7 +59,7 @@
 	h4 {
 	    margin: 0; // Remove default h4 margin
 	    padding: 0;
-	    font-size: 1.2rem; // Default font size for h4 in info box
+	    font-size: 1rem; // Default font size for h4 in info box
 	    font-weight: bold; // Reset default bold for h4 if not needed
 	}
     }
