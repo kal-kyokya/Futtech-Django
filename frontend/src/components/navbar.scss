@@ -1,4 +1,5 @@
 /* --- frontend/src/components/navbar.scss ---*/
+@use "sass:color";
 
 .navbar {
     position: fixed;
@@ -75,7 +76,7 @@
 	    transition: background-color 0.3s ease;
 
 	    &:hover {
-		background-color: darken(#028ECA, 10%);
+		background-color: color.adjust(#028ECA, $lightness: -10%);
 	    }
 	}
 
@@ -267,7 +268,7 @@
 	    transition: background-color 0.3s ease;
 
 	    &:hover {
-		background-color: darken(#028ECA, 10%);
+		background-color: color.adjust(#028ECA, $lightness: -10%);
 	    }
 	}
     }
