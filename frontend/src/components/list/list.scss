@@ -71,5 +71,20 @@
 	    font-size: 0.9rem; // Smaller font size for mobile
 	    margin-left: 2rem; // Use rem for margin on mobile
 	}
+
+	.wrapper {
+	    .sliderArrow {
+		width: 2rem; // Smaller width for arrows on mobile
+
+		.MuiSvgIcon-root {
+		    font-size: 1.8rem; // Smaller icon size
+		}
+	    }
+
+	    .container {
+		margin-left: 2rem; // Same as the width of a 'sliderArrow'
+		// No fixed width here, as ListItem will handle its own width on mobile
+	    }
+	}
     }
 }
