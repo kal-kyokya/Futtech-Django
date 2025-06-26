@@ -13,14 +13,16 @@
 	white-space: nowrap; // Prevent title from wrapping
 	overflow: hidden;
 	text-overflow: ellipsis; // Add ellipsis for long titles
+	background-color: grey;
     }
 
     .wrapper {
 	position: relative;
+	overflow: hidden; // Hide overflow to prevent scrollbars appearing prematurely
 	background-color: green;
 
 	.sliderArrow {
-	    width: 50px;
+	    width: 3rem; // Base width for arrows
 	    height: 100%;
 	    background-color: rgb(1, 1, 1, 0.5);
 	    position: absolute;
@@ -29,6 +31,9 @@
 	    bottom: 0;
 	    margin: auto;
 	    cursor: pointer;
+	    display: flex; // Use flex to center arrow icon
+	    justify-content: center;
+	    align-items: center;
 
 	    &.left {
 		left: 0;
@@ -37,15 +42,21 @@
 	    &.right {
 		right: 0;
 	    }
+
+	    // Style for the actual MUI Icon within the arrow div
+	    .MuiSvgIcon-root {
+		font-size: 2.5rem; // Larger icon size for easier clicking
+		color: red;
+	    }
 	}
 
 	.container {
 	    display: flex;
-	    margin-left: 50px;
-	    margin-top: 10px;
+	    margin: 0.5rem 0 0.5rem 3rem; // Base margins
 	    width: max-content;
 	    transform: translateX(0px);
 	    transition: all 0.5s ease;
+	    background-color: turquoise;
 	}
     }
 }
