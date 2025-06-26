@@ -1,17 +1,23 @@
+/* --- frontend/src/components/list/list.scss --- */
+
 .list {
     width: 100%;
-    margin-top: 8px;
-    margin-bottom: 78px;
+    margin: 2rem 0;
+    background-color: blue;
 
     .listTitle {
 	color: white;
-	font-size: 16px;
-	font-weight: 500px;
-	margin-left: 50px;
+	font-size: 1rem; // Base font size
+	font-weight: 500;
+	margin-left: 3rem; // Base margin
+	white-space: nowrap; // Prevent title from wrapping
+	overflow: hidden;
+	text-overflow: ellipsis; // Add ellipsis for long titles
     }
 
     .wrapper {
 	position: relative;
+	background-color: green;
 
 	.sliderArrow {
 	    width: 50px;
