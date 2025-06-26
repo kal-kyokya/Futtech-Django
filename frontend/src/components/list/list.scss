@@ -60,3 +60,11 @@
 	}
     }
 }
+
+/* --- Media Queries for Mobile Responsiveness (Max-width: 767px) ---*/
+@media (max-width: 767px) {
+    .list {
+	margin-top: 1rem; // Adjust top margin for mobile
+	margin-bottom: 1.5rem; // Reduce bottom margin on mobile
+    }
+}
