@@ -26,7 +26,6 @@ const List = ({ list }) => {
 
 	    // Calculate how many items fit in the current container width
 	    // We will floor it since it can be a floating point number
-	    console.log(Math.floor(containerWidth / totalItemWidth));
 	    return Math.floor(containerWidth / totalItemWidth);
 	}
 	return 1; // Fallback
@@ -34,7 +33,8 @@ const List = ({ list }) => {
 
     const handleClick = (direction) => {
 	setIsMoved(true);
-	console.log('Arrow clicked')
+	const containerWidth = listRef.current.offsetWidth;
+	console.log(`Arrow clicked - Direction: ${direction}`)
 
 	// Get the current left position of the container
 	let currentTransformX = parseFloat(
@@ -52,7 +52,6 @@ const List = ({ list }) => {
 	if (visibleItems == 0) return; // Avoid division by zero or invalid calculations
 
 	const firstItem = listRef.current.children[0];
-	console.log(`First Item: ${firstItem}`);
 	if (!firstItem) return; // No items to slide
 
 	const itemWidth = firstItem.offsetWidth;
@@ -70,8 +69,8 @@ const List = ({ list }) => {
 	// Calculate the 'delta' (change) needed
 	let newTransformX = currentTransformX;
 
-	if (direction === 'right' && slideNumber < list.content.length - visibleItems) {
-	    console.log('right');
+	console.log(`Slides: ${slideNumber} - ${list.content.length}`);
+	if (direction === 'right' && slideNumber <= list.content.length - visibleItems) {
 	    setSlideNumber(slideNumber + 1);
 	    newTransformX = currentTransformX - slideStep; // Move left (show next)
 	    console.log(`Right Translate Value: ${newTransformX}`);
@@ -80,9 +79,11 @@ const List = ({ list }) => {
 	    const totalContentWidth = list.content.length * totalItemWidth;
 	    const maxNegativeTransform = -(totalContentWidth - containerWidth);
 
+	    console.log(`newTransformX < maxNegativeTransform : ${newTransformX} < ${maxNegativeTransform}`);
 	    if (newTransformX < maxNegativeTransform) {
 		newTransformX = maxNegativeTransform;
 	    }
+	    console.log(`translateX(${newTransformX}px)`);
 	}
 
 	if (direction === 'left' && slideNumber > 0) {
@@ -97,11 +98,12 @@ const List = ({ list }) => {
 	    if (newTransformX > initialMarginLeft) {
 		newTransformX = initialMarginLeft;
 	    }
+	    console.log(`translateX(${newTransformX}px)`);
 	}
 
 	// Apply the new transform
 	listRef.current.style.transform = `translateX(${newTransformX}px)`;
-	console.log(`'listRef.current': ${listRef.current}`);
+	console.log(`translateX(${newTransformX}px)`);
     }
 
     return (
