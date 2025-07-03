@@ -1,11 +1,12 @@
 .listItem {
-    width: 295px;
-    height: 195px;
-    margin-right: 3px;
+    width: 18.4375rem; // Desktop width
+    height: 12.1875rem; // Desktop height
+    margin-right: 0.1875rem; // Desktop margin
     background-color: var(--main-color);
     overflow: hidden;
     cursor: pointer;
     transition: transform 0.3s ease-in-out;
+    position: relative;
 
     img {
 	width: 100%;
@@ -27,8 +28,8 @@
 	transform: scale(1.2);
 	position: relative;
 	z-index: 10;
-	box-shadow: 0px 2px 15px 0px rgba(255, 255, 255, 0.1);
-	border-radius: 10px;
+	box-shadow: 0 0.125rem 1rem 0 rgba(255, 255, 255, 0.1);
+	border-radius: 0.625rem;
 
 	img {
 	    transform: scale(1.75);
@@ -38,5 +39,12 @@
 	    transform: scale(1.65);
 	    object-fit: contain;
 	}
+    }
+
+    /* --- Media Queries for Mobile Responsiveness --- */
+    @media (max-width: 767px) {
+	width: 11.25rem; // Smaller width for mobile
+	height: 6.25rem; // Smaller height for mobile
+	margin-right: 0.5rem; // Adjusted margin for mobile
     }
 }
