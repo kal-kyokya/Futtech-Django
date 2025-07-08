@@ -15,7 +15,7 @@ const List = ({ list }) => {
     const getVisibleItemsCount = () => {
 	if (!listRef.current) return 1; // Default to 1 if ref not ready
 
-	const containerWidth = listRef.current.offsetWidth;
+	const containerWidth = listRef.current.parentElement.getBoundingClientRect().width;
 	// More reliably, get the first item's actual computed width
 	if (listRef.current.children.length > 0) {
 	    const firstItem = listRef.current.children[0];
@@ -33,7 +33,7 @@ const List = ({ list }) => {
 
     const handleClick = (direction) => {
 	setIsMoved(true);
-	const containerWidth = listRef.current.offsetWidth;
+	const containerWidth = listRef.current.parentElement.getBoundingClientRect().width;
 	console.log(`Arrow clicked - Direction: ${direction}`)
 
 	// Get the current left position of the container
@@ -69,7 +69,7 @@ const List = ({ list }) => {
 	// Calculate the 'delta' (change) needed
 	let newTransformX = currentTransformX;
 
-	console.log(`Slides: ${slideNumber} - ${list.content.length}`);
+	console.log(`SlideNumber: ${slideNumber}, List length: ${list.content.length}`);
 	if (direction === 'right' && slideNumber <= list.content.length - visibleItems) {
 	    setSlideNumber(slideNumber + 1);
 	    newTransformX = currentTransformX - slideStep; // Move left (show next)
@@ -78,6 +78,7 @@ const List = ({ list }) => {
 	    // Ensure we don't slide too far right, leaving blank space
 	    const totalContentWidth = list.content.length * totalItemWidth;
 	    const maxNegativeTransform = -(totalContentWidth - containerWidth);
+	    console.log(`${list.content.length} * ${totalItemWidth} = ${totalContentWidth} - ${containerWidth}`);
 
 	    console.log(`newTransformX < maxNegativeTransform : ${newTransformX} < ${maxNegativeTransform}`);
 	    if (newTransformX < maxNegativeTransform) {
@@ -87,16 +88,16 @@ const List = ({ list }) => {
 	}
 
 	if (direction === 'left' && slideNumber > 0) {
-	    console.log('right');
+	    console.log('left');
 	    setSlideNumber(slideNumber - 1);
-	    newTransform = currentTransformX + slideStep; // Move right (show previous)
-	    console.log(`Left translate: ${newTransform}`);
+	    newTransformX = currentTransformX + slideStep; // Move right (show previous)
 
 	    // Ensure we don't slide past the initial position (0 or initial maargin offset)
 	    const initialMarginLeft = parseFloat(window.getComputedStyle(listRef.current).marginLeft);
+	    console.log(`New translate: ${newTransformX}, Initial Marg.: ${initialMarginLeft}`);
 
 	    if (newTransformX > initialMarginLeft) {
-		newTransformX = initialMarginLeft;
+		newTransformX = 0;
 	    }
 	    console.log(`translateX(${newTransformX}px)`);
 	}

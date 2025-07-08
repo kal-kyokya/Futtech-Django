@@ -19,6 +19,7 @@
     .wrapper {
 	position: relative;
 	overflow: hidden; // Hide overflow to prevent scrollbars appearing prematurely
+	width: 100%;
 	background-color: green;
 
 	.sliderArrow {
