@@ -26,7 +26,7 @@ This includes backend development, dynamic web content using the MERN Stack, and
 - Developed API endpoints
 - Implemented responsive web interfaces application usage.
 
-### :running: How Futtech Works
+### :telescope: How Futtech Works
 A seamless experience from recording training sessions to getting scouted:
 - **Training Sessions Recording**: Users uploads phone or drone-recorded sessions to Futtech.
 - **Video Streaming**: Uploaded content is safely stored and made available for on-demand streaming. 
@@ -42,30 +42,16 @@ A platform that empowers users through data, analytics, and visibility:
 - **AI-powered analytics** that help users analyze their movement, positioning, and decision-making.
 - **A bridge between users and scouts** → A talent database accessible to clubs worldwide.
 
-### :warning: Prerequisites
+---
 
-* Must have `git` installed
+## 📈 **Meta**
+| Metric | Description |
+| ------ | --------- |
+| GitHub Commits | 227 |
+| Created | Saturday, 15th March 2025 |
+| Last Update | Wednesday, 9th July 2025 |
+| Official Link | [Futtech](https://www.futtech.kalkyokya.tech/) |
+| Medium Blog Post | [Blog](https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5) |
+| GitHub Repository | [kal-kyokya/Futtech/](https://github.com/kal-kyokya/Futtech) |
 
-* Must have repository cloned
-
-* Must have `npm dependencies` installed
-
-```
-$ sudo apt-get install git
-```
-```
-$ sudo npm install
-```
-```
-$ sudo npm install sass
-```
-```
-$ sudo npm run dev
-```
-
-### :blue_book: Author
-* **Jean-Paul KYOKYA** - [@kal-kyokya](https://github.com/kal-kyokya)
-
-### :mag: Allowed editors
-```
-vi, vim, emacs
+---

@@ -30,7 +30,7 @@ const About = () => {
 		</Link>
 		<div className="socials">
 		    <span>Detailed version:&ensp;</span>
-		    <a href="https://medium.com/@kal-kyokya"
+		    <a href="https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5"
 		       target="_blank">
 			<img alt="Medium badge"
 	   		     src="https://img.shields.io/badge/Medium-black?logo=medium&logoColor=white"/>
