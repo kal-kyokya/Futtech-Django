@@ -5,12 +5,14 @@
 Football is the most popular sport on Earth, uniting people across education, class, and race. It has the power to strengthen communities and inspire dreams. Africa must harness this power to uplift itself.
 Through Futtech, I am building a future where African footballers no longer have to leave home to maximize their potential—because the tools they need will be right here.
 
+## Project Description
+An end-to-end Engineering project focusing on build of ```camera-equipped drones```, development of a responsively designed ```web platform``` and integration of an ```assistive Large Language Model```. This includes backend development, dynamic web content using the MERN Stack, and third-party service integrations (Google Firebase for images, and Mux for Video uploads).
 
-**Description**: An end-to-end IoT project focusing on Embedded Systems. This includes backend development, dynamic web content using Node JS, React with SASS, and static resources management.
+## Technologies Used
+MongoDB with Mongoose, ExpressJS run by PM2, React with SASS, NodeJS, and JavaScript.
 
-**Technologies Used**: MongoDB, Express JS, React, Node JS, HTML and CSS (SASS).
-
-**My Key Contributions**: Engaged in Fullstack Development and generated an appealing User Interface and a performant Backend system.
+## Key Contributions
+Developed API endpoints and implemented responsive web interfaces application usage.
 
 ## :running: Getting Started
 

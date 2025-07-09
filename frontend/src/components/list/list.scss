@@ -3,7 +3,6 @@
 .list {
     width: 100%;
     margin: 2rem 0;
-    background-color: blue;
 
     .listTitle {
 	color: white;
@@ -13,14 +12,12 @@
 	white-space: nowrap; // Prevent title from wrapping
 	overflow: hidden;
 	text-overflow: ellipsis; // Add ellipsis for long titles
-	background-color: grey;
     }
 
     .wrapper {
 	position: relative;
 	overflow: hidden; // Hide overflow to prevent scrollbars appearing prematurely
 	width: 100%;
-	background-color: green;
 
 	.sliderArrow {
 	    width: 3rem; // Base width for arrows
@@ -47,7 +44,6 @@
 	    // Style for the actual MUI Icon within the arrow div
 	    .MuiSvgIcon-root {
 		font-size: 2.5rem; // Larger icon size for easier clicking
-		color: red;
 	    }
 	}
 
