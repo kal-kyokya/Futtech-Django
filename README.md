@@ -1,6 +1,6 @@
 # :soccer: Futtech :soccer:
 Football is the most popular sport on Earth, uniting people across education, class, and race. It has the power to strengthen communities and inspire dreams. _**Africa must harness this power**_ to uplift itself.<br />
-**Through Futtech**, I am building a future where African footballers no longer have to leave home to maximize their potential—because the tools they need will be right here.<br />
+**Through [Futtech](https://www.futtech.kalkyokya.tech)**, I am building a future where African footballers no longer have to leave home to maximize their potential—because the tools they need will be right here.<br />
 
 ---
 
@@ -12,7 +12,8 @@ Football is one such skill, and technology is a powerful tool that can facilitat
 
 
 ### :page_with_curl: Project Description
-An end-to-end Engineering project focusing on build of ```camera-equipped drones```, development of a ```responsively designed web platform``` and integration of an ```assistive Large Language Model```. This includes backend development, dynamic web content using the MERN Stack, and third-party service integrations (Google Firebase for images, and Mux for Video uploads).
+An end-to-end Engineering project focusing on build of ```camera-equipped drones```, development of a ```responsively designed web platform``` and integration of an ```assistive Large Language Model```.<br />
+This includes backend development, dynamic web content using the MERN Stack, and third-party service integrations (Google Firebase for images, and Mux for Video uploads).
 
 ### :wrench: Technologies Used
 - JavaScript through JSX
@@ -25,11 +26,15 @@ An end-to-end Engineering project focusing on build of ```camera-equipped drones
 - Developed API endpoints
 - Implemented responsive web interfaces application usage.
 
-## :running: Getting Started
+### :running: How Futtech Works
+A seamless experience from recording training sessions to getting scouted:
+- **Training Sessions Recording**: Users uploads phone or drone-recorded sessions to Futtech.
+- **Video Streaming**: Uploaded content is safely stored and made available for on-demand streaming. 
+- **AI-Driven Analytics**: If requested, Futtech’s system processes the video data and identifies key metrics.
+- **Performance Reports**: Users receives detailed insights on their game.
+- **Visibility & Growth**: The data helps Users refine their skills and attract scouts.
 
-* [Ubuntu 20.04 LTS](http://releases.ubuntu.com/20.04/) - Operating system.
-
-## :warning: Prerequisites
+### :warning: Prerequisites
 
 * Must have `git` installed
 
@@ -50,9 +55,9 @@ $ sudo npm install sass
 $ sudo npm run dev
 ```
 
-## :blue_book: Author
+### :blue_book: Author
 * **Jean-Paul KYOKYA** - [@kal-kyokya](https://github.com/kal-kyokya)
 
-## :mag: Allowed editors
+### :mag: Allowed editors
 ```
 vi, vim, emacs
