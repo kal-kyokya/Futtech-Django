@@ -34,6 +34,14 @@ A seamless experience from recording training sessions to getting scouted:
 - **Performance Reports**: Users receives detailed insights on their game.
 - **Visibility & Growth**: The data helps Users refine their skills and attract scouts.
 
+---
+
+A platform that empowers users through data, analytics, and visibility:
+- **Data-driven training & feedback loops** → Helping users improve strategically.
+- **Affordable and scalable** performance tracking tools.
+- **AI-powered analytics** that help users analyze their movement, positioning, and decision-making.
+- **A bridge between users and scouts** → A talent database accessible to clubs worldwide.
+
 ### :warning: Prerequisites
 
 * Must have `git` installed
