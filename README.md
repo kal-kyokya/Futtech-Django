@@ -42,16 +42,12 @@ A platform that empowers users through data, analytics, and visibility:
 - **AI-powered analytics** that help users analyze their movement, positioning, and decision-making.
 - **A bridge between users and scouts** → A talent database accessible to clubs worldwide.
 
----
-
-## 📈 **Meta**
+## 📈 **Extra Information**
 | Metric | Description |
 | ------ | --------- |
-| GitHub Commits | 227 |
-| Created | Saturday, 15th March 2025 |
+| GitHub Repository | [kal-kyokya/Futtech/](https://github.com/kal-kyokya/Futtech) |
+| Repo Created | Saturday, 15th March 2025 |
 | Last Update | Wednesday, 9th July 2025 |
 | Official Link | [Futtech](https://www.futtech.kalkyokya.tech/) |
 | Medium Blog Post | [Blog](https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5) |
-| GitHub Repository | [kal-kyokya/Futtech/](https://github.com/kal-kyokya/Futtech) |
-
----
+| GitHub Commits | 228 |
