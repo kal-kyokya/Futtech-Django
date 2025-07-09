@@ -1,7 +1,7 @@
 # :soccer: Futtech :soccer:
-Football is the **most popular sport on Earth**, uniting people across **education, class, and race**. It has the power to **strengthen communities** and **inspire dreams**. _**Africa must harness this power**_ to uplift itself.<br />
+Football is the most popular sport on Earth, uniting people across education, class, and race. It has the power to strengthen communities and inspire dreams. _**Africa must harness this power**_ to uplift itself.<br />
 **Through Futtech**, I am building a future where African footballers no longer have to leave home to maximize their potential—because the tools they need will be right here.<br />
-Mastery of complex skills is not easy. Especially with inefficient methods.<br />
+> _"Mastery of complex skills is not easy. Especially with inefficient methods."_<br />
 Football is one such skill, and technology is a powerful tool that can facilitate its mastery.
 
 
