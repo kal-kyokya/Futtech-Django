@@ -2,16 +2,23 @@ import './about.scss';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowCircleUpOutlinedIcon from '@mui/icons-material/ArrowCircleUpOutlined';
 import { Link } from 'react-router-dom';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const About = () => {
     const [isScrolled, setIsScrolled] = useState(false);
 
-    window.onscroll = () => {
-	setIsScrolled(window.pageYOffset === 0 ? false : true);
+    useEffect(() => {
+	const handleScroll = () => {
+	    setIsScrolled(window.pageYOffset > 0);
+	};
 
-	return () => (window.onscroll = null);
-    };
+	window.addEventListener('scroll', handleScroll);
+
+	// Cleanup function: This runs when the component unmounts
+	return () => {
+	    window.removeEventListener('scroll', handleScroll);
+	};
+    }, []); // Empty dependency array means this effect runs once on mount and cleans up on unmount
 
     return (
 	<div id="page-top">
@@ -126,7 +133,13 @@ const About = () => {
 		    </a><br />
 		    <a href="https://www.linkedin.com/in/jean-paul-kyokya-b21892223/" target="_blank">
 			Link to my LinkedIn profile
-		    </a>
+		    </a><br />
+                    <a href="https://twitter.com/JPDemarie" target="_blank">
+                        Link to my X (Twitter) profile
+                    </a><br />
+                    <a href="https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5" target="_blank">
+                        Link to the full article on Medium
+                    </a>
 		</p>
 
 		<img src="/poa.JPEG"
