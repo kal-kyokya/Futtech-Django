@@ -1,17 +1,12 @@
 import './watch.scss';
+import { Link, useLocation } from 'react-router-dom';
+import { VideoContext } from '../../contexts/videoContext/VideoContext';
+import { useContext } from 'react';
+import Navbar from '../../components/Navbar';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowForwardIcon from '@mui/icons-material/ArrowForward';
-import { Link, useLocation } from 'react-router-dom';
-import { useContext } from 'react';
-import { VideoContext } from '../../contexts/videoContext/VideoContext';
-import Navbar from '../../components/Navbar';
-import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
-import PermIdentityIcon from '@mui/icons-material/PermIdentity';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
-import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
-import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
-import PublishIcon from '@mui/icons-material/Publish';
 import DescriptionIcon from '@mui/icons-material/Description';
 import VideoPlayer from '../../components/videoPlayer/VideoPlayer';
 

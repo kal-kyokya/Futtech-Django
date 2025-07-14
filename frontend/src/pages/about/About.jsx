@@ -39,7 +39,7 @@ const About = () => {
 		    <span>Detailed version:&ensp;</span>
 		    <a href="https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5"
 		       target="_blank"
-		    rel="noopener noreferrer">
+		       rel="noopener noreferrer">
 			<img alt="Medium badge"
 	   		     src="https://img.shields.io/badge/Medium-black?logo=medium&logoColor=white"/>
 		    </a>
