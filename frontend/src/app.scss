@@ -30,3 +30,8 @@ img {
   box-sizing: inherit;
 }
 
+body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scrollbars from rogue elements */
+}

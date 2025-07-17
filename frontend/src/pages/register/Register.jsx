@@ -26,7 +26,7 @@ const Register = () => {
 	const emailRegEx = /^[a-zA-Z0-9_.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 	if (emailRegEx.test(emailRef.current.value)) {
-	    if(resError) { resError.error = 'Valid Email'; }
+	    if (resError) { resError.error = 'Valid Email'; }
 	    setEmail(emailRef.current.value);
 	} else {
 	    dispatch(loginFailure({ error: 'Invalid Email' }));
