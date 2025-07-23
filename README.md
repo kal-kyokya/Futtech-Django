@@ -12,42 +12,42 @@ Football is one such skill, and technology is a powerful tool that can facilitat
 
 
 ### :page_with_curl: Project Description
-An end-to-end Engineering project focusing on build of ```camera-equipped drones```, development of a ```responsively designed web platform``` and integration of an ```assistive Large Language Model```.<br />
+Futtech is an end-to-end Engineering project focused on build of ```camera-equipped drones```, development of a ```responsively designed web platform``` and integration of an ```assistive Large Language Model```.<br />
 This includes backend development, dynamic web content using the MERN Stack, and third-party service integrations (Google Firebase for images, and Mux for Video uploads).
 
 ### :wrench: Technologies Used
-- JavaScript through JSX
-- React with SCSS
-- ExpressJS run by PM2
-- MongoDB with Mongoose
-- NodeJS for the backend
+- JavaScript in JSX.
+- React with SASS.
+- ExpressJS through by PM2.
+- MongoDB via Mongoose.
+- NodeJS for the backend.
 
 ### :key: Key Contributions
-- Developed API endpoints
+- Developed API endpoints.
 - Implemented responsive web interfaces application usage.
 
 ### :telescope: How Futtech Works
 A seamless experience from recording training sessions to getting scouted:
-- **Training Sessions Recording**: Users uploads phone or drone-recorded sessions to Futtech.
+- **Training Sessions Recording**: Video content is uploaded to Futtech; Users book drone-recording sessions on Futtech's website or simply avail phone-recorded ones.
 - **Video Streaming**: Uploaded content is safely stored and made available for on-demand streaming. 
 - **AI-Driven Analytics**: If requested, Futtech’s system processes the video data and identifies key metrics.
 - **Performance Reports**: Users receives detailed insights on their game.
-- **Visibility & Growth**: The data helps Users refine their skills and attract scouts.
+- **Growth & Visibility**: The data helps Users better define their identity, refine their skills and potentially attract scouts.
 
 ---
 
 A platform that empowers users through data, analytics, and visibility:
 - **Data-driven training & feedback loops** → Helping users improve strategically.
 - **Affordable and scalable** performance tracking tools.
-- **AI-powered analytics** that help users analyze their movement, positioning, and decision-making.
+- **AI-powered analytics** that help users analyze their technical and tactical skills, as well as decision-making.
 - **A bridge between users and scouts** → A talent database accessible to clubs worldwide.
 
 ## 📈 **Extra Information**
 | Metric | Description |
 | ------ | --------- |
 | Repo Created | Saturday, 15th March 2025 |
-| Last Update | Wednesday, 9th July 2025 |
+| Last Update | Wednesday, 23rd July 2025 |
 | GitHub Repository | [kal-kyokya/Futtech/](https://github.com/kal-kyokya/Futtech) |
 | Official Link | [Futtech](https://www.futtech.kalkyokya.tech/) |
 | Medium Blog Post | [Blog](https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5) |
-| GitHub Commits | 228 |
+| GitHub Commits | 239 |
