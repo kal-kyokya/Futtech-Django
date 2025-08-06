@@ -1,15 +1,28 @@
 .login {
     width: 100vw;
     height: 100vh;
-    background: linear-gradient(to bottom, rgba(0, 0, 0, 0), rgba(0, 0, 10, 0.65) 40%, rgba(0, 0, 0, 0.85) 66.66%), url('https://raw.githubusercontent.com/kal-kyokya/Futtech/refs/heads/main/frontend/public/background.jpg');
+    background: linear-gradient(
+	to bottom,
+	rgba(0, 0, 0, 0),
+	rgba(0, 0, 10, 0.65) 40%,
+	rgba(0, 0, 0, 0.85) 66.66%
+    ), url('https://raw.githubusercontent.com/kal-kyokya/Futtech/refs/heads/main/frontend/public/background.jpg');
+    background-position: center;
+    background-repeat: repeat;
+    background-size: auto 100%;
     position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    overflow-y: auto;
 
     .top {
-	padding: 0px 60px;
+	padding: 0 3.125rem;
 
 	.logo {
-	    height: 75px;
-	    border-radius: 41px;
+	    height: 4.75rem;
+	    border-radius: 2.5rem;
 	}
     }
 
