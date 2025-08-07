@@ -30,12 +30,11 @@
     }
 
     .container {
-	width: 100%;
+	width: 50%;
 	height: 100%;
-	position: absolute;
 	display: flex;
-	left: 36.5%;
-	top: 20%;
+	justify-content: center;
+	align-items: center;
 
 	form {
 	    width: 300px;
