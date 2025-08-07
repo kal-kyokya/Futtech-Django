@@ -31,26 +31,27 @@
 
     .container {
 	width: 50%;
+	max-width: 60rem;
 	height: 100%;
 	display: flex;
 	justify-content: center;
 	align-items: center;
 
 	form {
-	    width: 300px;
-	    height: 450px;
+	    width: 20rem;
+	    height: 30rem;
 	    display: flex;
 	    flex-direction: column;
 	    justify-content: space-evenly;
 	    background: rgba(0, 0, 0, 0.5);
-	    border-radius: 5px;
-	    padding: 0px 50px;
+	    border-radius: 0.25rem;
+	    padding: 0.5rem 3rem;
 
 	    input {
-		height: 40px;
-		padding: 5px 15px;
-		font-size: 16px;
-		border-radius: 5px;
+		height: 2.5rem;
+		padding: 0.25rem 1rem;
+		font-size: 1rem;
+		border-radius: 0.25rem;
 		border: none;
 		background: rgba(0, 0, 0, 0.6);
 		color: grey;
