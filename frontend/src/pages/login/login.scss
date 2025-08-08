@@ -48,25 +48,27 @@
 	    padding: 0.5rem 3rem;
 
 	    input {
-		height: 2.5rem;
-		padding: 0.25rem 1rem;
+		height: 3rem;
+		max-height: 3rem;
+		padding: 0 0.625rem;
 		font-size: 1rem;
 		border-radius: 0.25rem;
-		border: none;
+		border: 1px solid grey;
 		background: rgba(0, 0, 0, 0.6);
 		color: grey;
 	    }
  
 	    button {
-		height: 40px;
+		height: 2.5rem;
+		max-height: 2.5rem;
 		border: none;
 		background-color: #05F283;
 		color: #002B56;
-		border-radius: 5px;
-		font-size: 16px;
+		border-radius: 0.25rem;
+		font-size: 1rem;
 		font-weight: 500;
 		cursor: pointer;
-		padding: 5px;
+		padding: 0.25rem;
 	    }
 
 	    .userPrompt {
