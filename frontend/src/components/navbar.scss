@@ -19,7 +19,7 @@
     }
 
     .container {
-	padding: 0 3.125rem; // Desktop default padding (50px)
+	padding: 0 2.5rem; // Desktop default padding (50px)
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
@@ -110,8 +110,8 @@
 		position: absolute;
 		background-color: rgba(0, 0, 0, 0.9); // Darker background for visibility
 		border-radius: 0.3125rem;
-		right: 20.3%; // Desktop percentage positioning
-		top: calc(100% + 5px); // Position below the icon
+		right: -120%; // Desktop percentage positioning
+		top: calc(100% - 5px); // Position below the icon
 		min-width: 150px;
 		padding: 0.5rem 0;
 		box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
@@ -192,7 +192,7 @@
 
 	    .hiddenOptions {
 		// Adjust dropdown position for mobile
-		right: 1rem; // Fixed right offset, more reliable on mobile
+		right: -0.75rem; // Fixed right offset, more reliable on mobile
 		left: unset; // Ensure no left offset if accidentally applied
 		min-width: 120px; // Slightly smaller min-width for mobile dropdown
 

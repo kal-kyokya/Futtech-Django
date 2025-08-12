@@ -120,21 +120,23 @@ const Navbar = () => {
 			<div className='manage'>
 			    <ArrowDropDownIcon className='optionIcon'/>
 			    <div className='hiddenOptions'>
-				<div className='options'>
-				    { window.location.pathname !== '/me' ? (
-					<Link className='link'
+				{ window.location.pathname !== '/me' ? (
+				    <Link className='link'
 					      to='/me'
-					      onClick={() => setIsMobileMenuOpen(false)}>  {/* Close menu if open */}
+					  onClick={() => setIsMobileMenuOpen(false)}>  {/* Close menu if open */}
+					<div className='options'>
 					    Profile
-					</Link>
-				    ) : (
-					<Link className='link'
+					</div>
+				    </Link>
+				) : (
+				    <Link className='link'
 					      to='/'
-					      onClick={() => setIsMobileMenuOpen(false)}>  {/* Close menu if open */}
+					  onClick={() => setIsMobileMenuOpen(false)}>  {/* Close menu if open */}
+					<div className='options'>
 					    Home
-					</Link>
-				    )}
-				</div>
+					</div>
+				    </Link>
+				)}
 
 				<div className='options'
 				     onClick={handleLogOut}
