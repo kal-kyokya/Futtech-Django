@@ -139,7 +139,7 @@ const Register = () => {
 
 		{ loggedOut && (
 		    <div className='userPrompt'>
-			Log out completed.
+			Log out successful ✔
 		    </div>
 		)}
 	    </div>
