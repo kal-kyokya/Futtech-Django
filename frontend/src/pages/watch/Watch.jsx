@@ -22,7 +22,7 @@ const Watch = () => {
 		    <Link className='link'
 			  to={ origin === 'list' ? '/' : '/videoList' }
 		    >
-			<div className='iconLeft'>
+			<div className='videoIcon'>
 			    <ArrowBackIcon className='arrow'/>
 			    { origin === 'list' ? <span>Home</span> : <span>Videos</span> }
 			</div>
@@ -31,7 +31,7 @@ const Watch = () => {
 		    <Link className='link'
 			  to={ origin === 'list' ? '/videoList' : '/' }
 		    >
-			<div className='iconRight'>
+			<div className='videoIcon'>
 			    { origin === 'list' ? <span>Videos</span> : <span>Home</span> }
 			    <ArrowForwardIcon className='arrow'/>
 			</div>
@@ -43,45 +43,43 @@ const Watch = () => {
 		    videoTitle={ location.state?.video.title }
 		/>
 
-		<div className='videoContainer'>
-		    <div className='videoDetails'>
+		<div className='videoDetails'>
 
-			<div className='videoDetailsTop'>
-			    <img className='profile'
-				 src={ video.thumbnail }
-				 alt='Video Thumbnail'
-			    />
-			    <div className='videoInfos'>
-				<Link to={ '/video/' + video._id }
-				      state={ { 'input': video } }
-				      className='link'
-				>
-				    <h2 className='videoName'>
-					<u>{ video.title }</u>
-				    </h2>
-				</Link>
-				<h3 className='videoCategory'>{ video.category }</h3>
+		    <div className='videoDetailsTop'>
+			<img className='profile'
+			     src={ video.thumbnail }
+			     alt='Video Thumbnail'
+			/>
+			<div className='videoInfos'>
+			    <Link to={ '/video/' + video._id }
+				  state={ { 'input': video } }
+				  className='link'
+			    >
+				<h2 className='videoName'>
+				    <u>{ video.title }</u>
+				</h2>
+			    </Link>
+			    <h3 className='videoCategory'>{ video.category }</h3>
+			</div>
+		    </div>
+
+		    <div className='videoDetailsBottom'>
+			<span className='videoDetailsTitle'>Video details</span>
+			<div className='videoDetailsDiv'>
+			    <CalendarMonthOutlinedIcon className='videoDetailsIcon' />
+			    <div className='videoDetailsContent'>
+				{ video.date.split('T')[0] }
 			    </div>
 			</div>
-
-			<div className='videoDetailsBottom'>
-			    <span className='videoDetailsTitle'>Video details</span>
-			    <div className='videoDetailsDiv'>
-				<CalendarMonthOutlinedIcon className='videoDetailsIcon' />
-				<div className='videoDetailsContent'>
-				    { video.date.split('T')[0] }
-				</div>
+			<div className='videoDetailsDiv'>
+			    <LocationOnOutlinedIcon className='videoDetailsIcon' />
+			    <div className='videoDetailsContent'>
+				{ video.location }
 			    </div>
-			    <div className='videoDetailsDiv'>
-				<LocationOnOutlinedIcon className='videoDetailsIcon' />
-				<div className='videoDetailsContent'>
-				    { video.location }
-				</div>
-			    </div>
-			    <div className='videoDetailsDiv'>
-				<DescriptionIcon className='videoDetailsIcon' />
-				<div className='videoDetailsContent'>{ video.desc }</div>
-			    </div>
+			</div>
+			<div className='videoDetailsDiv'>
+			    <DescriptionIcon className='videoDetailsIcon' />
+			    <div className='videoDetailsContent'>{ video.desc }</div>
 			</div>
 		    </div>
 		</div>

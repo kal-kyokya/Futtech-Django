@@ -1,108 +1,92 @@
 .watch {
-    width: 97.1vw;
-    height: 83vh;
+    width: 100vw;
+    height: 100vh;
 
     .options {
 	width: 100%;
 	display: flex;
 	align-itemns: center;
 	justify-content: space-between;
-	cursor: pointer;
 	z-index: 10;
 	position: fixed;
 
-	.iconLeft {
-	    left: 1em;
+	.videoIcon {
 	    display: flex;
-	    align-itemns: center;
+	    cursor: pointer;
 
 	    .arrow {
-		margin-right: 3px;
-	    }
-	}
-
-	.iconRight {
-	    right: 10px;
-	    display: flex;
-	    align-itemns: center;
-
-	    .arrow {
-		margin-left: 3px;
+		margin-right: 0.25rem;
 	    }
 	}
     }
     
     video {
-	width: 100vw;
-	height: 100vh;
+	width: 100%;
+	height: 100%;
 	object-fit: contain;
 	padding: 0;
 	background-color: #0D1C23;
     }
 
-    .videoContainer {
+    .videoDetails {
 	display: flex;
 	flex-direction: column;
 	color: white;
-	margin-top: -7px;
+	margin-top: -0.5rem;
+	padding: 0.75rem 2.5rem;
+	margin-bottom: 2.5rem;
 	background-color: black;
-	width: 100vw;
 
-	.videoDetails {
-	    padding: 13px 39px;
-	    margin-bottom: 39px;
+	.videoDetailsTop {
+	    display: flex;
+	    align-items: center;
 
-	    .videoDetailsTop {
-		display: flex;
-		align-items: center;
-
-		.profile {
-		    width: 91px;
-		    height: 91px;
-		    border: 1px solid grey;
-		    border-radius: 50%;
-		    object-fit: cover;
-		    cursor: pointer;
-		    background-color: white;
-		    margin-right: 13px;
-		}
-
-		.videoInfos {
-		    display: flex;
-		    flex-direction: column;
-
-		    .videoName {
-			font-weight: 600;
-			color: #028ECA;
-		    }
-
-		    .videoCategory {
-			font-weight: 300;
-		    }
-		}
+	    .profile {
+		width: 4rem;
+		height: 4rem;
+		border: 1px solid grey;
+		border-radius: 50%;
+		object-fit: cover;
+		cursor: pointer;
+		background-color: white;
+		margin-right: 1rem;
 	    }
 
-	    .videoDetailsBottom {
-		margin-top: 13px;
+	    .videoInfos {
+		display: flex;
+		flex-direction: column;
 
-		.videoDetailsTitle {
-		    color: rgba(255, 255, 255, 0.52);
-		    font-weight: 300;
+		.videoName {
+		    font-weight: 600;
+		    color: #028ECA;
 		}
 
-		.videoDetailsDiv {
-		    display: flex;
-		    align-items: center;
-		    margin: 13px 0px;
-		    color: rgba(255, 255, 255, 0.78);
+		.videoCategory {
+		    font-weight: 300;
+		}
+	    }
+	}
 
-		    .videoDetailsIcon {
-			margin-right: 15px;
-		    }
+	.videoDetailsBottom {
+	    margin-top: 1rem;
 
-		    .videoDetailsContent {
-			font-weight: 16px;
-		    }
+	    .videoDetailsTitle {
+		color: rgba(255, 255, 255, 0.52);
+		font-weight: 300;
+	    }
+
+	    .videoDetailsDiv {
+		display: flex;
+		align-items: center;
+		margin: 0.75rem 0;
+		color: rgba(255, 255, 255, 0.78);
+
+		.videoDetailsIcon {
+		    margin-right: 1rem;
+		}
+
+		.videoDetailsContent {
+		    font-weight: 1rem;
 		}
 	    }
 	}
