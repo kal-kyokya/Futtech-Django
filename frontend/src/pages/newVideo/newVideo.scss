@@ -17,13 +17,14 @@
 	.newVideoTop {
 	    display: flex;
 	    flex-wrap: wrap;
-	    margin-left: 1rem;
 
 	    .newVideoItem {
 		display: flex;
 		flex-direction: column;
 		margin: 1.5rem 2rem;
-		width: 16rem;
+
+		min-width: 16rem;
+		width: calc(50% - 4rem); // To allow two items per row with margin
 
 		label {
 		    margin-bottom: 0.25rem;
@@ -106,5 +107,32 @@
 		height: auto;
 	    }
 	}
+    }
+}
+
+/* Media Queries implementation aimed at adapting the layout for different screen sizes */
+@media (max-width: 767px) {
+    .newVideo {
+	margin-top: 60px;
+
+	.newVideoTop {
+	    flex-direction: colum;
+	    align-items: center;
+
+	    .newVideoItem {
+		width: 90%;
+		margin: 1rem 0;
+	    }
+	}
+
+	.newVideoBottom {
+	    flex-direction: column;
+	}
+    }
+}
+
+@media (max-width: 1024px) {
+    .newVideo {
+	padding: 0.75rem 2rem;
     }
 }
