@@ -179,6 +179,11 @@
 /* Media Queries ensuring the page's dimensions are mobile-friendly */
 @media (max-width: 767px) {
     .user {
+	width: 100vw;
 	margin-top: 60px;
+
+	.userContainer {
+	    flex-direction: column;
+	}
     }
 }
