@@ -1,8 +1,8 @@
 .user {
-    padding: 19px;
+    padding: 1.25rem;
     background-color: var(--main-color);
     color: white;
-    margin-top: 78px;
+    margin-top: 75px;
 
     .userTopSection {
 	display:flex;
@@ -13,33 +13,32 @@
     .userContainer {
 	display: flex;
 	color: white;
-	margin-top: 13px;
+	margin-top: 0.75rem;
 
 	.userDetails {
 	    flex: 1;
-	    padding: 13px;
-	    box-shadow: 0px 2px 15px 0px rgba(255, 255, 255, 0.52);
-	    margin-right: 13px;
+	    padding: 0.75rem;
+	    box-shadow: 0 0.125rem 1rem 0 rgba(255, 255, 255, 0.52);
+	    margin-right: 0.75rem;
 
 	    .userDetailsTop {
 		display: flex;
 		align-items: center;
 
 		.profile {
-		    width: 52px;
-		    height: 52px;
+		    width: 3.5rem;
+		    height: 3.5rem;
 		    border: 1px solid grey;
 		    border-radius: 50%;
 		    object-fit: fill;
 		    cursor: pointer;
 		    background-color: white;
-		    margin-right: 13px;
+		    margin-right: 1.5rem;
 		}
 
 		.userInfos {
 		    display: flex;
 		    flex-direction: column;
-		    margin-left: 13px;
 
 		    .userNames {
 			font-weight: 600;
@@ -52,7 +51,7 @@
 	    }
 
 	    .userDetailsBottom {
-		margin-top: 13px;
+		margin-top: 0.75rem;
 
 		.userDetailsTitle {
 		    color: rgba(255, 255, 255, 0.65);
@@ -62,34 +61,34 @@
 		.userDetailsDiv {
 		    display: flex;
 		    align-items: center;
-		    margin: 13px 0px;
+		    margin: 0.75rem 0;
 		    color: rgba(255, 255, 255, 0.78);
 
 		    .userDetailsIcon {
-			margin-right: 10px;
+			margin-right: 0.75rem;
 		    }
 
 		    .userDetailsContent {
-			font-weight: 16px;
+			font-weight: 1rem;
 		    }
 		}
 
 		.userDetailsLinks {
 		    display: flex;
 		    align-items: center;
-		    margin: 8px 0px;
+		    margin: 0.75rem 0;
 		    color: rgba(255, 255, 255, 0.78);
 
 		    .userDetailsIcon {
-			margin-right: 10px;
+			margin-right: 0.75rem;
 		    }
 
 		    .userDetailsContent {
-			font-weight: 16px;
+			font-weight: 1rem;
 		    }
 
 		    &:hover {
-			border-radius: 5px;
+			border-radius: 0.25rem;
 			background-color: rgba(255, 255, 255, 0.13);
 		    }
 		}
@@ -99,12 +98,12 @@
 
 	.userUpdate {
 	    flex: 2;
-	    padding: 13px;
-	    box-shadow: 0px 2px 15px 0px rgba(255, 255, 255, 0.52);
+	    padding: 0.75rem;
+	    box-shadow: 0 0.125rem 1rem 0 rgba(255, 255, 255, 0.52);
 
 	    .userUpdateTitle {
 		color: rgba(255, 255, 255, 0.65);
-		font-size: 23px;
+		font-size: 1.5rem;
 		font-weight: 600;
 		text-align: center;
 	    }
@@ -112,26 +111,25 @@
 	    .userUpdateForm {
 		display: flex;
 		justify-content: space-between;
-		margin-top: 19px;
+		margin-top: 1.25rem;
 
 		.userUpdateLeft {
 
 		    .userUpdateItem {
 			display: flex;
 			flex-direction: column;
-			margin-top: 9px;
+			margin-bottom: 1rem;
 
 			label {
-			    margin-bottom: 5px;
-			    font-size: 13px;
+			    font-size: 1rem;
 			}
 
 			.userUpdateInput {
 			    border: none;
 			    border-bottom: 1px solid grey;
-			    width: 234px;
-			    height: 26px;
-			    padding: 3px;
+			    width: 15rem;
+			    height: 1.5rem;
+			    padding: 0 0.25rem;
 			    background-color: var(--main-color);
 			    color: white;
 			}
@@ -148,13 +146,12 @@
 			align-items: center;
 
 			.userUpdateImg {
-			    width: 130px;
-			    height: 130px;
+			    width: 7.5rem;
+			    height: 7.5rem;
 			    object-fit: cover;
-			    border-radius: 13px;
-			    margin-right: 19px;
+			    margin-right: 1.25rem;
 			    border: 1px solid grey;
-			    box-shadow: 0px 2px 15px 0px rgba(255, 255, 255, 0.13);
+			    box-shadow: 0 0.125rem 1rem 0 rgba(255, 255, 255, 0.13);
 			    border-radius: 50%;
 			}
 
@@ -164,16 +161,24 @@
 		    }
 
 		    .userUpdateButton {
+			max-height: 3rem;
 			border: none;
-			border-radius: 5px;
+			border-radius: 0.25rem;
 			background-color: #028ECA;
 			color: white;
-			padding: 10px;
+			padding: 0.75rem;
 			cursor: pointer;
 			font-weight: 600;
 		    }
 		}
 	    }
 	}
+    }
+}
+
+/* Media Queries ensuring the page's dimensions are mobile-friendly */
+@media (max-width: 767px) {
+    .user {
+	margin-top: 60px;
     }
 }

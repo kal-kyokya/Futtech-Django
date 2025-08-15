@@ -176,7 +176,7 @@ const User = () => {
 			    <div className='userDetailsDiv'>
 				<SportsSoccerIcon className='userDetailsIcon' />
 				<div className='userDetailsContent'>
-				    { user.position }{ (user.sex !== 'Sex') && ` | ${user.sex}` }
+				    { (user.sex !== 'Sex') && `${user.sex} | ` }{ user.position }
 				</div>
 			    </div>
 			    <div className='userDetailsDiv'>
