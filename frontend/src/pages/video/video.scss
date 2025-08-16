@@ -168,6 +168,7 @@
 
 		    .videoUpdateUpload {
 			display: flex;
+			justify-content: center;
 			align-items: center;
 
 			.videoUpdateImg {
@@ -199,6 +200,7 @@
 			padding: 0.75rem;
 			cursor: pointer;
 			font-weight: 600;
+			font-size: 1rem;
 			margin-bottom: 0.75rem;
 		    }
 		}
@@ -207,3 +209,32 @@
     }
 }
 
+/* Media Query ensuring this page renders appropriately on Mobile size screens. */
+@media (max-width: 767px) {
+    .videoStyle {
+	margin-top: 60px;
+
+	.videoContainer {
+	    margin-top: 1rem;
+
+	    .videoDetails {
+		margin-bottom: 2rem;
+	    }
+
+	    .videoUpdate {
+
+		.videoUpdateForm {
+		    flex-direction: column;
+		    padding: 0;
+
+		    .videoUpdateTop {
+
+			.videoUpdateItem {
+			    margin-bottom: 1.75rem;
+			}
+		    }
+		}
+	    }
+	}
+    }
+}
