@@ -14,6 +14,7 @@ import {
 import axios from 'axios';
 import Navbar from '../../components/Navbar';
 
+
 const VideoList = () => {
     const { videos, dispatch } = useContext(VideoContext);
     const { user } = useContext(UserContext);
@@ -76,7 +77,6 @@ const VideoList = () => {
     ];
 
     const paginationModel = { page: 0, pageSize: 10 };
-
 
     return (
 	<>

@@ -1,19 +1,19 @@
 .videoList {
-    margin-top: 91px;
+    margin-top: 75px;
 }
 
 .videoListCell {
     display: flex;
 
     .profile {
-	width: 45px;
-	height: 45px;
+	width: 3rem;
+	height: 3rem;
 	border: 1px solid grey;
 	border-radius: 50%;
 	object-fit: cover;
 	cursor: pointer;
 	background-color: white;
-	margin-right: 10px;
+	margin-right: 0.75rem;
     }
 }
 
@@ -35,5 +35,12 @@
 	padding: 6px 13px;
 	cursor: pointer;
 	margin-right: 13px;
+    }
+}
+
+/* Media Query ensuring mobile-friendly design */
+@media (max-width: 767px) {
+    .videoList {
+	margin-top: 60px;
     }
 }
