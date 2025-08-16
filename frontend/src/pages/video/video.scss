@@ -1,12 +1,12 @@
 .videoStyle {
-    padding: 19px;
-    margin-top: 78px;
+    padding: 1.25rem;
+    margin-top: 75px;
     background-color: var(--main-color);
 
     .videoTopSection {
 	display:flex;
-	align-items: center;
 	justify-content: space-between;
+	align-items: center;
 
 	.videoEditTitle {
 	    color: rgba(255, 255, 255, 0.65);
@@ -16,25 +16,25 @@
 
 	    .videoWatchButton {
 		border: none;
-		padding: 5px;
-		border-radius: 6px;
+		padding: 0.25rem;
+		border-radius: 0.25rem;
 		color: var(--main-color);
 		background-color: #05F283;
 		cursor: pointer;
-		font-size: 15px;
+		font-size: 1rem;
 		font-weight: 600;
 	    }
 
 	    .videoDeleteButton {
 		border: none;
-		padding: 5px;
-		border-radius: 6px;
+		padding: 0.25rem;
+		border-radius: 0.25rem;
 		color: white;
 		background-color: rgb(130, 0, 0);
 		cursor: pointer;
-		font-size: 15px;
+		font-size: 1rem;
 		font-weight: 600;
-		margin-left: 15px;
+		margin-left: 1rem;
 	    }
 	}
     }
@@ -43,27 +43,27 @@
 	display: flex;
 	flex-direction: column;
 	color: white;
-	margin-top: 13px;
+	margin-top: 0.75rem;
 
 	.videoDetails {
 	    flex: 1;
-	    padding: 13px;
-	    box-shadow: 0px 2px 15px 0px rgba(255, 255, 255, 0.52);
-	    margin-bottom: 13px;
+	    padding: 0.75rem;
+	    box-shadow: 0 0.125rem 1rem 0 rgba(255, 255, 255, 0.52);
+	    margin-bottom: 0.75rem;
 
 	    .videoDetailsTop {
 		display: flex;
 		align-items: center;
 
 		.profile {
-		    width: 78px;
-		    height: 78px;
+		    width: 5rem;
+		    height: 5rem;
 		    border: 1px solid grey;
 		    border-radius: 50%;
 		    object-fit: cover;
 		    cursor: pointer;
 		    background-color: white;
-		    margin-right: 13px;
+		    margin-right: 0.75rem;
 		}
 
 		.videoInfos {
@@ -81,7 +81,7 @@
 	    }
 
 	    .videoDetailsBottom {
-		margin-top: 13px;
+		margin-top: 0.75rem;
 
 		.videoDetailsTitle {
 		    color: rgba(255, 255, 255, 0.52);
@@ -90,16 +90,15 @@
 
 		.videoDetailsDiv {
 		    display: flex;
-		    align-items: center;
-		    margin: 13px 0px;
+		    margin: 0.75rem 0;
 		    color: rgba(255, 255, 255, 0.78);
 
 		    .videoDetailsIcon {
-			margin-right: 10px;
+			margin-right: 0.75rem;
 		    }
 
 		    .videoDetailsContent {
-			font-weight: 16px;
+			font-weight: 1rem;
 		    }
 		}
 	    }
@@ -107,8 +106,8 @@
 
 	.videoUpdate {
 	    flex: 2;
-	    padding: 13px;
-	    box-shadow: 0px 2px 15px 0px rgba(255, 255, 255, 0.52);
+	    padding: 0.75rem;
+	    box-shadow: 0 0.125rem 1rem 0 rgba(255, 255, 255, 0.52);
 
 	    .videoUpdateBlock {
 		display: flex;
@@ -117,7 +116,7 @@
 
 		.videoUpdateTitle {
 		    color: rgba(255, 255, 255, 0.65);
-		    font-size: 23px;
+		    font-size: 1.5rem;
 		    font-weight: 600;
 		    text-align: center;
 		}
@@ -126,36 +125,36 @@
 	    .videoUpdateForm {
 		display: flex;
 		justify-content: space-between;
-		margin-top: 19px;
-		padding: 0px 52px;
+		margin-top: 1.25rem;
+		padding: 0 3.5rem;
 
 		.videoUpdateTop {
 
 		    .videoUpdateItem {
 			display: flex;
 			flex-direction: column;
-			margin-top: 13px;
+			margin-bottom: 0.75rem;
 
 			label {
-			    margin-bottom: 5px;
-			    font-size: 13px;
+			    margin-bottom: 0.25rem;
+			    font-size: 0.75rem;
 			}
 
 			.videoUpdateInput {
 			    border: none;
 			    border-bottom: 1px solid grey;
-			    width: 234px;
-			    height: 26px;
-			    padding: 3px;
+			    width: 15rem;
+			    height: 1.5rem;
+			    padding: 0.25rem;
 			    background-color: var(--main-color);
 			    color: white;
 			}
 
 			.videoUpdateInputDesc {
 			    border-bottom: 1px solid grey;
-			    width: 282px;
-			    height: 130px;
-			    padding: 3px;
+			    width: 16rem;
+			    height: 7.5rem;
+			    padding: 0.25rem;
 			    background-color: var(--main-color);
 			    color: white;
 			}
@@ -172,12 +171,12 @@
 			align-items: center;
 
 			.videoUpdateImg {
-			    width: 156px;
-			    height: 156px;
+			    width: 10rem;
+			    height: 10rem;
 			    object-fit: cover;
-			    border-radius: 13px;
-			    margin-right: 19px;
-			    box-shadow: 0px 2px 15px 0px rgba(255, 255, 255, 0.39);
+			    border-radius: 0.75rem;
+			    margin-right: 1.25rem;
+			    box-shadow: 0 0.125rem 1rem 0 rgba(255, 255, 255, 0.39);
 			}
 
 			.videoUpdateIcon {
@@ -187,21 +186,24 @@
 
 		    .userPrompt {
 			color: #05F283;
-			margin-top: 26px;
+			margin-top: 1.5rem;
 			text-align: center;
 		    }
 
 		    .videoUpdateButton {
+			max-height: 3rem;
 			border: none;
-			border-radius: 5px;
+			border-radius: 0.25rem;
 			background-color: #05F283;
 			color: rgba(0, 0, 0, 0.78);
-			padding: 10px;
+			padding: 0.75rem;
 			cursor: pointer;
 			font-weight: 600;
+			margin-bottom: 0.75rem;
 		    }
 		}
 	    }
 	}
     }
 }
+
