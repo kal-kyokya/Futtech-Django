@@ -182,8 +182,36 @@
 	width: 100vw;
 	margin-top: 60px;
 
+	.userTopSection {
+	    display:flex;
+	    align-items: center;
+	    justify-content: center;
+	}
+
 	.userContainer {
 	    flex-direction: column;
+
+	    .userDetails {
+		margin-bottom: 1.75rem;
+		margin-right: 0;
+	    }
+
+	    .userUpdate {
+		.userUpdateForm {
+		    flex-direction: column;
+
+		    .userUpdateRight {
+			margin-top: 0.75rem;
+			justify-content: center;
+			align-items: space-around;
+
+			.userUpdateUpload {
+			    justify-content: center;
+			    margin-bottom: 1.5rem;
+			}
+		    }
+		}
+	    }
 	}
     }
 }
