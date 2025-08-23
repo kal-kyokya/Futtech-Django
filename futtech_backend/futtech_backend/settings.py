@@ -101,6 +101,7 @@ CACHES = {
         ),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+            'SERIALIZER': 'django_redis.serializers.json.JSONSerializer', # To resolve byte decoding mismatch and reliably handle data stored by 'django.contrib.admin'
             'CONNECTION_POOL_KWARGS': {
                 'decode_responses': True, # Decodes responses for easier Python handling
                 'max_connections': 100,
