@@ -37,3 +37,29 @@ class UserProfile(models.Model):
         	The username associated with the instanciated user.
         """
         return self.user.username
+
+
+class Video(models.Model):
+    """
+    Represents a video asset within the platform (Inside Futtech).
+
+    Inheritance:
+    	models.Model - Base class enabling access to the 'batteries-included'
+    	'BaseModel' class, described as:
+    	'The metaclass for all class models.'
+    """
+
+    class VideoStatus(models.TextChoices):
+        """
+        Leverages OOP (Object-oriented programming) to avail a list of
+        states in which the video is at all time during its loading.
+
+        Inheritance:
+        	models.TextChoices - Base class facilitating creation of
+        	enumerated string choices.
+        """
+
+        PENDING = 'pending', 'Pending'
+        PROCESSING = 'processing', 'Processing'
+        READY = 'ready', 'Ready'
+        ERROR = 'error', 'Error'
