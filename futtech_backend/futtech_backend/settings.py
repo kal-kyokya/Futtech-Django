@@ -101,9 +101,10 @@ CACHES = {
         ),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'SERIALIZER': 'django_redis.serializers.json.JSONSerializer', # To resolve byte decoding mismatch and reliably handle data stored by 'django.contrib.admin'
+            'SERIALIZER': 'django_redis.serializers.pickle.PickleSerializer', # To resolve byte decoding mismatch and reliably handle data stored by 'django.contrib.admin'
             'CONNECTION_POOL_KWARGS': {
-                'decode_responses': True, # Decodes responses for easier Python handling
+# Commented out this line due to emerging misconfiguration it caused when combined with the newly added 'SERIALIZER: PickleSerializer'
+#                'decode_responses': True, # Decodes responses for easier Python handling
                 'max_connections': 100,
                 'retry_on_timeout': True,
             }
