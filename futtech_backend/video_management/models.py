@@ -59,7 +59,50 @@ class Video(models.Model):
         	enumerated string choices.
         """
 
+        # These are tuples using Python's Tuple Packing
         PENDING = 'pending', 'Pending'
         PROCESSING = 'processing', 'Processing'
         READY = 'ready', 'Ready'
         ERROR = 'error', 'Error'
+
+
+    id = models.UUIDField(primary_key=True,
+                          default=uuid.uuid4,
+                          editable=False)
+    owner = models.ForeignKey(User,
+                              on_delete=models.CASCADE,
+                              related_name='videos')
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True,
+                                   null=True)
+
+    # Mux-specific fields
+    mux_asset_id = models.CharField(max_length=255,
+                                    unique=True,
+                                    null=True,
+                                    blank=True)
+    mux_playback_id = models.CharField(max_length=255,
+                                       unique=True,
+                                       null=True,
+                                       blank=True)
+
+    duration = models.DurationField(null=true,
+                                    blank=True)
+    status = models.CharField(max_length=20,
+                              choices=VideoStatus.choices,
+                              default=VideoStatus.PENDING)
+    is_premium = models.Boolean(default=False)
+
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        """
+        Defines the expected string representation of every subsequent
+        instanciation of this Video model.
+
+        Return:
+        	The video title as well as the owner's username.
+        """
+        return "'{}' by {}".format(self.title,
+                                   self.owner.username)
