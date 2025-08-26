@@ -1,8 +1,7 @@
 #!/usr/bin/env python3
 """
-'video_management/models.py' contains definition of all the necessary DB tables
-required for Futtech's video management App to handle CRUD operations leading
-to product delivery.
+'video_management/models.py' contains definitions of all DB tables required
+for this App to handle CRUD operations facilitating video streaming.
 """
 
 import uuid
@@ -45,8 +44,7 @@ class Video(models.Model):
 
     Inheritance:
     	models.Model - Base class enabling access to the 'batteries-included'
-    	'BaseModel' class, described as:
-    	'The metaclass for all class models.'
+    	'BaseModel' class described as: 'The metaclass for all class models.'
     """
 
     class VideoStatus(models.TextChoices):
@@ -59,7 +57,7 @@ class Video(models.Model):
         	enumerated string choices.
         """
 
-        # These are tuples using Python's Tuple Packing
+        # These are tuples created using Python's Tuple Packing
         PENDING = 'pending', 'Pending'
         PROCESSING = 'processing', 'Processing'
         READY = 'ready', 'Ready'
