@@ -84,12 +84,12 @@ class Video(models.Model):
                                        null=True,
                                        blank=True)
 
-    duration = models.DurationField(null=true,
+    duration = models.DurationField(null=True,
                                     blank=True)
     status = models.CharField(max_length=20,
                               choices=VideoStatus.choices,
                               default=VideoStatus.PENDING)
-    is_premium = models.Boolean(default=False)
+    is_premium = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
