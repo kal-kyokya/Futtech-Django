@@ -14,9 +14,17 @@ from dotenv import load_dotenv
 # Mux API Configuration
 # --------------------------
 
-# Laying out foundation for Basic Authentication
+# Basic Authentication Setup
 load_dotenv()
 
 configuration = mux_python.Configuration()
 configuration.username = os.environ.get('MUX_TOKEN_ID')
 configuration.password = os.environ.get('MUX_TOKEN_SECRET')
+
+# API clients
+assets_api = mux_python.AssetsApi(
+    mux_python.ApiClient(
+        configuration
+    )
+)
+
