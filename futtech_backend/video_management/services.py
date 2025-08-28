@@ -6,10 +6,9 @@ the designated VPaaS (Mux|27-Aug-2025) while mitigating 'vendor lock-in' risks.
 
 import os
 import mux_python
-from .models import Video
 from dotenv import load_dotenv
-import logger
-
+from .models import Video
+from .logs import logger
 
 # --------------------------
 # Mux API Configuration
@@ -52,7 +51,7 @@ def create_direct_upload_url():
         create_upload_response = uploads_api.create_direct_upload(
             create_upload_request
         )
-        logger.print_debug(str(create_upload_response))
+        logger.debug(str(create_upload_response))
 
         assert create_upload_response != None
         assert create_upload_response.data != None
