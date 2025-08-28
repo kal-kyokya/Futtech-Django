@@ -59,5 +59,19 @@ def create_direct_upload_url():
 
         return create_upload_response.data
     except mux_python.ApiException as err:
-        logger.error("Exception when calling UploadsApi->create_direct_api: {}".format(err))
+        logger.error("Exception when calling DirectUploadsApi->create_direct_api: {}".format(err))
         return None
+
+
+def handle_mux_webhook(payload, signature_header):
+    """
+    Verifies and processes incoming Mux webhooks (Automated notifications from
+    Mux to this App signaling completion status of asynchronous event).
+
+    Params:
+    	payload - JSON object containing the status of the Mux event.
+    	signature_header - Hash of the request body & a timestamp for security.
+
+    Return:
+    	A boolean (True) if no exception is raised during processing.
+    """
