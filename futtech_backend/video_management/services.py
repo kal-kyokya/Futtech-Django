@@ -59,4 +59,5 @@ def create_direct_upload_url():
 
         return create_upload_response.data
     except mux_python.ApiException as err:
-        pass
+        logger.error("Exception when calling UploadsApi->create_direct_api: {}".format(err))
+        return None
