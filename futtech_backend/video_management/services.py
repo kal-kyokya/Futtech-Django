@@ -4,11 +4,13 @@
 the designated VPaaS (Mux|27-Aug-2025) while mitigating 'vendor lock-in' risks.
 """
 
-import os
-import mux_python
+# Imports are sorted alphabetically with dotted files at the bottom
+import datetime
 from dotenv import load_dotenv
-from .models import Video
+import mux_python
+import os
 from .logs import logger
+from .models import Video
 
 # --------------------------
 # Mux API Configuration
@@ -70,8 +72,50 @@ def handle_mux_webhook(payload, signature_header):
 
     Params:
     	payload - JSON object containing the status of the Mux event.
-    	signature_header - Hash of the request body & a timestamp for security.
+    	signature_header - Hash of the request body and timestamp for security,
+    			   generated using a unique Mux webhook secret key.
 
     Return:
     	A boolean (True) if no exception is raised during processing.
     """
+
+    # It is CRITICAL to verify the webhook signature for security
+    webhook_secret = os.environ.get('MUX_WEBHOOK_SIGNING_SECRET', '')
+    try:
+        # The Mux SDK's verify function will raise an error if invalid
+        mux_python.webhooks.verify_header(payload,
+                                          signature_header,
+                                          webhook_secret)
+    except ValueError as err:
+        # Invalid signature
+        logger.error("Exception verifying the Mux webhook: {}".format(err))
+        return False
+
+    event_data = payload.get('data', {})
+    event_type = payload.get('type')
+
+    if event_type == 'video.asset.ready':
+        asset_id = event_data.get('id')
+        playback_id = event_data.get('playback_ids', [{}]).get('id')
+        duration = event_data.get('duration')
+
+        # Find the corresponding video in our database and update it
+        try:
+            video = Video.objects.get(mux_asset_id=asset_id)
+            video.mux_playback_id = playback_id
+            video.duration = datetime.timedelta(seconds=duration)
+            video.status = Video.VideoStatus.READY
+            video.save()
+        except Video.DoesNotExist as err:
+            logger.error("Exception updating video object upon Mux creation: {}".format(err))
+    elif event_type == 'video.asset.errored':
+        asset_id = event_data.get('id')
+        try:
+            video = Video.objects.get(mux_asset_id=asset_id)
+            video.status = Video.VideoStatus.ERROR
+            video.save()
+        except Video.DoesNotExist as err:
+            logger.error("Exception updating video after Mux creation err: {}".format(err))
+
+    # End of verification and processing of webhooks from Mux
+    return True
