@@ -16,7 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
+from video_management import views
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/videos/<uuid:video_id>/get-playback-token/',
+         views.get_playback_token,
+         name='get_playback_token'),
 ]
