@@ -156,5 +156,5 @@ def generate_signed_playback_token(playback_id):
 
         return token
     except Exception as err:
-        logger.error(f"Error generating JWT: {}".format(err))
+        logger.error("Error generating JWT: {}".format(err))
         return None
