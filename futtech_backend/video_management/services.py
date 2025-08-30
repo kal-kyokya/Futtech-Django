@@ -11,8 +11,8 @@ import jwt
 import mux_python
 import os
 import time
-from logs import logger
-from models import Video
+from .logs import logger
+from .models import Video
 
 # --------------------------
 # Mux API Configuration
@@ -126,7 +126,7 @@ def handle_mux_webhook(payload, signature_header):
 
 def generate_signed_playback_token(playback_id):
     """
-    Generates a signed JWT for a given Mux Playback ID.
+    Generates a signed JWT off of the input Mux Playback ID.
 
     Params:
     	playback_id - The dictionary-like object to be encoded as a JWT.
@@ -135,3 +135,26 @@ def generate_signed_playback_token(playback_id):
     	A JSON Web Token solving the stateless server-side authentication and
     	authorization problem in modern web development.
     """
+
+    if not signing_key_id or not private_key_pem:
+        logger.error("Misconfiguration, cannot generate a signed token.")
+        return None
+    try:
+        # Token expires in 1 hour
+        expiration_time = int(time.time()) + 3600
+
+        token = jwt.encode(
+            {
+                'sub': playback_id,
+                'aud': 'v', # Targeted audience (Recipient) claim
+                'exp': expiration_time,
+                'kid': signing_key_id,
+            },
+            private_key_pem,
+            algorithm='RS256',
+        )
+
+        return token
+    except Exception as err:
+        logger.error(f"Error generating JWT: {}".format(err))
+        return None
