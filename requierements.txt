@@ -1,8 +1,10 @@
 asgiref==3.9.1
 Django==5.2.5
 django-redis==6.0.0
+logger==1.4
 mux_python==5.1.0
 psycopg2-binary==2.9.10
+PyJWT==2.10.1
 python-dateutil==2.9.0.post0
 python-dotenv==1.1.1
 redis==6.4.0

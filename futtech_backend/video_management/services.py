@@ -96,7 +96,7 @@ def handle_mux_webhook(payload, signature_header):
 
     if event_type == 'video.asset.ready':
         asset_id = event_data.get('id')
-        playback_id = event_data.get('playback_ids', [{}]).get('id')
+        playback_id = event_data.get('playback_ids', [{}])[0].get('id')
         duration = event_data.get('duration')
 
         # Find the corresponding video in our database and update it
