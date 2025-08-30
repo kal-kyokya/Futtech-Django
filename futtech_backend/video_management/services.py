@@ -7,10 +7,12 @@ the designated VPaaS (Mux|27-Aug-2025) while mitigating 'vendor lock-in' risks.
 # Imports are sorted alphabetically with dotted files at the bottom
 import datetime
 from dotenv import load_dotenv
+import jwt
 import mux_python
 import os
-from .logs import logger
-from .models import Video
+import time
+from logs import logger
+from models import Video
 
 # --------------------------
 # Mux API Configuration
@@ -22,13 +24,15 @@ load_dotenv()
 configuration = mux_python.Configuration()
 configuration.username = os.environ.get('MUX_TOKEN_ID')
 configuration.password = os.environ.get('MUX_TOKEN_SECRET')
+configs = mux_python.ApiClient(configuration)
 
-# API Client Initialization
-uploads_api = mux_python.DirectUploadsApi(
-    mux_python.ApiClient(
-        configuration
-    )
-)
+# API Clients Initialization
+web_inputs_api = mux_python.WebInputsApi(configs)
+uploads_api = mux_python.DirectUploadsApi(configs)
+
+# JWT Signing Configuration
+signing_key_id = os.environ.get('MUX_SIGNING_KEY_ID')
+private_key_pem = os.environ.get('MUX_PROVATE_KEY')
 
 def create_direct_upload_url():
     """
@@ -119,3 +123,15 @@ def handle_mux_webhook(payload, signature_header):
 
     # End of verification and processing of webhooks from Mux
     return True
+
+def generate_signed_playback_token(playback_id):
+    """
+    Generates a signed JWT for a given Mux Playback ID.
+
+    Params:
+    	playback_id - The dictionary-like object to be encoded as a JWT.
+
+    Return:
+    	A JSON Web Token solving the stateless server-side authentication and
+    	authorization problem in modern web development.
+    """
