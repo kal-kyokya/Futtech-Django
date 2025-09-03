@@ -40,6 +40,7 @@ const Watch = () => {
 
 		<VideoPlayer
 		    playbackId={ location.state?.video.content }
+		    videoId={ location.state?.video.id }
 		    videoTitle={ location.state?.video.title }
 		/>
 
