@@ -14,7 +14,7 @@ import Navbar from '../../components/Navbar';
  * @params {Object} config - Default config for the instance (HTTP request?).
  *
  * @returns {Axios} a customized instance of Axios.
- */
+ **/
 const apiService = axios.create({
     baseUrl: import.meta.env.VITE_API_BASE_URL,
     interceptors: { // This will attach the auth token to every request
@@ -51,7 +51,7 @@ const NewVideo = () => {
      *  @params {Object} e - 'On submit event' attached to HTML form element.
      *
      *  @returns {null} - No explicit return, just a set of 'side effects'.
-     */
+     **/
     const handleUploadAndSubmit = async (e) => {
 	e.preventDefault(): // Prevents automatic submission of form content
 
@@ -66,6 +66,65 @@ const NewVideo = () => {
 	setUploadProgress(0);
 
 	try {
+	    /**
+	     * STEP 1: Create a Video record in Django & get a Mux Upload URL.
+	     *
+	     * _ We send our initial metadata to our backend first.
+	     * _ The backend creates a 'pending' Video object and asks Mux for
+	     * 	 an upload URL.
+	     **/
+
+	    const createResponse = await apiService.post('/api/videos/create-upload/',
+							 {
+							     title,
+							     description,
+							     is_premium: isPremium,
+							 });
+
+	    const { upload_url, video_id, mux_asset_id } = createResponse.data;
+
+	    if (!upload_url) {
+		throw new Error('Could not retrieve an upload URL from the server');
+	    }
+
+	    /**
+	     * STEP 2: Upload the video file directly to Mux
+	     *
+	     * The client uploads the file to Mux. No backend operation needed.
+	     **/
+
+	    await axios.put(upload_url, videoFile, {
+		headers: {
+		    'Content-Type': videoFile.type,
+		},
+		onUploadProgress: (progressEvent) => {
+		    const percent = Math.round(
+			(progressEvent.loaded * 100) / progressEvent.total
+		    );
+		    setUploadProgress(percent);
+		},
+	    });
+
+	    /**
+	     * STEP 3: Finalize the upload with our backend.
+	     *
+	     * This confirms the upload from the client-side and can trigger
+	     * post-upload workflows.
+	     **/
+
+	    await apiService.patch(`/api/videos/${video_id}/upload-complete/`,
+				   {
+				       mux_asset_id: mux_asset_id,
+				   });
+
+	    /**
+	     * STEP 4: Navigate the user to the watch page.
+	     *
+	     * The video will show a 'processing' state until
+	     * the Mux webhook updates the backend.
+	     **/
+
+	    navigate(`/watch/${video_id}`);
 
 	} catch (err) {
 
