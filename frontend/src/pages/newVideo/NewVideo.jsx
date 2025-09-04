@@ -44,6 +44,34 @@ const NewVideo = () => {
     const [uploadProgress, setUploadProgress] = useState(0);
     const [error, setError] = useState(null);
 
+    /**
+     *  handleUploadAndSubmit - Asynchronous arrow function handling the entire
+     *  			upload and video creation process.
+     *
+     *  @params {Object} e - 'On submit event' attached to HTML form element.
+     *
+     *  @returns {null} - No explicit return, just a set of 'side effects'.
+     */
+    const handleUploadAndSubmit = async (e) => {
+	e.preventDefault(): // Prevents automatic submission of form content
+
+	// Client-side inforcement of the Django Model's 'required fields'
+	if (!videoFile || !title) {
+	    setError("A title and video file are required");
+	    return;
+	}
+
+	setIsUploading(true);
+	setError(null); // In case there was an unsuccesful attempt
+	setUploadProgress(0);
+
+	try {
+
+	} catch (err) {
+
+	}
+    };
+
     return (
 	<div className='userPrompt'>
 	    Upload a new Video.
