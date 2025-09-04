@@ -53,7 +53,7 @@ const NewVideo = () => {
      *  @returns {null} - No explicit return, just a set of 'side effects'.
      **/
     const handleUploadAndSubmit = async (e) => {
-	e.preventDefault(): // Prevents automatic submission of form content
+	e.preventDefault(); // Prevents automatic submission of form content
 
 	// Client-side inforcement of the Django Model's 'required fields'
 	if (!videoFile || !title) {
@@ -135,9 +135,39 @@ const NewVideo = () => {
     };
 
     return (
-	<div className='userPrompt'>
-	    Upload a new Video.
-	</div>
+	<>
+	    <Navbar />
+	    <div className='newVideo'>
+		<h1 className='newVideoTitle'>Upload New Video</h1>
+
+		<form className='newVideoForm'
+		      onSubmit={handleUploadAndSubmit}>
+		    <div className='newVideoTop'>
+			<div className='newVideoItem'>
+			    <label>Title</label>
+			    <input className='newVideoInput'
+				   type='text'
+				   placeholder='Enter video title'
+				   value={title}
+				   onChange={(e) => setTitle(e.target.value)}
+				   required
+			    />
+			</div>
+
+			<div className='newVideoItem'>
+			    <label>Description</label>
+			    <textarea className='newVideoInputDesc'
+				   placeholder='Describe your video'
+				   value={description}
+				   onChange={(e) => setDescription(e.target.value)}
+			    />
+			</div>
+
+		    </div>
+
+		</form>
+	    </div>
+	</>
     );
 };
 
