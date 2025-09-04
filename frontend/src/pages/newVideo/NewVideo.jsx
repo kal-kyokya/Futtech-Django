@@ -28,3 +28,27 @@ const apiService = axios.create({
 	},
     },
 });
+
+const NewVideo = () => {
+    const { user } = useContext(UserContext);
+    const navigate = useNavigate();
+
+    // React states matching our Django Video model
+    const [title, setTitle] = useState('');
+    const [description, setDescription] = useState('');
+    const [isPremium, setIsPremium] = useState(false);
+    const [videoFile, setVideoFile] = useState(null);
+
+    // React states tracking and monitoring UI/Upload status
+    const [isUploading, setIsUploading] = useState(false);
+    const [uploadProgress, setUploadProgress] = useState(0);
+    const [error, setError] = useState(null);
+
+    return (
+	<div className='userPrompt'>
+	    Upload a new Video.
+	</div>
+    );
+};
+
+export default NewVideo;
