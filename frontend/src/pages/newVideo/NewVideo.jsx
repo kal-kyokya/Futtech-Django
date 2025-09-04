@@ -127,7 +127,10 @@ const NewVideo = () => {
 	    navigate(`/watch/${video_id}`);
 
 	} catch (err) {
-
+	    console.error('Upload process failed: ', err);
+	    setError('An error occured during the upload. Please try again.');
+	    setIsUploading(false);
+	    setUploadProgress(0);
 	}
     };
 
