@@ -7,6 +7,7 @@ for this App to handle CRUD operations facilitating video streaming.
 import uuid
 from django.db import models
 from django.contrib.auth.models import User
+from .choices import PlayerPosition, UserSex, VideoStatus, VideoCategory
 
 
 class UserProfile(models.Model):
@@ -26,6 +27,27 @@ class UserProfile(models.Model):
                                  blank=True)
     bio = models.TextField(null=True,
                            blank=True)
+    position = models.CharField(max_length=20,
+                                choices=PlayerPosition.choices,
+                                default=PlayerPosition.OBSERVER)
+    profession = models.CharField(help_text='Professional footballer, Engineer, Business owner...',
+                                  max_length=255,
+                                  null=True,
+                                  blank=True)
+    sex = models.CharField(max_length=6,
+                           choices=UserSex.choices,
+                           default=UserSex.BLANK)
+    birthday = models.DateField(null=True,
+                                blank=True)
+    phone = models.CharField(help_text='+123456789, 0123456789, 123456789',
+                             max_length=13,
+                             null=True,
+                             blank=True)
+    location = models.CharField(help_text='Current place of residence.',
+                                max_length=168,
+                                null=True,
+                                blank=True)
+    active_footballer = models.BooleanField(default=True)
 
     def __str__(self):
         """
@@ -47,23 +69,6 @@ class Video(models.Model):
     	'BaseModel' class described as: 'The metaclass for all class models.'
     """
 
-    class VideoStatus(models.TextChoices):
-        """
-        Leverages OOP (Object-oriented programming) to avail a list of
-        states in which the video is at all time during its loading.
-
-        Inheritance:
-        	models.TextChoices - Base class facilitating creation of
-        	enumerated string choices.
-        """
-
-        # These are tuples created using Python's Tuple Packing
-        PENDING = 'pending', 'Pending'
-        PROCESSING = 'processing', 'Processing'
-        READY = 'ready', 'Ready'
-        ERROR = 'error', 'Error'
-
-
     id = models.UUIDField(primary_key=True,
                           default=uuid.uuid4,
                           editable=False)
@@ -84,14 +89,27 @@ class Video(models.Model):
                                        null=True,
                                        blank=True)
 
-    duration = models.DurationField(null=True,
-                                    blank=True)
     status = models.CharField(max_length=20,
                               choices=VideoStatus.choices,
                               default=VideoStatus.PENDING)
+    duration = models.DurationField(null=True,
+                                    blank=True)
     is_premium = models.BooleanField(default=False)
     is_drone = models.BooleanField(default=False)
     is_analysis = models.BooleanField(default=False)
+
+    location = models.CharField(help_text='Place of video recording.',
+                                max_length=168,
+                                null=True,
+                                blank=True)
+    category = models.CharField(max_length=10,
+                                choices=VideoCategory.choices,
+                                default=VideoCategory.TRAINING)
+    recorded_on = models.DateField(null=True,
+                                   blank=True)
+    thumbnail = models.URLField(max_length=512,
+                                null=True,
+                                blank=True)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
