@@ -36,8 +36,10 @@ const NewVideo = () => {
     // React states matching our Django Video model
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
-    const [isPremium, setIsPremium] = useState(false);
     const [videoFile, setVideoFile] = useState(null);
+    const [isPremium, setIsPremium] = useState(false);
+    const [isDrone, setIsDrone] = useState(false);
+    const [isAiAnalysis, setIsAiAnalysis] = useState(false);
 
     // React states tracking and monitoring UI/Upload status
     const [isUploading, setIsUploading] = useState(false);
@@ -79,6 +81,8 @@ const NewVideo = () => {
 							     title,
 							     description,
 							     is_premium: isPremium,
+							     is_drone: isDrone,
+							     is_analysis: isAiAnalysis,
 							 });
 
 	    const { upload_url, video_id, mux_asset_id } = createResponse.data;
@@ -144,12 +148,22 @@ const NewVideo = () => {
 		      onSubmit={handleUploadAndSubmit}>
 		    <div className='newVideoTop'>
 			<div className='newVideoItem'>
-			    <label>Title</label>
+			    <label>Title *</label>
 			    <input className='newVideoInput'
 				   type='text'
 				   placeholder='Enter video title'
 				   value={title}
 				   onChange={(e) => setTitle(e.target.value)}
+				   required
+			    />
+			</div>
+
+			<div className='newVideoItem'>
+			    <label>Video File *</label>
+			    <input className='newVideoInput'
+				   type='file'
+				   accept='video/*'
+				   onChange={(e) => setVideo(e.target.files)}
 				   required
 			    />
 			</div>
@@ -175,13 +189,25 @@ const NewVideo = () => {
 			</div>
 
 			<div className='newVideoItem'>
-			    <label>Video File</label>
-			    <input className='newVideoInput'
-				   type='file'
-				   accept='video/*'
-				   onChange={(e) => setVideo(e.target.files)}
-				   required
-			    />
+			    <label>Drone Footage?</label>
+			    <select className='newVideoSelect'
+				    value={isDrone}
+				    onChange={(e) => setIsDrone(e.target.value === 'true')}
+			    >
+				<option value='false'>No (Other media)</option>
+				<option value='true'>Yes</option>
+			    </select>
+			</div>
+
+			<div className='newVideoItem'>
+			    <label>AI Analysis?</label>
+			    <select className='newVideoSelect'
+				    value={isAiAnalysis}
+				    onChange={(e) => setIsAiAnalysis(e.target.value === 'true')}
+			    >
+				<option value='false'>No (Raw footage)</option>
+				<option value='true'>Yes</option>
+			    </select>
 			</div>
 		    </div>
 
