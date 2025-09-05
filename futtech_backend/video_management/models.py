@@ -90,6 +90,8 @@ class Video(models.Model):
                               choices=VideoStatus.choices,
                               default=VideoStatus.PENDING)
     is_premium = models.BooleanField(default=False)
+    is_drone = models.BooleanField(default=False)
+    is_analysis = models.BooleanField(default=False)
 
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
