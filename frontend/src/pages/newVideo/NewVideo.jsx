@@ -163,8 +163,48 @@ const NewVideo = () => {
 			    />
 			</div>
 
+			<div className='newVideoItem'>
+			    <label>Premium Content?</label>
+			    <select className='newVideoSelect'
+				   value={isPremium}
+				   onChange={(e) => setIsPremium(e.target.value === 'true')}
+			    >
+				<option value={false}>No (Free to watch)</option>
+				<option value={true}>Yes (Requires subscription)</option>
+			    </select>
+			</div>
+
+			<div className='newVideoItem'>
+			    <label>Video File</label>
+			    <input className='newVideoInput'
+				   type='file'
+				   accept='video/*'
+				   onChange={(e) => setVideo(e.target.files)}
+				   required
+			    />
+			</div>
 		    </div>
 
+		    <div className='newVideoBottom'>
+			{isUploading && (
+			    <div className='userPrompt'>
+				<div>Uploading video: {uploadProgress}%</div>
+				<progress value={uploadProgress}
+					  max='100'
+				>
+				</progress>
+			    </div>
+			)}
+
+			{error && <div className='userPrompt error'>{error}</div>}
+
+			<button className='newVideoButton'
+				type='submit'
+				disabled={isUploading}
+			>
+			    {isUploading? 'Uploading...' : 'Upload and Create'}
+			</button>
+		    </div>
 		</form>
 	    </div>
 	</>
