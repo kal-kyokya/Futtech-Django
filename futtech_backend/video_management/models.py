@@ -7,7 +7,7 @@ for this App to handle CRUD operations facilitating video streaming.
 import uuid
 from django.db import models
 from django.contrib.auth.models import User
-from .choices import PlayerPosition, UserSex, VideoStatus, VideoCategory
+from .choices import PlayerPosition, UserSex, VideoStatus, VideoCategory, VideoPolicy
 
 
 class UserProfile(models.Model):
@@ -88,6 +88,9 @@ class Video(models.Model):
                                        unique=True,
                                        null=True,
                                        blank=True)
+    mux_playback_policy = models.CharField(max_length=6,
+                                           choices=VideoPolicy,
+                                           default=VideoPolicy.PUBLIC)
 
     status = models.CharField(max_length=20,
                               choices=VideoStatus.choices,

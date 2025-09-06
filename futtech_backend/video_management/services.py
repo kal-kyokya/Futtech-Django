@@ -32,7 +32,7 @@ uploads_api = mux_python.DirectUploadsApi(configs)
 
 # JWT Signing Configuration
 signing_key_id = os.environ.get('MUX_SIGNING_KEY_ID')
-private_key_pem = os.environ.get('MUX_PROVATE_KEY')
+private_key_pem = os.environ.get('MUX_PRIVATE_KEY')
 
 def create_direct_upload_url():
     """

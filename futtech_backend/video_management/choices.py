@@ -78,3 +78,18 @@ class VideoCategory(models.TextChoices):
     # These are tuples created using Python's Tuple Packing
     GAME = 'game', 'Game'
     TRAINING = 'training', 'Training'
+
+
+class VideoPolicy(models.TextChoices):
+    """
+    Leverages OOP (Object-oriented programming) to avail a list of
+    playback policy associated with each mux video asset.
+
+    Inheritance:
+    	models.TextChoices - Base class facilitating creation of
+    	enumerated string choices.
+    """
+
+    # These are tuples created using Python's Tuple Packing
+    PUBLIC = 'public', 'Public'
+    SIGNED = 'signed', 'Signed'
