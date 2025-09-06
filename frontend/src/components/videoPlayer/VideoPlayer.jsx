@@ -1,7 +1,7 @@
 import './videoPlayer.scss';
 import { useEffect, useRef } from 'react';
 
-const VideoPlayer = ({ playbackId, videoId, videoTitle, userId}) => {
+const VideoPlayer = ({ playbackId, tokens, metadata}) => {
     const ref = useRef();
 
     useEffect(() => {
@@ -9,9 +9,10 @@ const VideoPlayer = ({ playbackId, videoId, videoTitle, userId}) => {
 
 	// Set attributes manually to be React-safe
 	ref.current.setAttribute('playback-id', playbackId);
-	ref.current.setAttribute('metadata-video-id', videoId);
-	ref.current.setAttribute('metadata-video-title', videoTitle);
-	ref.current.setAttribute('metadata-viewer-user-id', userId);
+	ref.current.setAttribute('tokens', tokens);
+	ref.current.setAttribute('metadata-video-id', metadata.video_id);
+	ref.current.setAttribute('metadata-video-title', metadata.video_title);
+	ref.current.setAttribute('metadata-viewer-user-id', metadata.viewer_user_id);
 	ref.current.setAttribute('stream-type', 'on-demand');
 	ref.current.setAttribute('controls', '');
 	ref.current.setAttribute('class', 'muxPlayer');
