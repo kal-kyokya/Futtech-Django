@@ -71,9 +71,9 @@ const NewVideo = () => {
 	    /**
 	     * STEP 1: Create a Video record in Django & get a Mux Upload URL.
 	     *
-	     * _ We send our initial metadata to our backend first.
-	     * _ The backend creates a 'pending' Video object and asks Mux for
-	     * 	 an upload URL.
+	     * _ First send metadata to the Django backend.
+	     * _ The backend creates a 'pending' Video object, prompts Mux for
+	     * 	 an upload URL and send it in the response.
 	     **/
 
 	    const createResponse = await apiService.post('/api/videos/create-upload/',
@@ -92,9 +92,9 @@ const NewVideo = () => {
 	    }
 
 	    /**
-	     * STEP 2: Upload the video file directly to Mux
+	     * STEP 2: Upload the video file directly to Mux.
 	     *
-	     * The client uploads the file to Mux. No backend operation needed.
+	     * Automated client-side upload to Mux. No backend call needed.
 	     **/
 
 	    await axios.put(upload_url, videoFile, {
@@ -110,9 +110,9 @@ const NewVideo = () => {
 	    });
 
 	    /**
-	     * STEP 3: Finalize the upload with our backend.
+	     * STEP 3: Finalize the upload with the backend.
 	     *
-	     * This confirms the upload from the client-side and can trigger
+	     * This confirms the client-side upload and can trigger
 	     * post-upload workflows.
 	     **/
 
