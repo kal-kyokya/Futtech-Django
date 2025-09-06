@@ -79,4 +79,46 @@ const Watch = () => {
 
 	fetchVideoData();
     }, [videoId, user]);
+
+    /**
+     * Set of possible render logics when video is not ready for playback.
+     *
+     * It is based on the preceding data logic.
+     **/
+
+    if (loading) {
+	return (
+	    <>
+		<Navbar />
+		<div className='watch'>
+		    Loading video...
+		</div>
+	    </>
+	);
+    }
+
+    if (error) {
+	return (
+	    <>
+		<Navbar />
+		<div className='watch error'>
+		    {error}
+		</div>
+	    </>
+	);
+    }
+
+    if (video.status !== 'ready') { // The video is still processing
+	return (
+	    <>
+		<Navbar />
+		<div className='watch'>
+		    <h1>{video.title}</h1>
+		    <p>This video is still processing. Please check back in a few moments.</p>
+		</div>
+	    </>
+	);
+    }
 };
+
+export default Watch;
