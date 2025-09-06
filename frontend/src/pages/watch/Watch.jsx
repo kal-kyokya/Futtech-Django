@@ -2,7 +2,7 @@ import './watch.scss';
 import { Link, useParams } from 'react-router-dom';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
-import MuxPlayer from '@mux-player-react';
+import VideoPlayer from '../../components/videoPlayer/VideoPlayer';
 
 import { UserContext } from '../../contexts/userContext/UserContext';
 import Navbar from '../../components/Navbar';
@@ -134,13 +134,13 @@ const Watch = () => {
 		    </div>
 		</Link>
 
-		<MuxPlayer playbackId={video.mux_playback_id}
-			   tokens={{ playback: playbackToken }}
-			   metadata={{
-			       video_id: video.id,
-			       video_title: video.title,
-			       viewer_user_id: user ? user.id : null,
-			   }}
+		<VideoPlayer playbackId={video.mux_playback_id}
+			     tokens={{ playback: playbackToken }}
+			     metadata={{
+				 video_id: video.id,
+				 video_title: video.title,
+				 viewer_user_id: user ? user.id : null,
+			     }}
 		/>
 
 		<div className='videoDetails'>
