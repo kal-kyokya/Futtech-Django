@@ -70,7 +70,8 @@ const Watch = () => {
 		}
 
 	    } catch (err) {
-
+		console.error('Failed to fetch video data', err);
+		setError(err.message || 'Could not load video. It may be private or does not exist.');
 	    } finally {
 
 	    }
