@@ -13,7 +13,7 @@ import Navbar from '../../components/Navbar';
  *
  * @params {Object} config - Default config for the instance (HTTP request?).
  *
- * @returns {Axios} a customized instance of Axios.
+ * @returns {Axios} a customized instance of Axios. Extended request.
  **/
 const apiService = axios.create({
     baseUrl: import.meta.env.VITE_API_BASE_URL,
