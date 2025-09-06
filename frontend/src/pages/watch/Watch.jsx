@@ -119,6 +119,43 @@ const Watch = () => {
 	    </>
 	);
     }
+
+    // Render logic once videos are ready for playback
+    return (
+	<>
+	    <Navbar />
+	    <div className='watch'>
+		<Link className='limk'
+		      to='/'
+		>
+		    <div className='back'>
+			<ArrowBackIcon />
+			Home
+		    </div>
+		</Link>
+
+		<MuxPlayer playbackId={video.mux_playback_id}
+			   tokens={{ playback: playbackToken }}
+			   metadata={{
+			       video_id: video.id,
+			       video_title: video.title,
+			       viewer_user_id: user ? user.id : null,
+			   }}
+		/>
+
+		<div className='videoDetails'>
+		    <h1 className='videoTitle'>{video.title}</h1>
+		    <p className='videoDescription'>{video.description}</p>
+
+		    {video.is_premium &&
+		     <span className='premiumBadge'>
+			 Premium
+		     </span>}
+		</div>
+
+	    </div>
+	</>
+    );
 };
 
 export default Watch;
