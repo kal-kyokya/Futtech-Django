@@ -72,6 +72,41 @@ class UserProfile(models.Model):
         return self.user.username
 
 
+class Team(models.Model):
+    """
+    Represents a Team accessing the 'Enterprise' subscription plan.
+
+    Inheritance:
+    	models.Model - Base class enabling access to the 'batteries-included'
+    	'BaseModel' class described as: 'The metaclass for all class models.'
+    """
+
+    team_name = models.CharField(max_length=100)
+    members = models.ManyToManyField(User,
+                                     related_name='teams',
+                                     through='Membership')
+    subscription = models.ForeignKey('djstripe.Subscription',
+                                     null=True,
+                                     blank=True,
+                                     on_delete=models.SET_NULL
+                                     help_text="The team's Stripe subscription object, if it exists")
+    customer = models.ForeignKey('djstripe.Customer',
+                                 null=True,
+                                 blank=True,
+                                 on_delete=models.SET_NULL,
+                                 help_text="The team's Stripe Customer object, if it exists")
+
+    def __str__(self):
+        """
+        Defines the 'string representation' of any instance of
+        the 'Team' class.
+
+        Return:
+        	The name associated with the instanciated team.
+        """
+        return f'Team name: {self.team_name}'
+
+
 class Video(models.Model):
     """
     Represents a video asset within the platform (Inside Futtech).
