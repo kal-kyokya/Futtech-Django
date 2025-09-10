@@ -49,6 +49,18 @@ class UserProfile(models.Model):
                                 blank=True)
     active_footballer = models.BooleanField(default=True)
 
+    # Stripe integration fields
+    subscription = models.ForeignKey('djstripe.Subscription',
+                                     null=True,
+                                     blank=True,
+                                     on_delete=models.SET_NULL
+                                     help_text="The user's Stripe subscription object, if it exists")
+    customer = models.ForeignKey('djstripe.Customer',
+                                 null=True,
+                                 blank=True,
+                                 on_delete=models.SET_NULL,
+                                 help_text="The user's Stripe Customer object, if it exists")
+
     def __str__(self):
         """
         Defines the 'string representation' of any instance of
