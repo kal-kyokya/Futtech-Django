@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'video_management',
     'django_redis',
+    'djstripe',
 ]
 
 MIDDLEWARE = [
@@ -113,6 +114,7 @@ CACHES = {
 }
 
 # This is to ensure Django sessions are stored in Redis
+
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_CACHE_ALIAS = 'default'
 
@@ -157,3 +159,12 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Stripe API keys
+
+STRIPE_TEST_PUBLIC_KEY = os.environ.get('STRIPE_TEST_PUBLIC_KEY')
+STRIPE_TEST_SECRET_KEY = os.environ.get('STRIPE_TEST_SECRET_KEY')
+STRIPE_LIVE_MODE = os.environ.get('STRIPE_LIVE_MODE') # True in production
+
+DJSTRIPE_FOREIGN_KEY_TO_FIELD = 'id'
+DJSTRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_TEST_ _KEY')
