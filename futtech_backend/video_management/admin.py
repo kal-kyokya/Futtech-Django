@@ -5,7 +5,7 @@ and enables super user manipulation of said models in a browser tab.
 """
 
 from django.contrib import admin
-from .models import UserProfile, Video
+from .models import Team, UserProfile, Video
 
 
 @admin.register(Video)
@@ -25,7 +25,7 @@ class VideoAdmin(admin.ModelAdmin):
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
     """
-    Enables customization of the UserProfile appearance on the admin page.
+    Enables customization of UserProfile appearance on the admin page.
 
     Inheritance:
     	admin.ModelAdmin - Described as 'Encapsulating all admin options and
@@ -34,6 +34,20 @@ class UserProfileAdmin(admin.ModelAdmin):
     """
 
     list_display = ('__str__', 'bio')
+
+
+@admin.register(Team)
+class TeamAdmin(admin.ModelAdmin):
+    """
+    Enables customization of the Team model's appearance on the admin page.
+
+    Inheritance:
+    	admin.ModelAdmin - Described as 'Encapsulating all admin options and
+    	functionality for a given model', here allows declaration of desired
+    	fields to be displayed on the admin page.
+    """
+
+    list_display = ('__str__', 'team_name')
 
 
 # admin.site.register([UserProfile, VideoAdmin, Video])

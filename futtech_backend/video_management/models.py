@@ -10,6 +10,39 @@ from django.contrib.auth.models import User
 from .choices import PlayerPosition, UserSex, VideoStatus, VideoCategory, VideoPolicy
 
 
+class Team(models.Model):
+    """
+    Represents a Team accessing the 'Enterprise' subscription plan.
+
+    Inheritance:
+    	models.Model - Base class enabling access to the 'batteries-included'
+    	'BaseModel' class described as: 'The metaclass for all class models.'
+    """
+
+    team_name = models.CharField(max_length=100)
+
+    subscription = models.ForeignKey('djstripe.Subscription',
+                                     null=True,
+                                     blank=True,
+                                     on_delete=models.SET_NULL,
+                                     help_text="The team's Stripe subscription object, if it exists")
+    customer = models.ForeignKey('djstripe.Customer',
+                                 null=True,
+                                 blank=True,
+                                 on_delete=models.SET_NULL,
+                                 help_text="The team's Stripe Customer object, if it exists")
+
+    def __str__(self):
+        """
+        Defines the 'string representation' of any instance of
+        the 'Team' class.
+
+        Return:
+        	The name associated with the instanciated team.
+        """
+        return f'Team name: {self.team_name}'
+
+
 class UserProfile(models.Model):
     """
     Extends the built-in User model to store application-specific data.
@@ -53,13 +86,19 @@ class UserProfile(models.Model):
     subscription = models.ForeignKey('djstripe.Subscription',
                                      null=True,
                                      blank=True,
-                                     on_delete=models.SET_NULL
+                                     on_delete=models.SET_NULL,
                                      help_text="The user's Stripe subscription object, if it exists")
     customer = models.ForeignKey('djstripe.Customer',
                                  null=True,
                                  blank=True,
                                  on_delete=models.SET_NULL,
                                  help_text="The user's Stripe Customer object, if it exists")
+    team = models.ForeignKey(Team,
+                             null=True,
+                             blank=True,
+                             on_delete=models.SET_NULL,
+                             related_name='members',
+                             help_text='The team whose enterprise subscription a user has access to')
 
     def __str__(self):
         """
@@ -70,41 +109,6 @@ class UserProfile(models.Model):
         	The username associated with the instanciated user.
         """
         return self.user.username
-
-
-class Team(models.Model):
-    """
-    Represents a Team accessing the 'Enterprise' subscription plan.
-
-    Inheritance:
-    	models.Model - Base class enabling access to the 'batteries-included'
-    	'BaseModel' class described as: 'The metaclass for all class models.'
-    """
-
-    team_name = models.CharField(max_length=100)
-    members = models.ManyToManyField(User,
-                                     related_name='teams',
-                                     through='Membership')
-    subscription = models.ForeignKey('djstripe.Subscription',
-                                     null=True,
-                                     blank=True,
-                                     on_delete=models.SET_NULL
-                                     help_text="The team's Stripe subscription object, if it exists")
-    customer = models.ForeignKey('djstripe.Customer',
-                                 null=True,
-                                 blank=True,
-                                 on_delete=models.SET_NULL,
-                                 help_text="The team's Stripe Customer object, if it exists")
-
-    def __str__(self):
-        """
-        Defines the 'string representation' of any instance of
-        the 'Team' class.
-
-        Return:
-        	The name associated with the instanciated team.
-        """
-        return f'Team name: {self.team_name}'
 
 
 class Video(models.Model):
