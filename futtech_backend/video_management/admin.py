@@ -47,7 +47,7 @@ class TeamAdmin(admin.ModelAdmin):
     	fields to be displayed on the admin page.
     """
 
-    list_display = ('__str__', 'team_name')
+    list_display = ('__str__', 'created_at', 'updated_at')
 
 
 # admin.site.register([UserProfile, VideoAdmin, Video])

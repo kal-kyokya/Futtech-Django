@@ -8,6 +8,7 @@ import uuid
 from django.db import models
 from django.contrib.auth.models import User
 from .choices import PlayerPosition, UserSex, VideoStatus, VideoCategory, VideoPolicy
+from django.utils import timezone
 
 
 class Team(models.Model):
@@ -32,6 +33,9 @@ class Team(models.Model):
                                  on_delete=models.SET_NULL,
                                  help_text="The team's Stripe Customer object, if it exists")
 
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(auto_now=True)
+
     def __str__(self):
         """
         Defines the 'string representation' of any instance of
@@ -40,7 +44,7 @@ class Team(models.Model):
         Return:
         	The name associated with the instanciated team.
         """
-        return f'Team name: {self.team_name}'
+        return self.team_name
 
 
 class UserProfile(models.Model):
