@@ -1,6 +1,6 @@
 import { useEffect, useRef } from 'react';
 
-const Payment = ({ pricingTableId, publishableKey }) => {
+const Payment = ({ pricingTableId, publishableKey, clientReferenceId }) => {
     const ref = useRef();
 
     useEffect(() => {
@@ -9,7 +9,8 @@ const Payment = ({ pricingTableId, publishableKey }) => {
 	// Set attributes manually to be React-safe
 	ref.current.setAttribute('pricing-table-id', pricingTableId);
 	ref.current.setAttribute('publishable-key', publishableKey);
-    }, [pricingTableId, publishableKey]);
+	ref.current.setAttribute('client-reference-id', clientReferenceId);
+    }, [pricingTableId, publishableKey, clientReferenceId]);
 
     return (
 	    <stripe-pricing-table ref={ref}>
