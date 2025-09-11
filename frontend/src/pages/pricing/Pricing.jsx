@@ -1,3 +1,4 @@
+import useState from 'react';
 import axios from 'axios';
 import Navbar from '../../components/Navbar';
 import Payment from '../../components/payment/Payment';
@@ -18,14 +19,21 @@ const apiService = axios.create({
 });
 
 const Pricing = () => {
-    
+    const [pricingTableId, setPricingTableId] = useState(null);
+    const [publishableKey, setPublishableKey] = useState(null);
+
+    const user = JSON.parse(localStorage.getItem('user'));
+
+    const IdentifierRes = apiService.get('api/pricing-page-identifiers/');
+    setPricingTableId(IdentifierRes.data.stripe_pricing_table_id);
+    setPublishableKey(IdentifierRes.data.stripe_public_key);
 
     return (
 	<>
 	    <Navbar />
-	    <Payment pricingTableId=''
-		     publishableKey=''
-		     clientReferenceId=''
+	    <Payment pricingTableId={ pricingTableId }
+		     publishableKey={ publishableKey }
+		     clientReferenceId={ user.id }
 	    />
 	</>
     );
