@@ -21,7 +21,13 @@ from video_management import views
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/videos/<uuid:video_id>/',
+         views.get_video_data,
+         name='get_video_data'),
     path('api/videos/<uuid:video_id>/get-playback-token/',
          views.get_playback_token,
          name='get_playback_token'),
+    path('api/pricing-page-identifiers/',
+         views.get_pricing_page_identifiers,
+         name='get_pricing_page_identifiers'),
 ]
