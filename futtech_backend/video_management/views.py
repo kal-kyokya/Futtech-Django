@@ -4,10 +4,16 @@
 Business logic and Data layer, for defined set of URLs.
 """
 
-from django.http import JsonResponse, HttpResponseForbidden
-from django.contrib.auth.decorators import login_required
 from django.conf import settings
+from django.contrib import messages
+from django.contrib.auth import get_user_model # Reliable way to get the correct/active User model class.
+from django.contrib.auth.decorators import login_required
+from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
+from django.urls import reverse
+
 from djstripe.settings import djstripe_settings
+from djstripe.models import Subscription
+
 from .logs import logger
 from .models import Video
 from . import services
@@ -95,3 +101,17 @@ def get_pricing_page_identifiers(request):
         'stripe_public_key': djstripe_settings.STRIPE_PUBLIC_KEY,
         'stripe_pricing_table_id': settings.STRIPE_PRICING_TABLE_ID
     })
+
+
+@login_required
+def subscription_confirm(request):
+    """
+    Provision a paying user with the choosen subscription.
+
+    Params:
+    	request - The object representation of the frontend request made.
+
+    Return:
+    	A redirect to the subscription details.
+    """
+    pass
