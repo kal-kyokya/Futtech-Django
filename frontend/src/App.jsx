@@ -13,6 +13,8 @@ import Watch from './pages/watch/Watch';
 import NewList from './pages/newList/NewList';
 import Video from './pages/video/Video';
 import Lists from './pages/lists/Lists';
+import Pricing from './pages/pricing';
+
 
 const App = () => {
     const { user } = useContext(UserContext);
@@ -37,7 +39,7 @@ const App = () => {
 			   user && user.accessToken ?
 			       <Home category='video'/> : <Navigate to='/' />
 		       } />
-		<Route path='/analysis' element={
+		<Route path='/ai-analysis' element={
 			   user && user.accessToken ?
 			       <Home category='analysis'/> : <Navigate to='/' />
 		       } />
@@ -45,19 +47,23 @@ const App = () => {
 			   user && user.accessToken ?
 			       <Watch /> : <Navigate to='/' />
 		       } />
-		<Route path='/me' element={
+		<Route path='/pricing-page' element={
+			   user && user.accessToken ?
+			       <Pricing /> : <Navigate to='/' />
+		       } />
+		<Route path='/profile' element={
 			   user && user.accessToken ?
 			       <User /> : <Navigate to='/' />
 		       } />
-		<Route path='/newVideo' element={
+		<Route path='/new-video' element={
 			   user && user.accessToken ?
 			       <NewVideo /> : <Navigate to='/' />
 		       } />
-		<Route path='/newList' element={
+		<Route path='/new-list' element={
 			   user && user.accessToken ?
 			       <NewList /> : <Navigate to='/' />
 		       } />
-		<Route path='/videoList' element={
+		<Route path='/video-list' element={
 			   user && user.accessToken ?
 			       <VideoList /> : <Navigate to='/' />
 		       } />
