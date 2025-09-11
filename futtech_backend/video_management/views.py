@@ -35,7 +35,7 @@ def get_video_data(request, video_id):
 
     # We check if the user is logged in.
     if not video.is_premium or request.user.is_authenticated:
-        return JsonResponse({'data': video})
+        return JsonResponse({'video': video})
     else:
         logger.info("Unauthorized request for a playback ID.")
         return HttpResponseForbidden("You do not have permission to view this video.")
