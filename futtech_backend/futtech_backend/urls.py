@@ -30,4 +30,7 @@ urlpatterns = [
     path('api/pricing-page-identifiers/',
          views.get_pricing_page_identifiers,
          name='get_pricing_page_identifiers'),
+    path('subscription-confirm',
+         views.get_subscription_confirmation,
+         name='get_subscription_confirmation'),
 ]
