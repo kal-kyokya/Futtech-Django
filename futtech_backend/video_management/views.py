@@ -4,9 +4,6 @@
 Business logic and Data layer, for defined set of URLs.
 """
 
-import os
-from dotenv import load_dotenv
-
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model # Reliable way to get the correct/active User model class.
@@ -18,14 +15,15 @@ from django.views.decorators.http import require_POST
 from djstripe.settings import djstripe_settings
 from djstripe.models import Subscription
 
-import stripe # Was pip installed when the 'djstripe' module was.
-
 from .logs import logger
 from .models import Video
 from . import services
 
+import stripe # Was pip installed when the 'djstripe' module was.
 
-load_dotenv()
+
+# Configure the stripe for secure consumption of its API
+stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
 
 
 @login_required
@@ -112,6 +110,19 @@ def get_pricing_page_identifiers(request):
     })
 
 
+@require_POST
+def create_checkout_session(request):
+    """
+    Initiates the Stripe checkout/payment session.
+
+    Param:
+    	request - The clients-side data associated with the user demand.
+
+    Return:
+    	A redirect URL to the stripe checkout session.
+    """
+
+
 @login_required
 def subscription_confirm(request):
     """
@@ -123,9 +134,6 @@ def subscription_confirm(request):
     Return:
     	A redirect to Stripe's customer portal for subscription management.
     """
-
-    # Configure the 'stripe object' for secure consumption of its API
-    stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
 
     # Extract the session ID from the URL & fetch its associated Stripe session
     session_id = request.GET.get(session_id)
@@ -165,10 +173,7 @@ def create_portal_session(request):
     	A redirect to Stripe's customer portal.
     """
 
-    stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
-    return_path = 'https://{}/subscription-details'.format(
-        os.environ.get(DOMAIN_NAME)
-    )
+    return_path = 'https://{}/profile'.format(settings.DOMAIN_NAME)
 
     portal_session = stripe.billing_portal.Session.create(
         customer=request.user.customer.id,

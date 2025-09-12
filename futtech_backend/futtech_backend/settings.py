@@ -170,3 +170,6 @@ STRIPE_PRICING_TABLE_ID = os.environ.get('STRIPE_PRICING_TABLE_ID')
 
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = 'id'
 DJSTRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_TEST_ _KEY')
+
+# Default domain name
+DOMAIN_NAME = os.environ.get('DOMAIN_NAME')
