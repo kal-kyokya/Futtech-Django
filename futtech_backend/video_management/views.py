@@ -4,6 +4,9 @@
 Business logic and Data layer, for defined set of URLs.
 """
 
+import os
+from dotenv import load_dotenv
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model # Reliable way to get the correct/active User model class.
@@ -20,6 +23,9 @@ import stripe # Was pip installed when the 'djstripe' module was.
 from .logs import logger
 from .models import Video
 from . import services
+
+
+load_dotenv()
 
 
 @login_required
@@ -158,4 +164,15 @@ def create_portal_session(request):
     Return:
     	A redirect to Stripe's customer portal.
     """
-    pass
+
+    stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
+    return_path = 'https://{}/subscription-details'.format(
+        os.environ.get(DOMAIN_NAME)
+    )
+
+    portal_session = stripe.billing_portal.Session.create(
+        customer=request.user.customer.id,
+        return_url=return_path,
+    )
+
+    return HttpResponseRedirect(portal_session.url)
