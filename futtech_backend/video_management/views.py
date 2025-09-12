@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model # Reliable way to get the correct
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
+from django.views.decorators.http import require_POST
 
 from djstripe.settings import djstripe_settings
 from djstripe.models import Subscription
@@ -114,7 +115,7 @@ def subscription_confirm(request):
     	request - The object representation of the frontend request made.
 
     Return:
-    	A redirect to the subscription details.
+    	A redirect to Stripe's customer portal for subscription management.
     """
 
     # Configure the 'stripe object' for secure consumption of its API
@@ -143,3 +144,18 @@ def subscription_confirm(request):
     # Notify the user of the subscription status and redirect
     messages.success(request, f"You have successfully signed up. Thanks for the support!")
     return HttpResponseRedirect(reverse("create_portal_session"))
+
+
+@login_required
+@require_POST
+def create_portal_session(request):
+    """
+    Allows user to access Stripe's customer portal and manage subscriptions.
+
+    Param:
+    	request - A dictionary object representing the client-side request.
+
+    Return:
+    	A redirect to Stripe's customer portal.
+    """
+    pass
