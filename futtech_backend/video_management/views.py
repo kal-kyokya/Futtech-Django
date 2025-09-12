@@ -110,19 +110,6 @@ def get_pricing_page_identifiers(request):
     })
 
 
-@require_POST
-def create_checkout_session(request):
-    """
-    Initiates the Stripe checkout/payment session.
-
-    Param:
-    	request - The clients-side data associated with the user demand.
-
-    Return:
-    	A redirect URL to the stripe checkout session.
-    """
-
-
 @login_required
 def subscription_confirm(request):
     """
