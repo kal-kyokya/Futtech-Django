@@ -14,6 +14,8 @@ from django.urls import reverse
 from djstripe.settings import djstripe_settings
 from djstripe.models import Subscription
 
+import stripe # Was pip installed when the 'djstripe' module was.
+
 from .logs import logger
 from .models import Video
 from . import services
@@ -106,7 +108,7 @@ def get_pricing_page_identifiers(request):
 @login_required
 def subscription_confirm(request):
     """
-    Provision a paying user with the choosen subscription.
+    Provisions a user with the subscription paid for.
 
     Params:
     	request - The object representation of the frontend request made.
@@ -114,4 +116,30 @@ def subscription_confirm(request):
     Return:
     	A redirect to the subscription details.
     """
-    pass
+
+    # Configure the 'stripe object' for secure consumption of its API
+    stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
+
+    # Extract the session ID from the URL & fetch its associated Stripe session
+    session_id = request.GET.get(session_id)
+    session = stripe.checkout.Session.retrieve(session_id)
+
+    # Ensure match between he whom initiated the session and a user in our DB
+    client_reference_id = int(session.client_reference_id)
+    subscription_holder = get_user_model().objects.get(id=client_reference_id)
+
+    assert client_reference_id == subscription_holder
+
+    # Think of a subscription as a contract between Futtech and a user
+    # This finds the contract and stores it on our local machine
+    subscription = stripe.Subscription.retrieve(session.subscription)
+    djstripe_subscription = Subscription.sync_from_stripe_data(subscription)
+
+    # Update our user's subscription field to allow streaming
+    subscription_holder.subscription = djstripe_subscription
+    subscription_holder.customer = djstripe_subscription.customer
+    subscription_holder.save()
+
+    # Notify the user of the subscription status and redirect
+    messages.success(request, f"You have successfully signed up. Thanks for the support!")
+    return HttpResponseRedirect(reverse("create_portal_session"))
