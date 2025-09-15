@@ -16,4 +16,7 @@ class PlaybackHistorySerializer(serializers.ModelSerializer):
     Inheritance:
     	serializers.ModelSerializer - Base class handling data marshalling.
     """
-    pass
+
+    class Meta:
+        model = PlaybackHistory
+        fields = ['video', 'watch_progress']
