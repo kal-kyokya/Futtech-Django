@@ -18,7 +18,7 @@ class Team(models.Model):
 
     Inheritance:
     	models.Model - Base class enabling access to the 'batteries-included'
-    	'BaseModel' class described as: 'The metaclass for all class models.'
+    	out-of-the-box 'BaseModel' class: 'The metaclass for all class models.'
     """
 
     team_name = models.CharField(max_length=100)
@@ -122,7 +122,7 @@ class Video(models.Model):
 
     Inheritance:
     	models.Model - Base class enabling access to the 'batteries-included'
-    	'BaseModel' class described as: 'The metaclass for all class models.'
+    	out-of-the-box 'BaseModel' class: 'The metaclass for all class models.'
     """
 
     id = models.UUIDField(primary_key=True,
@@ -191,7 +191,7 @@ class PlaybackHistory(models.Model):
 
     Inheritance:
     	models.Model - Base class enabling access to the 'batteries-included'
-    	'BaseModel' class described as: 'The metaclass for all class models.'
+    	out-of-the-box 'BaseModel' class: 'The metaclass for all class models.'
     """
 
     user = models.ForeignKey(get_user_model(),
