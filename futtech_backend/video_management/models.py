@@ -208,6 +208,8 @@ class PlaybackHistory(models.Model):
     class Meta:
         # A user has one history record per video
         unique_together = ('user', 'video')
+        verbose_name = 'Video watch progress'
+        verbose_name_plural = 'Videos watch progress'
 
     def __str__(self):
         """
