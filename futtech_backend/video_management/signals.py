@@ -9,8 +9,6 @@ from djstripe.models import Event, Charge, PaymentMethod
 from .logs import logger
 
 
-@djstripe_receiver('customer.subscription.created',
-                  'customer.subscription.updated')
 def handle_customer_subscription(sender, **kwargs):
     """
     Handles subscription creation and updates.
@@ -27,6 +25,16 @@ def handle_customer_subscription(sender, **kwargs):
     logger.info(f'{sender} -> {event}')
     logger.info('Subscription {} for customer {} was updated'.format(subscription.id,
                                                                      subscription.customer.id))
+
+
+@djstripe_receiver('customer.subscription.created')
+def handle_customer_subscription_created(sender, **kwargs):
+    handle_customer_subscription(sender, **kwargs)
+
+
+@djstripe_receiver('customer.subscription.updated')
+def handle_customer_subscription_updated(sender, **kwargs):
+    handle_customer_subscription_updated(sender, **kwargs)
 
 
 @djstripe_receiver('charge.succeeded')
