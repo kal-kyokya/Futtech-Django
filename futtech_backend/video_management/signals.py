@@ -4,21 +4,36 @@
 	     sent by Stripe and perform appropriate actions.
 """
 
-from djstripe import webhooks
+from djstripe.event_handlers import djstripe_receiver
+from djstripe.models import Event, Charge, PaymentMethod
 from .logs import logger
 
 
-@webhooks.handler('customer.subscription.created',
+@djstripe_receiver('customer.subscription.created',
                   'customer.subscription.updated')
-def subscription_updated_handler(event):
+def handle_customer_subscription(sender, **kwargs):
     """
     Handles subscription creation and updates.
     The dj-stripe Subscription model is already updated by the time this runs.
 
     Param:
-    	event - The Stripe webhook to be processed internally.
+    	sender - The source of the signal being processed.
+    	kwargs - The Stripe event whose webhook will be processed.
     """
+
+    event = kwargs.get('event')
     subscription = event.data['object']
 
     logger.info('Subscription {} for customer {} was updated'.format(subscription.id,
                                                                      subscription.customer.id))
+
+
+def handle_charge_succeeded(sender, kwargs):
+    """
+    Processes Stripe webhooks for successful customer charge.
+
+    Param:
+    	sender - Origin of the currently processed signal.
+    	kwargs - Contains the Stripe event to be processed.
+    """
+    pass
