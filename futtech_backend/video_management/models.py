@@ -6,7 +6,8 @@ for this App to handle CRUD operations facilitating video streaming.
 
 import uuid
 from django.db import models
-from django.contrib.auth.models import User
+# from django.contrib.auth.models import User
+from django.contrib.auth import get_user_model
 from .choices import PlayerPosition, UserSex, VideoStatus, VideoCategory, VideoPolicy
 from django.utils import timezone
 
@@ -56,7 +57,7 @@ class UserProfile(models.Model):
     	which itself is the 'Metaclass for all models'.
     """
 
-    user = models.OneToOneField(User,
+    user = models.OneToOneField(get_user_model(),
                                 on_delete=models.CASCADE,
                                 primary_key=True)
     avatar_url = models.URLField(max_length=512,
@@ -127,7 +128,7 @@ class Video(models.Model):
     id = models.UUIDField(primary_key=True,
                           default=uuid.uuid4,
                           editable=False)
-    owner = models.ForeignKey(User,
+    owner = models.ForeignKey(get_user_model(),
                               on_delete=models.CASCADE,
                               related_name='videos')
     title = models.CharField(max_length=255)
@@ -182,3 +183,36 @@ class Video(models.Model):
         """
         return "'{}' by {}".format(self.title,
                                    self.owner.username)
+
+
+class PlaybackHistory(models.Model):
+    """
+    Tracks the watch progress for a user on a specific video.
+
+    Inheritance:
+    	models.Model - Base class enabling access to the 'batteries-included'
+    	'BaseModel' class described as: 'The metaclass for all class models.'
+    """
+
+    user = models.ForeignKey(get_user_model(),
+                             on_delete=models.CASCADE)
+    video = models.ForeignKey(Video,
+                              on_delete=models.CASCADE)
+    watch_progress = models.PositiveIntegerField() # Store progress in seconds
+    last_watched_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        # A user has one history record per video
+        unique_together = ('user', 'video')
+
+    def __str__(self):
+        """
+        Defines the 'string representation' of any instance of
+        the 'PlaybackHistory' class.
+
+        Return:
+        	A description of WHO watched WHAT and for what DURATION.
+        """
+        return '{} watched {} for {}s'.format(self.user.username,
+                                              self.video.title,
+                                              self.watch_progress)

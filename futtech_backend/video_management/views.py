@@ -160,7 +160,7 @@ def create_portal_session(request):
     	A redirect to Stripe's customer portal.
     """
 
-    return_path = 'https://{}/profile'.format(settings.DOMAIN_NAME)
+    return_path = 'https://{}/profile/'.format(settings.DOMAIN_NAME)
 
     portal_session = stripe.billing_portal.Session.create(
         customer=request.user.customer.id,
