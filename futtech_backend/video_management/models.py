@@ -8,7 +8,11 @@ import uuid
 from django.db import models
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
-from .choices import PlayerPosition, UserSex, VideoStatus, VideoCategory, VideoPolicy
+from .choices import (
+    PlayerPosition, UserSex,
+    VideoStatus, VideoCategory,
+    VideoPolicy
+)
 from django.utils import timezone
 
 

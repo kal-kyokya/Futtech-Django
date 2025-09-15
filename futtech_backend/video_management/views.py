@@ -226,4 +226,19 @@ class UpdateWatchProgressView(APIView):
     		  from the 'Base of all views in REST Framework'.
     """
 
-    pass
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request, *args, **kwargs):
+        serializer = PlaybackHistorySerializer(data=request.data)
+        if serializer.is_valid():
+            video = serializer.validated_data['video']
+            progress = serializer.validated_data['watch_progress']
+
+            PlaybackHistory.objects.update_or_create(
+                user=request.user,
+                video=video,
+                defaults={'watch_progress': progress}
+            )
+            return Response({'status': 'success'}, status=200)
+
+        return Response(serializer.errors, status=400)
