@@ -5,7 +5,10 @@ and enables super user manipulation of said models in a browser tab.
 """
 
 from django.contrib import admin
-from .models import Team, UserProfile, Video
+from .models import (
+    Team, UserProfile,
+    Video, PlaybackHistory,
+)
 
 
 @admin.register(Video)
@@ -48,6 +51,21 @@ class TeamAdmin(admin.ModelAdmin):
     """
 
     list_display = ('__str__', 'created_at', 'updated_at')
+
+
+@admin.register(PlaybackHistory)
+class PlaybackHistoryAdmin(admin.ModelAdmin):
+    """
+    Enables customization of the PlaybackHistory model's appearance
+    on the admin page.
+
+    Inheritance:
+    	admin.ModelAdmin - Described as 'Encapsulating all admin options and
+    	functionality for a given model', here allows declaration of desired
+    	fields to be displayed on the admin page.
+    """
+
+    list_display = ('__str__',)
 
 
 # admin.site.register([UserProfile, VideoAdmin, Video])

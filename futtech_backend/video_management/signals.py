@@ -38,7 +38,7 @@ def handle_customer_subscription_updated(sender, **kwargs):
 
 
 @djstripe_receiver('charge.succeeded')
-def handle_charge_succeeded(sender, kwargs):
+def handle_charge_succeeded(sender, **kwargs):
     """
     Processes Stripe webhooks for successful customer charge.
 
