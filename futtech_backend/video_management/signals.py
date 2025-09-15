@@ -8,6 +8,8 @@ from djstripe import webhooks
 from .logs import logger
 
 
+@webhooks.handler('customer.subscription.created',
+                  'customer.subscription.updated')
 def subscription_updated_handler(event):
     """
     Handles subscription creation and updates.
@@ -16,4 +18,7 @@ def subscription_updated_handler(event):
     Param:
     	event - The Stripe webhook to be processed internally.
     """
-    pass
+    subscription = event.data['object']
+
+    logger.info('Subscription {} for customer {} was updated'.format(subscription.id,
+                                                                     subscription.customer.id))
