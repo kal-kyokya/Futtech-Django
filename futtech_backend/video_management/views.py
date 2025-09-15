@@ -15,9 +15,14 @@ from django.views.decorators.http import require_POST
 from djstripe.settings import djstripe_settings
 from djstripe.models import Customer, Subscription
 
+from rest_framework.views import APIView
+from rest_framwork.response import Response
+from rest_framwork.permissions import IsAuthenticated
+
+from . import services
 from .logs import logger
 from .models import Video
-from . import services
+from .serializers import PlaybackHistorySerializer
 
 import stripe # Was pip installed with 'djstripe'
 
@@ -210,3 +215,15 @@ def create_checkout_session(request):
             {'error': str(err)},
             status=500
         )
+
+
+class UpdateWatchProgressView(APIView):
+    """
+    Handles POST or PATCH request to update video watch progress.
+
+    Inheritance:
+    	APIView - Empowers this view with a set of predefined class attributes
+    		  from the 'Base of all views in REST Framework'.
+    """
+
+    pass
