@@ -24,10 +24,12 @@ def handle_customer_subscription(sender, **kwargs):
     event = kwargs.get('event')
     subscription = event.data['object']
 
+    logger.info(f'{sender} -> {event}')
     logger.info('Subscription {} for customer {} was updated'.format(subscription.id,
                                                                      subscription.customer.id))
 
 
+@djstripe_receiver('charge.succeeded')
 def handle_charge_succeeded(sender, kwargs):
     """
     Processes Stripe webhooks for successful customer charge.
@@ -36,4 +38,10 @@ def handle_charge_succeeded(sender, kwargs):
     	sender - Origin of the currently processed signal.
     	kwargs - Contains the Stripe event to be processed.
     """
-    pass
+
+    event = kwargs.get('event')
+    charge_id = event.data['object']['id']
+    charge = Charge.objects.get(id=charge_id)
+
+    logger.info(f'{sender} -> {event}')
+    logger.info('Charge ID - {} succeeded: {}'.format(charge_id. charge))
