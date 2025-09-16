@@ -33,6 +33,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
+ADMINS = [(os.environ.get('ADMIN_FULL_NAME'), os.environ.get('ADMIN_EMAIL'))]
 
 # Application definition
 
@@ -170,7 +171,7 @@ STRIPE_LIVE_MODE = os.environ.get('STRIPE_LIVE_MODE') # True in production
 STRIPE_PRICING_TABLE_ID = os.environ.get('STRIPE_PRICING_TABLE_ID')
 
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = 'id'
-DJSTRIPE_WEBHOOK_SECRET = os.environ.get('STRIPE_TEST_ _KEY')
+DJSTRIPE_WEBHOOK_SECRET = os.environ.get('DJSTRIPE_WEBHOOK_SECRET')
 
 # Default domain name
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME')
