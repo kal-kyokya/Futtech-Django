@@ -31,7 +31,11 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
+# Defaults to localhost
 ALLOWED_HOSTS = []
+
+# In order to access the Admin page using <domain_name>:<port>/admin
+# ALLOWED_HOSTS = [os.environ.get('DOMAIN_NAME')]
 
 ADMINS = [(os.environ.get('ADMIN_FULL_NAME'), os.environ.get('ADMIN_EMAIL'))]
 
