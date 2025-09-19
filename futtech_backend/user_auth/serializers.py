@@ -118,4 +118,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         	A new created instance of the Django User model.
         """
 
-        
+        validated_data.pop('password2') # Remove the confirmation password
+        user = UserModel.objects.create_user(**validate_data)
+
+        return user
