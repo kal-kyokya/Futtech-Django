@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'video_management',
     'django_redis',
     'djstripe',
+    'user_auth',
 ]
 
 MIDDLEWARE = [
