@@ -20,3 +20,23 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     	serializers.ModelSerializer - Avail rest_framework's out-of-the-box
     	features enabling data validation and serialization/deserialization.
     """
+
+    email = serializers.EmailField(
+        required=True,
+        validators=[UniqueValidator(
+            queryset=get_user_model().objects.all(),
+            message='A user with this email already exists.'
+        )]
+    )
+    username = serializers.CharField(
+        required=True,
+        validators=[UniqueValidator(
+            queryset=get_user_model().objects.all(),
+            message='A user with username already exists.'
+        )]
+    )
+    password2 = serializer.CharField(
+        required=True,
+        write_only=True,
+        style={'input_type': 'password'}
+    )
