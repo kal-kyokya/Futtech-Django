@@ -10,11 +10,13 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 
+UserModel = get_user_model()
+
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """
     Handles validation of the user data sent as request body as well as
-    the creation of Django compliant complex python objects (Model fields)
+    creation of Django-compliant complex python objects (Model fields).
 
     Inheritance:
     	serializers.ModelSerializer - Avail rest_framework's out-of-the-box
@@ -24,16 +26,24 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(
         required=True,
         validators=[UniqueValidator(
-            queryset=get_user_model().objects.all(),
+            queryset=UserModel.objects.all(),
             message='A user with this email already exists.'
         )]
     )
     username = serializers.CharField(
         required=True,
         validators=[UniqueValidator(
-            queryset=get_user_model().objects.all(),
+            queryset=UserModel.objects.all(),
             message='A user with username already exists.'
         )]
+    )
+
+    # 'write_only=True' ensures these sensitive fields are used for input
+    # and validation, but never serialized and return in any API response.
+    password = serializer.CharField(
+        required=True,
+        write_only=True,
+        style={'input_type': 'password'}
     )
     password2 = serializer.CharField(
         required=True,
@@ -52,7 +62,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         """
 
         # Django model upon which this serializer primarily acts
-        model = get_user_model()
+        model = UserModel
 
         # Model fields to include during serialization and deserialization
         fields = ('email', 'username', 'password', 'password2')
@@ -60,6 +70,10 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         # Additional configuration not directly tied to model fields
         extra_kwargs = {
             'password': {
+                'write_only': True,
+                'required': True,
+            },
+            'password2': {
                 'write_only': True,
                 'required': True,
             }
