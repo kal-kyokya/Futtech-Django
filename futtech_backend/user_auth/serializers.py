@@ -90,3 +90,19 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         Return:
         	The 'attrs' dictionary, if no validation error is raised.
         """
+
+        if attrs['password'] != attrs['password2']:
+            raise serializers.ValidationError({
+                'password2': 'Password fields did not match'
+            })
+
+        # Password strength validation using Django's built-in framework
+        try:
+            validate_password(attrs['password'])
+        except serializers.ValidationError as err:
+            raise serializers.ValidationError({
+                'password': list(err.messages)
+            })
+
+        return attrs
+    
