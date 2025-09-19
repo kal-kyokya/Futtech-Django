@@ -106,3 +106,16 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         return attrs
     
+    def create(self, validated_data):
+        """
+        Handles generation of a User model object.
+
+        Params:
+        	self - A representation of the current class instance.
+        	validated_data - Safe python object used for serialization.
+
+        Return:
+        	A new created instance of the Django User model.
+        """
+
+        
