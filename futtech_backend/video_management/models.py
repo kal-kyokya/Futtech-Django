@@ -47,7 +47,7 @@ class Team(models.Model):
         the 'Team' class.
 
         Return:
-        	The name associated with the instanciated team.
+        	The name associated with the instantiated team.
         """
         return self.team_name
 
@@ -115,7 +115,7 @@ class UserProfile(models.Model):
         the 'UserProfile' class.
 
         Return:
-        	The username associated with the instanciated user.
+        	The username associated with the instantiated user.
         """
         return self.user.username
 
@@ -180,7 +180,7 @@ class Video(models.Model):
     def __str__(self):
         """
         Defines the expected string representation of every subsequent
-        instanciation of this Video model.
+        instantiation of this Video model.
 
         Return:
         	The video title as well as the owner's username.

@@ -115,10 +115,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         	validated_data - Safe python object used for serialization.
 
         Return:
-        	A new created instance of the Django User model.
+        	A newly created instance of the Django User model.
         """
 
-        validated_data.pop('password2') # Remove the confirmation password
+        validated_data.pop('password2')
+
+        # 'create_user' automatically handles password hashing
         user = UserModel.objects.create_user(**validate_data)
 
         return user
