@@ -79,3 +79,14 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             }
         }
 
+    def validate(self, attrs):
+        """
+        Handles password confirmation and initialization data validation.
+
+        Params:
+        	self - A python object representing the class instance.
+        	attrs - A dictionary containing the data to be serialized.
+
+        Return:
+        	The 'attrs' dictionary, if no validation error is raised.
+        """
