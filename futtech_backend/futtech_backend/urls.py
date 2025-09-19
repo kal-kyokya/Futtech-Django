@@ -16,24 +16,20 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from video_management import views
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('stripe/',
-         include('djstripe.urls',
-                 namespace='djstripe')),
-    path('api/videos/<uuid:video_id>/',
-         views.get_video_data,
-         name='get_video_data'),
-    path('api/videos/<uuid:video_id>/get-playback-token/',
-         views.get_playback_token,
-         name='get_playback_token'),
-    path('api/pricing-page-identifiers/',
-         views.get_pricing_page_identifiers,
-         name='get_pricing_page_identifiers'),
-    path('subscription-confirm',
-         views.get_subscription_confirmation,
-         name='get_subscription_confirmation'),
+    path('stripe/', include(
+        'djstripe.urls',
+        namespace='djstripe'
+    )),
+    path('/api/v1/auth/', include(
+        'user_auth.urls',
+        namespace='user-auth'
+    )),
+    path('api/v1/', include(
+        'video_management.urls',
+        namespace='video-management'
+    )),
 ]
