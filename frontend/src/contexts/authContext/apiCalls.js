@@ -3,7 +3,8 @@ import { loginStart, loginSuccess, loginFailure } from './AuthActions';
 import { useNavigate } from 'react-router-dom';
 
 
-// Re-using the same conceptual API service as in '../newVideo/NewVideo'
+// Re-using the same conceptual API service as in
+// '../../pages/newVideo/NewVideo'
 export const apiService = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
     interceptors: {
