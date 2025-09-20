@@ -76,7 +76,7 @@ const NewVideo = () => {
 	     * 	 an upload URL and send it in the response.
 	     **/
 
-	    const createResponse = await apiService.post('/api/videos/create-upload/',
+	    const createResponse = await apiService.post('/videos/create-upload/',
 							 {
 							     title,
 							     description,
@@ -116,7 +116,7 @@ const NewVideo = () => {
 	     * post-upload workflows.
 	     **/
 
-	    await apiService.patch(`/api/videos/${video_id}/upload-complete/`,
+	    await apiService.patch(`/videos/${video_id}/upload-complete/`,
 				   {
 				       mux_asset_id: mux_asset_id,
 				   });
