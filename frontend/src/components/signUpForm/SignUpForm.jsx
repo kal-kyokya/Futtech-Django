@@ -1,6 +1,7 @@
 import './signUpForm.scss';
 import React from 'react';
 import { useForm } from 'react-hook-form';
+import apiService from '../../contexts/authContext/apiCalls'
 
 
 const SignUpForm = () => {
@@ -10,7 +11,44 @@ const SignUpForm = () => {
 	  } = useForm();
 
     const onSubmit = async (data) {
-	return null;
+	try {
+	    const response = await apiService.post('/auth/register', {
+		body: JSON.stringify(data),
+	    });
+
+	    const responseData = await response.json();
+
+	    if (!response.ok) {
+		if (response.status === 400) {
+		    //handle validation errors from the server
+		    Object.keys(responseData).forEach((fieldName) => {
+			setError(fieldName, {
+			    type: 'server',
+			    message: responseData[fieldName].join(', '),
+			});
+		    });
+
+		} else {
+		    // Handle other server errors (e.g., 500)
+		    setError('root.serverError', {
+			type: response.status.toString(),
+			message: 'An unexpected error occured. Please try again.'
+		    });
+		}
+		return
+	    }
+
+	    // Handle successful registration
+	    // e.g., Store tokens, redirect user
+	    console.log('Registration successful:', responseData);
+
+	} catch (error) {
+	    // Handle network errors
+	    setError('root.networkError', {
+		type: 'network',
+		message: 'A network error occured. Please check your connection.',
+	    });
+	}
     };
 
     return (
