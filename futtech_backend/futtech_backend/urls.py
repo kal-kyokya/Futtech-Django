@@ -40,4 +40,8 @@ urlpatterns = [
         'video_management.urls',
         namespace='video-management'
     )),
+    path('api/v2/playlists/', include(
+        'playlists.urls',
+        namespace='playlists'
+    )),
 ]

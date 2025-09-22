@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'djstripe',
     'user_auth',
     'video_management',
+    'playlists',
 ]
 
 MIDDLEWARE = [
