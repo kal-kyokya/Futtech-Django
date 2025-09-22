@@ -16,6 +16,9 @@ from .choices import (
 from django.utils import timezone
 
 
+UserModel = get_user_model()
+
+
 class Team(models.Model):
     """
     Represents a Team accessing the 'Enterprise' subscription plan.
@@ -61,7 +64,7 @@ class UserProfile(models.Model):
     	which itself is the 'Metaclass for all models'.
     """
 
-    user = models.OneToOneField(get_user_model(),
+    user = models.OneToOneField(UserModel,
                                 on_delete=models.CASCADE,
                                 primary_key=True)
     avatar_url = models.URLField(max_length=512,
@@ -132,7 +135,7 @@ class Video(models.Model):
     id = models.UUIDField(primary_key=True,
                           default=uuid.uuid4,
                           editable=False)
-    owner = models.ForeignKey(get_user_model(),
+    owner = models.ForeignKey(UserModel,
                               on_delete=models.CASCADE,
                               related_name='videos')
     title = models.CharField(max_length=255)
@@ -198,7 +201,7 @@ class PlaybackHistory(models.Model):
     	out-of-the-box 'BaseModel' class: 'The metaclass for all class models.'
     """
 
-    user = models.ForeignKey(get_user_model(),
+    user = models.ForeignKey(UserModel,
                              on_delete=models.CASCADE)
     video = models.ForeignKey(Video,
                               on_delete=models.CASCADE)

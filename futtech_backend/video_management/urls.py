@@ -23,4 +23,7 @@ urlpatterns = [
     path('subscription-confirm',
          views.get_subscription_confirmation,
          name='get_subscription_confirmation'),
+    path('user/profile',
+         views.get_user_profile,
+         name='get_user_profile'),
 ]

@@ -81,7 +81,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     def validate(self, attrs):
         """
-        Handles password confirmation and initialization data validation.
+        Handles password confirmation and initializes data validation.
 
         Params:
         	self - A python object representing the class instance.
@@ -121,6 +121,6 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         validated_data.pop('password2')
 
         # 'create_user' automatically handles password hashing
-        user = UserModel.objects.create_user(**validate_data)
+        user = UserModel.objects.create_user(**validated_data)
 
         return user

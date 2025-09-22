@@ -32,11 +32,11 @@ urlpatterns = [
         'djstripe.urls',
         namespace='djstripe'
     )),
-    path('/api/v1/auth/', include(
+    path('/api/v2/auth/', include(
         'user_auth.urls',
         namespace='user-auth'
     )),
-    path('api/v1/', include(
+    path('api/v2/', include(
         'video_management.urls',
         namespace='video-management'
     )),
