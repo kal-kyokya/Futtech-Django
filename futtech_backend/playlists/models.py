@@ -6,6 +6,7 @@
 
 from django.db import models
 from django.conf import settings
+from video_management.models import Video
 
 
 class Playlist(models.Model):
@@ -15,3 +16,16 @@ class Playlist(models.Model):
     Inheritance:
     	models.Model - Base class for all Django Models.
     """
+
+    name = models.CharField(max_length=255)
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name='playlists',
+    )
+
+    videos = models.ManyToManyField(
+        Video,
+        related_name='in_playlists',
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
