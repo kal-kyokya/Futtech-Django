@@ -136,3 +136,21 @@ class UserLoginSerializer(serializers.Serializer):
     	predefined attributes and methods facilitating processes
     	of validation, serialization and deserialization.
     """
+
+    # Uses email instead of username to keep the app professional
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+
+    def validate(self, attrs):
+        """
+        Contains the core of this serializer's conversion logic.
+
+        Params:
+        	self - A representation of the instanciation of
+        	       this serializer subclass.
+        	attrs - The user data sent inside the HTTP request.
+
+        Return:
+        	A python dictionary made of the JWT access and
+        	refresh token, as well as basic user info.
+        """
