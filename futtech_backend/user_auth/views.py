@@ -7,8 +7,9 @@
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny
+from rest_framework.views import APIView
 
-from .serializers import UserRegistrationSerializer
+from .serializers import UserRegistrationSerializer, UserLoginSerializer
 
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -59,3 +60,32 @@ class UserRegistrationView(generics.CreateAPIView):
             status=status.HTTP_201_CREATED,
             headers=headers
         )
+
+
+class UserLoginView(APIView):
+    """
+    Contains the application handling client-side requests to log in.
+
+    Inheritance:
+    	APIView - Most basic class-based view provided by DRF. Extends
+    	Django's 'View' class, offers the highest degree of control over
+    	the request-response cycle since it is a lower-level abstraction.
+
+    	It has a less opinionated structure and requires one to explicitly
+    	define methods for each HTTP verb (e.g., get, post, put, delete).
+    """
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handles all POST request made to this end point.
+
+        Params:
+        	self - Object representation of the current class instance.
+        	request - The HTTP request sent by the frontend.
+
+        Return:
+        	A DRF Response object containing the JWT access and
+        	refresh tokens associated with the requesting user.
+        """
+
+        
