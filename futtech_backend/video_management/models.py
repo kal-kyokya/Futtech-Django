@@ -109,7 +109,7 @@ class UserProfile(models.Model):
                              null=True,
                              blank=True,
                              on_delete=models.SET_NULL,
-                             related_name='members',
+                             related_name='team_members',
                              help_text='The team whose enterprise subscription a user has access to')
 
     def __str__(self):
@@ -125,7 +125,7 @@ class UserProfile(models.Model):
 
 class Video(models.Model):
     """
-    Represents a video asset within the platform (Inside Futtech).
+    Represents a video asset within the platform (i.e., Inside Futtech).
 
     Inheritance:
     	models.Model - Base class enabling access to the 'batteries-included'
@@ -137,7 +137,7 @@ class Video(models.Model):
                           editable=False)
     owner = models.ForeignKey(UserModel,
                               on_delete=models.CASCADE,
-                              related_name='videos')
+                              related_name='uploaded_videos')
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True,
                                    null=True)
