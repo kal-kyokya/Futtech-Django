@@ -67,7 +67,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         model = UserModel
 
         # Model fields to include during serialization and deserialization
-        fields = ('email', 'username', 'password', 'password2')
+        fields = ['email', 'username', 'password', 'password2']
 
         # Additional configuration not directly tied to model fields
         extra_kwargs = {
