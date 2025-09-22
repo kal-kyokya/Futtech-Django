@@ -5,5 +5,13 @@
 """
 
 from django.db import models
+from django.conf import settings
 
 
+class Playlist(models.Model):
+    """
+    Blueprint for all playlist objects to be stored in DB.
+
+    Inheritance:
+    	models.Model - Base class for all Django Models.
+    """
