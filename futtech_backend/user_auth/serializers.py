@@ -124,3 +124,15 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         user = UserModel.objects.create_user(**validated_data)
 
         return user
+
+
+class UserLoginSerializer(serializers.Serializer):
+    """
+    Handles validation of the user data sent within a request
+    before its conversion to/from JSON during login.
+
+    Inheritance:
+    	serializers.Serializer - Empowers this subclass with
+    	predefined attributes and methods facilitating processes
+    	of validation, serialization and deserialization.
+    """
