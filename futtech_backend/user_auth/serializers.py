@@ -5,10 +5,12 @@
 		 objects, like Django Model fields for example.
 """
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
+from rest_framework_simplejwt.tokens import RefreshToken
+
 
 UserModel = get_user_model()
 
@@ -154,3 +156,31 @@ class UserLoginSerializer(serializers.Serializer):
         	A python dictionary made of the JWT access and
         	refresh token, as well as basic user info.
         """
+
+        email = attrs.get('email')
+        password = attrs.get('password')
+
+        try:
+            user = UserModel.objects.get(email=email)
+        except UserModel.DoesNotExist:
+            raise serializers.ValidationError('Invalid credentials.')
+
+        user = authenticate(username=user.username,
+                            password=password)
+        if not user:
+            raise serializers.ValidationError('Invalid credentials.')
+
+        if not user.is_active:
+            raise serializers.ValidationError('User account is disabled.')
+
+        refresh = RefreshToken.for_user(user)
+
+        return {
+            'access': str(refresh.access_token),
+            'refresh': str(refresh),
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+            },
+        }
