@@ -88,4 +88,10 @@ class UserLoginView(APIView):
         	refresh tokens associated with the requesting user.
         """
 
-        
+        serializer = UserLoginSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        return Response(
+            serializer.validated_data,
+            status=status.HTTP_200_OK
+        )
