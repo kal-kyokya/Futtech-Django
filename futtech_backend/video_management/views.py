@@ -11,6 +11,7 @@ from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
 from django.urls import reverse
 from django.views.decorators.http import require_POST
+from django.views.decorators.csrf import csrf_exempt
 
 from djstripe.settings import djstripe_settings
 from djstripe.models import Customer, Subscription
@@ -19,6 +20,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+from rest_framework.decorators import api_view
 
 from playlists.serializers import VideoSerializer
 
@@ -220,6 +222,8 @@ def create_checkout_session(request):
         )
 
 
+@csrf_exempt
+@api_view(['POST'])
 def mux_webhook(request):
     """
     Listens for webhooks updating the upload status of video files.
@@ -230,6 +234,13 @@ def mux_webhook(request):
     Return:
     	A DRF Response object declaring the upload status.
     """
+
+    verification_status = services.handle_mux_webhook(
+        request,
+        request.headers.get('Mux-Signature')
+    )
+
+    return Response({'status': verification_status})
 
 
 class UpdateWatchProgressView(APIView):
