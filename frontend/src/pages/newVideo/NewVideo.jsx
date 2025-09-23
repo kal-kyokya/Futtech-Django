@@ -78,7 +78,7 @@ const NewVideo = () => {
 	     * 	 an upload URL and send it in the response.
 	     **/
 
-	    const createResponse = await apiService.post('/video/create-upload/',
+	    const createResponse = await apiService.post('/video/upload/',
 							 {
 							     title,
 							     description,
