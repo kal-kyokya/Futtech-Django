@@ -4,6 +4,7 @@
 	   playlist-related data.
 """
 
+from django.db import models
 from rest_framework import viewsets, permissions
 from .models import Playlist
 from .serializers import PlaylistSerializer
@@ -31,7 +32,11 @@ class PlaylistViewSet(viewsets.ModelViewSet):
         Return:
         	A Django model query set containing public playlists.
         """
-        return Playlist.objects.filter(is_public=True)
+
+        user = self.request.user
+        return Playlist.objects.filter(
+            models.Q(owner=user) | models.Q(is_public=True)
+        )
 
     def perform_create(self, serializer):
         """

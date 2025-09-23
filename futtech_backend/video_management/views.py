@@ -268,3 +268,5 @@ class VideoViewSet(ModelViewSet):
         Return:
         	A filtered Django model query set.
         """
+
+        return Video.objects.filter(owner=self.request.user)

@@ -41,7 +41,7 @@ class VideoSerializer(serializers.ModelSerializer):
 class PlaylistSerializer(serializers.ModelSerializer):
     """
     Handles validation and JSON conversion of request(ed) data
-    during CRUD operations on the Video Model.
+    during CRUD operations on the Playlist Model.
 
     Inheritance:
     	serializers.ModelSerializer - Predefines confirmation,
