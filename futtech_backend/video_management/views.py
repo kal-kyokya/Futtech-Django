@@ -22,12 +22,15 @@ from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
 
+from mux_python.rest import ApiException
+
 from playlists.serializers import VideoSerializer
 
 from . import services
 from .logs import logger
 from .models import Video
 from .serializers import VideoUploadSerializer, PlaybackHistorySerializer
+
 
 import stripe # Was pip installed with 'djstripe'
 
@@ -335,7 +338,7 @@ class VideoUploadView(APIView):
                 is_drone=data['is_drone'],
                 is_analysis=data['is_analysis'],
                 mux_upload_id=upload.id,
-                status='uploading'
+                status='pending'
             )
 
             return Response(
@@ -374,3 +377,29 @@ class UploadCompleteView(APIView):
         Return:
         	A DRF response object containing the video and Mux asset IDs.
         """
+
+        try:
+            video = Video.objects.get(id=video_id,
+                                      owner=request.user)
+        except Video.DoesNotExist:
+            return Response({'error': 'Video not found'},
+                            status=404)
+
+        # Fetch the asset linked to the upload
+        try:
+            upload = services.uploads_api.get_direct_upload(
+                video.mux_upload_id
+            )
+            asset_id = upload.data.asset_id
+        except ApiException:
+            return Response({'error': 'Mux upload not ready'},
+                            status=400)
+
+        video.mux_asset_id = asset_id
+        video.status = 'processing'
+        video.save()
+
+        return Response({
+            'video_id': video.id,
+            'mux_asset_id': asset.id
+        })
