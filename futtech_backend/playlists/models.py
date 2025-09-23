@@ -28,4 +28,5 @@ class Playlist(models.Model):
         Video,
         related_name='in_playlists',
     )
+    is_public = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)

@@ -32,8 +32,10 @@ class VideoSerializer(serializers.ModelSerializer):
         # Django model upon which this serializer primarily acts
         model = Video
 
-        # Model fields to include during serialization and deserialization
-        fields = '__all__'
+        # Model fields to exclude from the serialized output
+        exclude = ('mux_asset_id', 'mux_playback_id',
+                   'mux_playback_policy', 'created_at',
+                   'updated_at', 'status')
 
 
 class PlaylistSerializer(serializers.ModelSerializer):
