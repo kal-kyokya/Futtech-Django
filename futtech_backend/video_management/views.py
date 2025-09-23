@@ -254,3 +254,17 @@ class VideoViewSet(ModelViewSet):
     Inheritance:
     	ModelViewSet - A set of 'default actions' method for HTTP verbs.
     """
+
+    serializer_class = VideoSerializer
+    permissions_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """
+        Handles GET requests of Video instances.
+
+        Params:
+        	self - A python representation of the view's instantiation.
+
+        Return:
+        	A filtered Django model query set.
+        """

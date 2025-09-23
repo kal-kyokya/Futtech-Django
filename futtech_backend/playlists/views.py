@@ -38,7 +38,7 @@ class PlaylistViewSet(viewsets.ModelViewSet):
         Handles POST request creating new playlists.
 
         Params:
-        	self - Object representation of the class instanciation.
+        	self - Object representation of the class instantiation.
         	serializer - A validated Django model friendly data set.
 
         Return:
