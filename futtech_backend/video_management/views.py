@@ -358,3 +358,19 @@ class UploadCompleteView(APIView):
     	APIView - Empowers this view with a set of predefined class attributes
     		  from the 'Base of all views in REST Framework'.
     """
+
+    permission_classes = [IsAuthenticated]
+
+    def patch(self, request, video_id):
+        """
+        Mark upload complete, after frontend finishes direct upload.
+
+        Params:
+        	self - The current instance of the APIView subsclass.
+        	request - A dictionary-like python object containing
+        		  the frontend's request data.
+        	video_id - A unique identifier tied to a Video model object.
+
+        Return:
+        	A DRF response object containing the video and Mux asset IDs.
+        """
