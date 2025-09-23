@@ -25,7 +25,7 @@ from playlists.serializers import VideoSerializer
 from . import services
 from .logs import logger
 from .models import Video
-from .serializers import PlaybackHistorySerializer
+from .serializers import VideoUploadSerializer, PlaybackHistorySerializer
 
 import stripe # Was pip installed with 'djstripe'
 
@@ -296,3 +296,32 @@ class VideoUploadView(APIView):
         	A DRF response object containing the video ID, the
         	upload URL as well as the Mux upload ID.
         """
+
+        upload = services.create_direct_upload_url()
+
+        serializer = VideoUploadSerializer(data=request.data)
+        if serializer.is_valid():
+            data = serializer.valid_data
+
+            # Create the video instance
+            video = Video.objects.create(
+                owner=request.user,
+                title=data['title'],
+                description=data['description'],
+                is_premium=data['is_premium'],
+                is_drone=data['is_drone'],
+                is_analysis=data['is_analysis'],
+                mux_upload_id=upload.id,
+                status='uploading'
+            )
+
+            return Response(
+                {
+                    'video_id': video.id,
+                    'mux_upload_id': upload.id,
+                    'upload_url': upload.url,
+                },
+                status=status.HTTP_201_CREATED,
+            )
+
+        return Response(serializer.errors, status=400)
