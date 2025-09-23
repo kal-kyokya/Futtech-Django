@@ -68,6 +68,8 @@ const NewVideo = () => {
 	setUploadProgress(0);
 
 	try {
+	    // Browser-to-Mux direct upload flow recommended by Mux.
+
 	    /**
 	     * STEP 1: Create a Video record in Django & get a Mux Upload URL.
 	     *
@@ -76,7 +78,7 @@ const NewVideo = () => {
 	     * 	 an upload URL and send it in the response.
 	     **/
 
-	    const createResponse = await apiService.post('/videos/create-upload/',
+	    const createResponse = await apiService.post('/video/create-upload/',
 							 {
 							     title,
 							     description,
