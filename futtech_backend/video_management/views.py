@@ -271,3 +271,13 @@ class VideoViewSet(ModelViewSet):
 
         return Video.objects.filter(owner=self.request.user,
                                     status='ready')
+
+
+class VideoUploadView(APIView):
+    """
+    Handles requests for MUX upload URLs.
+
+    Inheritance:
+    	APIView - Empowers this view with a set of predefined class attributes
+    		  from the 'Base of all views in REST Framework'.
+    """
