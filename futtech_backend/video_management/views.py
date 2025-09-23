@@ -348,3 +348,13 @@ class VideoUploadView(APIView):
             )
 
         return Response(serializer.errors, status=400)
+
+
+class UploadCompleteView(APIView):
+    """
+    Handles post-upload workflows such as video presence confirmation in DB.
+
+    Inheritance:
+    	APIView - Empowers this view with a set of predefined class attributes
+    		  from the 'Base of all views in REST Framework'.
+    """
