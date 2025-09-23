@@ -220,6 +220,18 @@ def create_checkout_session(request):
         )
 
 
+def mux_webhook(request):
+    """
+    Listens for webhooks updating the upload status of video files.
+
+    Param:
+    	request - Python dictionary-like object containing Mux data.
+
+    Return:
+    	A DRF Response object declaring the upload status.
+    """
+
+
 class UpdateWatchProgressView(APIView):
     """
     Handles POST or PATCH request to update video watch progress.
