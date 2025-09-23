@@ -35,7 +35,7 @@ class VideoSerializer(serializers.ModelSerializer):
         # Model fields to exclude from the serialized output
         exclude = ('mux_asset_id', 'mux_playback_id',
                    'mux_playback_policy', 'created_at',
-                   'updated_at', 'status')
+                   'updated_at',)
 
 
 class PlaylistSerializer(serializers.ModelSerializer):

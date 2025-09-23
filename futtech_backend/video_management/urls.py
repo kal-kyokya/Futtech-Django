@@ -26,4 +26,8 @@ urlpatterns = [
     path('user/profile',
          views.get_user_profile,
          name='get_user_profile'),
+    path('videos/',
+         views.VideoViewSet.as_view(),
+         name='crud-videos'
+    )
 ]
