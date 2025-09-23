@@ -36,10 +36,10 @@ private_key_pem = os.environ.get('MUX_PRIVATE_KEY')
 
 def create_direct_upload_url():
     """
-    Creates a new direct upload URL in Mux.
+    Creates a Mux direct upload URL for client-side videos.
 
     Return:
-    	A URL passed to the client to upload the file directly to Mux.
+    	A URL enabling a direct client-side upload to Mux.
     """
 
     create_asset_request = mux_python.CreateAssetRequest(
@@ -80,7 +80,7 @@ def handle_mux_webhook(payload, signature_header):
     			   generated using a unique Mux webhook secret key.
 
     Return:
-    	A boolean (True) if no exception is raised during processing.
+    	A boolean, 'True' if no exception is raised during processing.
     """
 
     # It is CRITICAL to verify the webhook signature for security

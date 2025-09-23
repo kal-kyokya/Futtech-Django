@@ -6,7 +6,7 @@
 """
 
 from rest_framework import serializers
-from .models import PlaybackHistory
+from .models import Video, PlaybackHistory
 
 
 class PlaybackHistorySerializer(serializers.ModelSerializer):

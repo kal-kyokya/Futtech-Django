@@ -19,8 +19,8 @@ from django.urls import path, include
 
 
 ###
-# Uses a 'top-level' hierarchical routing approach where URL requests are
-# directed to 'installed apps' for further processing.
+# Uses a 'top-level', hierarchical, routing approach where URL requests are
+# directed to the 'installed apps' for further processing.
 #
 # Keeping the project's routing clean and scalable as more applications
 # as well as endpoints are added.

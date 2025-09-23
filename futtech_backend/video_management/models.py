@@ -154,6 +154,10 @@ class Video(models.Model):
     mux_playback_policy = models.CharField(max_length=6,
                                            choices=VideoPolicy,
                                            default=VideoPolicy.PUBLIC)
+    mux_upload_id = models.CharField(max_length=255,
+                                    unique=True,
+                                    null=True,
+                                    blank=True)
 
     status = models.CharField(max_length=20,
                               choices=VideoStatus.choices,
