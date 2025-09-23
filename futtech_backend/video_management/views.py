@@ -16,8 +16,11 @@ from djstripe.settings import djstripe_settings
 from djstripe.models import Customer, Subscription
 
 from rest_framework.views import APIView
+from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
+
+from playlists.serializers import VideoSerializer
 
 from . import services
 from .logs import logger
@@ -242,3 +245,12 @@ class UpdateWatchProgressView(APIView):
             return Response({'status': 'success'}, status=200)
 
         return Response(serializer.errors, status=400)
+
+
+class VideoViewSet(ModelViewSet):
+    """
+    Handles GET and POST request on the Video model.
+
+    Inheritance:
+    	ModelViewSet - A set of 'default actions' method for HTTP verbs.
+    """
