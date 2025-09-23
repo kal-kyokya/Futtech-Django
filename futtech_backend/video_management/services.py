@@ -86,10 +86,10 @@ def handle_mux_webhook(payload, signature_header):
     # It is CRITICAL to verify the webhook signature for security
     webhook_secret = os.environ.get('MUX_WEBHOOK_SIGNING_SECRET', '')
     try:
-        # The Mux SDK's verify function will raise an error if invalid
-        mux_python.webhooks.verify_header(payload,
-                                          signature_header,
-                                          webhook_secret)
+        # This custom-built verify function will raise an error if invalid
+        mux_webhooks.verify_signature(payload,
+                                      signature_header,
+                                      webhook_secret)
     except ValueError as err:
         # Invalid signature
         logger.error("Exception verifying the Mux webhook: {}".format(err))
