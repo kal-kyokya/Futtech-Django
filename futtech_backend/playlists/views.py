@@ -16,3 +16,19 @@ class PlaylistViewSet(viewsets.ModelViewSet):
     Inheritance:
     	viewsets.ModelViewSet - Provides 'default actions' method.
     """
+
+    serializer_class = PlaylistSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        """
+        Handles GET request for playlist objects.
+
+        Param:
+        	self - A representation of the currently processed
+        	       PlaylistViewSet instance.
+
+        Return:
+        	A Django model query set containing public playlists.
+        """
+        return Playlist.objects.filter(is_public=True)
