@@ -275,9 +275,24 @@ class VideoViewSet(ModelViewSet):
 
 class VideoUploadView(APIView):
     """
-    Handles requests for MUX upload URLs.
+    Handles provision of MUX direct upload URLs.
 
     Inheritance:
     	APIView - Empowers this view with a set of predefined class attributes
     		  from the 'Base of all views in REST Framework'.
     """
+
+    permission_classes = [IsAuthenticated]
+
+    def post(self, request):
+        """
+        Calls for a Mux direct upload and stores metatata.
+
+        Params:
+        	self - A instance of the current class-based view.
+        	request - The client-side generated HTTP request object.
+
+        Return:
+        	A DRF response object containing the video ID, the
+        	upload URL as well as the Mux upload ID.
+        """
