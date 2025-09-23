@@ -28,6 +28,14 @@ urlpatterns = [
          name='get_user_profile'),
     path('videos/',
          views.VideoViewSet.as_view(),
-         name='crud-videos'
-    )
+         name='crud-videos'),
+    path('video/upload',
+         views.VideoUploadView.as_view(),
+         name='upload-video'),
+    path('video/<uuid:video_id>/upload-complete',
+         views.UploadCompleteView.as_view(),
+         name='video-upload-complete'),
+    path('webhooks/mux',
+         views.mux_webhook,
+         name='mux-webhook'),
 ]
