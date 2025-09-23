@@ -5,18 +5,59 @@
 		 convert every I/O of the 'video' and 'watch_progress' fields.
 """
 
-from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 from .models import Video, PlaybackHistory
 
 
-class PlaybackHistorySerializer(serializers.ModelSerializer):
+class PlaybackHistorySerializer(ModelSerializer):
     """
-    Ties PlaybackHistory the out-of-the-box 'djangorestframework' serializer.
+    Handles validation and serialization of request data
+    aimed at the PlaybackHistory Django model.
 
     Inheritance:
-    	serializers.ModelSerializer - Base class handling data marshalling.
+    	ModelSerializer - Base class for all DRF serializer classes.
     """
 
     class Meta:
         model = PlaybackHistory
         fields = ['video', 'watch_progress']
+
+
+class VideoUploadSerializer(ModelSerializer):
+    """
+    Handles serialization of data used during the video upload workflow.
+
+    Inheritance:
+    	ModelSerializer - Base class for all DRF serializer classes.
+    """
+
+    class Meta:
+        """
+        Declares the model upon which serialization occur and
+        the fields to include in the serialized output.
+        """
+
+        model = Video
+        fields = ['id', 'title', 'description',
+                  'is_premium', 'is_drone', 'is_analysis']
+
+
+class VideoCreationSerializer(ModelSerializer):
+    """
+    Handles serialization of data used for video creation.
+
+    Inheritance:
+    	ModelSerializer - Base class for all DRF serializer classes.
+    """
+
+    class Meta:
+        """
+        Declares the model upon which serialization occur and
+        the fields to include/exclude from the serialized output.
+        """
+
+        model = Video
+
+        # Model fields to exclude from the serialized output
+        exclude = ('mux_playback_id', 'mux_playback_policy',
+                   'updated_at', 'created_at')
