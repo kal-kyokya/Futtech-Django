@@ -8,3 +8,11 @@ from rest_framework import viewsets, permissions
 from .models import Playlist
 from .serializers import PlaylistSerializer
 
+
+class PlaylistViewSet(viewsets.ModelViewSet):
+    """
+    Handles GET and POST request acting on the Playlist model.
+
+    Inheritance:
+    	viewsets.ModelViewSet - Provides 'default actions' method.
+    """
