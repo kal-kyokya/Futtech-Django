@@ -87,7 +87,7 @@ const NewVideo = () => {
 							     is_analysis: isAiAnalysis,
 							 });
 
-	    const { upload_url, video_id, mux_asset_id } = createResponse.data;
+	    const { upload_url, video_id, mux_upload_id } = createResponse.data;
 
 	    if (!upload_url) {
 		throw new Error('Could not retrieve an upload URL from the server');
