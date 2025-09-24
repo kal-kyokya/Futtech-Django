@@ -65,12 +65,13 @@ class UserRegistrationView(generics.CreateAPIView):
 
 class UserLoginView(APIView):
     """
-    Contains the application handling client-side requests to log in.
+    Contains the application logic handling frontend requests for log ins.
 
     Inheritance:
-    	APIView - Most basic class-based view provided by DRF. Extends
-    	Django's 'View' class, offers the highest degree of control over
-    	the request-response cycle since it is a lower-level abstraction.
+    	APIView - Most basic class-based view provided by DRF.
+    	It extends Django's 'View' class and offers the highest degree of
+    	control over the request-response cycle since it has a
+    	lower-level abstraction.
 
     	It has a less opinionated structure and requires one to explicitly
     	define methods for each HTTP verb (e.g., get, post, put, delete).
@@ -86,7 +87,7 @@ class UserLoginView(APIView):
 
         Return:
         	A DRF Response object containing the JWT access and
-        	refresh tokens associated with the requesting user.
+        	refresh tokens associated with the user requesting log in.
         """
 
         serializer = UserLoginSerializer(data=request.data)

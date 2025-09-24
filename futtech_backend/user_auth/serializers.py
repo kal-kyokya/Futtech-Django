@@ -131,8 +131,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 class UserLoginSerializer(serializers.Serializer):
     """
-    Handles validation of the user data sent within a request
-    before its conversion to/from JSON during login.
+    Handles validation of the request data before
+    its conversion to and from JSON.
 
     Inheritance:
     	serializers.Serializer - Empowers this subclass with
@@ -149,13 +149,12 @@ class UserLoginSerializer(serializers.Serializer):
         Contains the core of this serializer's conversion logic.
 
         Params:
-        	self - A representation of the instanciation of
-        	       this serializer subclass.
+        	self - An instanciation of this serializer subclass.
         	attrs - The user data sent inside the HTTP request.
 
         Return:
         	A python dictionary made of the JWT access and
-        	refresh token, as well as basic user info.
+        	refresh tokens, as well as basic user infos.
         """
 
         email = attrs.get('email')
@@ -164,14 +163,19 @@ class UserLoginSerializer(serializers.Serializer):
         try:
             user = UserModel.objects.get(email=email)
         except UserModel.DoesNotExist:
-            raise serializers.ValidationError('Invalid credentials.')
+            raise serializers.ValidationError({
+                'email': 'Invalid email'
+            })
 
-        user = authenticate(username=user.username,
-                            password=password)
-        if not user:
-            raise serializers.ValidationError('Invalid credentials.')
+        # Authenticate the user via a built-in user authentication function
+        authenticated_user = authenticate(username=user.username,
+                                          password=password)
+        if not authenticated_user:
+            raise serializers.ValidationError({
+                'password': 'Invalid password.'
+            })
 
-        if not user.is_active:
+        if not authenticated_user.is_active:
             raise serializers.ValidationError('User account is disabled.')
 
         refresh = RefreshToken.for_user(user)
