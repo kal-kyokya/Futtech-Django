@@ -41,7 +41,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     )
 
     # 'write_only=True' ensures these sensitive fields are used for input
-    # and validation, but never serialized and return in any API response.
+    # and validation, but never serialized and returned in any API response.
     password = serializer.CharField(
         required=True,
         write_only=True,
@@ -90,7 +90,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         	attrs - A dictionary containing the data to be serialized.
 
         Return:
-        	The 'attrs' dictionary, if no validation error is raised.
+        	The 'attrs' dictionary if no validation error is raised.
         """
 
         if attrs['password'] != attrs['password2']:
@@ -98,7 +98,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 'password2': 'Password fields did not match'
             })
 
-        # Password strength validation using Django's built-in framework
+        # Validate password strength with Django's built-in validation function
         try:
             validate_password(attrs['password'])
         except serializers.ValidationError as err:
@@ -110,11 +110,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         """
-        Handles generation of a User model object.
+        Handles addition of row to the User model.
 
         Params:
         	self - A representation of the current class instance.
-        	validated_data - Safe python object used for serialization.
+        	validated_data - A dictionary-like object containing all the
+        			 serializer fields defined as class attributes.
 
         Return:
         	A newly created instance of the Django User model.

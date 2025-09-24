@@ -16,29 +16,30 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 class UserRegistrationView(generics.CreateAPIView):
     """
-    Processes client-side request to register a new user.
+    Processes client-side requests for user registrations.
 
     Inheritance:
     	generics.CreateAPIView - High-level, generic view specifically
     	designed for creating model instances. Automatically handles
-    	POST method, serialzer instantiation, validation, saving, and
+    	POST method, serializer instantiation, validation, saving, and
     	response generation.
     """
 
     serializer_class = UserRegistrationSerializer
     permission_classes = (AllowAny,)
 
-    # Override the 'create' method to include a JWT access and refresh tokens
+    # Overrides the 'create' method to include JWT access and refresh tokens
     def create(self, request, *args, **kwargs):
         """
-        Customize the HTTP response to include a JWT access & refresh tokens.
+        Customizes the HTTP response to include JWT access & refresh tokens.
 
         Params:
         	self - A representation of the current class instance.
-        	request - The client-side HTTP request made.
+        	request - The HTTP request made by the frontend.
 
         Return:
-        	A 'rest_framework.response.Response' object.
+        	A 'rest_framework.response.Response' object containing
+        	a success message and the JWT access & refresh tokens.
         """
 
         serializer = self.get_serializer(data=request.data)
