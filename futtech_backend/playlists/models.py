@@ -11,7 +11,7 @@ from video_management.models import Video
 
 class Playlist(models.Model):
     """
-    Blueprint for all playlist objects to be stored in DB.
+    Blueprint for all playlist objects to be stored in the Database.
 
     Inheritance:
     	models.Model - Base class for all Django Models.

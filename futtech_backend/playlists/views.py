@@ -12,10 +12,12 @@ from .serializers import PlaylistSerializer
 
 class PlaylistViewSet(viewsets.ModelViewSet):
     """
-    Handles GET and POST request acting on the Playlist model.
+    Handles GET and POST requests directed towards the Playlist model.
 
     Inheritance:
-    	viewsets.ModelViewSet - Provides 'default actions' method.
+    	viewsets.ModelViewSet - A viewset providing a list of
+    				'default actions' method such as
+    				'create(), retrieve(), list(), etc'.
     """
 
     serializer_class = PlaylistSerializer
@@ -30,7 +32,7 @@ class PlaylistViewSet(viewsets.ModelViewSet):
         	       PlaylistViewSet instance.
 
         Return:
-        	A Django model query set containing public playlists.
+        	A Django model query set containing every public playlist.
         """
 
         user = self.request.user
@@ -47,6 +49,6 @@ class PlaylistViewSet(viewsets.ModelViewSet):
         	serializer - A validated Django model friendly data set.
 
         Return:
-        	None. A side effect, in the creation of a playlist.
+        	None. A side effect: The creation of a playlist.
         """
         serializer.save(owner=self.request.user)

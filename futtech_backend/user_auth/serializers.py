@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """
-'serializers.py' contains python classes defining process through which input
-		 data should be validated before creation of Django-friendly
-		 objects, like Django Model fields for example.
+'serializers.py' contains DRF serialization classes defining how input
+		 data should be validated before creation of complex python
+		 objects, such as Django Model instances.
 """
 
 from django.contrib.auth import get_user_model, authenticate

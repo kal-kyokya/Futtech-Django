@@ -11,7 +11,7 @@ from video_management.models import Video
 
 class VideoSerializer(serializers.ModelSerializer):
     """
-    Handles validation and JSON conversion of request(ed) data
+    Handles validation and JSON conversion of request data
     during CRUD operations on the Video Model.
 
     Inheritance:
@@ -39,12 +39,13 @@ class VideoSerializer(serializers.ModelSerializer):
 
 class PlaylistSerializer(serializers.ModelSerializer):
     """
-    Handles validation and JSON conversion of request(ed) data
+    Handles validation and JSON conversion of request data
     during CRUD operations on the Playlist Model.
 
     Inheritance:
-    	serializers.ModelSerializer - Predefines confirmation,
-    	validation, serialization and deserialization procedures.
+    	serializers.ModelSerializer - Predefines all procedures enabling
+			       	      data confirmation, validation,
+			       	      serialization and deserialization.
     """
 
     videos = VideoSerializer(many=True,
