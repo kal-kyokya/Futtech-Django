@@ -11,6 +11,7 @@ from . import views
 
 
 urlpatterns = [
+    # User heavy URLS
     path('video/<uuid:video_id>/get-playback-token/',
          views.get_playback_token,
          name='get_playback_token'),
@@ -29,6 +30,17 @@ urlpatterns = [
     path('user/stripe-profile',
          views.create_portal_session,
          name='get_stripe_profile'),
+
+    # Admin specific URLS
+    path('video/upload',
+         views.VideoUploadView.as_view(),
+         name='upload-video'),
+    path('video/<uuid:video_id>/upload-complete',
+         views.UploadCompleteView.as_view(),
+         name='video-upload-complete'),
+    path('webhooks/mux',
+         views.mux_webhook,
+         name='mux-webhook'),
     path('videos/',
          views.VideoViewSet.as_view(),
          name='crud-videos'),
