@@ -34,6 +34,44 @@ uploads_api = mux_python.DirectUploadsApi(configs)
 signing_key_id = os.environ.get('MUX_SIGNING_KEY_ID')
 private_key_pem = os.environ.get('MUX_PRIVATE_KEY')
 
+
+def generate_signed_playback_token(playback_id):
+    """
+    Generates a signed JWT off of the Mux Playback ID input parameter.
+
+    Params:
+    	playback_id - A dictionary-like object to be encoded in the JWT.
+
+    Return:
+    	A JSON Web Token allowing streaming of the requested Mux asset
+    	and enabling stateless server authentication and
+    	authorization. A modus operandi of modern web development.
+    """
+
+    if not signing_key_id or not private_key_pem:
+        logger.error("Misconfiguration, cannot generate a signed token.")
+        return None
+    try:
+        # Token expires in 1 hour
+        expiration_time = int(time.time()) + 3600
+
+        token = jwt.encode(
+            {
+                'sub': playback_id,
+                'aud': 'v', # Targeted audience (Recipient) claim
+                'exp': expiration_time,
+                'kid': signing_key_id,
+            },
+            private_key_pem,
+            algorithm='RS256',
+        )
+
+        return token
+    except Exception as err:
+        logger.error("Error generating JWT: {}".format(err))
+        return None
+
+
 def create_direct_upload_url():
     """
     Creates a MUX upload URL for client-side video creation.
@@ -123,39 +161,3 @@ def handle_mux_webhook(payload, signature_header):
 
     # End of verification and processing of webhooks from Mux
     return True
-
-def generate_signed_playback_token(playback_id):
-    """
-    Generates a signed JWT off of the Mux Playback ID input parameter.
-
-    Params:
-    	playback_id - A dictionary-like object to be encoded in the JWT.
-
-    Return:
-    	A JSON Web Token allowing streaming of the requested Mux asset
-    	and enabling stateless server authentication and
-    	authorization. A modus operandi of modern web development.
-    """
-
-    if not signing_key_id or not private_key_pem:
-        logger.error("Misconfiguration, cannot generate a signed token.")
-        return None
-    try:
-        # Token expires in 1 hour
-        expiration_time = int(time.time()) + 3600
-
-        token = jwt.encode(
-            {
-                'sub': playback_id,
-                'aud': 'v', # Targeted audience (Recipient) claim
-                'exp': expiration_time,
-                'kid': signing_key_id,
-            },
-            private_key_pem,
-            algorithm='RS256',
-        )
-
-        return token
-    except Exception as err:
-        logger.error("Error generating JWT: {}".format(err))
-        return None

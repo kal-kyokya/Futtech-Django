@@ -357,24 +357,24 @@ class VideoUploadView(APIView):
 
 class UploadCompleteView(APIView):
     """
-    Handles post-upload workflows such as video presence confirmation in DB.
+    Handles post upload workflows such as confirmation of video presence in DB.
 
     Inheritance:
     	APIView - Empowers this view with a set of predefined class attributes
-    		  from the 'Base of all views in REST Framework'.
+    		  from the 'Base of all views in Django REST Framework'.
     """
 
     permission_classes = [IsAuthenticated]
 
     def patch(self, request, video_id):
         """
-        Mark upload complete, after frontend finishes direct upload.
+        Marks upload as completed, once the frontend finishes direct upload.
 
         Params:
-        	self - The current instance of the APIView subsclass.
+        	self - The current instance of the APIView subclass.
         	request - A dictionary-like python object containing
         		  the frontend's request data.
-        	video_id - A unique identifier tied to a Video model object.
+        	video_id - A unique identifier tied to the Video model.
 
         Return:
         	A DRF response object containing the video and Mux asset IDs.
