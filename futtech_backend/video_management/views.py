@@ -254,32 +254,6 @@ class UpdateWatchProgressView(APIView):
         return Response(serializer.errors, status=400)
 
 
-class VideoViewSet(ModelViewSet):
-    """
-    Handles GET and POST request on the Video model.
-
-    Inheritance:
-    	ModelViewSet - A set of 'default actions' method for HTTP verbs.
-    """
-
-    serializer_class = VideoSerializer
-    permissions_classes = [IsAuthenticated]
-
-    def get_queryset(self):
-        """
-        Handles GET requests of Video instances.
-
-        Params:
-        	self - A python representation of the view's instantiation.
-
-        Return:
-        	A filtered Django model query set.
-        """
-
-        return Video.objects.filter(owner=self.request.user,
-                                    status='ready')
-
-
 class VideoUploadView(APIView):
     """
     Handles on-demand provision of MUX direct upload URLs to the frontend.
@@ -405,3 +379,29 @@ def mux_webhook(request):
     )
 
     return Response({'status': verification_status})
+
+
+class VideoViewSet(ModelViewSet):
+    """
+    Handles GET and POST requests aimed at the Video model.
+
+    Inheritance:
+    	ModelViewSet - Passes a set of 'default actions' method for HTTP verbs.
+    """
+
+    serializer_class = VideoSerializer
+    permissions_classes = [IsAuthenticated]
+
+    def get_queryset(self):
+        """
+        Handles GET requests of Video instances.
+
+        Params:
+        	self - A python representation of the view's instantiation.
+
+        Return:
+        	A filtered Django model query set.
+        """
+
+        return Video.objects.filter(owner=self.request.user,
+                                    status='ready')
