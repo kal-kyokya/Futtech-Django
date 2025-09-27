@@ -6,8 +6,12 @@
 from django.urls import path
 from .views import PlaylistViewSet
 
-urlspatterns = [
-    path('/',
-         PlaylistViewSet.as_view(),
+
+urlpatterns = [
+    path('',
+         PlaylistViewSet.as_view({
+             'get': 'retrieve',
+             'post': 'create'
+         }),
          name='video-playlists'),
 ]
