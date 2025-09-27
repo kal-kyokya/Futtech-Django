@@ -42,12 +42,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
     # 'write_only=True' ensures these sensitive fields are used for input
     # and validation, but never serialized and returned in any API response.
-    password = serializer.CharField(
+    password = serializers.CharField(
         required=True,
         write_only=True,
         style={'input_type': 'password'}
     )
-    password2 = serializer.CharField(
+    password2 = serializers.CharField(
         required=True,
         write_only=True,
         style={'input_type': 'password'}

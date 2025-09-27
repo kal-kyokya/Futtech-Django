@@ -7,7 +7,7 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 """
 
 from django.urls import path
-from .views import UserRegistrationView
+from .views import UserRegistrationView, UserLoginView
 
 
 urlpatterns = [
