@@ -107,7 +107,8 @@ def get_video_data(request, video_id):
 @login_required
 def get_pricing_page_identifiers(request):
     """
-    Provides the keys and IDs required for usage of Stripe's pricing table.
+    Provides the key-ID pair required for usage of
+    Stripe's embeddable pricing table.
 
     Params:
     	request - Dictionary object containing client-side data needed to
@@ -126,10 +127,10 @@ def get_pricing_page_identifiers(request):
 @login_required
 def get_subscription_confirmation(request):
     """
-    Provisions a user with the subscription paid for.
+    Provisions a user with the newly paid for subscription.
 
     Params:
-    	request - The object representation of the frontend request made.
+    	request - The object representation of the frontend request.
 
     Return:
     	A redirect to Stripe's customer portal for subscription management.
@@ -139,14 +140,14 @@ def get_subscription_confirmation(request):
     session_id = request.GET.get(session_id)
     session = stripe.checkout.Session.retrieve(session_id)
 
-    # Ensure match between he whom initiated the session and a user in our DB
+    # Ensure match between he who initiated the session and a user in our DB
     client_reference_id = int(session.client_reference_id)
     subscription_holder = get_user_model().objects.get(id=client_reference_id)
 
     assert client_reference_id == subscription_holder
 
     # Think of a subscription as a contract between Futtech and a user
-    # This finds the contract and stores it on our local machine
+    # This finds the contract and stores it locally
     subscription = stripe.Subscription.retrieve(session.subscription)
     djstripe_subscription = Subscription.sync_from_stripe_data(subscription)
 
@@ -156,7 +157,7 @@ def get_subscription_confirmation(request):
     subscription_holder.save()
 
     # Notify the user of the subscription status and redirect
-    messages.success(request, f"You have successfully signed up. Thanks for the support!")
+    messages.success(request, f"You have successfully subscribed. Thanks for the support!")
     return HttpResponseRedirect(reverse("create_portal_session"))
 
 
@@ -164,22 +165,23 @@ def get_subscription_confirmation(request):
 @require_POST
 def create_portal_session(request):
     """
-    Allows user to access Stripe's customer portal and manage subscriptions.
+    Allows users to access Stripe's customer portal and manage subscriptions.
 
     Param:
-    	request - A dictionary object representing the client-side request.
+    	request - A dictionary object representing the HTTP request.
 
     Return:
     	A redirect to Stripe's customer portal.
     """
 
-    return_path = 'https://{}/profile/'.format(settings.DOMAIN_NAME)
+    return_path = 'https://{}/stripe-profile/'.format(settings.DOMAIN_NAME)
 
     portal_session = stripe.billing_portal.Session.create(
         customer=request.user.customer.id,
         return_url=return_path,
     )
 
+    # I'm tempted to think that this should be a JSONResponse
     return HttpResponseRedirect(portal_session.url)
 
 
