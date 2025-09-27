@@ -36,12 +36,12 @@ urlpatterns = [
         'user_auth.urls',
         namespace='user-auth'
     )),
-    path('api/v2/', include(
-        'video_management.urls',
-        namespace='video-management'
-    )),
     path('api/v2/playlists/', include(
         'playlists.urls',
         namespace='playlists'
+    )),
+    path('api/v2/', include(
+        'video_management.urls',
+        namespace='video-management'
     )),
 ]

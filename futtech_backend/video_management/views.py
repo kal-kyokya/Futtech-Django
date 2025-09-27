@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
 'video_management.views.py' is the entry point to this application's
-Business logic and Data layer, for defined set of URLs.
+private layer (logic and data tiers), accessed via declared URL patterns.
 """
 
 from django.conf import settings
@@ -40,16 +40,53 @@ stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
 
 
 @login_required
-def get_video_data(request, video_id):
+def get_playback_token(request, video_id):
     """
-    Handles HTTP requests for Mux video assets.
+    Handles GET requests for playback-ready Mux video assets.
 
     Params:
     	request - A dictionary object representing the client's request.
     	video_id - A string representing the requested Mux asset ID.
 
     Return:
-    	A JSON Web Token containing a signed version of the playback ID.
+    	A JSON Web Token containing a signed version of the
+    	requested video's playback ID.
+    """
+
+    try:
+        video = Video.objects.get(pk=video_id)
+    except Video.DoesNotExist as err:
+        logger.error("Error retrieving video ID - {} from DB: {}".format(
+            video_id, err
+        ))
+
+    # Ensures that the video is free to watch or the user is subscribed
+    if not video.is_premium or request.user.profile.has_active_subscription():
+        token = services.generate_signed_playback_token(
+            video.mux_playback_id
+        )
+        if token:
+            return JsonResponse({'token': token})
+        else:
+            return JsonResponse(
+                {'error': 'Could not generate token'}, status=500
+            )
+
+    logger.info("Unauthorized request for a playback ID.")
+    return HttpResponseForbidden("You do not have permission to view this video.")
+
+
+@login_required
+def get_video_data(request, video_id):
+    """
+    Handles GET requests for Mux video assets.
+
+    Params:
+    	request - A dictionary object representing the frontend request.
+    	video_id - A string representing the requested Mux asset ID.
+
+    Return:
+    	A JSON response containing a the Video model instance requested.
     """
 
     try:
@@ -65,43 +102,6 @@ def get_video_data(request, video_id):
     else:
         logger.info("Unauthorized request for a playback ID.")
         return HttpResponseForbidden("You do not have permission to view this video.")
-
-
-@login_required
-def get_playback_token(request, video_id):
-    """
-    Handles HTTP requests for playback-ready Mux video assets.
-
-    Params:
-    	request - A dictionary object representing the client's request.
-    	video_id - A string representing the requested Mux asset ID.
-
-    Return:
-    	A JSON Web Token containing a signed version of the playback ID.
-    """
-
-    try:
-        video = Video.objects.get(pk=video_id)
-    except Video.DoesNotExist as err:
-        logger.error("Error retrieving video ID - {} from DB: {}".format(
-            video_id, err
-        ))
-
-    # Later on, we shall add subscription checks here.
-    # For now, we just check if the user is logged in.
-    if not video.is_premium or request.user.is_authenticated:
-        token = services.generate_signed_playback_token(
-            video.mux_playback_id
-        )
-        if token:
-            return JsonResponse({'token': token})
-        else:
-            return JsonResponse(
-                {'error': 'Could not generate token'}, status=500
-            )
-
-    logger.info("Unauthorized request for a playback ID.")
-    return HttpResponseForbidden("You do not have permission to view this video.")
 
 
 @login_required

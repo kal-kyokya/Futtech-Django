@@ -126,14 +126,15 @@ def handle_mux_webhook(payload, signature_header):
 
 def generate_signed_playback_token(playback_id):
     """
-    Generates a signed JWT off of the input Mux Playback ID.
+    Generates a signed JWT off of the Mux Playback ID input parameter.
 
     Params:
-    	playback_id - The dictionary-like object to be encoded as a JWT.
+    	playback_id - A dictionary-like object to be encoded in the JWT.
 
     Return:
-    	A JSON Web Token solving the stateless server-side authentication and
-    	authorization problem in modern web development.
+    	A JSON Web Token allowing streaming of the requested Mux asset
+    	and enabling stateless server authentication and
+    	authorization. A modus operandi of modern web development.
     """
 
     if not signing_key_id or not private_key_pem:

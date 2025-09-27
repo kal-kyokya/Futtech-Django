@@ -5,6 +5,8 @@ for this App to handle CRUD operations facilitating video streaming.
 """
 
 import uuid
+import time
+from datetime import datetime
 from django.db import models
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
@@ -60,13 +62,14 @@ class UserProfile(models.Model):
     Extends the built-in User model to store application-specific data.
 
     Inheritance:
-    	models.Model - Base class enabling access to Django's "Modelbase",
-    	which itself is the 'Metaclass for all models'.
+    	models.Model - Base class enabling access to the Django
+		       Modelbase class: The Metaclass for all models.
     """
 
     user = models.OneToOneField(UserModel,
                                 on_delete=models.CASCADE,
-                                primary_key=True)
+                                primary_key=True,
+                                related_name='profile')
     avatar_url = models.URLField(max_length=512,
                                  null=True,
                                  blank=True)
@@ -105,12 +108,36 @@ class UserProfile(models.Model):
                                  blank=True,
                                  on_delete=models.SET_NULL,
                                  help_text="The user's Stripe Customer object, if it exists")
+
     team = models.ForeignKey(Team,
                              null=True,
                              blank=True,
                              on_delete=models.SET_NULL,
                              related_name='team_members',
                              help_text='The team whose enterprise subscription a user has access to')
+
+    def has_active_subscription(self):
+        """
+        Runs a series of checks permitting a user to stream Futtech content.
+
+        Param:
+        	self - A representation of the current UserProfile instance.
+
+        Return:
+        	A boolean determining whether or not a user is subscribed.
+        """
+
+        if not self.subscription:
+            return False
+
+        # Include a 10-day grace period for subscriptions past due
+        if self.subscription.status == 'past_due':
+            days_past_due = datetime.timedelta(
+                seconds=time.time() - self.subscription.current_period_end
+            ).days
+            return days_past_due <= 10
+
+        return self.subscription.status == 'active'
 
     def __str__(self):
         """
@@ -125,11 +152,12 @@ class UserProfile(models.Model):
 
 class Video(models.Model):
     """
-    Represents a video asset within the platform (i.e., Inside Futtech).
+    Blueprint of every video asset within the platform (i.e., Inside Futtech).
 
     Inheritance:
     	models.Model - Base class enabling access to the 'batteries-included'
-    	out-of-the-box 'BaseModel' class: 'The metaclass for all class models.'
+    		       out-of-the-box 'BaseModel' class:
+    		       'The metaclass for all class models'.
     """
 
     id = models.UUIDField(primary_key=True,

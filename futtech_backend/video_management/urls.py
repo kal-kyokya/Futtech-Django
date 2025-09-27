@@ -11,12 +11,12 @@ from . import views
 
 
 urlpatterns = [
-    path('video/<uuid:video_id>/',
-         views.get_video_data,
-         name='get_video_data'),
     path('video/<uuid:video_id>/get-playback-token/',
          views.get_playback_token,
          name='get_playback_token'),
+    path('video/<uuid:video_id>/',
+         views.get_video_data,
+         name='get_video_data'),
     path('pricing-page-identifiers/',
          views.get_pricing_page_identifiers,
          name='get_pricing_page_identifiers'),
