@@ -83,10 +83,10 @@ def get_video_data(request, video_id):
 
     Params:
     	request - A dictionary object representing the frontend request.
-    	video_id - A string representing the requested Mux asset ID.
+    	video_id - A string representing the requested video ID in DB.
 
     Return:
-    	A JSON response containing a the Video model instance requested.
+    	A JSON response containing the requested Video model instance.
     """
 
     try:
@@ -96,11 +96,11 @@ def get_video_data(request, video_id):
             video_id, err
         ))
 
-    # We check if the user is logged in.
-    if not video.is_premium or request.user.is_authenticated:
+    # We make sure that the video belongs to the requesting user
+    if video.owner == request.user:
         return JsonResponse({'video': video})
     else:
-        logger.info("Unauthorized request for a playback ID.")
+        logger.info(f"Unauthorized request for video {video_id}.")
         return HttpResponseForbidden("You do not have permission to view this video.")
 
 
