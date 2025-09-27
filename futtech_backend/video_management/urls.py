@@ -42,6 +42,8 @@ urlpatterns = [
          views.mux_webhook,
          name='mux-webhook'),
     path('videos/',
-         views.VideoViewSet.as_view(),
+         views.VideoViewSet.as_view({
+             'get': 'retrieve',
+         }),
          name='crud-videos'),
 ]

@@ -310,7 +310,7 @@ class VideoUploadView(APIView):
 
 class UploadCompleteView(APIView):
     """
-    Handles post upload workflows such as confirmation of video presence in DB.
+    Handles postupload workflows such as confirmation of video presence in DB.
 
     Inheritance:
     	APIView - Empowers this view with a set of predefined class attributes
