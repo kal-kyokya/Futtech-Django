@@ -303,35 +303,35 @@ class VideoViewSet(ModelViewSet):
 
 class VideoUploadView(APIView):
     """
-    Handles provision of MUX direct upload URLs.
+    Handles on-demand provision of MUX direct upload URLs to the frontend.
 
     Inheritance:
     	APIView - Empowers this view with a set of predefined class attributes
-    		  from the 'Base of all views in REST Framework'.
+    		  from the 'Base of all views in Django REST Framework'.
     """
 
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
         """
-        Calls for a Mux direct upload and stores metatata.
+        Handles calls for MUX direct uploads and stores metatata.
 
         Params:
-        	self - A instance of the current class-based view.
+        	self - An instance of the current class-based view.
         	request - The client-side generated HTTP request object.
 
         Return:
         	A DRF response object containing the video ID, the
-        	upload URL as well as the Mux upload ID.
+        	upload URL, as well as the Mux upload ID.
         """
 
         upload = services.create_direct_upload_url()
 
-        serializer = VideoUploadSerializer(data=request.data)
-        if serializer.is_valid():
-            data = serializer.valid_data
+        serializer_output = VideoUploadSerializer(data=request.data)
+        if serializer_output.is_valid():
+            data = serializer_output.valid_data
 
-            # Create the video instance
+            # Create the video inside our Django model - 'Video'
             video = Video.objects.create(
                 owner=request.user,
                 title=data['title'],
@@ -352,7 +352,7 @@ class VideoUploadView(APIView):
                 status=status.HTTP_201_CREATED,
             )
 
-        return Response(serializer.errors, status=400)
+        return Response(serializer_output.errors, status=400)
 
 
 class UploadCompleteView(APIView):

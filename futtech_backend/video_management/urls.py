@@ -11,7 +11,7 @@ from . import views
 
 
 urlpatterns = [
-    # User heavy URLS
+    # User-heavy URLS
     path('video/<uuid:video_id>/get-playback-token/',
          views.get_playback_token,
          name='get_playback_token'),
@@ -31,7 +31,7 @@ urlpatterns = [
          views.create_portal_session,
          name='get_stripe_profile'),
 
-    # Admin specific URLS
+    # Admin-related URLS
     path('video/upload',
          views.VideoUploadView.as_view(),
          name='upload-video'),

@@ -36,10 +36,10 @@ private_key_pem = os.environ.get('MUX_PRIVATE_KEY')
 
 def create_direct_upload_url():
     """
-    Creates a Mux direct upload URL for client-side videos.
+    Creates a MUX upload URL for client-side video creation.
 
     Return:
-    	A URL enabling a direct client-side upload to Mux.
+    	A URL enabling a direct upload to Mux, from the frontend.
     """
 
     create_asset_request = mux_python.CreateAssetRequest(

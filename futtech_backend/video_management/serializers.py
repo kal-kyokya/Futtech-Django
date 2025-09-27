@@ -25,10 +25,11 @@ class PlaybackHistorySerializer(ModelSerializer):
 
 class VideoUploadSerializer(ModelSerializer):
     """
-    Handles serialization of data used during the video upload workflow.
+    Handles serialization of the data used during the video upload workflow.
 
     Inheritance:
-    	ModelSerializer - Base class for all DRF serializer classes.
+    	ModelSerializer - Base class for all DRF serializer classes
+    			  that directly operate on Django models.
     """
 
     class Meta:
