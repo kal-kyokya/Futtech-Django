@@ -227,27 +227,6 @@ def create_checkout_session(request):
         )
 
 
-@csrf_exempt
-@api_view(['POST'])
-def mux_webhook(request):
-    """
-    Listens for webhooks updating the upload status of video files.
-
-    Param:
-    	request - Python dictionary-like object containing Mux data.
-
-    Return:
-    	A DRF Response object declaring the upload status.
-    """
-
-    verification_status = services.handle_mux_webhook(
-        request,
-        request.headers.get('Mux-Signature')
-    )
-
-    return Response({'status': verification_status})
-
-
 class UpdateWatchProgressView(APIView):
     """
     Handles POST or PATCH request to update video watch progress.
@@ -405,3 +384,24 @@ class UploadCompleteView(APIView):
             'video_id': video.id,
             'mux_asset_id': asset.id
         })
+
+
+@csrf_exempt
+@api_view(['POST'])
+def mux_webhook(request):
+    """
+    Listens for webhooks updating the upload status of video files.
+
+    Param:
+    	request - A Python dictionary-like object containing Mux data.
+
+    Return:
+    	A DRF Response object declaring the upload status.
+    """
+
+    verification_status = services.handle_mux_webhook(
+        request,
+        request.headers.get('Mux-Signature')
+    )
+
+    return Response({'status': verification_status})

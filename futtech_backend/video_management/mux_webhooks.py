@@ -2,14 +2,18 @@ import hmac
 import hashlib
 import time
 
+
 def verify_signature(request_body, mux_signature_header, webhook_secret):
     # 1. Extract timestamp and signature from the Mux-Signature header
+    # This header will be in the format: 't=<timstamp>,v1=<signature>'
     parts = mux_signature_header.split(',')
     timestamp_str = None
     signature_str = None
     for part in parts:
         if part.startswith('t='):
             timestamp_str = part[2:]
+        # Potentially:
+        # 'else:' instead of 'elif <condition>'
         elif part.startswith('a='):
             signature_str = part[2:]
 

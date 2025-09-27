@@ -128,6 +128,7 @@ def handle_mux_webhook(payload, signature_header):
         mux_webhooks.verify_signature(payload,
                                       signature_header,
                                       webhook_secret)
+
     except ValueError as err:
         # Invalid signature
         logger.error("Exception verifying the Mux webhook: {}".format(err))
@@ -148,14 +149,17 @@ def handle_mux_webhook(payload, signature_header):
             video.duration = datetime.timedelta(seconds=duration)
             video.status = Video.VideoStatus.READY
             video.save()
+
         except Video.DoesNotExist as err:
             logger.error("Exception updating video object upon Mux creation: {}".format(err))
     elif event_type == 'video.asset.errored':
         asset_id = event_data.get('id')
+
         try:
             video = Video.objects.get(mux_asset_id=asset_id)
             video.status = Video.VideoStatus.ERROR
             video.save()
+
         except Video.DoesNotExist as err:
             logger.error("Exception updating video after Mux creation err: {}".format(err))
 
