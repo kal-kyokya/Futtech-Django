@@ -1,6 +1,7 @@
 /**
- * A collection of callbacks returning objects
- * tracking the stages of Authentication.
+ * './AuthActions.js' contains a collection of callbacks.
+ *		      Each generates a javascript object informing React
+ * 		      of the stage reached during user logins.
  */
 
 // LOGIN

@@ -1,68 +1,63 @@
 import './register.scss';
-import { useState, useRef, useContext } from 'react';
-import { AuthContext } from '../../contexts/authContext/AuthContext';
-import { UserContext } from '../../contexts/userContext/UserContext';
-import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import {
-    loginStart, loginSuccess, loginFailure } from '../../contexts/authContext/AuthActions';
-import { logOut } from '../../contexts/userContext/UserActions';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import { useState, useRef, useContext } from 'react';
+import { UserContext } from '../../contexts/userContext/UserContext';
+import {
+    registrationStart,
+    registrationSuccess,
+    registrationFailure,
+    logOut } from '../../contexts/userContext/UserActions';
 
 const Register = () => {
     const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
     const [username, setUsername] = useState("");
+    const [password1, setPassword1] = useState("");
+    const [password2, setPassword2] = useState("");
+
     const { dispatch,
 	    isFetching,
-	    error: resError } = useContext(AuthContext);
-    const navigate = useNavigate();
-    const { loggedOut, dispatch: userDispatch } = useContext(UserContext);
-    const baseURL = import.meta.env.VITE_API_BASE_URL;
+	    loggedOut,
+	    error: registrationError } = useContext(UserContext);
 
     const emailRef = useRef();
-
     const handleEmail = () => {
 	const emailRegEx = /^[a-zA-Z0-9_.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 	if (emailRegEx.test(emailRef.current.value)) {
-	    if (resError) { resError.error = 'Valid Email'; }
+	    if (registrationError) { registrationError.error = 'Valid Email'; }
+
 	    setEmail(emailRef.current.value);
 	} else {
-	    dispatch(loginFailure({ error: 'Invalid Email' }));
+	    dispatch(registrationFailure({ error: 'Invalid Email' }));
 	}
     }
 
-    const handleUsername = (e) => {
-	setUsername(e.target.value);
-    };
-
-    const handlePassword = (e) => {
-	setPassword(e.target.value);
-    };
-
     const handleRegister = async (e) => {
-	e.preventDefault(); // Prevent form reload and allow data submission
-	dispatch(loginStart());
+	e.preventDefault(); // Prevents form reload and allows data submission
+	dispatch(registrationStart());
 
 	if (username && password) {
 	    await axios.post(
-		`${baseURL}/users/signUp`,
+		`${import.meta.env.VITE_API_BASE_URL}/users/signUp`,
 		{ username, email, password },
 		{ headers: {'content-type': 'application/json'} }
 	    ).then((res) => {
 		console.log(res.data);
-		dispatch(loginSuccess(res.data));
+		dispatch(registrationSuccess(res.data));
+
+		const navigate = useNavigate();
 		navigate('/login');
 	    }).catch((err) => {
 		console.log(err.response.data.error);
-		dispatch(loginFailure(err.response.data));
+		dispatch(registrationFailure(err.response.data));
 	    });
 	} else {
 	    if (!username) {
-		dispatch(loginFailure({ error: 'Username required' }));
+		dispatch(registrationFailure({ error: 'Username required' }));
 	    } else {
-		dispatch(loginFailure({ error: 'Password required' }));
+		dispatch(registrationFailure({ error: 'Password required' }));
 	    }
 	}
     };
@@ -76,10 +71,11 @@ const Register = () => {
 			src='/logo.png'
 			alt='Logo of the Futtech Company'
 		    />
+
 		    <Link to='/login' className='link'>
-			<button className='signIn'>
+			<button className='logIn'>
 			    <span>
-				Sign In
+				Log In
 			    </span>
 			</button>
 		    </Link>
@@ -91,21 +87,21 @@ const Register = () => {
 		<h2>
 		    Learn more <Link to='/about'>here.</Link>
 		</h2>
-		<h4>Want to register? Enter your email to create or restart your membership.</h4>
+		<h4>Ready to watch? Enter your details to create or restart your membership.</h4>
 
 		{ email ? (
 		    <form className='membership'>
-			<input type='username'
-			       placeholder='Username'
-			       onChange={handleUsername}
+			<input type='password'
+			       placeholder='Password'
+			       onChange={(e) => {setPassword1(e.target.value)}}
 			       required
 			/>
 			<input type='password'
-			       placeholder='Password'
-			       autoComplete='password'
-			       onChange={handlePassword}
+			       placeholder='Confirm password'
+			       onChange={(e) => {setPassword2(e.target.value)}}
 			       required
 			/>
+
 			<button className='finish'
 				onClick={handleRegister}
 				disabled={isFetching}
@@ -115,6 +111,7 @@ const Register = () => {
 			    </span>
 			</button>
 		    </form>
+
 		) : (
 		    <div className='membership'>
 			<input type='email'
@@ -122,6 +119,12 @@ const Register = () => {
 			       ref={emailRef}
 			       required
 			/>
+			<input type='username'
+			       placeholder='Username'
+			       onChange={(e) {setUsername(e.target.value)}}
+			       required
+			/>
+
 			<button className='getStarted'
 				onClick={handleEmail}>
 			    <span>
@@ -131,9 +134,9 @@ const Register = () => {
 		    </div>
 		)}
 
-		{ resError && (
+		{ registrationError && (
 		    <div className='userPrompt'>
-			{resError.error}.
+			{registrationError.error}.
 		    </div>
 		)}
 

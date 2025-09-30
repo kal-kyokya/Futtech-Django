@@ -1,10 +1,13 @@
 /**
- * A reducer function linking stages of Authentication
- * to the states (data) internally managed by React.
+ * AuthReducer - An arrow-function updating the entire React App
+ * 		 of the stage reached during the user login flow.
  *
- * Something of a router for a potential Auth stages.
- */
-
+ * @params {Object} state - The initial React state used as login credentials.
+ * @params {Object} action - A javascript object containing the name of
+ * 			     stage reached and, optinally, the user/error.
+ *
+ * @returns {Object} The data set to be used as login credentials.
+ **/
 const AuthReducer = (state, action) => {
     switch (action.type) {
       case 'LOGIN_START':

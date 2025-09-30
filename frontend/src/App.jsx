@@ -22,10 +22,6 @@ const App = () => {
     return (
 	<Router>
 	    <Routes>
-		<Route path='/' element={
-			   user && user.accessToken ?
-			       <Home /> : <Register />
-		       } />
 		<Route path='/register' element={
 			   user && user.accessToken ?
 			       <Home /> : <Register />
@@ -33,6 +29,10 @@ const App = () => {
 		<Route path='/login' element={
 			   user && user.accessToken ?
 			       <Home /> : <Login />
+		       } />
+		<Route path='/' element={
+			   user && user.accessToken ?
+			       <Home /> : <Register />
 		       } />
 		<Route path='/about' element={<About />} />
 		<Route path='/videos' element={

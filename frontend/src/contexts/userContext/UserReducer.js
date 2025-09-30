@@ -1,13 +1,16 @@
 /**
- * A reducer function linking stages of user retrieval
- * to all the states (data) internally managed by React.
+ * UserReducer - An arrow-function updating the entire React App
+ * 		 of the stage reached during the user registration flow.
  *
- * Something of a router for potential stages reached.
- */
-
+ * @params {Object} state - The initial React state used as user credentials.
+ * @params {Object} action - A javascript object containing the name of
+ * 			     stage reached and, optinally, the user/error.
+ *
+ * @returns {Object} The data set to be used as login credentials.
+ **/
 const UserReducer = (state, action) => {
     switch (action.type) {
-      case 'SIGNIN_START':
+      case 'REGISTRATION_START':
 	return {
 	    user: null,
 	    isFetching: true,
@@ -15,7 +18,7 @@ const UserReducer = (state, action) => {
 	    loggedOut: false,
 	};
 
-      case 'SIGNIN_SUCCESS':
+      case 'REGISTRATION_SUCCESS':
 	return {
 	    user: action.payload,
 	    isFetching: false,
@@ -23,7 +26,7 @@ const UserReducer = (state, action) => {
 	    loggedOut: false,
 	};
 
-      case 'SIGNIN_FAILURE':
+      case 'REGISTRATION_FAILURE':
 	return {
 	    user: null,
 	    isFetching: false,
@@ -31,7 +34,7 @@ const UserReducer = (state, action) => {
 	    loggedOut: false,
 	};
 
-      case 'UPDATE_USER_START':
+      case 'UPDATE_START':
 	return {
 	    ...state,
 	    isFetching: true,
@@ -39,7 +42,7 @@ const UserReducer = (state, action) => {
 	    loggedOut: false,
 	};
 
-      case 'UPDATE_USER_SUCCESS':
+      case 'UPDATE_SUCCESS':
 	return {
 	    user: action.payload,
 	    isFetching: false,
@@ -47,11 +50,11 @@ const UserReducer = (state, action) => {
 	    loggedOut: false,
 	};
 
-      case 'UPDATE_USER_FAILURE':
+      case 'UPDATE_FAILURE':
 	return {
 	    ...state,
 	    isFetching: false,
-	    error: true,
+	    error: action.payload,
 	    loggedOut: false,
 	};
 
