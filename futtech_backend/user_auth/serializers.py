@@ -17,7 +17,7 @@ UserModel = get_user_model()
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """
-    Handles validation of the user data sent as request body, as well as
+    Handles validation of the user data sent in the request body, as well as
     creation of Django-compliant complex python objects (Model fields).
 
     Inheritance:
@@ -111,7 +111,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     
     def create(self, validated_data):
         """
-        Handles addition of row to the User model.
+        Handles creation of a new row in the User model.
 
         Params:
         	self - A representation of the current class instance.
@@ -132,8 +132,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
 class UserLoginSerializer(serializers.Serializer):
     """
-    Handles validation of the request data before
-    its conversion to and from JSON.
+    Handles validation of the user data before its conversion to/from JSON.
 
     Inheritance:
     	serializers.Serializer - Empowers this subclass with
@@ -168,7 +167,7 @@ class UserLoginSerializer(serializers.Serializer):
                 'email': 'Invalid email'
             })
 
-        # Authenticate the user via a built-in user authentication function
+        # Authenticate the user using a Django built-in authentication function
         authenticated_user = authenticate(username=user.username,
                                           password=password)
         if not authenticated_user:
