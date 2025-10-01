@@ -138,3 +138,6 @@ dist
 
 # Test files
 .myApp.scss
+
+# Emacs backup files
+*~
