@@ -50,8 +50,8 @@ class UserRegistrationView(generics.CreateAPIView):
 
         response_data = {
             'message': 'User registered successfully',
-            'refresh': str(refresh),
             'access': str(refresh.access_token),
+            'refresh': str(refresh),
         }
 
         headers = self.get_success_headers(serializer.data)
@@ -65,7 +65,7 @@ class UserRegistrationView(generics.CreateAPIView):
 
 class UserLoginView(APIView):
     """
-    Contains the application logic handling frontend requests for log ins.
+    Contains the application logic handling log in requests.
 
     Inheritance:
     	APIView - Most basic class-based view provided by DRF.
