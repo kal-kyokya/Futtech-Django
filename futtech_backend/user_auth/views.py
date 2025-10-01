@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """
-'views.py' is a collection of Django class-based views meant to handle
-	   http request made to the Futtech backend for the '/auth/' URL.
+'views.py' is a collection of Django class-based views each handling
+	   http requests made to the Futtech backend for the '/auth/' URL.
 """
 
 from rest_framework import generics, status
@@ -12,6 +12,10 @@ from rest_framework.views import APIView
 from .serializers import UserRegistrationSerializer, UserLoginSerializer
 
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.views import (
+    TokenObtainPairView,
+    TokenRefreshView,
+)
 
 
 class UserRegistrationView(generics.CreateAPIView):
@@ -97,3 +101,16 @@ class UserLoginView(APIView):
             serializer.validated_data,
             status=status.HTTP_200_OK
         )
+
+
+class ObtainTokenCookieView(TokenObtainPairView):
+    """
+    Handles HTTP request for JWT access and refresh pairs.
+    Ensures that the refresh token is set as a cookie header so as to
+    mitigate XSS (Cross Site Scripts) attacks, client-side.
+
+    Inheritance:
+    	TokenObtainPairView - DRF Simple JWT's default class-based view
+    			      handling requests for access/refresh tokens.
+    """
+    pass
