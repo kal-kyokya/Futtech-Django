@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
     'django_redis',
     'djstripe',
     'user_auth',
@@ -195,5 +196,8 @@ REST_FRAMEWORK = {
 
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    'REFRESH_TOKEN_LIFETIME': timedelta(days=7),
+    # Rotate refresh tokens and optionally blacklist old ones:
+    'ROTATE_REFRESH_TOKENS': True, # Refresh endpoint returns a new Refr_Token
+    'BLACKLIST_AFTER_ROTATION': True,
 }
