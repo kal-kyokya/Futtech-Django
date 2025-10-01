@@ -7,8 +7,7 @@ import { UserContext } from '../../contexts/userContext/UserContext';
 import {
     registrationStart,
     registrationSuccess,
-    registrationFailure,
-    logOut } from '../../contexts/userContext/UserActions';
+    registrationFailure } from '../../contexts/userContext/UserActions';
 
 const Register = () => {
     const [email, setEmail] = useState("");
@@ -38,14 +37,17 @@ const Register = () => {
 	e.preventDefault(); // Prevents form reload and allows data submission
 	dispatch(registrationStart());
 
-	if (username && password) {
+	if (email && username && password1 && password2) {
 	    await axios.post(
-		`${import.meta.env.VITE_API_BASE_URL}/users/signUp`,
-		{ username, email, password },
+		`${import.meta.env.VITE_API_BASE_URL}/auth/register`,
+		{ username, email, password1, password2 },
 		{ headers: {'content-type': 'application/json'} }
 	    ).then((res) => {
 		console.log(res.data);
-		dispatch(registrationSuccess(res.data));
+		dispatch(registrationSuccess({
+		    accessToken: res.data.access,
+		    refreshToken: res.data.refresh
+		}));
 
 		const navigate = useNavigate();
 		navigate('/login');
@@ -89,6 +91,12 @@ const Register = () => {
 		</h2>
 		<h4>Ready to watch? Enter your details to create or restart your membership.</h4>
 
+		{ registrationError && (
+		    <div className='userPrompt'>
+			{registrationError.error}.
+		    </div>
+		)}
+
 		{ email ? (
 		    <form className='membership'>
 			<input type='password'
@@ -131,12 +139,6 @@ const Register = () => {
 				Get Started
 			    </span>
 			</button>
-		    </div>
-		)}
-
-		{ registrationError && (
-		    <div className='userPrompt'>
-			{registrationError.error}.
 		    </div>
 		)}
 
