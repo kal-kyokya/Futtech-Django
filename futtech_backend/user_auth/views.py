@@ -103,6 +103,7 @@ class UserLoginView(APIView):
         )
 
 
+# This class replaces 'UserLoginView'
 class ObtainTokenCookieView(TokenObtainPairView):
     """
     Handles HTTP request for JWT access and refresh pairs.
