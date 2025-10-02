@@ -110,7 +110,46 @@ class ObtainTokenCookieView(TokenObtainPairView):
             secure=True,
             samesite='Lax',
             max_age=7*24*60*60, # Matches 'REFRESH_TOKEN_LIFETIME' in settings
-            path='api/v2/auth' # Limits cookie path to the auth endpoints
+            path='api/v2/auth/' # Limits cookie path to the auth endpoints
         )
 
         return response
+
+
+class RefreshTokenCookieView(TokenRefreshView):
+    """
+    Extends the DRF Simple JWT's built-in class-based that handles
+    creation of new access-refresh token pairs, so as to set the
+    refresh token as an HttpOnly cookie.
+
+    Inheritance:
+    	TokenRefreshView - Handles creation of new access-refresh tokens.
+    """
+
+    if 'refresh' not in request.data and 'refresh_token' in request.COOKIES:
+        request.data._mutable = True
+        request.data['refresh'] = request.COOKIES.get('refresh_token')
+
+    resp = super().post(request, *args, **kwargs)
+    # super returns {'access': '***', 'refresh': ''} since rotate is enabled
+    access = resp.data.get('access')
+    refresh = resp.data.get('refresh')
+
+    response = Response(
+        {
+            'access': access
+        },
+        status=status.HTTP_200_OK
+    )
+
+    if refresh:
+        response.set_cookie(
+            key='refresh_token',
+            value=refresh,
+            httponly=True,
+            samesite='lax',
+            max_age=7*24*60*60,
+            path='/api/v2/auth/'
+        )
+
+    return response
