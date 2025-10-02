@@ -67,43 +67,6 @@ class UserRegistrationView(generics.CreateAPIView):
         )
 
 
-class UserLoginView(APIView):
-    """
-    Contains the application logic handling log in requests.
-
-    Inheritance:
-    	APIView - Most basic class-based view provided by DRF.
-    	It extends Django's 'View' class and offers the highest degree of
-    	control over the request-response cycle since it has a
-    	lower-level abstraction.
-
-    	It has a less opinionated structure and requires one to explicitly
-    	define methods for each HTTP verb (e.g., get, post, put, delete).
-    """
-
-    def post(self, request, *args, **kwargs):
-        """
-        Handles all POST request made to this end point.
-
-        Params:
-        	self - Object representation of the current class instance.
-        	request - The HTTP request sent by the frontend.
-
-        Return:
-        	A DRF Response object containing the JWT access and
-        	refresh tokens associated with the user requesting log in.
-        """
-
-        serializer = UserLoginSerializer(data=request.data)
-        serializer.is_valid(raise_exception=True)
-
-        return Response(
-            serializer.validated_data,
-            status=status.HTTP_200_OK
-        )
-
-
-# This class replaces 'UserLoginView'
 class ObtainTokenCookieView(TokenObtainPairView):
     """
     Handles HTTP request for JWT access and refresh pairs.
@@ -114,4 +77,40 @@ class ObtainTokenCookieView(TokenObtainPairView):
     	TokenObtainPairView - DRF Simple JWT's default class-based view
     			      handling requests for access/refresh tokens.
     """
-    pass
+
+    def post(self, request, *args, **kwargs):
+        """
+        Handles every POST requests made to this endpoint and is
+        responsible for returning an HttpResponse object.
+
+        Params:
+        	self - An object representation of the current class instance.
+        	request - Django-created HttpRequest object that contains
+        		  metadata about the request.
+        """
+
+        resp = super().post(request, *args, **kwargs)
+        # res.data contains {'access': '***', 'refresh': '***'}
+        access = resp.data.get('access')
+        refresh = resp.data.get('refresh')
+
+        # Create the Django HttpResponse object
+        response = Response(
+            {
+                'access': access
+            },
+            status=status.HTTP_200_OK
+        )
+
+        # Set the refresh token as an HttpOnly cookie
+        response.set_cookie(
+            key='refresh_token',
+            value=refresh,
+            httponly=True,
+            secure=True,
+            samesite='Lax',
+            max_age=7*24*60*60, # Matches 'REFRESH_TOKEN_LIFETIME' in settings
+            path='api/v2/auth' # Limits cookie path to the auth endpoints
+        )
+
+        return response
