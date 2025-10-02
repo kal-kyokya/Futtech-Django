@@ -147,7 +147,7 @@ class RefreshTokenCookieView(TokenRefreshView):
             key='refresh_token',
             value=refresh,
             httponly=True,
-            samesite='lax',
+            samesite='strict',
             max_age=7*24*60*60,
             path='/api/v2/auth/'
         )

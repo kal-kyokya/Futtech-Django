@@ -7,7 +7,11 @@ The `urlpatterns` list routes URLs to views. For more information please see:
 """
 
 from django.urls import path
-from .views import UserRegistrationView, UserLoginView
+from .views import (
+    UserRegistrationView,
+    ObtainTokenCookieView,
+    RefreshTokenCookieView
+)
 
 
 urlpatterns = [
@@ -15,6 +19,9 @@ urlpatterns = [
          UserRegistrationView.as_view(),
          name='user-registration'),
     path('login/',
-         UserLoginView.as_view(),
+         ObtainTokenCookieView.as_view(),
          name='user-login'),
+    path('token/refresh',
+         RefreshTokenCookieView.as_view(),
+         name='token-refresh')
 ]
