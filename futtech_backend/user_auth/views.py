@@ -56,6 +56,7 @@ class UserRegistrationView(generics.CreateAPIView):
             'message': 'User registered successfully',
             'access': str(refresh.access_token),
             'refresh': str(refresh),
+            'user': user.id;
         }
 
         headers = self.get_success_headers(serializer.data)
@@ -147,7 +148,7 @@ class RefreshTokenCookieView(TokenRefreshView):
             key='refresh_token',
             value=refresh,
             httponly=True,
-            samesite='strict',
+            samesite='lax',
             max_age=7*24*60*60,
             path='/api/v2/auth/'
         )
