@@ -12,6 +12,7 @@ from .views import (
     ObtainTokenCookieView,
     RefreshTokenCookieView,
     LogoutView,
+    GetCurrentUserView,
 )
 
 
@@ -28,4 +29,7 @@ urlpatterns = [
     path('logout/',
          LogoutView.as_view(),
          name='user-logout'),
+    path('me/',
+         GetCurrentUserView.as_view(),
+         name='get-current-user'),
 ]

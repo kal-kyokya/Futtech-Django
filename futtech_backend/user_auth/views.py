@@ -9,7 +9,11 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 
-from .serializers import UserRegistrationSerializer, UserLoginSerializer
+from .serializers import (
+    UserRegistrationSerializer,
+    UserLoginSerializer,
+    CurrentUserSerializer,
+)
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.views import (
@@ -97,7 +101,7 @@ class ObtainTokenCookieView(TokenObtainPairView):
 
     def post(self, request, *args, **kwargs):
         """
-        Handles every POST requests handled by this view and is
+        Processes every POST request handled by this view and is
         responsible for returning an HttpResponse object.
 
         Params:
@@ -224,3 +228,29 @@ class LogoutView(APIView):
         )
 
         return response
+
+
+class GetCurrentUserView(APIView):
+    """
+    Retrieves information about the currently authenticated user.
+
+    Inheritance:
+    	APIView - Empowers this view with a set of predefined class attributes
+    		  from the 'Base of all views in Django REST Framework'.
+    """
+
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request):
+        """
+        Processes every GET request handled by this view.
+
+        Params:
+        	self - An object representation of the current class instance.
+        	request - Django-created HttpRequest object that contains
+        		  metadata about the request.
+        """
+
+        serializer = CurrentUserSerializer(request.user)
+
+        return Response(serializer.data)

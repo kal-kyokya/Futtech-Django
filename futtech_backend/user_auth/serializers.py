@@ -10,6 +10,7 @@ from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.tokens import RefreshToken
+from video_management.models import UserProfile
 
 
 UserModel = get_user_model()
@@ -185,3 +186,17 @@ class UserLoginSerializer(serializers.Serializer):
                 'email': user.email,
             },
         }
+
+
+class CurrentUserSerializer(serializers.ModelSerializer):
+    """
+    Handles creation of a JSON-seriazable format off of an input HTTP request.
+
+    Inheritance:
+    	serializers.ModelSerializer - Avail rest_framework's out-of-the-box
+    	features enabling data validation and serialization/deserialization.
+    """
+
+    class Meta:
+        model = UserProfile
+        fields = '__all__'
