@@ -55,17 +55,29 @@ class UserRegistrationView(generics.CreateAPIView):
         response_data = {
             'message': 'User registered successfully',
             'access': str(refresh.access_token),
-            'refresh': str(refresh),
-            'user': user.id;
+            'user': user.id,
         }
 
         headers = self.get_success_headers(serializer.data)
 
-        return Response(
+        response = Response(
             response_data,
             status=status.HTTP_201_CREATED,
             headers=headers
         )
+
+        # Set the refresh token as an HttpOnly cookie
+        response.set_cookie(
+            key='refresh_token',
+            value=refresh,
+            httponly=True,
+            secure=True,
+            samesite='Lax',
+            max_age=7*24*60*60, # Matches 'REFRESH_TOKEN_LIFETIME' in settings
+            path='api/v2/auth/' # Limits cookie path to the auth endpoints
+        )
+
+        return response
 
 
 class ObtainTokenCookieView(TokenObtainPairView):
