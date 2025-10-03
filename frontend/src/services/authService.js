@@ -18,6 +18,38 @@ class AuthService {
 
     /**
      * Asynchronous function.
+     * Handles user registration requests.
+     *
+     * @param {Object} userData - The user info required for registration.
+     */
+    async register(userData) {
+
+	try {
+	    const response = await apiClient.post('/auth/register', userData);
+	    const { message, access, user } = response.data;
+
+	    // Store the access token in memory
+	    tokenService.setAccessToken(access);
+
+	    // Fetch initial content
+	    const playlistsPromise = this.fetchInitialContent();
+
+	    return {
+		user,
+		message,
+		success: true,
+		playlistsPromise,
+	    };
+	} catch (error) {
+	    return {
+		success: false,
+		error: error.response?.data?.message || 'Registration failed',
+	    };
+	}
+    }
+
+    /**
+     * Asynchronous function.
      * Handles every user log in request.
      *
      * @param {Object} credentials - The user data required for log in.
