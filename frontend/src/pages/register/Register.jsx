@@ -2,12 +2,14 @@ import './register.scss';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
+import apiClient from '../../services/apiClient';
 import { useState, useRef, useContext } from 'react';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import {
     registrationStart,
     registrationSuccess,
     registrationFailure } from '../../contexts/userContext/UserActions';
+
 
 const Register = () => {
     const [email, setEmail] = useState("");
@@ -38,16 +40,17 @@ const Register = () => {
 	dispatch(registrationStart());
 
 	if (email && username && password1 && password2) {
-	    await axios.post(
-		`${import.meta.env.VITE_API_BASE_URL}/auth/register`,
-		{ username, email, password1, password2 },
-		{ headers: {'content-type': 'application/json'} }
-	    ).then((res) => {
-		console.log(res.data);
-		dispatch(registrationSuccess({
-		    accessToken: res.data.access,
-		    refreshToken: res.data.refresh
-		}));
+	    await apiClient.post('/auth/register',
+				 { username, email,
+				   password1, password2 },
+	    ).then((response) => {
+		const { message, access, user } = response.data;
+
+		// Store the access token in memory
+		tokenService.setAccessToken(access);
+
+		// Fetch the initial display content
+		const playlistPromise = this.fetchInitialContent();
 
 		const navigate = useNavigate();
 		navigate('/login');
