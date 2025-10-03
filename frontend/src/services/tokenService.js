@@ -23,7 +23,7 @@ class TokenService {
      *
      * @param {string} token - The backend-generated access token.
      */
-    setAccessToken() {
+    setAccessToken(token) {
 	this.accessToken = token;
     }
 
