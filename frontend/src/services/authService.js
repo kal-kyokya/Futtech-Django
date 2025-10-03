@@ -122,4 +122,21 @@ class AuthService {
 	    return { playlists: [], featured: [] };
 	}
     }
+
+    /**
+     * Asynchronous function.
+     *
+     * Fetches the logged in user's information set.
+     */
+    async getCurrentUser() {
+
+	try {
+	    const response = await apiClient.get('/auth/me/');
+
+	    return response.data;
+	} catch (error) {
+	    return null;
+	}
+    }
+
 }
