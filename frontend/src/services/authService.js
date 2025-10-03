@@ -33,8 +33,18 @@ class AuthService {
 
 	    // Immediately fetch initial content (playlists)
 	    const playlistsPromise = this.fetchInitialContent();
-	} catch (error) {
+	    return {
+		user,
+		message,
+		success: true,
+		playlistsPromise, // Return promise for component to handle
+	    };
 
+	} catch (error) {
+	    return {
+		success: false,
+		error: error.response?.data?.message || 'Login failed',
+	    };
 	}
     }
 
