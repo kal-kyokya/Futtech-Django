@@ -80,11 +80,7 @@ class AuthService {
 	}
     }
 
-    /**
-     * Asynchronous function.
-     *
-     * Handles the log out workflow.
-     */
+    // Handles the log out workflow
     async logout() {
 
 	try {
@@ -98,11 +94,7 @@ class AuthService {
 	}
     }
 
-    /**
-     * Asynchronous function.
-     *
-     * Fetches the first batch of playlists and videos.
-     */
+    // Fetches the first batch of playlists and videos
     async fetchInitialContent() {
 
 	try {
@@ -123,11 +115,7 @@ class AuthService {
 	}
     }
 
-    /**
-     * Asynchronous function.
-     *
-     * Fetches the logged in user's information set.
-     */
+    // Fetches the logged in user's information set
     async getCurrentUser() {
 
 	try {
@@ -137,6 +125,11 @@ class AuthService {
 	} catch (error) {
 	    return null;
 	}
+    }
+
+    // Confirms that the current user has an access token
+    isAuthenticated() {
+	return tokenService.hasAccessToken();
     }
 
 }
