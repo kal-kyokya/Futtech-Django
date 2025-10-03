@@ -83,6 +83,24 @@ class AuthService {
     /**
      * Asynchronous function.
      *
+     * Handles the log out workflow.
+     */
+    async logout() {
+
+	try {
+	    await apiClient.post('/auth/logout/');
+	} catch () {
+	    console.error('Logout error:', error);
+	} finally {
+	    // Always clear tokens locally
+	    tokenService.clearAccessToken();
+	    window.location.href = '/login';
+	}
+    }
+
+    /**
+     * Asynchronous function.
+     *
      * Fetches the first batch of playlists and videos.
      */
     async fetchInitialContent() {
