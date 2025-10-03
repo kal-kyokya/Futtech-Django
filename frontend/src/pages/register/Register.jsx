@@ -40,17 +40,16 @@ const Register = () => {
 	dispatch(registrationStart());
 
 	if (email && username && password1 && password2) {
-	    await apiClient.post('/auth/register',
-				 { username, email,
-				   password1, password2 },
-	    ).then((response) => {
-		const { message, access, user } = response.data;
-
-		// Store the access token in memory
-		tokenService.setAccessToken(access);
-
-		// Fetch the initial display content
-		const playlistPromise = this.fetchInitialContent();
+	    await apiClient.post(
+		`${import.meta.env.VITE_API_BASE_URL}/auth/register`,
+		{ username, email, password1, password2 },
+		{ headers: {'content-type': 'application/json'} }
+	    ).then((res) => {
+		console.log(res.data);
+		dispatch(registrationSuccess({
+		    accessToken: res.data.access,
+		    refreshToken: res.data.refresh
+		}));
 
 		const navigate = useNavigate();
 		navigate('/login');

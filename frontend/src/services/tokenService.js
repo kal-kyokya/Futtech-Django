@@ -8,7 +8,7 @@
 /**
  * @class
  *
- * 'TokenService' bundles together the attributes and methods required for
+ * 'TokenService' encapsulates the attributes and methods required for
  * 		  effective creation of a secure token storage mechanism.
  */
 class TokenService {
