@@ -55,7 +55,11 @@ class UserRegistrationView(generics.CreateAPIView):
         response_data = {
             'message': 'User registered successfully',
             'access': str(refresh.access_token),
-            'user': user,
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'email': user.email,
+            },
         }
 
         headers = self.get_success_headers(serializer.data)
@@ -84,7 +88,7 @@ class ObtainTokenCookieView(TokenObtainPairView):
     """
     Handles HTTP request for JWT access and refresh pairs.
     Ensures that the refresh token is set as a cookie header so as to
-    mitigate XSS (Cross Site Scripts) attacks, client-side.
+    mitigate XSS (Cross Site Scripting) attacks, client-side.
 
     Inheritance:
     	TokenObtainPairView - DRF Simple JWT's default class-based view
@@ -102,6 +106,10 @@ class ObtainTokenCookieView(TokenObtainPairView):
         		  metadata about the request.
         """
 
+        serializer = UserLoginSerializer(data=request.data)
+        if serializer.is_valid():
+            user = serializer.validated_data['user']
+
         resp = super().post(request, *args, **kwargs)
         # res.data contains {'access': '***', 'refresh': '***'}
         access = resp.data.get('access')
@@ -110,7 +118,8 @@ class ObtainTokenCookieView(TokenObtainPairView):
         # Create the Django HttpResponse object
         response = Response(
             {
-                'access': access
+                'access': access,
+                'user': user,
             },
             status=status.HTTP_200_OK
         )

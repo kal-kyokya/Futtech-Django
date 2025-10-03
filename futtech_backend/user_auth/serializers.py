@@ -178,11 +178,7 @@ class UserLoginSerializer(serializers.Serializer):
         if not authenticated_user.is_active:
             raise serializers.ValidationError('User account is disabled.')
 
-        refresh = RefreshToken.for_user(user)
-
         return {
-            'access': str(refresh.access_token),
-            'refresh': str(refresh),
             'user': {
                 'id': user.id,
                 'username': user.username,
