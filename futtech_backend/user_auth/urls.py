@@ -10,7 +10,8 @@ from django.urls import path
 from .views import (
     UserRegistrationView,
     ObtainTokenCookieView,
-    RefreshTokenCookieView
+    RefreshTokenCookieView,
+    LogoutView,
 )
 
 
@@ -23,5 +24,8 @@ urlpatterns = [
          name='user-login'),
     path('token/refresh',
          RefreshTokenCookieView.as_view(),
-         name='token-refresh')
+         name='token-refresh'),
+    path('logout/',
+         LogoutView.as_view(),
+         name='user-logout'),
 ]

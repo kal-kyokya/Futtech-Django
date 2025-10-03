@@ -6,7 +6,7 @@
 
 from rest_framework import generics, status
 from rest_framework.response import Response
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 
 from .serializers import UserRegistrationSerializer, UserLoginSerializer
@@ -97,7 +97,7 @@ class ObtainTokenCookieView(TokenObtainPairView):
 
     def post(self, request, *args, **kwargs):
         """
-        Handles every POST requests made to this endpoint and is
+        Handles every POST requests handled by this view and is
         responsible for returning an HttpResponse object.
 
         Params:
@@ -118,6 +118,7 @@ class ObtainTokenCookieView(TokenObtainPairView):
         # Create the Django HttpResponse object
         response = Response(
             {
+                'message': 'User logged in successfully',
                 'access': access,
                 'user': user,
             },
@@ -175,3 +176,51 @@ class RefreshTokenCookieView(TokenRefreshView):
         )
 
     return response
+
+
+class LogoutView(APIView):
+    """
+    Blacklists the refresh token and clears cookie.
+
+    Inheritance:
+    	APIView - Empowers this view with a set of predefined class attributes
+    		  from the 'Base of all views in Django REST Framework'.
+    """
+
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request):
+        """
+        Handles every POST request handled by this view.
+
+        Params:
+        	self - A representation of this class' instanciation.
+        	request - A dictionary-like object holding the client request. 
+        """
+
+        # If refresh is stored as a cookie, we can read and blacklist it:
+        refresh = request.COOKIES.get('refresh_token')
+
+        if refresh:
+            try:
+                token = RefreshToken(refresh)
+
+                # Blacklisting invalidates the refresh token server-side
+                # So as to ensure it cannot be reused
+                token.blacklist()
+            except Exception as err:
+                print(err)
+
+        response = Response(
+            {
+                'message': 'Logged out'
+            },
+            status=status.HTTP_200_OK,
+        )
+
+        response.delete_cookie(
+            'refresh_token',
+            path='/api/v2/auth/',
+        )
+
+        return response
