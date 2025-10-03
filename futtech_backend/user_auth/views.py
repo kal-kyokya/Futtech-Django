@@ -55,7 +55,7 @@ class UserRegistrationView(generics.CreateAPIView):
         response_data = {
             'message': 'User registered successfully',
             'access': str(refresh.access_token),
-            'user': user.id,
+            'user': user,
         }
 
         headers = self.get_success_headers(serializer.data)
