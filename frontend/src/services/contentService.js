@@ -62,7 +62,7 @@ class ContentService {
 	    return data
 
 	} catch (error) {
-	    console.error('Failed to fetch playlists:', error);
+	    console.error('Failed to fetch playlists: ', error);
 
 	    return { playlists: [], hasMore: false };
 	}
@@ -99,7 +99,7 @@ class ContentService {
 	    return data;
 
 	} catch (error) {
-	    console.error(`Failed to fetch videos for playlist ${playlistId}:`,
+	    console.error(`Failed to fetch videos for playlist ${playlistId}: `,
 			  error);
 	    return { videos: [], hasMore: false };
 	}
@@ -159,9 +159,37 @@ class ContentService {
 	    };
 
 	} catch (error) {
-	    console.error('Search failed:', error);
+	    console.error('Search failed: ', error);
 
 	    return { videos: [], playlists: [] };
+	}
+    }
+
+    /**
+     * Asynchronous function.
+     * Gets a video's details with Mux playback info excluded.
+     *
+     * @param {string} videoId - UUID of the video whose details are needed.
+     */
+    async getVideoDetails(videoId) {
+	const cacheKey = `video_${videoId}`;
+
+	if (this.cache.has(cacheKey)) {
+	    return this.cache.get(cacheKey);
+	}
+
+	try {
+	    const response = await apiClient.get(`/videos/${videoId}/`);
+	    const video = response.data;
+
+	    this.cache.set(cacheKey, video);
+
+	    return video;
+
+	} catch (error) {
+	    console.error(`Failed to fetch video ${videoId}: `, error);
+
+	    return null;
 	}
     }
 
