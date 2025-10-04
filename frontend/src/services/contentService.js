@@ -67,4 +67,41 @@ class ContentService {
 	    return { playlists: [], hasMore: false };
 	}
     }
+
+    /**
+     * @class
+     * Fetches videos for a specific playlist with pagination
+     *
+     * @param {string} playlistId - UUID tied to the playlist object.
+     * @param {Number} page - The page on which the playlist if found.
+     * @param {Number} limit - The maximum number of videos to be fetched.
+     */
+    async fetchPlaylistVideos(playlistId, page = 1, limit = 20) {
+	const cacheKey = `playlist_${playlistId}_${page}_${limit}`;
+
+	if (this.cache.has(cacheKey)) {
+	    return this.cache.get(cacheKey);
+	}
+
+	try {
+	    const response = await apiClient.get(`/playlists/${palylistId/videos/}`, {
+		params: { page, limit },
+	    });
+
+	    const data = {
+		videos: response.data.results,
+		hasMore: !!response.data.next,
+		nextPage: page + 1,
+	    };
+
+	    this.cache.set(cacheKey, data);
+
+	    return data;
+
+	} catch (error) {
+	    console.error(`Failed to fetch videos for playlist ${playlistId}:`,
+			  error);
+	    return { videos: [], hasMore: false };
+	}
+    }
 }
