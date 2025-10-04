@@ -94,7 +94,7 @@ class AuthService {
 	}
     }
 
-    // Fetches the first batch of playlists and videos
+    // Fetches the first batch of playlists and their associated videos
     async fetchInitialContent() {
 
 	try {
@@ -115,7 +115,7 @@ class AuthService {
 	}
     }
 
-    // Fetches the logged in user's information set
+    // Fetches the details of currently logged in user
     async getCurrentUser() {
 
 	try {

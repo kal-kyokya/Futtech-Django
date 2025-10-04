@@ -20,8 +20,8 @@ const apiClient = axios.create({
 });
 
 /**
- * Make an appendage to the 'apiClient' object with
- * a Request interceptor adding the access token
+ * Makes an appendage to the 'apiClient' object with a
+ * Request interceptor adding an access token to each request.
  */
 apiClient.interceptors.request.use(
     (config) => {
@@ -35,7 +35,7 @@ apiClient.interceptors.request.use(
     (error) => Promise.reject(error),
 );
 
-// Response interceptor to handle token refresh
+// Definition of the Response interceptor handling token refresh
 let isRefreshing = false;
 let refreshSubscribers = [];
 
@@ -51,6 +51,7 @@ const onRefreshed = (token) => {
     refreshSubscribers = [];
 };
 
+// Actual Response interceptor
 apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {

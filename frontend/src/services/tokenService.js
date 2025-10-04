@@ -21,7 +21,7 @@ class TokenService {
     /**
      * Handles WRITE operations on the Access token (in-memory only).
      *
-     * @param {string} token - The backend-generated access token.
+     * @param {String} token - The backend-generated access token.
      */
     setAccessToken(token) {
 	this.accessToken = token;
@@ -30,13 +30,17 @@ class TokenService {
     /**
      * Handles READ operations on the Access token.
      *
-     * @return {string} the Access token tied to this class instanciation.
+     * @returns {String} the Access token tied to this class instanciation.
      */
     getAccessToken() {
 	return this.accessToken;
     }
 
-    // Checks if the Access token exists
+    /**
+     * Checks if the Access token exists.
+     *
+     * @returns {Boolean} true if it exists or converts 'null' values to false.
+     */
     hasTokens() {
 	return !!(this.accessToken);
     }

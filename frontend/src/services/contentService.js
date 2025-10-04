@@ -33,7 +33,7 @@ class ContentService {
      *
      * @returns {Object} A set of paginated playlists with the metadata.
      */
-    async fetchPlaylists(page = 1, limit = 10) {
+    async fetchPlaylists(page = 1, limit = 3) {
 	const cacheKey = `playlists_${page}_${limit}`;
 
 	// Check cache first
@@ -81,7 +81,7 @@ class ContentService {
      * @returns {Object} The set of videos tied to a playlist, paginated
      *			 and with the metadata.
      */
-    async fetchPlaylistVideos(playlistId, page = 1, limit = 20) {
+    async fetchPlaylistVideos(playlistId, page = 1, limit = 10) {
 	const cacheKey = `playlist_${playlistId}_${page}_${limit}`;
 
 	if (this.cache.has(cacheKey)) {
