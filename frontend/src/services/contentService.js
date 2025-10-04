@@ -214,4 +214,28 @@ class ContentService {
 	this.cache.clear();
     }
 
+    /**
+     * Asynchronous function.
+     * Get a video set recommendation, potentially based on a particular video.
+     *
+     * @param {string} videoId - Optional video off of which the recommendation
+     *     			 is extracted.
+     */
+    async getRecommendations(videoId = null) {
+
+	try {
+	    const endpoint = videoId
+		  ? `/videos/${videoId}/recommendations/`
+		  : '/recommendations/';
+
+	    const response = await apiClient.get(endpoint);
+
+	    return response.data;
+	} catch (error) {
+	    console.error('Failed to fetch recommendations: ', error);
+
+	    return [];
+	}
+    }
+
 }
