@@ -104,4 +104,36 @@ class ContentService {
 	    return { videos: [], hasMore: false };
 	}
     }
+
+    /**
+     * @class
+     * Prefetches the next page in the background.
+     *
+     * @param {Number} page - The page segment required.
+     * @param {Number} limit - The maximum number of items to be fetched.
+     */
+    async prefetchPage(page, limit) {
+	if (this.isPrefetching) {
+	    this.prefetchQueue.push({ page, limit });
+	    return;
+	}
+
+	this.isPrefetching = true;
+
+	try {
+	    // Silently fetch and cache the playlists
+	    await this.fetchPlaylists(page, limit);
+
+	    // Process queue if any
+	    if (this.prefetchQueue.length > 0) {
+		const next = this.prefetchQueue.shift();
+
+		await this.prefetchPage(next.page, next.limit);
+	    }
+
+	} finally {
+	    this.isPrefetching = false;
+	}
+    }
+
 }
