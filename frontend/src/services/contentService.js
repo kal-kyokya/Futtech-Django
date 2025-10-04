@@ -193,4 +193,20 @@ class ContentService {
 	}
     }
 
+    /**
+     * Prefetches video thumbnails.
+     *
+     * @param {Array} videos - The set of videos whose thumbnails are needed.
+     */
+    prefetchThumbnails(videos) {
+	if (!videos || videos.length === 0) return;
+
+	videos.forEach((video) => {
+	    if (video.thumbnail_url) {
+		const img = new Image();
+		img.src = video.thumbnail_url;
+	    }
+	});
+    }
+
 }
