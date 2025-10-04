@@ -23,6 +23,8 @@ class Playlist(models.Model):
         on_delete=models.CASCADE,
         related_name='playlists',
     )
+    description = models.TextField(blank=True,
+                                   null=True)
 
     videos = models.ManyToManyField(
         Video,
@@ -30,3 +32,16 @@ class Playlist(models.Model):
     )
     is_public = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        """
+        Defines the expected string representation of every subsequent
+        instantiation of this Playlist model.
+
+        Param:
+        	self - Object representation of the class instantiation.
+        Return:
+        	The playlist name as well as the owner's username.
+        """
+        return "'{}' by {}".format(self.name,
+                                   self.owner.username)
