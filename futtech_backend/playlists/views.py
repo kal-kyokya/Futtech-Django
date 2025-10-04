@@ -1,13 +1,14 @@
 #!/usr/bin/env python3
 """
 'views.py' handles all HTTP requests made to the Django backend for
-	   playlist-related data.
+	   playlist-related operations.
 """
 
 from django.db import models
 from rest_framework import viewsets, permissions
 from .models import Playlist
 from .serializers import PlaylistSerializer
+from .pagination import PlaylistPagination
 
 
 class PlaylistViewSet(viewsets.ModelViewSet):
@@ -15,30 +16,51 @@ class PlaylistViewSet(viewsets.ModelViewSet):
     Handles GET and POST requests directed towards the Playlist model.
 
     Inheritance:
-    	viewsets.ModelViewSet - A viewset providing a list of
-    				'default actions' method such as
-    				'create(), retrieve(), list(), etc'.
+    	viewsets.ModelViewSet - Predefines 'default actions' methods (CRUD)
+    				'list(), retrieve(), create(), etc'.
     """
+    
+    user = self.request.user
+
+    # Ensures videos are prefetched for all playlists in one DB hit
+    queryset = Playlist.objects.filter(
+        models.Q(owner=user) | models.Q(is_public=True)
+    ).prefetch_related('videos')
+    # queryset = Playlist.objects.all().prefetch_related('videos')
 
     serializer_class = PlaylistSerializer
+    pagination_class = PlaylistPagination
     permission_classes = [permissions.IsAuthenticated]
 
-    def get_queryset(self):
+    def list(self, request, *args, **kwargs):
         """
-        Handles GET request for playlist objects.
+        Ensures results are paginated and wrapped in DRF's pagination response.
+        Uses prefetch_related to avoid N+1 queries.
 
         Param:
         	self - A representation of the currently processed
         	       PlaylistViewSet instance.
+        	request - The HTTP request object attach to this API call.
 
         Return:
-        	A Django model query set containing every public playlist.
+        	A paginated list of playlists with their related videos.
         """
 
-        user = self.request.user
-        return Playlist.objects.filter(
-            models.Q(owner=user) | models.Q(is_public=True)
-        )
+        # Apply any filter (e.g., search, custom filters, permissions)
+        queryset = self.filter_queryset(self.get_queryset())
+
+        # Slices the queryset according to the custom pagination rules
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            # Serializes that page of Playlist objects into JSON
+            serializer = self.get_serializer(page, many=True)
+
+            return self.get_paginated_response(serializer.data)
+
+        serializer = self.get_serializer(queryset, many=True)
+        return Response(serializer.data)
+
 
     def perform_create(self, serializer):
         """
