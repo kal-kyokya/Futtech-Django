@@ -217,6 +217,8 @@ class Video(models.Model):
         Defines the expected string representation of every subsequent
         instantiation of this Video model.
 
+        Param:
+        	self - Object representation of the class instantiation.
         Return:
         	The video title as well as the owner's username.
         """
