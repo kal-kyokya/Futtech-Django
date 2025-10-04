@@ -15,8 +15,8 @@ class VideoSerializer(serializers.ModelSerializer):
     during CRUD operations on the Video Model.
 
     Inheritance:
-    	serializers.ModelSerializer - Predefines confirmation,
-    	validation, serialization and deserialization procedures.
+    	serializers.ModelSerializer - Predefines procedures handling
+    	confirmation, validation, serialization and deserialization.
     """
 
     class Meta:

@@ -1,0 +1,7 @@
+#!/usr/bin/env python
+"""
+'playlists/pagination.py' contains the class customizing pagination of
+			  playlist querysets.
+"""
+
+  extended off of DRF's built-in pagination class.
