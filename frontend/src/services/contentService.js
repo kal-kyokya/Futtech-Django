@@ -209,4 +209,9 @@ class ContentService {
 	});
     }
 
+    // Clear cache (useful for memory management)
+    clearCache() {
+	this.cache.clear();
+    }
+
 }
