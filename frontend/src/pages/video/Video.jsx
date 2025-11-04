@@ -182,7 +182,7 @@ const Video = () => {
 			    </button>
 			</Link>
 			<button className='videoDeleteButton'
-				onClick={() => dispatch(videoDelete())}
+				onClick={handleDelete}
 			>
 			    Delete
 			</button>
