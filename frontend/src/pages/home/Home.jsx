@@ -2,38 +2,49 @@ import './home.scss';
 import Navbar from '../../components/Navbar';
 import Featured from '../../components/featured/Featured';
 import List from '../../components/list/List';
-import Watch from '../../pages/watch/Watch';
-import Register from '../../pages/register/Register';
-import Login from '../../pages/login/Login';
 import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
-import { UserContext } from '../../contexts/userContext/UserContext';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
+import apiClient from '../../services/apiClient';
 
 const Home = ({ category }) => {
     const [lists, setLists] = useState([]);
     const [subCategory, setSubCategory] = useState('');
-    const { user } = useContext(UserContext);
     const { videos } = useContext(VideoContext);
-    const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     useEffect(() => {
-	const getRandomLists = async () => {
-	    await axios.get(
-		`${baseURL}/lists${category ? '?category=' + category : ''}${
-		    subCategory ? '?subCategory=' + subCategory : ''
-		  }`,
-		{
-		    headers: { 'auth-token': user.accessToken }
-		}
-	    ).then((res) => {
-		setLists(res.data);
-	    }).catch((err) => {
-		console.error(err);
-	    });
-	}
+	let isMounted = true;
 
-	getRandomLists();
+	const fetchLists = async () => {
+	    const params = new URLSearchParams();
+
+	    if (category) {
+		params.append('category', category);
+	    }
+
+	    if (subCategory) {
+		params.append('subCategory', subCategory);
+	    }
+
+	    const endpoint = params.toString() ? `/lists?${params.toString()}` : '/lists';
+
+	    try {
+		const response = await apiClient.get(endpoint);
+		if (isMounted) {
+		    setLists(response.data || [])
+		}
+	    } catch (error) {
+		console.error('Failed to fetch lists:', error);
+		if (isMounted) {
+		    setLists([]);
+		}
+	    }
+	};
+
+	fetchLists();
+
+	return () => {
+	    isMounted = false;
+	};
     }, [category, subCategory]);
 
     return (
