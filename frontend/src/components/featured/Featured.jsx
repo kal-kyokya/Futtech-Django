@@ -54,12 +54,7 @@ const Featured = ({ category }) => {
 	     </div>
 	    }
 
-	    <img src={
-		     category ?
-			 content ? content.thumbnail :
-			 category === 'video' ? '/drone.jpg' : '/balltech.png'
-		     : '/poa.JPEG'
-		 }
+	    <img src={ content?.thumbnail || fallbackImage }
 		 alt="Featured section's image"
 	    />
 
