@@ -1,26 +1,33 @@
 import './newList.scss';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ListContext } from '../../contexts/listContext/ListContext';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import {
     createListStart, createListSuccess, createListFailure,
 } from '../../contexts/listContext/ListActions';
-import { UserContext } from '../../contexts/userContext/UserContext';
 import Navbar from '../../components/Navbar';
-import axios from 'axios';
+import apiClient from '../../services/apiClient';
 
 const NewList = () => {
-    const [list, setList] = useState(null);
+    const [list, setList] = useState({
+	title: '', category: '',
+	subCategory; '', thumbnail: null,
+	content: [],
+    });
     const navigate = useNavigate();
-    const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     const { dispatch } = useContext(ListContext);
     const { videos } = useContext(VideoContext);
-    const { user } = useContext(UserContext);
 
     const handleChange = (e) => {
-	setList({ ...list, [e.target.name]: e.target.value});
+	const { name, value, files } = e.target;
+	const fieldValue = name === 'thumbnail' && files ? files[0] : value;
+
+	setList((prev) => ({
+	    ...prev,
+	    [name]: fieldValue,
+	}));
     };
 
     const handleSelect = (e) => {
