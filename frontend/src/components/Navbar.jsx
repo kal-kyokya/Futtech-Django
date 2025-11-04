@@ -3,7 +3,7 @@ import './navbar.scss';
 import SearchIcon from '@mui/icons-material/Search';
 import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
 import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../contexts/userContext/UserContext';
 import { logOut } from '../contexts/userContext/UserActions';
@@ -14,7 +14,8 @@ const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const { user, dispatch } = useContext(UserContext);
-    const navigate = useNavigate(); // Initialize useNavigate hook
+    const navigate = useNavigate();
+    const location = useLocation();
 
     /*
       window.onscroll = () => {
@@ -91,14 +92,14 @@ const Navbar = () => {
 			</div>
 
 			<Link className='link desktop-nav-item'
-			      to='/newVideo'
+			      to='/new-video'
 			>
 			    <button className='navbarButton'>
 				Create
 			    </button>
 			</Link>
 			<Link className='link desktop-nav-item'
-			      to='/videoList'
+			      to='/video-list'
 			>
 			    <button className='navbarButton'>
 				Manage
@@ -120,7 +121,7 @@ const Navbar = () => {
 			<div className='manage'>
 			    <ArrowDropDownIcon className='optionIcon'/>
 			    <div className='hiddenOptions'>
-				{ window.location.pathname !== '/me' ? (
+				{ location.pathname !== '/me' ? (
 				    <Link className='link'
 					      to='/me'
 					  onClick={() => setIsMobileMenuOpen(false)}>  {/* Close menu if open */}
@@ -165,10 +166,10 @@ const Navbar = () => {
 			<a onClick={() => handleNavLinkClick('/about')}>About</a>
 		    </li>
 		    <li>
-			<a onClick={() => handleNavLinkClick('/newVideo')}>Create Video</a>
+			<a onClick={() => handleNavLinkClick('/new-video')}>Create Video</a>
 		    </li>
 		    <li>
-			<a onClick={() => handleNavLinkClick('/videoList')}>Manage Videos</a>
+			<a onClick={() => handleNavLinkClick('/video-list')}>Manage Videos</a>
 		    </li>
 		</ul>
 
