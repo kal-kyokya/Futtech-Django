@@ -6,7 +6,6 @@
 
 import apiClient from './apiClient';
 
-
 /**
  * @class
  *
@@ -43,14 +42,14 @@ class ContentService {
 
 	try {
 	    const response = await apiClient.get('/playlists/', {
-		    params: { page, limit }
+		params: { page, limit },
 	    });
 
 	    const data = {
-		playlists: response.data.results,
-		hasMore: !!response.data.next,
+		playlists: response.data.results ?? [],
+		hasMore: Boolean(response.data.next),
 		nextPage: page + 1,
-		totalCount: response.data.count,
+		totalCount: response.data.count ?? 0,
 	    };
 
 	    // Cache the results
@@ -66,7 +65,12 @@ class ContentService {
 	} catch (error) {
 	    console.error('Failed to fetch playlists: ', error);
 
-	    return { playlists: [], hasMore: false };
+	    return {
+		playlists: [],
+		hasMore: false,
+		nextPage: page,
+		totalCount: 0,
+	    };
 	}
     }
 
@@ -89,13 +93,13 @@ class ContentService {
 	}
 
 	try {
-	    const response = await apiClient.get(`/playlists/${palylistId/videos/}`, {
+	    const response = await apiClient.get(`/playlists/${playlistId/videos/}`, {
 		params: { page, limit },
 	    });
 
 	    const data = {
-		videos: response.data.results,
-		hasMore: !!response.data.next,
+		videos: response.data.results ?? [],
+		hasMore: Boolean(response.data.next),
 		nextPage: page + 1,
 	    };
 
@@ -104,9 +108,8 @@ class ContentService {
 	    return data;
 
 	} catch (error) {
-	    console.error(`Failed to fetch videos for playlist ${playlistId}: `,
-			  error);
-	    return { videos: [], hasMore: false };
+	    console.error(`Failed to fetch videos for playlist ${playlistId}: `, error);
+	    return { videos: [], hasMore: false, nextPage: page };
 	}
     }
 
