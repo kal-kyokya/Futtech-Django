@@ -31,9 +31,15 @@ const NewList = () => {
     };
 
     const handleSelect = (e) => {
-	let listItems = Array.from(e.target.selectOptions, (item) => item.value);
+	const selectedValues = Array.from(
+	    e.target.selectedOptions,
+	    (option) => option.value,
+	);
 
-	setList({ ...list, [e.target.name]: listItems });
+	setList((prev) => ({
+	    ...prev,
+	    [e.target.name]: selectedValues,
+	}));
     };
 
     const handleSubmit = async (e) => {
@@ -41,19 +47,21 @@ const NewList = () => {
 	dispatch(createListStart());
 
 	try {
-	    const res = await axios.post(`{baseURL}/lists`, list, {
-		headers: {
-		    'auth-token': user.accessToken,
-		}
-	    });
+	    const payload = {
+		title: list.title,
+		category: list.category,
+		subCategory: list.subCategory,
+		content: list.content
+	    };
 
-	    dispatch(createListSuccess(res.data));
-	} catch (err) {
-	    console.log(err);
+	    const response = await apiClient.post('/lists/', payload);
+
+	    dispatch(createListSuccess(response.data));
+	    navigate('/lists');
+	} catch (error) {
+	    console.error('Failed to create list: ', error);
 	    dispatch(createListFailure());
 	}
-
-	navigate('/lists');
     };
 
     return (
