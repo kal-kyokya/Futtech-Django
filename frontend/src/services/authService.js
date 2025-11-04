@@ -85,7 +85,7 @@ class AuthService {
 
 	try {
 	    await apiClient.post('/auth/logout/');
-	} catch () {
+	} catch (error) {
 	    console.error('Logout error:', error);
 	} finally {
 	    // Always clear tokens locally
@@ -129,7 +129,7 @@ class AuthService {
 
     // Confirms that the current user has an access token
     isAuthenticated() {
-	return tokenService.hasAccessToken();
+	return tokenService.hasTokens();
     }
 
 }
