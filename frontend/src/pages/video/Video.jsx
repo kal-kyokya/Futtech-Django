@@ -11,9 +11,14 @@ import Navbar from '../../components/Navbar';
 import DescriptionIcon from '@mui/icons-material/Description';
 import axios from 'axios';
 import {
-    updateVideoStart, updateVideoSuccess, updateVideoFailure
+    updateVideoStart,
+    updateVideoSuccess,
+    updateVideoFailure,
+    deleteVideoStart,
+    deleteVideoSuccess,
+    deleteVideoFailure,
 } from '../../contexts/videoContext/VideoActions';
-import { useState, useContext, useEffect } from 'react';
+import { useState, useContext } from 'react';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import storage from '../../firebase';
@@ -62,7 +67,7 @@ const Video = () => {
 		console.log(progress.toFixed(0) + '% done.');
 		setUploadProgress(progress.toFixed(0));
 	    },
-	    (err) => {
+	    (error) => {
 		console.error(error);
 		setIsUploading(false);
 	    },
@@ -98,21 +103,65 @@ const Video = () => {
 	dispatch(updateVideoStart());
 
 	try {
-	    await axios.put(`${baseURL}/videos/${video?._id || input?._id}`, updatedVideo,
-					{
-					    headers: {
-						'auth-token': user.accessToken
-					    }
-					}).then((res) => {
-					    console.log(res.data);
-					    dispatch(updateVideoSuccess(res.data));
-					    setPrompt('Update Completed');
-					    navigate(`/video/${video?._id || input?._id}`);
-					});
+	    const accessToken = user?.accessToken;
+	    if (!accessToken) {
+		console.error('Missing access token for updating video.');
+		dispatch(updateVideoFailure());
+		return;
+	    }
 
-	} catch (err) {
-	    console.error(err);
+	    const videoIdentifier = video?._id || input?._id;
+	    const response = await axios.put(
+		`${baseURL}/videos/${videoIdentifier}/`,
+		updatedVideo,
+		{
+		    headers: {
+			Authorization: `Bearer ${accessToken}`,
+		    },
+		},
+	    );
+
+	    dispatch(updateVideoSuccess(response.data));
+	    setPrompt('Update Completed');
+	    navigate(`/video/${videoIdentifier}`);
+
+	} catch (error) {
+	    console.error(error);
 	    dispatch(updateVideoFailure());
+	}
+    };
+
+    const handleDelete = async () => {
+	const videoIdentifier = video?._id || input?._id;
+
+	if (!videoIdentifier) {
+	    return;
+	}
+
+	dispatch(deleteVideoStart());
+
+	try {
+	    const accessToken = user?.accessToken;
+	    if (!accessToken) {
+		console.error('Missing access token for deleting video');
+		dispatch(deleteVideoFailure());
+		return;
+	    }
+
+	    await axios.delete(
+		`${baseURL}/videos/${videoIdentifier}/`,
+		{
+		    headers: {
+			Authorization: `Bearer ${accessToken}`,
+		    },
+		},
+	    );
+
+	    dispatch(deleteVideoSuccess(videoIdentifier));
+	    navigate('/video-list');
+	} catch (error) {
+	    console.error('Failed to delete video: ', error);
+	    dispatch(deleteVideoFailure());
 	}
     };
 
