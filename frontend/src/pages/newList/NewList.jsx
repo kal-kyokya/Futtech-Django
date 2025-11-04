@@ -71,33 +71,37 @@ const NewList = () => {
 	    <div className='newList'>
 		<h1 className='newListTitle'>New List</h1>
 
-		<form className='newListForm'>
+		<form className='newListForm' onSubmit={handleSubmit}>
 		    <div className='newListTop'>
 			<div className='newListLeft'>
 			    <div className='newListItem'>
 				<label>Title</label>
 				<input type='text'
-				       placeholder={ 'list.title' }
+				       placeholder='List title'
 				       className='newListInput'
 				       name='title'
+				       value={list.title}
 				       onChange={handleChange}
+				       required
 				/>
 			    </div>
 			    <div className='newListItem'>
 				<label>Category</label>
 				<input type='text'
-				       placeholder={ 'list.category' }
+				       placeholder='Category'
 				       className='newListInput'
 				       name='category'
+				       value={list.category}
 				       onChange={handleChange}
 				/>
 			    </div>
 			    <div className='newListItem'>
 				<label>Sub-category</label>
 				<input type='text'
-				       placeholder={ 'list.subCategory' }
+				       placeholder='Sub-category'
 				       className='newListInput'
 				       name='subCategory'
+				       value={list.subCategory}
 				       onChange={handleChange}
 				/>
 			    </div>
@@ -106,6 +110,7 @@ const NewList = () => {
 				<input type='file'
 				       id='thumbnail'
 				       name='thumbnail'
+				       accept='image/*'
 				       onChange={handleChange}
 				/>
 			    </div>
@@ -117,14 +122,17 @@ const NewList = () => {
 				<select className='newListSelect'
 					multiple
 					name='content'
+					value={list.content}
 					onChange={handleSelect}
 					style={ { height: '260px' } }
 				>
 				    {
 					Array.isArray(videos) &&
-					    videos.length &&
-					    videos.map((video, index) => (
-						<option key="index" value="video._id">
+					    videos.length > 0 &&
+					    videos.map((video) => (
+						<option key={video._id}
+							value={video.id}
+						>
 						    {video.title}
 						</option>
 					    ))
@@ -133,15 +141,15 @@ const NewList = () => {
 			    </div>
 			</div>
 		    </div>
+
 		    <div className='newListBottom'>
 			<button className='newListButton'
-				onClick={handleSubmit}
+				type='submit'
 			>
 			    Create
 			</button>
 		    </div>
 		</form>
-
 	    </div>
 	</>
     );
