@@ -1,27 +1,38 @@
 import './featured.scss';
-import axios from 'axios';
-import { useState, useEffect, useContext } from 'react';
-import { UserContext } from '../../contexts/userContext/UserContext';
+import { useState, useEffect } from 'react';
+import apiClient from '../../services/apiClient';
 
 const Featured = ({ category }) => {
     const [content, setContent] = useState(null);
-    const { user } = useContext(UserContext);
-    const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     useEffect(() => {
+	let isMounted = true;
+
 	const getContent = async () => {
-	    const res = await axios.get(`${baseURL}/videos/random?category=${ category }`, {
-		headers: {
-		    'auth-token': user.accessToken
+	    const endpoint = category
+		  ? `/videos/random?category=${encodeURIComponent(category)}`
+		  : '/videos/random';
+
+	    try {
+		const response = await apiClient.get(endpoint);
+		const data = Array.isArray(response.data) ? response.data[0] : response.data;
+
+		if (isMounted) {
+		    setContent(data || null);
 		}
-	    }).then((res) => {
-		setContent(res.data[0]);
-	    }).catch((err) => {
-		console.log(err);
-	    });
-	}
+	    } catch (error) {
+		console.error('Failed to fetch featured content:', error);
+		if (isMounted) {
+		    setContent(null);
+		}
+	    }
+	};
 
 	getContent();
+
+	return () => {
+	    isMounted = false;
+	}
     }, [category]);
 
     return (
