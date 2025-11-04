@@ -35,6 +35,12 @@ const Featured = ({ category }) => {
 	}
     }, [category]);
 
+    const fallbackImage = category === 'video'
+	  ? '/drone.jpg'
+	  : category
+	  ? 'balltech.png'
+	  : '/poa.JPEG';
+
     return (
 	<div className='featured'>
 	    {category &&
