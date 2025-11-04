@@ -33,7 +33,7 @@ const Home = ({ category }) => {
 		    setLists(response.data || [])
 		}
 	    } catch (error) {
-		console.error('Failed to fetch lists:', error);
+		console.error('Failed to fetch lists: ', error);
 		if (isMounted) {
 		    setLists([]);
 		}

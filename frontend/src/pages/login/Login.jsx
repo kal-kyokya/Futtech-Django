@@ -1,5 +1,4 @@
 import './login.scss';
-import axios from 'axios';
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../contexts/authContext/AuthContext';
@@ -17,6 +16,7 @@ import {
     getListsStart,
     getListsSuccess,
     getListsFailure } from '../../contexts/listContext/ListActions';
+import authService from '../../services/authService';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -30,65 +30,55 @@ const Login = () => {
     const { dispatch: videoDispatch } = useContext(VideoContext);
     const { dispatch: listDispatch } = useContext(ListContext);
 
-    const baseURL = import.meta.env.VITE_API_BASE_URL;
+    const navigate = useNavigate();
 
     const handleSignIn = async (e) => {
 	e.preventDefault(); // Prevents form reload and allows data submission
+
 	dispatch(loginStart());
 	videoDispatch(getVideosStart());
 	listDispatch(getListsStart());
 
-	await axios.post(
-	    `${baseURL}/auth/login`,
-	    { email, password },
-	    { headers: {'content-type': 'application/json'} }
-	).then((userRes) => {
-	    const getVideos = async () => {
-		videoDispatch(getVideosStart());
+	try {
+	    const result = await authService.login({ email, password });
 
+	    if (!result.success) {
+		throw new Error(result.error || 'Login failed');
+	    }
+
+	    dispatch(loginSuccess(result.user));
+
+	    if (result.playlistsPromise) {
 		try {
-		    const res = await axios.get(`${baseURL}/`, {
-			headers: {
-			    'auth-token': userRes.data.accessToken,
-			}
-		    });
-		    console.log(res);
+		    const { playlists, featured } = await result.playlistsPromise;
+		    if (Array.isArray(featured)) {
+			videoDispatch(getVideosSuccess(featured));
+		    } else {
+			videoDispatch(getVideosSuccess(featured?.results ?? []));
+		    }
 
-		    videoDispatch(getVideosSuccess(res.data));
-		} catch (err) {
-		    console.error(err);
+		    if (Array.isArray(playlists)) {
+			listDispatch(getListsSuccess(playlists));
+		    } else {
+			listDispatch(getListsSuccess(playlists?.results ?? []));
+		    }
+		} catch (contentError) {
+		    console.error('Failed to load initial content: ', contentError);
 		    videoDispatch(getVideosFailure());
-		}
-	    };
-
-	    const getLists = async () => {
-		listDispatch(getListsStart());
-
-		try {
-		    const res = await axios.get(`${baseURL}/lists`, {
-			headers: {
-			    'auth-token': userRes.data.accessToken,
-			}
-		    });
-
-		    listDispatch(getListsSuccess(res.data));
-		} catch (err) {
-		    console.error(err);
 		    listDispatch(getListsFailure());
 		}
-	    };
+	    } else {
+		videoDispatch(getVideosSuccess([]));
+		listDispatch(getListsSuccess([]));
+	    }
 
-	    getVideos();
-	    getLists();
-	    dispatch(loginSuccess(userRes.data));
-	    userDispatch(signinSuccess(userRes.data));
-	}).catch((err) => {
-	    console.log(err.response.data.error);
-	    dispatch(loginFailure(err.response.data));
-	}).finally(() => {
-	    const navigate = useNavigate();
 	    navigate('/user', { replace: true });
-	});
+	} catch (error) {
+	    console.error('Login failed: ', error);
+	    dispatch(loginFailure({ error: error.message }));
+	    videoDispatch(getVideosFailure());
+	    listDispatch(getListsFailures\());
+	}
     };
 
     return (
