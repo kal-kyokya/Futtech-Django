@@ -103,7 +103,7 @@ const NewVideo = () => {
 			    <input className='newVideoInput'
 				   type='file'
 				   accept='video/*'
-				   onChange={(e) => setVideo(e.target.files)}
+				   onChange={(e) => setVideoFile(e.target.files?.[0] || null)}
 				   required
 			    />
 			</div>
@@ -168,7 +168,7 @@ const NewVideo = () => {
 				type='submit'
 				disabled={isUploading}
 			>
-			    {isUploading? 'Uploading...' : 'Upload and Create'}
+			    {isUploading ? 'Uploading...' : 'Upload and Create'}
 			</button>
 		    </div>
 		</form>
