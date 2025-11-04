@@ -1,8 +1,7 @@
 #!/usr/bin/env node
 /**
  * 'apiClient.js' configures Axios with interceptors, via the creation of
- *		  an Axios instance with interceptors to automatically handle
- * 		  token refresh.
+ *		  an Axios instance that automatically handles token refresh.
  */
 
 import axios from 'axios';
@@ -13,10 +12,11 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
 
 // Create the Axios instance
 const apiClient = axios.create({
-    baseUrl: API_BASE_URL,
+    baseURL: API_BASE_URL,
     headers: {
 	'Content-Type': 'application/json',
     },
+    withCredentials: true,
 });
 
 /**
@@ -40,14 +40,12 @@ let isRefreshing = false;
 let refreshSubscribers = [];
 
 // Queue failed requests while refreshing
-const subscribTokenRefresh = (cb) => {
+const subscribeTokenRefresh = (cb) => {
     refreshSubscribers.push(cb);
 };
 
 const onRefreshed = (token) => {
-    refreshSubscribers.forEach(
-	(cb) => cb(token);
-    );
+    refreshSubscribers.forEach((cb) => cb(token));
     refreshSubscribers = [];
 };
 
@@ -58,7 +56,7 @@ apiClient.interceptors.response.use(
 	const originalRequest = error.config;
 
 	// Check if error is 401 and we haven't already tried to refresh
-	if (error.response?.status === 401 && !(orginalRequest._retry)) {
+	if (error.response?.status === 401 && !orginalRequest._retry) {
 
 	    if (isRefreshing) {
 		// If already refreshing, queue this request
@@ -66,7 +64,6 @@ apiClient.interceptors.response.use(
 		    subscribeTokenRefresh((token) => {
 			originalRequest.headers.Authorization = `Bearer ${token
 }`;
-
 			resolve(apiClient(originalRequest));
 		    });
 		});
@@ -79,6 +76,8 @@ apiClient.interceptors.response.use(
 		// Call the refresh endpoint on the back end
 		const response = await axios.post(
 		    `${API_BASE_URL}/auth/token/refresh/`,
+		    {},
+		    { withCredentials: true },
 		);
 
 		const { access } = response.data;
