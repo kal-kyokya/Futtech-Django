@@ -11,9 +11,6 @@ export default defineConfig({
 	    '/lists': 'http://localhost:8080',
 	}
     },
-    optimizeDeps: {
-	include: ['@mux/mux-player-react'],
-    },
     build: {
 	sourcemap: false,
 	commonjsOptions: {
