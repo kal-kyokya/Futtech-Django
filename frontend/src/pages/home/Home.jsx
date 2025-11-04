@@ -47,23 +47,28 @@ const Home = ({ category }) => {
 	};
     }, [category, subCategory]);
 
+    const hasLists = Array.isArray(lists) && lists.length > 0;
+    const hasVideos = Array.isArray(videos) && videos.length > 0;
+
     return (
 	<div className='home'>
 	    <Navbar />
 	    <Featured category={ category } />
 
-	    {
-		Array.isArray(lists) && lists.length ? lists.map((list) => {
-		    <List list={ list }/>
-		})
-		    : Array.isArray(videos) && videos.length && <List list={{
-				'title': 'Recommendations',
-				'content': videos.slice(-10).map(video => video._id)
-			    }}
-		      />
-	    }
+	    {hasLists
+	     ? lists.map((list) => {
+		 <List key={list._id || list.title} list={ list } />
+	     })
+	     : hasVideos && (
+		 <List
+		     list={{
+			 'title': 'Recommendations',
+			 'content': videos.slice(-10).map(video => video._id)
+		     }}
+		 />
+	     )}
 	</div>
     );
-}
+};
 
 export default Home;
