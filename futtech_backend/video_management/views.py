@@ -95,10 +95,12 @@ def get_video_data(request, video_id):
         logger.error("Error retrieving video ID - {} from DB: {}".format(
             video_id, err
         ))
+        return JsonResponse({'error': 'Video not found'}, status=404)
 
     # We make sure that the video belongs to the requesting user
     if video.owner == request.user:
-        return JsonResponse({'video': video})
+        serializer = VideoSerializer(video)
+        return JsonResponse(serializer.data)
     else:
         logger.info(f"Unauthorized request for video {video_id}.")
         return HttpResponseForbidden("You do not have permission to view this video.")
