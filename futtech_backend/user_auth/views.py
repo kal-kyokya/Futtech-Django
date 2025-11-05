@@ -153,33 +153,38 @@ class RefreshTokenCookieView(TokenRefreshView):
     	TokenRefreshView - Handles creation of new access-refresh tokens.
     """
 
-    if 'refresh' not in request.data and 'refresh_token' in request.COOKIES:
-        request.data._mutable = True
-        request.data['refresh'] = request.COOKIES.get('refresh_token')
+    def post(self, request, *args, **kwargs):
+        """
+        Overrides the parent-defined post method.
+        """
+        if 'refresh' not in request.data and 'refresh_token' in request.COOKIES:
+            data = request.data.copy()
+            data['refresh'] = request.COOKIES.get('refresh_token')
+            request._full_data = data
 
-    resp = super().post(request, *args, **kwargs)
-    # super returns {'access': '***', 'refresh': ''} since rotate is enabled
-    access = resp.data.get('access')
-    refresh = resp.data.get('refresh')
+        resp = super().post(request, *args, **kwargs)
+        # super returns {'access', '***', 'refresh': ''} since rotate is enabled
+        access = resp.data.get('access')
+        refresh = resp.data.get('refresh')
 
-    response = Response(
-        {
-            'access': access
-        },
-        status=status.HTTP_200_OK
-    )
-
-    if refresh:
-        response.set_cookie(
-            key='refresh_token',
-            value=refresh,
-            httponly=True,
-            samesite='lax',
-            max_age=7*24*60*60,
-            path='/api/v2/auth/'
+        response = Response(
+            {
+                'access': access
+            },
+            status=status.HTTP_200_OK
         )
 
-    return response
+        if refresh:
+            response.set_cookie(
+                key='refresh_token',
+                value=str(refresh),
+                httponly=True,
+                samesite='lax',
+                max_age=7*24*60*60,
+                path='/api/v2/auth/'
+            )
+
+        return response
 
 
 class LogoutView(APIView):

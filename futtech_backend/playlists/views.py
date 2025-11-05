@@ -56,6 +56,8 @@ class PlaylistViewSet(viewsets.ModelViewSet):
             # Serializes that page of Playlist objects into JSON
             serializer = self.get_serializer(page, many=True)
 
+            # Wraps the serialized data with pagination metadata
+            # (like count, next, previous, results)
             return self.get_paginated_response(serializer.data)
 
         serializer = self.get_serializer(queryset, many=True)
