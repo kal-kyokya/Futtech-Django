@@ -77,12 +77,12 @@ class UserRegistrationView(generics.CreateAPIView):
         # Set the refresh token as an HttpOnly cookie
         response.set_cookie(
             key='refresh_token',
-            value=refresh,
+            value=str(refresh),
             httponly=True,
             secure=True,
             samesite='Lax',
             max_age=7*24*60*60, # Matches 'REFRESH_TOKEN_LIFETIME' in settings
-            path='api/v2/auth/' # Limits cookie path to the auth endpoints
+            path='/api/v2/auth/' # Limits cookie path to the auth endpoints
         )
 
         return response
@@ -111,8 +111,10 @@ class ObtainTokenCookieView(TokenObtainPairView):
         """
 
         serializer = UserLoginSerializer(data=request.data)
-        if serializer.is_valid():
-            user = serializer.validated_data['user']
+        if not serializer.is_valid():
+            return Response(serializer.errors, status=400)
+
+        user = serializer.validated_data['user']
 
         resp = super().post(request, *args, **kwargs)
         # res.data contains {'access': '***', 'refresh': '***'}
@@ -132,12 +134,12 @@ class ObtainTokenCookieView(TokenObtainPairView):
         # Set the refresh token as an HttpOnly cookie
         response.set_cookie(
             key='refresh_token',
-            value=refresh,
+            value=str(refresh),
             httponly=True,
             secure=True,
             samesite='Lax',
             max_age=7*24*60*60, # Matches 'REFRESH_TOKEN_LIFETIME' in settings
-            path='api/v2/auth/' # Limits cookie path to the auth endpoints
+            path='/api/v2/auth/' # Limits cookie path to the auth endpoints
         )
 
         return response
