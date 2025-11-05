@@ -10,8 +10,19 @@ from .views import PlaylistViewSet
 urlpatterns = [
     path('',
          PlaylistViewSet.as_view({
-             'get': 'retrieve',
+             'get': 'list',
              'post': 'create'
          }),
-         name='video-playlists'),
+         name='playlist-list'
+    ),
+    path(
+        '<int:pk>',
+        PlaylistViewSet.as_view({
+            'get': 'retrieve',
+            'put': 'update',
+            'patch': 'partial_update',
+            'delete': 'destroy',
+        }),
+        name='playlist-detail',
+    ),
 ]
