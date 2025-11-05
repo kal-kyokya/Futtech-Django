@@ -6,6 +6,7 @@
 
 from django.db import models
 from rest_framework import viewsets, permissions
+from rest_framework.response import Response
 from .models import Playlist
 from .serializers import PlaylistSerializer
 from .pagination import PlaylistPagination
@@ -19,18 +20,21 @@ class PlaylistViewSet(viewsets.ModelViewSet):
     	viewsets.ModelViewSet - Predefines 'default actions' methods (CRUD)
     				'list(), retrieve(), create(), etc'.
     """
-    
-    user = self.request.user
-
-    # Ensures videos are prefetched for all playlists in one DB hit
-    queryset = Playlist.objects.filter(
-        models.Q(owner=user) | models.Q(is_public=True)
-    ).prefetch_related('videos')
-    # queryset = Playlist.objects.all().prefetch_related('videos')
 
     serializer_class = PlaylistSerializer
     pagination_class = PlaylistPagination
     permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        """
+        Ensures videos are prefetched for all playlists in one DB hit
+        """
+        user = self.request.user
+
+        queryset = Playlist.objects.filter(
+            models.Q(owner=user) | models.Q(is_public=True)
+        ).prefetch_related('videos')
+
 
     def list(self, request, *args, **kwargs):
         """
