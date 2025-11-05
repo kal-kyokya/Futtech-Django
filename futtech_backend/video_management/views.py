@@ -8,7 +8,12 @@ from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model # Reliable way to get the correct/active User model class.
 from django.contrib.auth.decorators import login_required
-from django.http import HttpResponseForbidden, HttpResponseRedirect, JsonResponse
+from django.http import (
+    HttpResponseBadRequest,
+    HttpResponseForbidden,
+    HttpResponseRedirect,
+    JsonResponse,
+)
 from django.urls import reverse
 from django.views.decorators.http import require_POST
 from django.views.decorators.csrf import csrf_exempt
@@ -129,7 +134,7 @@ def get_pricing_page_identifiers(request):
 @login_required
 def get_subscription_confirmation(request):
     """
-    Provisions a user with the newly paid for subscription.
+    Provisions a user with the newly paid-for-subscription.
 
     Params:
     	request - The object representation of the frontend request.
@@ -140,13 +145,19 @@ def get_subscription_confirmation(request):
 
     # Extract the session ID from the URL & fetch its associated Stripe session
     session_id = request.GET.get(session_id)
+    if not session_id:
+        logger.warning(
+            "Subscription confirmation requested without a session_id query parameter."
+        )
+        return HttpBadRequest("Missing session identifier")
+
     session = stripe.checkout.Session.retrieve(session_id)
 
     # Ensure match between he who initiated the session and a user in our DB
     client_reference_id = int(session.client_reference_id)
     subscription_holder = get_user_model().objects.get(id=client_reference_id)
 
-    assert client_reference_id == subscription_holder
+    assert client_reference_id == subscription_holder.id
 
     # Think of a subscription as a contract between Futtech and a user
     # This finds the contract and stores it locally
@@ -154,9 +165,10 @@ def get_subscription_confirmation(request):
     djstripe_subscription = Subscription.sync_from_stripe_data(subscription)
 
     # Update our user's subscription field to allow streaming
-    subscription_holder.subscription = djstripe_subscription
-    subscription_holder.customer = djstripe_subscription.customer
-    subscription_holder.save()
+    profile = subscription_holder.profile
+    profile.subscription = djstripe_subscription
+    profile.customer = djstripe_subscription.customer
+    profile.save()
 
     # Notify the user of the subscription status and redirect
     messages.success(request, f"You have successfully subscribed. Thanks for the support!")
