@@ -26,6 +26,7 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.decorators import api_view
+from rest_framework import status
 
 from mux_python.rest import ApiException
 
@@ -33,7 +34,7 @@ from playlists.serializers import VideoSerializer
 
 from . import services
 from .logs import logger
-from .models import Video
+from .models import Video, PlaybackHistory
 from .serializers import VideoUploadSerializer, PlaybackHistorySerializer
 
 
@@ -296,7 +297,7 @@ class VideoUploadView(APIView):
 
         serializer_output = VideoUploadSerializer(data=request.data)
         if serializer_output.is_valid():
-            data = serializer_output.valid_data
+            data = serializer_output.valided_data
 
             # Create the video inside our Django model - 'Video'
             video = Video.objects.create(
@@ -370,7 +371,7 @@ class UploadCompleteView(APIView):
 
         return Response({
             'video_id': video.id,
-            'mux_asset_id': asset.id
+            'mux_asset_id': asset_id
         })
 
 
@@ -404,7 +405,7 @@ class VideoViewSet(ModelViewSet):
     """
 
     serializer_class = VideoSerializer
-    permissions_classes = [IsAuthenticated]
+    permission_classes = [IsAuthenticated]
 
     def get_queryset(self):
         """
