@@ -5,8 +5,7 @@ for this App to handle CRUD operations facilitating video streaming.
 """
 
 import uuid
-import time
-from datetime import datetime
+import datetime
 from django.db import models
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
@@ -132,9 +131,12 @@ class UserProfile(models.Model):
 
         # Include a 10-day grace period for subscriptions past due
         if self.subscription.status == 'past_due':
-            days_past_due = datetime.timedelta(
-                seconds=time.time() - self.subscription.current_period_end
-            ).days
+            current_time = timezone.now()
+            period_end = datetime.datetime.fromtimestamp(
+                self.subscription.current_period_end,
+                tz=datetime.timezone.utc
+            )
+            days_past_due = (current_time - period_end).days
             return days_past_due <= 10
 
         return self.subscription.status == 'active'
