@@ -4,6 +4,8 @@
 private layer (logic and data tiers), accessed via declared URL patterns.
 """
 
+import json
+
 from django.conf import settings
 from django.contrib import messages
 from django.contrib.auth import get_user_model # Reliable way to get the correct/active User model class.
@@ -388,12 +390,35 @@ def mux_webhook(request):
     	A DRF Response object declaring the upload status.
     """
 
-    verification_status = services.handle_mux_webhook(
-        request,
-        request.headers.get('Mux-Signature')
+    raw_body = request.body or b''
+
+    try:
+        payload = json.loads(raw_body.decode('utf-8') or '{}')
+    except (UnicodeDecodeError, json.JSONDecodeError) as err:
+        logger.error("Invalid JSON payload received from Mux webhook: {}".format(err))
+        return Response(
+            {
+                'status': 'error',
+                'detail': 'Invalid JSON payload',
+            },
+            status=status.HTTP_400_BAD_REQUEST,
+        )
+
+    verification_status, message = services.handle_mux_webhook(
+        raw_body,
+        payload,
+        request.headers.get('Mux-Signature'),
     )
 
-    return Response({'status': verification_status})
+    response_status = status.HTTP_200_OK if verification_status else status.HTTP_400_BAD_REQUEST
+
+    return Response(
+        {
+            'status': 'ok' if verification_status else 'error',
+            'detail': message
+        },
+        status=response_status,
+    )
 
 
 class VideoViewSet(ModelViewSet):
