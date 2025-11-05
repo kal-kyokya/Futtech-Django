@@ -11,6 +11,9 @@ import jwt
 import mux_python
 import os
 import time
+
+from . import mux_webhooks
+from .choices import VideoStatus
 from .logs import logger
 from .models import Video
 
@@ -107,12 +110,13 @@ def create_direct_upload_url():
         return None
 
 
-def handle_mux_webhook(payload, signature_header):
+def handle_mux_webhook(raw_body, payload, signature_header):
     """
     Verifies and processes incoming Mux webhooks (Automated notifications from
     Mux to this App signaling completion status of asynchronous event).
 
     Params:
+    	raw_body - As the name suggest, primitive format of the data received
     	payload - JSON object containing the status of the Mux event.
     	signature_header - Hash of the request body and timestamp for security,
     			   generated using a unique Mux webhook secret key.
@@ -123,19 +127,24 @@ def handle_mux_webhook(payload, signature_header):
 
     # It is CRITICAL to verify the webhook signature for security
     webhook_secret = os.environ.get('MUX_WEBHOOK_SIGNING_SECRET', '')
-    try:
-        # This custom-built verify function will raise an error if invalid
-        mux_webhooks.verify_signature(payload,
-                                      signature_header,
-                                      webhook_secret)
+    if not webhook_secret:
+        logger.error("Mux webhook secret is not configured")
+        return False, "Webhook secret is not configured"
+    if not signature_header:
+        logger.error("Missing Mux-Signature header on webhook request.")
+        return False, "Missing webhook signature"
 
-    except ValueError as err:
-        # Invalid signature
-        logger.error("Exception verifying the Mux webhook: {}".format(err))
-        return False
+    is_valid, message = mux_webhooks.verify_signature(raw_body,
+                                                      signature_header,
+                                                      webhook_secret)
+
+    if not is_valid:
+        logger.error("Exception verifying the Mux webhook: {}".format(message))
+        return False, message
 
     event_data = payload.get('data', {})
     event_type = payload.get('type')
+    success_message = message
 
     if event_type == 'video.asset.ready':
         asset_id = event_data.get('id')
@@ -147,8 +156,9 @@ def handle_mux_webhook(payload, signature_header):
             video = Video.objects.get(mux_asset_id=asset_id)
             video.mux_playback_id = playback_id
             video.duration = datetime.timedelta(seconds=duration)
-            video.status = Video.VideoStatus.READY
+            video.status = VideoStatus.READY
             video.save()
+            success_message = "Video asset marked as ready"
 
         except Video.DoesNotExist as err:
             logger.error("Exception updating video object upon Mux creation: {}".format(err))
@@ -157,11 +167,12 @@ def handle_mux_webhook(payload, signature_header):
 
         try:
             video = Video.objects.get(mux_asset_id=asset_id)
-            video.status = Video.VideoStatus.ERROR
+            video.status = VideoStatus.ERROR
             video.save()
+            success_message = "Video asset marked as errored"
 
         except Video.DoesNotExist as err:
             logger.error("Exception updating video after Mux creation err: {}".format(err))
 
     # End of verification and processing of webhooks from Mux
-    return True
+    return True, success_message

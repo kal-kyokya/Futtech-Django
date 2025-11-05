@@ -14,8 +14,8 @@ def verify_signature(request_body, mux_signature_header, webhook_secret):
             timestamp_str = part[2:]
         # Potentially:
         # 'else:' instead of 'elif <condition>'
-        elif part.startswith('a='):
-            signature_str = part[2:]
+        elif part.startswith('v1='):
+            signature_str = part[3:]
 
     if not timestamp_str or not signature_str:
         return False, "Invalid Mux-Signature header format."
