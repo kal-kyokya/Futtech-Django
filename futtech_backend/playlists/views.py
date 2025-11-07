@@ -35,6 +35,8 @@ class PlaylistViewSet(viewsets.ModelViewSet):
             models.Q(owner=user) | models.Q(is_public=True)
         ).prefetch_related('videos')
 
+        return queryset
+
 
     def list(self, request, *args, **kwargs):
         """
