@@ -1,25 +1,38 @@
 #!/usr/bin/env python3
 """
-'tests' verifies the grace-period logic for overdue subscriptions both
-within and beyond the 10-day window.
+'tests' ensures the core video management utilities work as intended.
 """
 
-from types import SimpleNamespace
 import datetime
 import hashlib
 import hmac
+import os
+from types import SimpleNamespace
 from unittest.mock import patch
 
-from django.test import SimpleTestCase
+from django.contrib.auth import get_user_model
+from django.test import SimpleTestCase, TestCase, override_settings
 from django.utils import timezone
 
-from .models import UserProfile
+from . import services
+from .choices import VideoStatus
+from .models import UserProfile, Video
 from .mux_webhooks import verify_signature
+
+
+TEST_DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': ':memory:',
+    }
+}
+
+TEST_PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
 
 
 class UserProfileSubscriptionTests(SimpleTestCase):
     """
-    Tests attributes of the UserProfile model.
+    Validates the grace-period logic for overdue subscriptions.
 
     Inheritance:
     	SimpleTestCase - Class to be overriden in order to run relatively
@@ -49,7 +62,7 @@ class UserProfileSubscriptionTests(SimpleTestCase):
 
 class VerifySignatureTests(SimpleTestCase):
     """
-    Tests the Mux webhooks signature processing logic.
+    Verifies that the Mux webhook signature helper behaves correctly.
 
     Inheritance:
     	SimpleTestCase - Class to be overriden in order to run relatively
@@ -61,7 +74,7 @@ class VerifySignatureTests(SimpleTestCase):
         signature = hmac.new(
             secret.encode('utf-8'),
             payload.encode('utf-8'),
-            hashlib.sha256
+            hashlib.sha256,
         ).hexdigest()
 
         return f"t={timestamp},v1={signature}"
@@ -72,8 +85,10 @@ class VerifySignatureTests(SimpleTestCase):
         timestamp = 1_700_000_000
         header = self._build_header(body, secret, timestamp)
 
-        with patch("futtech_backend.video_management.mux_webhooks.time.time",
-                   return_value=timestamp):
+        with patch(
+                "futtech_backend.video_management.mux_webhooks.time.time",
+                return_value=timestamp,
+        ):
             is_valid, message = verify_signature(body, header, secret)
 
         self.assertTrue(is_valid)
@@ -85,8 +100,10 @@ class VerifySignatureTests(SimpleTestCase):
         timestamp = 1_700_000_000
         header = f"t={timestamp},v1=notSignature"
 
-        with patch("futtech_backend.video_management.mux_webhooks.time.time",
-                   return_value=timestamp):
+        with patch(
+                "futtech_backend.video_management.mux_webhooks.time.time",
+                return_value=timestamp,
+        ):
             is_valid, message = verify_signature(body, header, secret)
 
         self.assertFalse(is_valid)
@@ -97,11 +114,82 @@ class VerifySignatureTests(SimpleTestCase):
         body = b'{"test": "payload"}'
         current_time = 1_700_000_000
         old_timestamp = current_time - 400 # beyond default tolerance of 300 seconds
-        header = self._build_header(body, secret, timestamp)
+        header = self._build_header(body, secret, old_timestamp)
 
-        with patch("futtech_backend.video_management.mux_webhooks.time.time",
-                   return_value=current_time):
+        with patch(
+                "futtech_backend.video_management.mux_webhooks.time.time",
+                return_value=current_time,
+        ):
             is_valid, message = verify_signature(body, header, secret)
 
         self.assertFalse(is_valid)
         self.assertEqual(message, "Webhook timestamp too old.")
+
+
+@override_settings(
+    DATABASES=TEST_DATABASES,
+    PASSWORD_HASHERS=TEST_PASSWORD_HASHERS,
+    SECRET_KEY='test-secret-key',
+)
+class HandleMuxWebhookTests(TestCase):
+    """
+    Exercises the webhook handling logic on a real database.
+    """
+
+    def setUp(self):
+        user_model = get_user_model()
+        self.owner = user_model.objects.create_user(
+            username='owner',
+            email='owner@example.com',
+            password='OwnerPass123!',
+        )
+        self.video = Video.objects.create(
+            owner=self.owner,
+            title='Example video',
+            mux_asset_id='asset-123',
+        )
+
+    @patch('futtech_backend.video_management.services.mux_webhooks.verify_signature')
+    def test_ready_event_updates_video(self, mock_verify_signature):
+        mock_verify_signature.return_value = (True, None)
+        payload = {
+            'type': 'video.asset.ready',
+            'data': {
+                'id': self.video.mux_asset_id,
+                'playback_ids': [{'id': 'playback-xyz'}],
+                'duration': 42,
+            },
+        }
+
+        with patch.dict(os.environ, {'MUX_WEBHOOK_SIGNING_SECRET': 'secret'}):
+            success, message = services.handles_mux_webhook(b'{}',
+                                                            payload,
+                                                            'header')
+
+            self.assertTrue(success)
+            self.assertEqual(message, 'Video asset marked as ready')
+
+            self.video.refresh_from_db()
+            self.assertEqual(self.video.status, VideoStatus.READY)
+            self.assertEqual(self.video.mux_playback_id, 'playback-xyz')
+            self.assertEqual(self.video.duration, datetime.timedelta(seconds=42))
+
+        @patch('futtech_backend.video_management.services.mux_webhooks.verify_signature')
+        def test_invalid_signature_short_circuits_processing(self, mock_verify_signature):
+            mock_verify_signature.return_value = (False, 'bad signature')
+            payload = {
+                'type': 'video.asset.ready',
+                'data': {},
+            }
+
+            with patch.dict(os.environ, {'MUX_WEBHOOK_SIGNING_SECRET': 'secret'}):
+                success, message = services.handle_mux_webhook(b'{}',
+                                                               payload,
+                                                               'header')
+
+            self.assertFalse(success)
+            self.assertEqual(message, 'bad signature')
+
+            self.video.refresh_from_db()
+            self.assertEqual(self.video.status,
+                             VideoStatus.PENDING)
