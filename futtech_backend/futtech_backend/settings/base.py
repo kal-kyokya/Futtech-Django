@@ -20,7 +20,7 @@ from datetime import timedelta
 load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = Path(__file__).resolve().parent.parent.parent
 
 
 # Quick-start development settings - unsuitable for production
@@ -30,14 +30,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 # Defaults to localhost
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS: list[str] = []
 
 # In order to access the Admin page using <domain_name>:<port>/admin
-# ALLOWED_HOSTS = [os.environ.get('DOMAIN_NAME')]
-
 ADMINS = [(os.environ.get('ADMIN_FULL_NAME'), os.environ.get('ADMIN_EMAIL'))]
 
 # Application definition
@@ -49,14 +47,18 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    # 3rd party
     'rest_framework',
     'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist',
     'django_redis',
     'djstripe',
-    'user_auth',
-    'video_management',
-    'playlists',
+
+    # Use the '<app>.apps.<AppConfigName>' large project naming convention
+    'user_auth.apps.UserAuthConfig',
+    'video_management.apps.VideoManagementConfig',
+    'playlists.apps.PlaylistsConfig',
 ]
 
 MIDDLEWARE = [
@@ -173,6 +175,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
 STATIC_URL = 'static/'
+STATIC_ROOT = BASE_DIR / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -200,6 +203,11 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
+    'DEFAULT_PERMISSION_CLASSES': (
+        'rest_framework.permissions.IsAuthenticated',
+    ),
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20,
 }
 
 SIMPLE_JWT = {
