@@ -9,6 +9,8 @@ DEBUG = False
 
 ALLOWED_HOSTS = os.environ.get('DJANGO-ALLOWED_HOSTS', ['kalkyokya.tech'])
 
+SECRET_KEY = require_env("DJANGO_SECRET_KEY")
+
 CORS_ALLOW_ALL_ORIGINS = False
 CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', [])
 

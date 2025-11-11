@@ -14,7 +14,18 @@ import os
 from dotenv import load_dotenv
 from pathlib import Path
 from datetime import timedelta
+from django.core.exceptions import ImproperlyConfigured
 
+
+def require_env(name: str) -> str:
+    """
+    Ensures production-dependent variables are never set to 'None'
+    if it so happens that the environment variable is missing.
+    """
+    value = os.environ.get(name)
+    if not value:
+        raise ImproperlyConfigured(f"Missing required environment variable: {name}")
+    return value
 
 # Load environment variables from .env file
 load_dotenv()
@@ -27,7 +38,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
+# SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
