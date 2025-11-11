@@ -20,8 +20,27 @@ CSRF_COOKIE_SECURE = True
 
 STRIPE_LIVE_MODE = True
 
-REDIS_HOST = os.environ.get("REDIS_HOST")
-REDIS_PORT = os.environ.get("REDIS_PORT")
+# Stripe API keys
+
+STRIPE_TEST_PUBLIC_KEY = require_env('STRIPE_TEST_PUBLIC_KEY')
+STRIPE_TEST_SECRET_KEY = require_env('STRIPE_TEST_SECRET_KEY')
+
+STRIPE_PRICING_TABLE_ID = require_env('STRIPE_PRICING_TABLE_ID')
+
+DJSTRIPE_FOREIGN_KEY_TO_FIELD = 'id'
+DJSTRIPE_WEBHOOK_SECRET = require_env('DJSTRIPE_WEBHOOK_SECRET')
+
+# True in production
+STRIPE_LIVE_MODE = os.environ.get('STRIPE_LIVE_MODE', 'false').lower() == 'true'
+
+MUX_TOKEN_ID = require_env('MUX_TOKEN_ID')
+MUX_TOKEN_SECRET = require_env('MUX_TOKEN_SECRET')
+MUX_SIGNING_KEY_ID = require_env('MUX_SIGNING_KEY_ID')
+MUX_PRIVATE_KEY = require_env('MUX_PRIVATE_KEY')
+MUX_WEBHOOK_SIGNING_SECRET = require_env('MUX_WEBHOOK_SIGNING_SECRET')
+
+REDIS_HOST = os.environ.get('REDIS_HOST')
+REDIS_PORT = os.environ.get('REDIS_PORT')
 
 if REDIS_HOST and REDIS_PORT:
     CACHES = {

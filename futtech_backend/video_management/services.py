@@ -6,10 +6,10 @@ the designated VPaaS (Mux|27-Aug-2025) while mitigating 'vendor lock-in' risks.
 
 # Imports are sorted alphabetically with dotted files at the bottom
 import datetime
+from django.conf import settings
 from dotenv import load_dotenv
 import jwt
 import mux_python
-import os
 import time
 
 from . import mux_webhooks
@@ -25,8 +25,8 @@ from .models import Video
 load_dotenv()
 
 configuration = mux_python.Configuration()
-configuration.username = os.environ.get('MUX_TOKEN_ID')
-configuration.password = os.environ.get('MUX_TOKEN_SECRET')
+configuration.username = settings.MUX_TOKEN_ID
+configuration.password = settings.MUX_TOKEN_SECRET
 configs = mux_python.ApiClient(configuration)
 
 # API Clients Initialization
@@ -34,8 +34,8 @@ web_inputs_api = mux_python.WebInputsApi(configs)
 uploads_api = mux_python.DirectUploadsApi(configs)
 
 # JWT Signing Configuration
-signing_key_id = os.environ.get('MUX_SIGNING_KEY_ID')
-private_key_pem = os.environ.get('MUX_PRIVATE_KEY')
+signing_key_id = settings.MUX_SIGNING_KEY_ID
+private_key_pem = settings.MUX_PRIVATE_KEY
 
 
 def generate_signed_playback_token(playback_id):
@@ -126,7 +126,7 @@ def handle_mux_webhook(raw_body, payload, signature_header):
     """
 
     # It is CRITICAL to verify the webhook signature for security
-    webhook_secret = os.environ.get('MUX_WEBHOOK_SIGNING_SECRET', '')
+    webhook_secret = settings.MUX_WEBHOOK_SIGNING_SECRET
     if not webhook_secret:
         logger.error("Mux webhook secret is not configured")
         return False, "Webhook secret is not configured"
