@@ -37,9 +37,6 @@ BASE_DIR = Path(__file__).resolve().parent.parent.parent
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/5.2/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-# SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY')
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
@@ -123,27 +120,6 @@ else:
             'NAME': BASE_DIR / 'db.sqlite3',
         }
     }
-
-
-CACHES = {
-    'default': {
-        'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': "redis://{}:{}/1".format(
-            os.environ.get('REDIS_HOST'),
-            os.environ.get('REDIS_PORT')
-        ),
-        'OPTIONS': {
-            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-            'SERIALIZER': 'django_redis.serializers.pickle.PickleSerializer', # To resolve byte decoding mismatch and reliably handle data stored by 'django.contrib.admin'
-            'CONNECTION_POOL_KWARGS': {
-# Commented out this line due to emerging misconfiguration it caused when combined with the newly added 'SERIALIZER: PickleSerializer'
-#                'decode_responses': True, # Decodes responses for easier Python handling
-                'max_connections': 100,
-                'retry_on_timeout': True,
-            }
-        }
-    }
-}
 
 # This is to ensure Django sessions are stored in Redis
 
