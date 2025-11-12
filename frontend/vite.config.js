@@ -6,15 +6,16 @@ export default defineConfig({
     plugins: [react()],
     server: {
 	proxy: {
-	    '/users': 'http://localhost:8080',
-	    '/videos': 'http://localhost:8080',
-	    '/lists': 'http://localhost:8080',
-	}
+	    '/api/v2': {
+		target: 'http://localhost:8000',
+		changeOrigin: true,
+	    },
+	},
     },
     build: {
 	sourcemap: false,
 	commonjsOptions: {
 	    include: [/node_modules/],
 	},
-    }
-})
+    },
+});
