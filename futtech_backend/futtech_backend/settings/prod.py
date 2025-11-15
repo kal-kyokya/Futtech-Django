@@ -7,7 +7,10 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = os.environ.get('DJANGO-ALLOWED_HOSTS', ['kalkyokya.tech'])
+ALLOWED_HOSTS = csv_list(require_env('DJANGO_ALLOWED_HOSTS'))
+if not ALLOWED_HOSTS:
+    # Defensive: fail fast instead of running with an empty list
+    raise ImproperlyConfigured("DJANGO_ALLOWED_HOSTS produced an empty list")
 
 SECRET_KEY = require_env("DJANGO_SECRET_KEY")
 
@@ -17,6 +20,7 @@ CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', [])
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
+CSRF_TRUSTED_ORIGINS = [f"https://{h}" for h in ALLOWED_HOSTS]
 
 STRIPE_LIVE_MODE = True
 

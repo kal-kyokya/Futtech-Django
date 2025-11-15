@@ -27,6 +27,14 @@ def require_env(name: str) -> str:
         raise ImproperlyConfigured(f"Missing required environment variable: {name}")
     return value
 
+
+def csv_list(v:str) -> list[str]:
+    """
+    Turns an environment variable (str) into an array.
+    """
+    return [x.strip() for x in v.split(",") if x.strip()]
+
+
 # Load environment variables from .env file
 load_dotenv()
 
@@ -122,7 +130,6 @@ else:
     }
 
 # This is to ensure Django sessions are stored in Redis
-
 SESSION_ENGINE = 'django.contrib.sessions.backends.cache'
 SESSION_CACHE_ALIAS = 'default'
 
