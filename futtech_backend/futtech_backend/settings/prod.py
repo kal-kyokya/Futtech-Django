@@ -10,7 +10,15 @@ DEBUG = False
 ALLOWED_HOSTS = csv_list(require_env('DJANGO_ALLOWED_HOSTS'))
 if not ALLOWED_HOSTS:
     # Defensive: fail fast instead of running with an empty list
-    raise ImproperlyConfigured("DJANGO_ALLOWED_HOSTS produced an empty list")
+    raise ImproperlyConfigured("DJANGO_ALLOWED_HOSTS produced an empty list.")
+
+CORS_ALLOWED_ORIGINS = csv_list("CORS_ALLOWED_ORIGINS")
+if not CORS_ALLOWED_ORIGINS:
+    raise ImproperConfigured("CORS_ALLOWED_ORIGINS  is required in production and must be a comma-separated list of origins with the scheme.")
+
+CSRF_TRUSTED_ORIGINS = csv_list("CSRF_TRUSTED_ORIGINS")
+if not CSRF_TRUSTED_ORIGINS:
+    raise ImproperConfigured("CSRF_TRUSTED_ORIGINS is required in production.")
 
 SECRET_KEY = require_env("DJANGO_SECRET_KEY")
 

@@ -28,10 +28,11 @@ def require_env(name: str) -> str:
     return value
 
 
-def csv_list(v:str) -> list[str]:
+def csv_list(name:str, default: str = "") -> list[str]:
     """
     Turns an environment variable (str) into an array.
     """
+    raw = os.environ.get(name, default)
     return [x.strip() for x in v.split(",") if x.strip()]
 
 
@@ -50,6 +51,10 @@ DEBUG = False
 
 # Defaults to localhost
 ALLOWED_HOSTS: list[str] = []
+
+CORS_ALLOWED_ALL_ORIGINS = False
+CORS_ALLOWED_ORIGINS: list[str] = []
+CSRF_TRUSTED_ORIGINS: list[str] = []
 
 # In order to access the Admin page using <domain_name>:<port>/admin
 ADMINS = [(os.environ.get('ADMIN_FULL_NAME'), os.environ.get('ADMIN_EMAIL'))]
