@@ -14,16 +14,15 @@ if not ALLOWED_HOSTS:
 
 CORS_ALLOWED_ORIGINS = csv_list("CORS_ALLOWED_ORIGINS")
 if not CORS_ALLOWED_ORIGINS:
-    raise ImproperConfigured("CORS_ALLOWED_ORIGINS  is required in production and must be a comma-separated list of origins with the scheme.")
+    raise ImproperlyConfigured("CORS_ALLOWED_ORIGINS  is required in production and must be a comma-separated list of origins with the scheme.")
 
 CSRF_TRUSTED_ORIGINS = csv_list("CSRF_TRUSTED_ORIGINS")
 if not CSRF_TRUSTED_ORIGINS:
-    raise ImproperConfigured("CSRF_TRUSTED_ORIGINS is required in production.")
+    raise ImproperlyConfigured("CSRF_TRUSTED_ORIGINS is required in production.")
 
 SECRET_KEY = require_env("DJANGO_SECRET_KEY")
 
 CORS_ALLOW_ALL_ORIGINS = False
-CORS_ALLOWED_ORIGINS = os.environ.get('CORS_ALLOWED_ORIGINS', [])
 
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True

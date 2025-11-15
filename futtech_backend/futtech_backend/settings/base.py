@@ -33,7 +33,7 @@ def csv_list(name:str, default: str = "") -> list[str]:
     Turns an environment variable (str) into an array.
     """
     raw = os.environ.get(name, default)
-    return [x.strip() for x in v.split(",") if x.strip()]
+    return [x.strip() for x in raw.split(",") if x.strip()]
 
 
 # Load environment variables from .env file

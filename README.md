@@ -22,7 +22,7 @@ Futtech pairs a Django 5.2 backend with a React frontend (a user-facing app buil
 
 * **frontend/** – Vite React client that gates routes behind JWT-authenticated context providers, fetches media catalogs, and integrates with the backend via an Axios client that knows how to refresh tokens.
 
-* **requierements.txt & package manifests** – lock in Python libraries (DRF, dj-stripe, mux-python) and JavaScript dependencies (React, MUI, Axios, Firebase).
+* **requirements.txt & package manifests** – lock in Python libraries (DRF, dj-stripe, mux-python) and JavaScript dependencies (React, MUI, Axios, Firebase).
 
 #### :key: Backend essentials
 * **Core configuration** – settings.py enables REST Framework + SimpleJWT, Redis-backed sessions, Stripe/dj-stripe, and the domain-specific apps; it expects environment variables for database, Stripe, and Mux credentials.
@@ -45,7 +45,7 @@ Futtech pairs a Django 5.2 backend with a React frontend (a user-facing app buil
 * **Content loading** – screens such as Home.jsx pull curated lists or fall back to locally cached videos, using the base API URL from environment configuration to reach backend endpoints.
 
 #### Environment & tooling tips
-* Install Python dependencies from requierements.txt, ensuring Redis, PostgreSQL, Stripe, and Mux environment variables are in place before running migrations or starting manage.py runserver.
+* Install Python dependencies from requirements.txt, ensuring Redis, PostgreSQL, Stripe, and Mux environment variables are in place before running migrations or starting manage.py runserver.
 
 * Configure the frontend with VITE_API_BASE_URL and matching Stripe/Mux keys so Axios calls and embedded checkout flows hit the right backend endpoints.
 
