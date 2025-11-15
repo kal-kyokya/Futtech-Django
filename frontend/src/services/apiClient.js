@@ -56,7 +56,7 @@ apiClient.interceptors.response.use(
 	const originalRequest = error.config;
 
 	// Check if error is 401 and we haven't already tried to refresh
-	if (error.response?.status === 401 && !orginalRequest._retry) {
+	if (error.response?.status === 401 && !originalRequest._retry) {
 
 	    if (isRefreshing) {
 		// If already refreshing, queue this request

@@ -10,7 +10,7 @@ set -euo pipefail
 FRONTEND_DIR="${FRONTEND_DIR:-$(cd "$(dirname "$0")" && pwd)}"
 # Directory of the frontend; default = the folder where this script lives
 
-DOCROOT="${DOCRROT:-/var/www/futtech/app}"
+DOCROOT="${DOCROOT:-/var/www/futtech/app}"
 # Nginx document root where the built SPA will be server.
 
 NODE_OPTIONS="${NODE_OPTIONS:---max-old-space-size=4096}"
