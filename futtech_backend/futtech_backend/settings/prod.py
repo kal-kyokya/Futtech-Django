@@ -7,7 +7,7 @@ from .base import *
 
 DEBUG = False
 
-ALLOWED_HOSTS = csv_list(require_env('DJANGO_ALLOWED_HOSTS'))
+ALLOWED_HOSTS = csv_list("DJANGO_ALLOWED_HOSTS")
 if not ALLOWED_HOSTS:
     # Defensive: fail fast instead of running with an empty list
     raise ImproperlyConfigured("DJANGO_ALLOWED_HOSTS produced an empty list.")
