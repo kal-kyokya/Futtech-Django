@@ -7,30 +7,29 @@ import { useNavigate } from 'react-router-dom';
 // '../../pages/newVideo/NewVideo'
 export const apiService = axios.create({
     baseURL: import.meta.env.VITE_API_BASE_URL,
-    interceptors: {
-	request: (config) => {
-	    const user = JSON.parse(localStorage.getItem('user'));
-	    if (user && user.access_token) {
-		config.headers.Authorization = `Bearer ${user.access_token}`;
-	    }
-	    return config;
-	},
-    },
+});
+
+apiService.interceptors.request.use((config) => {
+    const user = JSON.parse(localStorage.getItem('user'));
+    if (user?.access_token) {
+        config.headers.Authorization = `Bearer ${user.access_token}`;
+    }
+    return config;
 });
 
 const login = async (userCredentials, dispatch) => {
     dispatch(loginStart());
 
     try {
-	const res = await axios.post(
-	    '${import.meta.env.VITE_API_BASE_URL}/auth/login/',
-	    userCredentials
-	);
+        const res = await axios.post(
+            `${import.meta.env.VITE_API_BASE_URL}/auth/login/`,
+            userCredentials,
+        );
 
-	if (res.data && res.data.access_token) {
-	    localStorage.setItem('user', JSON.stringigy(res.data));
-	    dispatch(loginSuccess(res.data));
-	} else {
+        if (res.data && res.data.access_token) {
+            localStorage.setItem('user', JSON.stringify(res.data));
+            dispatch(loginSuccess(res.data));
+        } else {
 	    dispatch(loginFailure());
 	}
 
