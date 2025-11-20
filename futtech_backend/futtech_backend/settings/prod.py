@@ -10,15 +10,21 @@ DEBUG = False
 ALLOWED_HOSTS = csv_list("DJANGO_ALLOWED_HOSTS")
 if not ALLOWED_HOSTS:
     # Defensive: fail fast instead of running with an empty list
-    raise ImproperlyConfigured("DJANGO_ALLOWED_HOSTS produced an empty list.")
+    raise ImproperlyConfigured(
+        "DJANGO_ALLOWED_HOSTS produced an empty list."
+    )
 
 CORS_ALLOWED_ORIGINS = csv_list("CORS_ALLOWED_ORIGINS")
 if not CORS_ALLOWED_ORIGINS:
-    raise ImproperlyConfigured("CORS_ALLOWED_ORIGINS  is required in production and must be a comma-separated list of origins with the scheme.")
+    raise ImproperlyConfigured(
+        "CORS_ALLOWED_ORIGINS  is required in production and must be a comma-separated list of origins with the scheme."
+    )
 
 CSRF_TRUSTED_ORIGINS = csv_list("CSRF_TRUSTED_ORIGINS")
 if not CSRF_TRUSTED_ORIGINS:
-    raise ImproperlyConfigured("CSRF_TRUSTED_ORIGINS is required in production.")
+    raise ImproperlyConfigured(
+        "CSRF_TRUSTED_ORIGINS is required in production."
+    )
 
 SECRET_KEY = require_env("DJANGO_SECRET_KEY")
 
@@ -27,7 +33,11 @@ CORS_ALLOW_ALL_ORIGINS = False
 SECURE_SSL_REDIRECT = True
 SESSION_COOKIE_SECURE = True
 CSRF_COOKIE_SECURE = True
-CSRF_TRUSTED_ORIGINS = [f"https://{h}" for h in ALLOWED_HOSTS]
+CSRF_TRUSTED_ORIGINS = [origin.rstrip("/") for origin in CSRF_TRUSTED_ORIGINS]
+
+# Honour HTTPS when running behind a reverse proxy such as Nginx
+SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
+USE_X_FORWARDED_HOST = True
 
 STRIPE_LIVE_MODE = True
 
