@@ -34,7 +34,8 @@ CORS_ALLOW_ALL_ORIGINS = False
 SECURE_SSL_REDIRECT = True
 
 # HSTS: will start with a small value to test (e.g., 300 seconds), then raise
-SECURE_HSTS_SECONDS = 300             # 1 year|31536000 secs after I verified
+# 1 year|31536000 secs after I verified
+SECURE_HSTS_SECONDS = 31536000
 SECURE_HSTS_INCLUDE_SUBDOMAINS = True # extend to subdomains
 SECURE_HSTS_PRELOAD = True            # allow browser preload lists (optional)
 
