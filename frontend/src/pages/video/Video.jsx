@@ -21,7 +21,6 @@ import {
 import { useState, useContext } from 'react';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import { UserContext } from '../../contexts/userContext/UserContext';
-import storage from '../../firebase';
 import {
     getDownloadURL,
     ref as storageRef,

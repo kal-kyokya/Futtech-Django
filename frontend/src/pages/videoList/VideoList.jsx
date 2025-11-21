@@ -2,7 +2,6 @@ import './videoList.scss';
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { rows } from '../../dummyData';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useContext, useEffect } from 'react';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';

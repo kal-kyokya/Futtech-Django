@@ -2,7 +2,6 @@ import './lists.scss';
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { rows } from '../../dummyData';
 import { Link } from 'react-router-dom';
 import { useState, useContext, useEffect } from 'react';
 import { ListContext } from '../../contexts/listContext/ListContext';

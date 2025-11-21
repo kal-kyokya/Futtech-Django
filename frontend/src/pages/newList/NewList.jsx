@@ -12,7 +12,7 @@ import apiClient from '../../services/apiClient';
 const NewList = () => {
     const [list, setList] = useState({
 	title: '', category: '',
-	subCategory; '', thumbnail: null,
+	subCategory: '', thumbnail: null,
 	content: [],
     });
     const navigate = useNavigate();

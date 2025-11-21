@@ -14,10 +14,9 @@ import { UserContext } from '../../contexts/userContext/UserContext';
 import Navbar from '../../components/Navbar';
 import axios from 'axios';
 import {
-    updateUserStart,
-    updateUserSuccess,
-    updateUserFailure } from '../../contexts/userContext/UserActions';
-import storage from '../../firebase';
+    updateStart,
+    updateSuccess,
+    updateFailure } from '../../contexts/userContext/UserActions';
 import {
     getDownloadURL,
     ref as storageRef,

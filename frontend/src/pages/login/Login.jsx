@@ -77,7 +77,7 @@ const Login = () => {
 	    console.error('Login failed: ', error);
 	    dispatch(loginFailure({ error: error.message }));
 	    videoDispatch(getVideosFailure());
-	    listDispatch(getListsFailures\());
+	    listDispatch(getListsFailures());
 	}
     };
 

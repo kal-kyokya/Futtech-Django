@@ -7,13 +7,12 @@ import Register from './pages/register/Register';
 import Login from './pages/login/Login';
 import Home from './pages/home/Home';
 import NewVideo from './pages/newVideo/NewVideo';
-import VideoList from './pages/videoList/VideoList';
 import User from './pages/user/User';
 import Watch from './pages/watch/Watch';
 import NewList from './pages/newList/NewList';
 import Video from './pages/video/Video';
 import Lists from './pages/lists/Lists';
-import Pricing from './pages/pricing';
+import Pricing from './pages/pricing/Pricing';
 
 
 const App = () => {
