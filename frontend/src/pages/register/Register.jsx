@@ -11,8 +11,8 @@ import {
 const Register = () => {
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
-    const [password1, setPassword1] = useState('');
-    const [password2, setPassword2] = useState('');
+    const [password, setPassword] = useState('');
+    const [password-confirm, setPasswordConfirm] = useState('');
 
     const { dispatch, isFetching,
 	    loggedOut, error: registrationError } = useContext(UserContext);
@@ -39,7 +39,7 @@ const Register = () => {
 	e.preventDefault(); // Prevents form reload and allows data submission
 	dispatch(registrationStart());
 
-	if (!email || !username || !password1 || !password2) {
+	if (!email || !username || !password || !password-confirm) {
 	    const message = !username
 		  ? 'Username required'
 		  : 'Password required';
@@ -47,7 +47,7 @@ const Register = () => {
 	    return;
 	}
 
-	if (password1 !== password2) {
+	if (password !== password-confirm) {
 	    dispatch(registrationFailure({ error: 'Passwords do not match' }));
 	    return;
 	}
@@ -55,7 +55,7 @@ const Register = () => {
 	try {
 	    const response = await apiClient.post(
 		'/auth/register/',
-		{ username, email, password1, password2 },
+		{ username, email, password, password-confirm },
 	    );
 
 	    dispatch(registrationSuccess(response.data));
@@ -103,12 +103,12 @@ const Register = () => {
 		    <form className='membership' onSubmit={handleRegister}>
 			<input type='password'
 			       placeholder='Password'
-			       onChange={(e) => setPassword1(e.target.value)}
+			       onChange={(e) => setPassword(e.target.value)}
 			       required
 			/>
 			<input type='password'
 			       placeholder='Confirm password'
-			       onChange={(e) => setPassword2(e.target.value)}
+			       onChange={(e) => setPasswordConfirm(e.target.value)}
 			       required
 			/>
 
