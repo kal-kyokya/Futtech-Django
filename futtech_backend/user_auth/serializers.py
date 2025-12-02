@@ -22,7 +22,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     creation of Django-compliant complex python objects (Model fields).
 
     Inheritance:
-    	serializers.ModelSerializer - Avail rest_framework's out-of-the-box
+    	serializers.ModelSerializer - Avails rest_framework's out-of-the-box
     	features enabling data validation and serialization/deserialization.
     """
 
@@ -48,7 +48,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         write_only=True,
         style={'input_type': 'password'}
     )
-    password2 = serializers.CharField(
+    password-confirm = serializers.CharField(
         required=True,
         write_only=True,
         style={'input_type': 'password'}
@@ -69,7 +69,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         # Model fields to include in the python dictionary-like object
         # returned after effective validation
-        fields = ['email', 'username', 'password', 'password2']
+        fields = ['email', 'username', 'password', 'password-confirm']
 
         # Additional configuration not directly tied to model fields
         extra_kwargs = {
@@ -77,7 +77,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 'write_only': True,
                 'required': True,
             },
-            'password2': {
+            'password-confirm': {
                 'write_only': True,
                 'required': True,
             }
@@ -88,16 +88,16 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         Handles password confirmation and initializes data validation.
 
         Params:
-        	self - A python object representing the class instance.
+        	self - A python object representing the current class instance.
         	attrs - A dictionary containing the data to be serialized.
 
         Return:
         	The 'attrs' dictionary if no validation error is raised.
         """
 
-        if attrs['password'] != attrs['password2']:
+        if attrs['password'] != attrs['password-confirm']:
             raise serializers.ValidationError({
-                'password2': 'Password fields did not match'
+                'password-confirm': 'Password fields did not match'
             })
 
         # Validate password strength with Django's built-in validation function
@@ -123,7 +123,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         	A newly created instance of the Django User model.
         """
 
-        validated_data.pop('password2')
+        validated_data.pop('password-confirm')
 
         # 'create_user' automatically handles password hashing
         user = UserModel.objects.create_user(**validated_data)
