@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 /**
  * 'apiClient.js' configures Axios with interceptors, via the creation of
  *		  an Axios instance that automatically handles token refresh.
