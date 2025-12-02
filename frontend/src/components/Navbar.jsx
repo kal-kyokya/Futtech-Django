@@ -160,7 +160,7 @@ const Navbar = () => {
 			<a onClick={() => handleNavLinkClick('/videos')}>Drone Footages</a>
 		    </li>
 		    <li>
-			<a onClick={() => handleNavLinkClick('/analysis')}>AI-driven Analysis</a>
+			<a onClick={() => handleNavLinkClick('/ai-analysis')}>AI-driven Analysis</a>
 		    </li>
 		    <li>
 			<a onClick={() => handleNavLinkClick('/about')}>About</a>
