@@ -265,7 +265,7 @@ const Video = () => {
 		    <div className='videoUpdate'>
 			<div className='videoUpdateBlock'>
 			    <div className='videoUpdateTitle'>
-				Edit | <Link to='/videoList'
+				Edit | <Link to='/video-list'
 					     style={{'color': '#028ECA'}}
 				       >
 					   Manage Videos
