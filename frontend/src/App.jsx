@@ -13,6 +13,7 @@ import NewList from './pages/newList/NewList';
 import Video from './pages/video/Video';
 import Lists from './pages/lists/Lists';
 import Pricing from './pages/pricing/Pricing';
+import VideoList from './pages/videoList/VideoList';
 
 
 const App = () => {
