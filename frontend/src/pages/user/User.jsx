@@ -155,7 +155,7 @@ const User = () => {
 			    >
 				Manage
 			    </span>
-			    <Link className='link' to='/videoList'>
+			    <Link className='link' to='/video-list'>
 				<div className='userDetailsLinks'>
 				    <VideoLibraryIcon className='userDetailsIcon' />
 				    Videos
