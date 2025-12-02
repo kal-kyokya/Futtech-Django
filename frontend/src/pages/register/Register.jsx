@@ -12,7 +12,7 @@ const Register = () => {
     const [email, setEmail] = useState('');
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
-    const [password-confirm, setPasswordConfirm] = useState('');
+    const [passwordConfirm, setPasswordConfirm] = useState('');
 
     const { dispatch, isFetching,
 	    loggedOut, error: registrationError } = useContext(UserContext);
@@ -39,7 +39,7 @@ const Register = () => {
 	e.preventDefault(); // Prevents form reload and allows data submission
 	dispatch(registrationStart());
 
-	if (!email || !username || !password || !password-confirm) {
+	if (!email || !username || !password || !passwordConfirm) {
 	    const message = !username
 		  ? 'Username required'
 		  : 'Password required';
@@ -47,7 +47,7 @@ const Register = () => {
 	    return;
 	}
 
-	if (password !== password-confirm) {
+	if (password !== passwordConfirm) {
 	    dispatch(registrationFailure({ error: 'Passwords do not match' }));
 	    return;
 	}
@@ -55,7 +55,7 @@ const Register = () => {
 	try {
 	    const response = await apiClient.post(
 		'/auth/register/',
-		{ username, email, password, password-confirm },
+		{ username, email, password, passwordConfirm },
 	    );
 
 	    dispatch(registrationSuccess(response.data));
