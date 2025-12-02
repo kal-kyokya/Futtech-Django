@@ -40,7 +40,7 @@ class UserAuthenticationFlowTests(TestCase):
             'email': 'newuser@example.com',
             'username': 'newuser',
             'password': 'StrongPass123!',
-            'password-confirm': 'StrongPass123!',
+            'passwordConfirm': 'StrongPass123!',
         }
 
     def test_user_can_register_login_refresh_and_fetch_profile(self):

@@ -48,7 +48,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         write_only=True,
         style={'input_type': 'password'}
     )
-    password-confirm = serializers.CharField(
+    passwordConfirm = serializers.CharField(
         required=True,
         write_only=True,
         style={'input_type': 'password'}
@@ -69,7 +69,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         # Model fields to include in the python dictionary-like object
         # returned after effective validation
-        fields = ['email', 'username', 'password', 'password-confirm']
+        fields = ['email', 'username', 'password', 'passwordConfirm']
 
         # Additional configuration not directly tied to model fields
         extra_kwargs = {
@@ -77,7 +77,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
                 'write_only': True,
                 'required': True,
             },
-            'password-confirm': {
+            'passwordConfirm': {
                 'write_only': True,
                 'required': True,
             }
@@ -95,9 +95,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         	The 'attrs' dictionary if no validation error is raised.
         """
 
-        if attrs['password'] != attrs['password-confirm']:
+        if attrs['password'] != attrs['passwordConfirm']:
             raise serializers.ValidationError({
-                'password-confirm': 'Password fields did not match'
+                'passwordConfirm': 'Password fields did not match'
             })
 
         # Validate password strength with Django's built-in validation function
@@ -123,7 +123,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         	A newly created instance of the Django User model.
         """
 
-        validated_data.pop('password-confirm')
+        validated_data.pop('passwordConfirm')
 
         # 'create_user' automatically handles password hashing
         user = UserModel.objects.create_user(**validated_data)
