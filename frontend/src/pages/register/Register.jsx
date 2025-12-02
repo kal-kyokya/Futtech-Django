@@ -54,7 +54,7 @@ const Register = () => {
 
 	try {
 	    const response = await apiClient.post(
-		'/auth/register',
+		'/auth/register/',
 		{ username, email, password1, password2 },
 	    );
 

@@ -25,7 +25,7 @@ class AuthService {
     async register(userData) {
 
 	try {
-	    const response = await apiClient.post('/auth/register', userData);
+	    const response = await apiClient.post('/auth/register/', userData);
 	    const { message, access, user } = response.data;
 
 	    // Store the access token in memory
@@ -57,7 +57,7 @@ class AuthService {
     async login(credentials) {
 
 	try {
-	    const response = await apiClient.post('/auth/login', credentials);
+	    const response = await apiClient.post('/auth/login/', credentials);
 	    const { message, access, user } = response.data;
 
 	    // Store the access token in memory
