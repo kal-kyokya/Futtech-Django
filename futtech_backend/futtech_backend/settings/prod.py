@@ -14,6 +14,10 @@ if not ALLOWED_HOSTS:
         "DJANGO_ALLOWED_HOSTS produced an empty list."
     )
 
+# Always allow local development hosts to prevent admin access errors when
+# debugging deployments via localhost tunnelling.
+ALLOWED_HOSTS += ["localhost", "127.0.0.1", "0.0.0.0"]
+
 CORS_ALLOWED_ORIGINS = csv_list("CORS_ALLOWED_ORIGINS")
 if not CORS_ALLOWED_ORIGINS:
     raise ImproperlyConfigured(
