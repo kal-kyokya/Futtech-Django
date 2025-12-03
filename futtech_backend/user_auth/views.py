@@ -88,15 +88,16 @@ class UserRegistrationView(generics.CreateAPIView):
         return response
 
 
-class ObtainTokenCookieView(TokenObtainPairView):
+class ObtainTokenCookieView(APIView):
     """
-    Handles HTTP request for JWT access and refresh pairs.
+    Handles HTTP requests for JWT access and refresh pairs while accepting
+    email/password credentials instead of the default username/password.
     Ensures that the refresh token is set as a cookie header so as to
     mitigate XSS (Cross Site Scripting) attacks, client-side.
 
     Inheritance:
-    	TokenObtainPairView - DRF Simple JWT's default class-based view
-    			      handling requests for access/refresh tokens.
+    	APIView - Gives fine-grained control over request handling while still
+    		  leveraging DRF's validation and response helpers.
     """
 
     def post(self, request, *args, **kwargs):
