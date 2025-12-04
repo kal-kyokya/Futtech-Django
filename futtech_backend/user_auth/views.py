@@ -100,34 +100,29 @@ class ObtainTokenCookieView(APIView):
     		  leveraging DRF's validation and response helpers.
     """
 
+    permission_classes = (AllowAny,)
+    serializer_class = UserLoginSerializer
+
     def post(self, request, *args, **kwargs):
         """
-        Processes every POST request handled by this view and is
-        responsible for returning an HttpResponse object.
-
-        Params:
-        	self - An object representation of the current class instance.
-        	request - Django-created HttpRequest object that contains
-        		  metadata about the request.
+        Validates credentials, issues tokens, and persists refresh cookie.
         """
 
-        serializer = UserLoginSerializer(data=request.data)
-        if not serializer.is_valid():
-            return Response(serializer.errors, status=400)
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
 
         user = serializer.validated_data['user']
+        refresh = RefreshToken.for_user(user)
 
-        resp = super().post(request, *args, **kwargs)
-        # res.data contains {'access': '***', 'refresh': '***'}
-        access = resp.data.get('access')
-        refresh = resp.data.get('refresh')
-
-        # Create the Django HttpResponse object
         response = Response(
             {
                 'message': 'User logged in successfully',
-                'access': access,
-                'user': user,
+                'access': str(refresh.access_token),
+                'user': {
+                    'id': user.id,
+                    'username': user.username,
+                    'email': user.email,
+                },
             },
             status=status.HTTP_200_OK
         )
@@ -139,7 +134,7 @@ class ObtainTokenCookieView(APIView):
             httponly=True,
             secure=True,
             samesite='Lax',
-            max_age=7*24*60*60, # Matches 'REFRESH_TOKEN_LIFETIME' in settings
+            max_age=7*24*60*60,  # Matches 'REFRESH_TOKEN_LIFETIME' in settings
             path='/api/v2/auth/' # Limits cookie path to the auth endpoints
         )
 
