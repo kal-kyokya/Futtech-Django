@@ -24,6 +24,8 @@ if not CORS_ALLOWED_ORIGINS:
         "CORS_ALLOWED_ORIGINS  is required in production and must be a comma-separated list of origins with the scheme."
     )
 
+CORS_ALLOW_CREDENTIALS = True
+
 CSRF_TRUSTED_ORIGINS = csv_list("CSRF_TRUSTED_ORIGINS")
 if not CSRF_TRUSTED_ORIGINS:
     raise ImproperlyConfigured(
