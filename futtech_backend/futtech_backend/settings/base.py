@@ -62,6 +62,7 @@ ADMINS = [(os.environ.get('ADMIN_FULL_NAME'), os.environ.get('ADMIN_EMAIL'))]
 # Application definition
 
 INSTALLED_APPS = [
+    'corsheaders',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
