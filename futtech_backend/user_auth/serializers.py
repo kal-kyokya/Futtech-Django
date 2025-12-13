@@ -154,8 +154,7 @@ class UserLoginSerializer(serializers.Serializer):
         	attrs - The user data sent inside the HTTP request.
 
         Return:
-        	A python dictionary made of the JWT access and
-        	refresh tokens, as well as basic user infos.
+        	A python dictionary containing basic user infos.
         """
 
         email = attrs.get('email')
@@ -180,11 +179,7 @@ class UserLoginSerializer(serializers.Serializer):
             raise serializers.ValidationError('User account is disabled.')
 
         return {
-            'user': {
-                'id': user.id,
-                'username': user.username,
-                'email': user.email,
-            },
+            'user': authenticated_user,
         }
 
 
