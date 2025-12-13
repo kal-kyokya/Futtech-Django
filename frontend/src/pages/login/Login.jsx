@@ -2,12 +2,17 @@ import './login.scss';
 import { useState, useContext } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../contexts/authContext/AuthContext';
+import { UserContext } from '../../contexts/userContext/UserContext';
 import { ListContext } from '../../contexts/listContext/ListContext';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import {
     loginStart,
     loginSuccess,
     loginFailure } from '../../contexts/authContext/AuthActions';
+import {
+    updateStart,
+    updateSuccess,
+    updateFailure } from '../../contexts/userContext/UserActions';
 import {
     getVideosStart,
     getVideosSuccess,
@@ -29,6 +34,7 @@ const Login = () => {
 
     const { dispatch: videoDispatch } = useContext(VideoContext);
     const { dispatch: listDispatch } = useContext(ListContext);
+    const { dispatch: userDispatch } = useContext(UserContext);
 
     const navigate = useNavigate();
 
@@ -36,6 +42,7 @@ const Login = () => {
 	e.preventDefault(); // Prevents form reload and allows data submission
 
 	dispatch(loginStart());
+	userDispatch(updateStart());
 	videoDispatch(getVideosStart());
 	listDispatch(getListsStart());
 
@@ -47,6 +54,7 @@ const Login = () => {
 	    }
 
 	    dispatch(loginSuccess(result.user));
+	    dispatch(updateSuccess(result.user));
 
 	    if (result.playlistsPromise) {
 		try {
@@ -76,6 +84,7 @@ const Login = () => {
 	} catch (error) {
 	    console.error('Login failed: ', error);
 	    dispatch(loginFailure({ error: error.message }));
+	    userDispatch(updateFailure({ error: error.message }));
 	    videoDispatch(getVideosFailure());
 	    listDispatch(getListsFailure());
 	}
