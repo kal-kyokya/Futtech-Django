@@ -43,6 +43,17 @@ class VideoUploadSerializer(ModelSerializer):
                   'is_premium', 'is_drone', 'is_analysis']
 
 
+class VideoSerializer():
+    """
+    Serializes Video instances for list/detail API responses.
+    """
+
+    class Meta:
+        model = Video
+        exclude = ('mux_playback_id', 'mux_playback_policy',
+                   'updated_at', 'created_at')
+
+
 class VideoCreationSerializer(ModelSerializer):
     """
     Handles serialization of data used for video creation.
