@@ -27,7 +27,7 @@ from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.response import Response
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework import status
 
 from mux_python.rest import ApiException
@@ -43,7 +43,7 @@ from .serializers import VideoUploadSerializer, PlaybackHistorySerializer
 import stripe # Was pip installed with 'djstripe'
 
 
-# Configure the stripe for secure consumption of its API
+# Configure stripe for secure consumption of its API
 stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
 
 
@@ -67,6 +67,7 @@ def get_playback_token(request, video_id):
         logger.error("Error retrieving video ID - {} from DB: {}".format(
             video_id, err
         ))
+        return JsonResponse({'error': 'Video not found'}, status=404)
 
     # Ensures that the video is free to watch or the user is subscribed
     if not video.is_premium or request.user.profile.has_active_subscription():
@@ -87,7 +88,7 @@ def get_playback_token(request, video_id):
 @login_required
 def get_video_data(request, video_id):
     """
-    Handles GET requests for Mux video assets.
+    Handles GET requests for details of Mux video assets.
 
     Params:
     	request - A dictionary object representing the frontend request.
@@ -112,6 +113,9 @@ def get_video_data(request, video_id):
     else:
         logger.info(f"Unauthorized request for video {video_id}.")
         return HttpResponseForbidden("You do not have permission to view this video.")
+
+
+
 
 
 @login_required
@@ -284,7 +288,7 @@ class VideoUploadView(APIView):
 
     def post(self, request):
         """
-        Handles calls for MUX direct uploads and stores metatata.
+        Handles calls for MUX direct uploads and stores metadata.
 
         Params:
         	self - An instance of the current class-based view.
@@ -299,7 +303,7 @@ class VideoUploadView(APIView):
 
         serializer_output = VideoUploadSerializer(data=request.data)
         if serializer_output.is_valid():
-            data = serializer_output.valided_data
+            data = serializer_output.validated_data
 
             # Create the video inside our Django model - 'Video'
             video = Video.objects.create(
