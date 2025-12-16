@@ -115,7 +115,18 @@ def get_video_data(request, video_id):
         return HttpResponseForbidden("You do not have permission to view this video.")
 
 
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def get_featured_videos(request):
+    """
+    Returns a limited list of the newest ready videos for the authenticated user.
 
+    Params:
+    	request - The HTTP request containing the optional query parameter 'limit'.
+
+    Return:
+    	A DRF Response object containing serialized video data.
+    """
 
 
 @login_required
