@@ -128,6 +128,18 @@ def get_featured_videos(request):
     	A DRF Response object containing serialized video data.
     """
 
+    try:
+        limit = int(request.query_params.get('limit', 20))
+    except (TypeError, ValueError):
+        limit = 20
+
+    # Keep limits sane and non-negative to avoid unexpected query slices.
+    limit = max(1, min(limit, 50))
+
+    videos = Video.objects.filter(status='ready').order_by('-create_at')[:limit]
+    serializer = VideoSerializer(videos, many=True)
+    return Response(serializer.data)
+
 
 @login_required
 def get_pricing_page_identifiers(request):
