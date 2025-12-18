@@ -45,3 +45,6 @@ class Playlist(models.Model):
         """
         return "'{}' by {}".format(self.name,
                                    self.owner.username)
+
+    class Meta:
+        ordering = ['-created_at']
