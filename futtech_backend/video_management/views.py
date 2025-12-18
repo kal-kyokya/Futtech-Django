@@ -32,12 +32,14 @@ from rest_framework import status
 
 from mux_python.rest import ApiException
 
-from playlists.serializers import VideoSerializer
-
 from . import services
 from .logs import logger
 from .models import Video, PlaybackHistory
-from .serializers import VideoUploadSerializer, PlaybackHistorySerializer
+from .serializers import (
+    VideoSerializer,
+    VideoUploadSerializer,
+    PlaybackHistorySerializer,
+)
 
 
 import stripe # Was pip installed with 'djstripe'
