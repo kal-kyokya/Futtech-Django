@@ -138,7 +138,7 @@ def get_featured_videos(request):
     # Keep limits sane and non-negative to avoid unexpected query slices.
     limit = max(1, min(limit, 50))
 
-    videos = Video.objects.filter(status='ready').order_by('-create_at')[:limit]
+    videos = Video.objects.filter(status='ready').order_by('-created_at')[:limit]
     serializer = VideoSerializer(videos, many=True)
     return Response(serializer.data)
 
