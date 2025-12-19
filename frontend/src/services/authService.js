@@ -28,10 +28,10 @@ class AuthService {
 	    const response = await apiClient.post('/auth/register/', userData);
 	    const { message, access, user } = response.data;
 
-	    // Store the access token in memory
+	    // Stores the access token in memory
 	    tokenService.setAccessToken(access);
 
-	    // Fetch initial content
+	    // Fetches initial content
 	    const playlistsPromise = this.fetchInitialContent();
 
 	    return {
@@ -60,16 +60,16 @@ class AuthService {
 	    const response = await apiClient.post('/auth/login/', credentials);
 	    const { message, access, user } = response.data;
 
-	    // Store the access token in memory
+	    // Stores the access token in memory
 	    tokenService.setAccessToken(access);
 
-	    // Immediately fetch initial content (playlists)
+	    // Immediately fetches the initial content (playlists)
 	    const playlistsPromise = this.fetchInitialContent();
 	    return {
 		user,
 		message,
 		success: true,
-		playlistsPromise, // Return promise for component to handle
+		playlistsPromise, // Returns a promise for component to handle
 	    };
 
 	} catch (error) {
@@ -88,7 +88,7 @@ class AuthService {
 	} catch (error) {
 	    console.error('Logout error:', error);
 	} finally {
-	    // Always clear tokens locally
+	    // Always clears tokens locally
 	    tokenService.clearAccessToken();
 	    window.location.href = '/login';
 	}

@@ -1,7 +1,11 @@
 import './app.scss';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { useContext } from 'react';
-import { UserContext } from './contexts/userContext/UserContext';
+import {
+    BrowserRouter as Router,
+    Routes,
+    Route,
+    Navigate } from 'react-router-dom';
+import AuthService from './services/authService';
+
 import About from './pages/about/About';
 import Register from './pages/register/Register';
 import Login from './pages/login/Login';
@@ -17,62 +21,61 @@ import VideoList from './pages/videoList/VideoList';
 
 
 const App = () => {
-    const { user } = useContext(UserContext);
 
     return (
 	<Router>
 	    <Routes>
 		<Route path='/register' element={
-			   user && user.accessToken ?
+			   AuthService.isAuthenticated() ?
 			       <Home /> : <Register />
 		       } />
 		<Route path='/login' element={
-			   user && user.accessToken ?
+			   AuthService.isAuthenticated() ?
 			       <Home /> : <Login />
 		       } />
 		<Route path='/' element={
-			   user && user.accessToken ?
+			   AuthService.isAuthenticated() ?
 			       <Home /> : <Register />
 		       } />
 		<Route path='/about' element={<About />} />
 		<Route path='/videos' element={
-			   user && user.accessToken ?
+			   AuthService.isAuthenticated() ?
 			       <Home category='video'/> : <Navigate to='/' />
 		       } />
 		<Route path='/ai-analysis' element={
-			   user && user.accessToken ?
+			   AuthService.isAuthenticated() ?
 			       <Home category='analysis'/> : <Navigate to='/' />
 		       } />
 		<Route path='/watch' element={
-			   user && user.accessToken ?
+			   AuthService.isAuthenticated() ?
 			       <Watch /> : <Navigate to='/' />
 		       } />
 		<Route path='/pricing-page' element={
-			   user && user.accessToken ?
+			   AuthService.isAuthenticated() ?
 			       <Pricing /> : <Navigate to='/' />
 		       } />
 		<Route path='/profile' element={
-			   user && user.accessToken ?
+			   AuthService.isAuthenticated() ?
 			       <User /> : <Navigate to='/' />
 		       } />
 		<Route path='/new-video' element={
-			   user && user.accessToken ?
+			   AuthService.isAuthenticated() ?
 			       <NewVideo /> : <Navigate to='/' />
 		       } />
 		<Route path='/new-list' element={
-			   user && user.accessToken ?
+			   AuthService.isAuthenticated() ?
 			       <NewList /> : <Navigate to='/' />
 		       } />
 		<Route path='/video-list' element={
-			   user && user.accessToken ?
+			   AuthService.isAuthenticated() ?
 			       <VideoList /> : <Navigate to='/' />
 		       } />
 		<Route path='/video/:id' element={
-			   user && user.accessToken ?
+			   AuthService.isAuthenticated() ?
 			       <Video /> : <Navigate to='/' />
 		       } />
 		<Route path='/lists' element={
-			   user && user.accessToken ?
+			   AuthService.isAuthenticated() ?
 			       <Lists /> : <Navigate to='/' />
 		       } />
 		<Route path='*' element={ <Navigate to='/' />} />
