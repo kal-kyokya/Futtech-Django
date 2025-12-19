@@ -52,7 +52,7 @@ class PlaylistViewSet(viewsets.ModelViewSet):
         	A paginated list of playlists with their related videos.
         """
 
-        # Apply any filter (e.g., search, custom filters, permissions)
+        # Applies any filter (e.g., search, custom filters, permissions)
         queryset = self.filter_queryset(self.get_queryset())
 
         # Slices the queryset according to the custom pagination rules
