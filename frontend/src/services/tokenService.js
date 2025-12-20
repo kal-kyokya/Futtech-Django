@@ -33,7 +33,7 @@ class TokenService {
     }
 
     /**
-     * Handles WRITE operations on the Access token (in-memory only).
+     * Handles WRITE operations on the access token (in-memory only).
      *
      * @param {String} token - The backend-generated access token.
      */
@@ -53,7 +53,7 @@ class TokenService {
     }
 
     /**
-     * Handles READ operations on the Access token.
+     * Handles READ operations on the access token.
      *
      * @returns {String} the access token tied to this class instanciation.
      */
@@ -67,12 +67,12 @@ class TokenService {
     }
 
     /**
-     * Checks if the Access token exists.
+     * Checks if the access token exists.
      *
      * @returns {Boolean} true if it exists or converts 'null' values to false.
      */
     hasTokens() {
-	return !!(this.accessToken);
+	return !!(this.getAccessToken());
     }
 
     /**
@@ -93,9 +93,14 @@ class TokenService {
 	return storedToken;
     }
 
-    // Clears the Access token (logout)
+    // Clears the access token (logout)
     clearAccessToken() {
 	this.accessToken = null;
+
+	const storage = this.getStorage();
+	if (storage) {
+	    storage.removeItem(this.storageKey);
+	}
     }
 }
 
