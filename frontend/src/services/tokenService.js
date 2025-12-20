@@ -16,6 +16,20 @@ class TokenService {
     // Creates an instance of the TokenService class.
     constructor() {
 	this.accessToken = null; // Keep in memory for security
+	this.storageKey = 'futtech_access_token';
+    }
+
+    /**
+     * Avails the browser's local storage for client-side manipulations.
+     *
+     * @returns {Object} localStorage - Malleable object representation.
+     */
+    getStorage() {
+	if (typeof window === 'undefined') {
+	    return null;
+	}
+
+	return window.localStorage;
     }
 
     /**
@@ -25,6 +39,17 @@ class TokenService {
      */
     setAccessToken(token) {
 	this.accessToken = token;
+
+	const storage = this.getStorage();
+	if (!storage) {
+	    return;
+	}
+
+	if (token) {
+	    storage.setItem(this.storageKey, token);
+	} else {
+	    storage.removeItem(this.storageKey);
+	}
     }
 
     /**
