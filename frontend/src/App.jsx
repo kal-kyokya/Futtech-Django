@@ -1,10 +1,12 @@
 import './app.scss';
+import { useEffect, useState } from 'react';
 import {
     BrowserRouter as Router,
     Routes,
     Route,
     Navigate } from 'react-router-dom';
 import AuthService from './services/authService';
+import PrivateRoute from './components/privateRoute/PrivateRoute';
 
 import About from './pages/about/About';
 import Register from './pages/register/Register';
@@ -21,64 +23,94 @@ import VideoList from './pages/videoList/VideoList';
 
 
 const App = () => {
+    const [authReady, setAuthReady] = useState(false);
+
+    useEffect(() => {
+	AuthService.rehydrate(); // Query localStorage ; Single Source of Truth
+	setAuthReady(true);
+    }, []);
+
+    const renderPublic = (component) => {
+	if (!authReady) {
+	    return <div className='auth-loading'>
+		       Loading...
+		   </div>;
+	}
+
+	return AuthService.isAuthenticated() ? <Home /> : component;
+    };
 
     return (
 	<Router>
 	    <Routes>
 		<Route path='/register' element={
-			   AuthService.isAuthenticated() ?
-			       <Home /> : <Register />
+			   renderPublic(<Register />)
 		       } />
 		<Route path='/login' element={
-			   AuthService.isAuthenticated() ?
-			       <Home /> : <Login />
+			   renderPublic(<Login />)
 		       } />
 		<Route path='/' element={
-			   AuthService.isAuthenticated() ?
-			       <Home /> : <Register />
+			   <PrivateRoute isReady={authReady}>
+			       <Home />
+			   </PrivateRoute>
 		       } />
 		<Route path='/about' element={<About />} />
 		<Route path='/videos' element={
-			   AuthService.isAuthenticated() ?
-			       <Home category='video'/> : <Navigate to='/' />
+			   <PrivateRoute isReady={authReady}>
+			       <Home category='video'/>
+			   </PrivateRoute>
 		       } />
 		<Route path='/ai-analysis' element={
-			   AuthService.isAuthenticated() ?
-			       <Home category='analysis'/> : <Navigate to='/' />
+			   <PrivateRoute isReady={authReady}>
+			       <Home category='analysis'/>
+			   </PrivateRoute>
 		       } />
 		<Route path='/watch' element={
-			   AuthService.isAuthenticated() ?
-			       <Watch /> : <Navigate to='/' />
+			   <PrivateRoute isReady={authReady}>
+			       <Watch />
+			   </PrivateRoute>
 		       } />
 		<Route path='/pricing-page' element={
-			   AuthService.isAuthenticated() ?
-			       <Pricing /> : <Navigate to='/' />
+			   <PrivateRoute isReady={authReady}>
+			       <Pricing />
+			   </PrivateRoute>
 		       } />
 		<Route path='/profile' element={
-			   AuthService.isAuthenticated() ?
-			       <User /> : <Navigate to='/' />
+			   <PrivateRoute isReady={authReady}>
+			       <User />
+			   </PrivateRoute>
+		       } />
+		<Route path='/user' element={
+			   <PrivateRoute isReady={authReady}>
+			       <User />
+			   </PrivateRoute>
 		       } />
 		<Route path='/new-video' element={
-			   AuthService.isAuthenticated() ?
-			       <NewVideo /> : <Navigate to='/' />
+			   <PrivateRoute isReady={authReady}>
+			       <NewVideo />
+			   </PrivateRoute>
 		       } />
 		<Route path='/new-list' element={
-			   AuthService.isAuthenticated() ?
-			       <NewList /> : <Navigate to='/' />
+			   <PrivateRoute isReady={authReady}>
+			       <NewList />
+			   </PrivateRoute>
 		       } />
 		<Route path='/video-list' element={
-			   AuthService.isAuthenticated() ?
-			       <VideoList /> : <Navigate to='/' />
+			   <PrivateRoute isReady={authReady}>
+			       <VideoList />
+			   </PrivateRoute>
 		       } />
 		<Route path='/video/:id' element={
-			   AuthService.isAuthenticated() ?
-			       <Video /> : <Navigate to='/' />
+			   <PrivateRoute isReady={authReady}>
+			       <Video />
+			   </PrivateRoute>
 		       } />
 		<Route path='/lists' element={
-			   AuthService.isAuthenticated() ?
-			       <Lists /> : <Navigate to='/' />
+			   <PrivateRoute isReady={authReady}>
+			       <Lists />
+			   </PrivateRoute>
 		       } />
-		<Route path='*' element={ <Navigate to='/' />} />
+		<Route path='*' element={ <Navigate to='/' replace />} />
 	    </Routes>
 	</Router>
 
