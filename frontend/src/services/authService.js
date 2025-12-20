@@ -132,6 +132,11 @@ class AuthService {
 	return tokenService.hasTokens();
     }
 
+    // Rehydrates tokens from storage (window.localStorage)
+    rehydrate() {
+	return tokenService.rehydrate();
+    }
+
 }
 
 export default new AuthService();
