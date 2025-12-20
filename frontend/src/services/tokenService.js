@@ -55,9 +55,14 @@ class TokenService {
     /**
      * Handles READ operations on the Access token.
      *
-     * @returns {String} the Access token tied to this class instanciation.
+     * @returns {String} the access token tied to this class instanciation.
      */
     getAccessToken() {
+	if (this.accessToken) {
+	    return this.accessToken;
+	}
+
+	this.rehydrate();
 	return this.accessToken;
     }
 
@@ -68,6 +73,24 @@ class TokenService {
      */
     hasTokens() {
 	return !!(this.accessToken);
+    }
+
+    /**
+     * Verifies the existence of a token in 'localStorage'
+     * and rewrites the in-memory 'accessToken' variable.
+     *
+     * @returns {String} the access token's value as per localStorage.
+     */
+    rehydrate() {
+	const storage = this.getStorage();
+	if (!storage) {
+	    return null;
+	}
+
+	const storedToken = storage.getItem(this.storageKey);
+	this.accessToken = storedToken;
+
+	return storedToken;
     }
 
     // Clears the Access token (logout)
