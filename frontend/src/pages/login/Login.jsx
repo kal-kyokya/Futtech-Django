@@ -80,7 +80,7 @@ const Login = () => {
 		listDispatch(getListsSuccess([]));
 	    }
 
-	    navigate('/user', { replace: true });
+	    navigate('/', { replace: true });
 	} catch (error) {
 	    console.error('Login failed: ', error);
 	    dispatch(loginFailure({ error: error.message }));
