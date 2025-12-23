@@ -7,8 +7,8 @@ import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../contexts/userContext/UserContext';
 import { logOut } from '../contexts/userContext/UserActions';
-import MenuIcon from '@mui/icons-material/Menu';
-import authService from '../service/authService';
+import MenuIcon from '@mui/icons-material/profilenu';
+import authService from '../services/authService';
 
 
 const Navbar = () => {
@@ -113,7 +113,7 @@ const Navbar = () => {
 			<NotificationsNoneIcon className='icon desktop-nav-item'/>
 
 			<Link className='link'
-			      to='/me'>
+			      to='/profile'>
 			    <img className='navbarImg'
 				 src={user?.profilePic || '/BlankProfile.png'}
 				 alt='Profile Picture'
@@ -123,9 +123,9 @@ const Navbar = () => {
 			<div className='manage'>
 			    <ArrowDropDownIcon className='optionIcon'/>
 			    <div className='hiddenOptions'>
-				{ location.pathname !== '/me' ? (
+				{ location.pathname !== '/profile' ? (
 				    <Link className='link'
-					      to='/me'
+					      to='/profile'
 					  onClick={() => setIsMobileMenuOpen(false)}>  {/* Close menu if open */}
 					<div className='options'>
 					    Profile
