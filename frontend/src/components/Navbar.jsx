@@ -8,6 +8,7 @@ import { useContext } from 'react';
 import { UserContext } from '../contexts/userContext/UserContext';
 import { logOut } from '../contexts/userContext/UserActions';
 import MenuIcon from '@mui/icons-material/Menu';
+import authService from '../service/authService';
 
 
 const Navbar = () => {
@@ -38,7 +39,8 @@ const Navbar = () => {
 	};
     }, []);
 
-    const handleLogOut = () => {
+    const handleLogOut = async () => {
+	await authService.logout();
 	localStorage.setItem('videos', JSON.stringify([]));
 	dispatch(logOut());
 	setIsMobileMenuOpen(false); // Close Mobile menu on logout

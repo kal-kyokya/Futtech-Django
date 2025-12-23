@@ -2,9 +2,9 @@ import { createContext, useReducer, useEffect } from 'react';
 import UserReducer from './UserReducer';
 
 const INITIAL_STATE = {
-    user: JSON.parse(localStorage.getItem('user')) || null,
     isFetching: false,
     error: false,
+    user: JSON.parse(localStorage.getItem('user')) || null,
     loggedOut: false
 };
 
