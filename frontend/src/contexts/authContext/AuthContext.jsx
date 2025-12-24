@@ -9,6 +9,7 @@ const INITIAL_STATE = {
     user: hasAccessToken ? storedUser : null,
     isFetching: false,
     error: null,
+    user: hasAccessToken ? storedUser : null,
     loggedOut: false,
 };
 
