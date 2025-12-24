@@ -1,8 +1,12 @@
 import { createContext, useReducer, useEffect } from 'react';
 import AuthReducer from './AuthReducer';
+import tokenService from '../../services/tokenService';
+
+const storedUser = JSON.parse(localStorage.getItem('user'));
+const hasAccessToken = tokenService.hasTokens();
 
 const INITIAL_STATE = {
-    user: JSON.parse(localStorage.getItem('user')) || null,
+    user: hasAccessToken ? storedUser : null,
     isFetching: false,
     error: null,
     loggedOut: false,
@@ -15,6 +19,12 @@ export const AuthContextProvider = ({ children }) => {
 
     useEffect(() => {
 	localStorage.setItem('user', JSON.stringify(state.user));
+    }, [state.user]);
+
+    useEffect(() => {
+	if (!tokenService.hasTokens() && state.user) {
+	    dispatch({ type: 'LOGOUT' });
+	}
     }, [state.user]);
 
     return (
