@@ -5,7 +5,6 @@
  */
 
 import apiClient from './apiClient';
-import tokenService from './tokenService';
 
 
 /**
@@ -82,15 +81,15 @@ class AuthService {
 
     // Handles the log out workflow
     async logout() {
-
 	try {
-	    await apiClient.post('/auth/logout/');
+	    await apiClient.post('/auth/logout/', {});
+	    return { success: true };
 	} catch (error) {
 	    console.error('Logout error:', error);
-	} finally {
-	    // Always clears tokens locally
-	    tokenService.clearAccessToken();
-	    window.location.href = '/login';
+	    return {
+		success: false,
+		error: error.response?.data?.detail || 'Logout failed',
+	    };
 	}
     }
 
