@@ -27,7 +27,7 @@ const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
 
-    const { dispatch,
+    const { dispatch: authDispatch,
 	    isFetching,
 	    loggedOut,
 	    error: loginError } = useContext(AuthContext);
@@ -41,7 +41,7 @@ const Login = () => {
     const handleSignIn = async (e) => {
 	e.preventDefault(); // Prevents form reload and allows data submission
 
-	dispatch(loginStart());
+	authDispatch(loginStart());
 	userDispatch(updateStart());
 	videoDispatch(getVideosStart());
 	listDispatch(getListsStart());
@@ -53,8 +53,8 @@ const Login = () => {
 		throw new Error(result.error || 'Login failed');
 	    }
 
-	    dispatch(loginSuccess(result.user));
-	    dispatch(updateSuccess(result.user));
+	    authDispatch(loginSuccess(result.user));
+	    userDispatch(updateSuccess(result.user));
 
 	    if (result.playlistsPromise) {
 		try {
