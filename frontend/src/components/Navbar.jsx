@@ -18,13 +18,6 @@ const Navbar = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    /*
-      window.onscroll = () => {
-      	setIsScrolled(window.pageYOffset === 0 ? false : true);
-      	return () => (window.onscroll = null);
-      };
-    */
-
     // Using useEffect for window.onscroll to prevent
     // potential memory leaks and ensure cleanup
     useEffect(() => {
