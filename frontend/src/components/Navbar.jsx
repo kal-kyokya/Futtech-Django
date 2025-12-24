@@ -6,15 +6,19 @@ import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useContext } from 'react';
 import { UserContext } from '../contexts/userContext/UserContext';
-import { logOut } from '../contexts/userContext/UserActions';
+import { AuthContext } from '../contexts/authContext/AuthContext';
+import { logOut as userLogOut } from '../contexts/userContext/UserActions';
+import { logOut as authLogOut } from '../contexts/authContext/AuthActions';
 import MenuIcon from '@mui/icons-material/profilenu';
 import authService from '../services/authService';
+import tokenService from '../services/tokenService';
 
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { user, dispatch } = useContext(UserContext);
+    const { user, dispatch: userDispatch } = useContext(UserContext);
+    const { dispatch: authDispatch } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
 
@@ -33,10 +37,17 @@ const Navbar = () => {
     }, []);
 
     const handleLogOut = async () => {
-	await authService.logout();
+	const result = await authService.logout();
+	if (!result.success) {
+	    console.warn(result.error);
+	}
+
+	tokenService.clearAccessToken();
 	localStorage.setItem('videos', JSON.stringify([]));
-	dispatch(logOut());
+	userDispatch(userLogOut());
+	authDispatch(authLogOut());
 	setIsMobileMenuOpen(false); // Close Mobile menu on logout
+	navigate('/login', { replace: true });
     };
 
     const toggleMobileMenu = () => {
