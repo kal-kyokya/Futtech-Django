@@ -6,7 +6,6 @@ const storedUser = JSON.parse(localStorage.getItem('user'));
 const hasAccessToken = tokenService.hasTokens();
 
 const INITIAL_STATE = {
-    user: hasAccessToken ? storedUser : null,
     isFetching: false,
     error: null,
     user: hasAccessToken ? storedUser : null,

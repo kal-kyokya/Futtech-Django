@@ -9,7 +9,7 @@ import { UserContext } from '../contexts/userContext/UserContext';
 import { AuthContext } from '../contexts/authContext/AuthContext';
 import { logOut as userLogOut } from '../contexts/userContext/UserActions';
 import { logOut as authLogOut } from '../contexts/authContext/AuthActions';
-import MenuIcon from '@mui/icons-material/profilenu';
+import MenuIcon from '@mui/icons-material/Menu';
 import authService from '../services/authService';
 import tokenService from '../services/tokenService';
 
