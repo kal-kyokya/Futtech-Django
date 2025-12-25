@@ -9,6 +9,8 @@ from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
 
+from django.conf import settings
+
 from .serializers import (
     UserRegistrationSerializer,
     UserLoginSerializer,
@@ -16,10 +18,27 @@ from .serializers import (
 )
 
 from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
 )
+
+
+def _refresh_cookie_options():
+    """
+    Bundles, inside a d dictionary, data to be attached to the refresh token
+    once it gets set as an HttpOnly cookie.
+    """
+    cookie_domain = getattr(settings, 'DOMAIN_NAME', None)
+    return {
+        'domain': cookie_domain or None,
+        'httponly': True,
+        'secure': True,
+        'samesite': 'Lax',
+        'max_age': 7 * 24 * 60 * 60, # Matches 'REFRESH_TOKEN_LIFETIME' in settings
+        'path': '/api/v2/auth/', # Limits cookie path to the auth endpoints
+    }
 
 
 class UserRegistrationView(generics.CreateAPIView):
@@ -78,11 +97,7 @@ class UserRegistrationView(generics.CreateAPIView):
         response.set_cookie(
             key='refresh_token',
             value=str(refresh),
-            httponly=True,
-            secure=True,
-            samesite='Lax',
-            max_age=7*24*60*60, # Matches 'REFRESH_TOKEN_LIFETIME' in settings
-            path='/api/v2/auth/' # Limits cookie path to the auth endpoints
+            **_refresh_cookie_options()
         )
 
         return response
@@ -131,11 +146,7 @@ class ObtainTokenCookieView(APIView):
         response.set_cookie(
             key='refresh_token',
             value=str(refresh),
-            httponly=True,
-            secure=True,
-            samesite='Lax',
-            max_age=7*24*60*60,  # Matches 'REFRESH_TOKEN_LIFETIME' in settings
-            path='/api/v2/auth/' # Limits cookie path to the auth endpoints
+            **_refresh_cookie_options()
         )
 
         return response
@@ -176,10 +187,7 @@ class RefreshTokenCookieView(TokenRefreshView):
             response.set_cookie(
                 key='refresh_token',
                 value=str(refresh),
-                httponly=True,
-                samesite='lax',
-                max_age=7*24*60*60,
-                path='/api/v2/auth/'
+                **_refresh_cookie_options()
             )
 
         return response
@@ -194,7 +202,7 @@ class LogoutView(APIView):
     		  from the 'Base of all views in Django REST Framework'.
     """
 
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (AllowAny,)
 
     def post(self, request):
         """
@@ -206,28 +214,44 @@ class LogoutView(APIView):
         """
 
         # If refresh is stored as a cookie, we can read and blacklist it:
-        refresh = request.COOKIES.get('refresh_token')
+        refresh = request.data.get('refresh') or request.COOKIES.get('refresh_token')
+        cookie_domain = getattr(settings, 'DOMAIN_NAME', None) or None
 
-        if refresh:
-            try:
-                token = RefreshToken(refresh)
+        if not refresh:
+            response = Response(
+                {'detail': 'Refresh token is required to log out.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+            response.delete_cookie(
+                'refresh_token',
+                path='api/v2/auth/',
+                domain=cookie_domain,
+            )
+            return response
 
-                # Blacklisting invalidates the refresh token server-side
-                # So as to ensure it cannot be reused
-                token.blacklist()
-            except Exception as err:
-                print(err)
+        try:
+            token = RefreshToken(refresh)
 
-        response = Response(
-            {
-                'message': 'Logged out'
-            },
-            status=status.HTTP_200_OK,
-        )
+            # Blacklisting invalidates the refresh token server-side
+            # So as to ensure it cannot be reused
+            token.blacklist()
+        except TokenError:
+            response = Response(
+                {'detail': 'Refresh token is invalid or expired.'},
+                status=status.HTTP_400_BAD_REQUEST,
+            )
+            response.delete_cookie(
+                'refresh_token',
+                path='api/v2/auth/',
+                domain=cookie_domain,
+            )
+            return response
 
+        response = Response(status=status.HTTP_204_NO_CONTENT)
         response.delete_cookie(
             'refresh_token',
             path='/api/v2/auth/',
+            domain=cookie_domain,
         )
 
         return response
