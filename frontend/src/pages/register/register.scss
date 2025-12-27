@@ -127,6 +127,14 @@
 	bottom: 1rem;
 	color: #05F283;
     }
+
+    .fieldError {
+	color: #F05353;
+	font-size: 0.85rem;
+	margin-top: -0.25rem;
+	margin-bottom: 0.5rem;
+    }
+
 }
 
 @media (min-width: 768px) {
