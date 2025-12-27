@@ -1,5 +1,5 @@
 import './login.scss';
-import { useState, useContext } from 'react';
+import { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../../contexts/authContext/AuthContext';
 import { UserContext } from '../../contexts/userContext/UserContext';
@@ -8,7 +8,8 @@ import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import {
     loginStart,
     loginSuccess,
-    loginFailure } from '../../contexts/authContext/AuthActions';
+    loginFailure,
+    clearAuthError } from '../../contexts/authContext/AuthActions';
 import {
     updateStart,
     updateSuccess,
@@ -22,6 +23,7 @@ import {
     getListsSuccess,
     getListsFailure } from '../../contexts/listContext/ListActions';
 import authService from '../../services/authService';
+import { normalizeError } from '../../services/apiClient';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -37,6 +39,11 @@ const Login = () => {
     const { dispatch: userDispatch } = useContext(UserContext);
 
     const navigate = useNavigate();
+    const fieldErrors = loginError?.fields || {};
+
+    useEffect(() => (
+	() => authDispatch(clearAuthError())
+    ), [authDispatch]);
 
     const handleSignIn = async (e) => {
 	e.preventDefault(); // Prevents form reload and allows data submission
@@ -50,7 +57,12 @@ const Login = () => {
 	    const result = await authService.login({ email, password });
 
 	    if (!result.success) {
-		throw new Error(result.error || 'Login failed');
+		const normalizedError = result.error || normalizeError(new Error('Login failed'));
+		authDispatch(loginFailure(normalizedError));
+		userDispatch(updateFailure(normalizedError));
+		videoDispatch(getVideosFailure());
+		listDispatch(getListsFailure());
+		return;
 	    }
 
 	    authDispatch(loginSuccess(result.user));
@@ -82,9 +94,10 @@ const Login = () => {
 
 	    navigate('/', { replace: true });
 	} catch (error) {
-	    console.error('Login failed: ', error);
-	    dispatch(loginFailure({ error: error.message }));
-	    userDispatch(updateFailure({ error: error.message }));
+	    const normalizedError = error?.normalized || normalizeError(error);
+	    console.error('Login failed: ', normalizedError);
+	    authDispatch(loginFailure(normalizedError));
+	    userDispatch(updateFailure(normalizedError));
 	    videoDispatch(getVideosFailure());
 	    listDispatch(getListsFailure());
 	}
@@ -107,19 +120,29 @@ const Login = () => {
 			   placeholder='Email address'
 			   onChange={(e) => setEmail(e.target.value)}
 		    />
+		    {fieldErrors.email && (
+			<div className='fieldError'>
+			    {fieldErrors.email}
+			</div>
+		    )}
 		    <input type='password'
 			   placeholder='Password'
 			   autoComplete='Password'
 			   onChange={(e) => setPassword(e.target.value)}
 		    />
+		    {fieldErrors.password && (
+			<div className='fieldError'>
+			    {fieldErrors.password}
+			</div>
+		    )}
 
 		    <button onClick={handleSignIn} disabled={isFetching}>
 			Sign In
 		    </button>
 
-		    {loginError && (
+		    {loginError?.message && (
 			<div className='userPrompt'>
-			    {loginError.error}.
+			    {loginError.message}
 			</div>
 		    )}
 
