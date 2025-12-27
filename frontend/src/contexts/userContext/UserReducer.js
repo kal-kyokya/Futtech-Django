@@ -34,6 +34,12 @@ const UserReducer = (state, action) => {
 	    loggedOut: false,
 	};
 
+      case  'CLEAR_USER_ERROR':
+	return {
+	    ...state,
+	    error: null,
+	}
+
       case 'UPDATE_START':
 	return {
 	    ...state,
