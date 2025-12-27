@@ -1,12 +1,13 @@
 import './register.scss';
 import { Link, useNavigate } from 'react-router-dom';
-import apiClient from '../../services/apiClient';
-import { useState, useRef, useContext } from 'react';
+import apiClient, { normalizeError } from '../../services/apiClient';
+import { useState, useRef, useContext, useEffect } from 'react';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import {
     registrationStart,
     registrationSuccess,
-    registrationFailure } from '../../contexts/userContext/UserActions';
+    registrationFailure,
+    clearUserError } from '../../contexts/userContext/UserActions';
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -19,6 +20,11 @@ const Register = () => {
 
     const navigate = useNavigate();
     const emailRef = useRef(null);
+    const fieldErrors = registrationError?.fields || {};
+
+    useEffect(() => (
+	() => dispatch(clearUserError())
+    ), [dispatch]);
 
     const handleEmail = () => {
 	const emailRegEx = /^[a-zA-Z0-9_.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
@@ -29,9 +35,9 @@ const Register = () => {
 
 	if (emailRegEx.test(emailRef.current.value)) {
 	    setEmail(emailRef.current.value);
-	    dispatch(registrationFailure(null));
+	    dispatch(clearUserError());
 	} else {
-	    dispatch(registrationFailure({ error: 'Invalid Email' }));
+	    dispatch(registrationFailure({ message: 'Invalid Email' }));
 	}
     };
 
@@ -40,15 +46,20 @@ const Register = () => {
 	dispatch(registrationStart());
 
 	if (!email || !username || !password || !passwordConfirm) {
-	    const message = !username
-		  ? 'Username required'
-		  : 'Password required';
-	    dispatch(registrationFailure({ error: message }));
+	    const message = !email
+		  ? 'Email required.'
+		  : !username
+		  ? 'Username required.'
+		  : 'Password required.';
+	    dispatch(registrationFailure({ message }));
 	    return;
 	}
 
 	if (password !== passwordConfirm) {
-	    dispatch(registrationFailure({ error: 'Passwords do not match' }));
+	    dispatch(registrationFailure({
+		message: 'Passwords do not match.',
+		fields: { passwordConfirm: 'Passwords do not match.' },
+	    }));
 	    return;
 	}
 
@@ -61,8 +72,8 @@ const Register = () => {
 	    dispatch(registrationSuccess(response.data));
 	    navigate('/login');
 	} catch (error) {
-	    const errorMessage = error.response?.data || { error: 'Registration failed' };
-	    dispatch(registrationFailure(errorMessage));
+	    const normalizedError = error?.normalized || normalizeError(error);
+	    dispatch(registrationFailure(normalizedError));
 	}
     };
 
@@ -93,9 +104,9 @@ const Register = () => {
 		</h2>
 		<h4>Ready to watch? Enter your details to create or restart your membership.</h4>
 
-		{ registrationError && registrationError?.error && (
+		{ registrationError?.message && (
 		    <div className='userPrompt'>
-			{registrationError.error}.
+			{registrationError.message}.
 		    </div>
 		)}
 
@@ -106,11 +117,21 @@ const Register = () => {
 			       onChange={(e) => setPassword(e.target.value)}
 			       required
 			/>
+			{fieldErrors.password && (
+			    <div className='fieldError'>
+				{fieldErrors.password}
+			    </div>
+			)}
 			<input type='password'
 			       placeholder='Confirm password'
 			       onChange={(e) => setPasswordConfirm(e.target.value)}
 			       required
 			/>
+			{fieldErrors.passwordConfirm && (
+			    <div className='fieldError'>
+				{fieldErrors.passwordConfirm}
+			    </div>
+			)}
 
 			<button className='finish'
 				type='submit'
@@ -129,11 +150,21 @@ const Register = () => {
 			       ref={emailRef}
 			       required
 			/>
+			{fieldErrors.email && (
+			    <div className='fieldError'>
+				{fieldErrors.email}
+			    </div>
+			)}
 			<input type='text'
 			       placeholder='Username'
 			       onChange={(e) => setUsername(e.target.value)}
 			       required
 			/>
+			{fieldErrors.username && (
+			    <div className='fieldError'>
+				{fieldErrors.username}
+			    </div>
+			)}
 
 			<button className='getStarted'
 				type='button'
