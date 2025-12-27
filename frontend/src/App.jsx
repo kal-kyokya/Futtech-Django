@@ -1,12 +1,15 @@
 import './app.scss';
 import { useEffect, useState } from 'react';
 import {
-    BrowserRouter as Router,
-    Routes,
+    createBrowserRouter,
+    createRoutesFromElements,
+    RouterProvider,
     Route,
-    Navigate } from 'react-router-dom';
+    Navigate,
+    Outlet } from 'react-router-dom';
 import AuthService from './services/authService';
 import PrivateRoute from './components/privateRoute/PrivateRoute';
+import RouteError from './components/routeError/RouteError';
 
 import About from './pages/about/About';
 import Register from './pages/register/Register';
@@ -40,80 +43,92 @@ const App = () => {
 	return AuthService.isAuthenticated() ? <Home /> : component;
     };
 
-    return (
-	<Router>
-	    <Routes>
-		<Route path='/register' element={
+    const RootLayout = () => (
+	<div className='app-shell'>
+	    <Outlet />
+	</div>
+    );
+
+    const router = createBrowserRouter(
+	createRoutesFromElements(
+	    <Route path='/'
+		   element={<RootLayout />}
+		   errorElement={<RouteError />}
+	    >
+		<Route path='register' element={
 			   renderPublic(<Register />)
 		       } />
-		<Route path='/login' element={
+		<Route path='login' element={
 			   renderPublic(<Login />)
 		       } />
-		<Route path='/' element={
+		<Route index element={
 			   <PrivateRoute isReady={authReady}>
 			       <Home />
 			   </PrivateRoute>
 		       } />
-		<Route path='/about' element={<About />} />
-		<Route path='/videos' element={
+		<Route path='about' element={<About />} />
+		<Route path='videos' element={
 			   <PrivateRoute isReady={authReady}>
 			       <Home category='video'/>
 			   </PrivateRoute>
 		       } />
-		<Route path='/ai-analysis' element={
+		<Route path='ai-analysis' element={
 			   <PrivateRoute isReady={authReady}>
 			       <Home category='analysis'/>
 			   </PrivateRoute>
 		       } />
-		<Route path='/watch' element={
+		<Route path='watch' element={
 			   <PrivateRoute isReady={authReady}>
 			       <Watch />
 			   </PrivateRoute>
 		       } />
-		<Route path='/pricing-page' element={
+		<Route path='pricing-page' element={
 			   <PrivateRoute isReady={authReady}>
 			       <Pricing />
 			   </PrivateRoute>
 		       } />
-		<Route path='/profile' element={
+		<Route path='profile' element={
 			   <PrivateRoute isReady={authReady}>
 			       <User />
 			   </PrivateRoute>
 		       } />
-		<Route path='/user' element={
+		<Route path='user' element={
 			   <PrivateRoute isReady={authReady}>
 			       <User />
 			   </PrivateRoute>
 		       } />
-		<Route path='/new-video' element={
+		<Route path='new-video' element={
 			   <PrivateRoute isReady={authReady}>
 			       <NewVideo />
 			   </PrivateRoute>
 		       } />
-		<Route path='/new-list' element={
+		<Route path='new-list' element={
 			   <PrivateRoute isReady={authReady}>
 			       <NewList />
 			   </PrivateRoute>
 		       } />
-		<Route path='/video-list' element={
+		<Route path='video-list' element={
 			   <PrivateRoute isReady={authReady}>
 			       <VideoList />
 			   </PrivateRoute>
 		       } />
-		<Route path='/video/:id' element={
+		<Route path='video/:id' element={
 			   <PrivateRoute isReady={authReady}>
 			       <Video />
 			   </PrivateRoute>
 		       } />
-		<Route path='/lists' element={
+		<Route path='lists' element={
 			   <PrivateRoute isReady={authReady}>
 			       <Lists />
 			   </PrivateRoute>
 		       } />
 		<Route path='*' element={ <Navigate to='/' replace />} />
-	    </Routes>
-	</Router>
+	    </Route>
+	),
+    );
 
+    return (
+	<RouterProvider router={router} />
     );
 };
 
