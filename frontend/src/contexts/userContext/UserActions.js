@@ -20,6 +20,10 @@ export const registrationFailure = (error) => ({
     payload: error,
 });
 
+export const clearUserError = () => ({
+    type: 'CLEAR_USER_ERROR',
+});
+
 // UPDATE
 
 export const updateStart = () => ({
