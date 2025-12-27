@@ -34,6 +34,12 @@ const AuthReducer = (state, action) => {
 	    loggedOut: false,
 	};
 
+      case  'CLEAR_AUTH_ERROR':
+	return {
+	    ...state,
+	    error: null,
+	}
+
       case 'LOGOUT':
 	return {
 	    user: null,
