@@ -18,6 +18,48 @@ const apiClient = axios.create({
     withCredentials: true,
 });
 
+export const normalizeError = (error) => {
+    const response = error?.response;
+    const status = response?.status ?? null;
+    const data = response?.data;
+    const fallbackMessage = error?.message || 'Unexpected error.';
+
+    if (!response) {
+	return {
+	    status,
+	    message: 'Network error. Please check your connection.',
+	    fields: null,
+	};
+    }
+
+    if (data && typeof data === 'object') {
+	const message = data.detail || data.message || fallbackMessage;
+	const fields = data.fields
+	      || Object.fromEntries(
+		  Object.entries(data)
+		      .filter(([key]) => !['detail', 'message', 'status', 'title', 'code'].includes(key))
+		      .map(([key, value]) => [
+			  key,
+			  Array.isArray(value) ? value.join(', ') : String(value),
+		      ]),
+	      );
+
+	return {
+	    status,
+	    code: data.code,
+	    title: data.title,
+	    message,
+	    fields: Object.keys(fields).length ? fields : null,
+	};
+    }
+
+    return {
+	status,
+	message: fallbackMessage,
+	fields: null,
+    };
+};
+
 /**
  * Makes an appendage to the 'apiClient' object with a
  * Request interceptor adding an access token to each request.
@@ -102,6 +144,7 @@ apiClient.interceptors.response.use(
 	    }
 	}
 
+	error.normalized = normalizeError(error);
 	return Promise.reject(error);
     },
 );
