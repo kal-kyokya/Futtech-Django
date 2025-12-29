@@ -4,7 +4,7 @@
  * 		    one class and makes the Futtech codebase more elegant.
  */
 
-import apiClient from './apiClient';
+import apiClient, { normalizeError } from './apiClient';
 import tokenService from './tokenService';
 
 
@@ -41,9 +41,10 @@ class AuthService {
 		playlistsPromise,
 	    };
 	} catch (error) {
+	    const normalized = error?.normalized || normalizeError(error);
 	    return {
 		success: false,
-		error: error.response?.data?.message || 'Registration failed',
+		error: normalized,
 	    };
 	}
     }
@@ -73,9 +74,10 @@ class AuthService {
 	    };
 
 	} catch (error) {
+	    const normalized = error?.normalized || normalizeError(error);
 	    return {
 		success: false,
-		error: error.response?.data?.message || 'Login failed',
+		error: normalized,
 	    };
 	}
     }
@@ -86,10 +88,11 @@ class AuthService {
 	    await apiClient.post('/auth/logout/', {});
 	    return { success: true };
 	} catch (error) {
+	    const normalized = error?.normalized || normalizeError(error);
 	    console.error('Logout error:', error);
 	    return {
 		success: false,
-		error: error.response?.data?.detail || 'Logout failed',
+		error: normalized,
 	    };
 	}
     }
