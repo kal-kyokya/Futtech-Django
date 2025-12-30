@@ -8,6 +8,7 @@
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
+from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.tokens import RefreshToken
 from video_management.models import UserProfile
@@ -163,20 +164,16 @@ class UserLoginSerializer(serializers.Serializer):
         try:
             user = UserModel.objects.get(email=email)
         except UserModel.DoesNotExist:
-            raise serializers.ValidationError({
-                'email': 'Invalid email'
-            })
+            raise AuthenticationFailed('Invalid email or password.')
 
         # Authenticate the user using a Django built-in authentication function
         authenticated_user = authenticate(username=user.username,
                                           password=password)
         if not authenticated_user:
-            raise serializers.ValidationError({
-                'password': 'Invalid password.'
-            })
+            raise AuthenticationFailed('Invalid email or password.')
 
         if not authenticated_user.is_active:
-            raise serializers.ValidationError('User account is disabled.')
+            raise AuthenticationFailed('User account is disabled.')
 
         return {
             'user': authenticated_user,
