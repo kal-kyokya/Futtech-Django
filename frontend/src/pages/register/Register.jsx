@@ -15,8 +15,9 @@ const Register = () => {
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
 
-    const { dispatch, isFetching,
-	    loggedOut, error: registrationError } = useContext(UserContext);
+    const { dispatch,
+	    isFetching,
+	    error: registrationError } = useContext(UserContext);
 
     const navigate = useNavigate();
     const emailRef = useRef(null);
@@ -73,6 +74,12 @@ const Register = () => {
 	    navigate('/login');
 	} catch (error) {
 	    const normalizedError = error?.normalized || normalizeError(error);
+	    if (normalizedError?.fields?.email || normalizedError?.fields?.username) {
+		setEmail('');
+		setUsername('');
+		setPassword('');
+		setPasswordConfirm('');
+	    }
 	    dispatch(registrationFailure(normalizedError));
 	}
     };
@@ -176,11 +183,6 @@ const Register = () => {
 		    </div>
 		)}
 
-		{ loggedOut && (
-		    <div className='userPrompt'>
-			Log out successful ✔
-		    </div>
-		)}
 	    </div>
 
 	</div>
