@@ -18,7 +18,7 @@ UserModel = get_user_model()
 
 class UserRegistrationSerializer(serializers.ModelSerializer):
     """
-    Handles validation of the user data sent in the request body, as well as
+    Handles validation of the user data sent in the request body, as well as,
     creation of Django-compliant complex python objects (Model fields).
 
     Inheritance:

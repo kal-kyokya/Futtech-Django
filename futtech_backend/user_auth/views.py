@@ -27,7 +27,7 @@ from rest_framework_simplejwt.views import (
 
 def _refresh_cookie_options():
     """
-    Bundles, inside a d dictionary, data to be attached to the refresh token
+    Bundles, inside a dictionary, data to be attached to the refresh token
     once it gets set as an HttpOnly cookie.
     """
     cookie_domain = getattr(settings, 'DOMAIN_NAME', None)
