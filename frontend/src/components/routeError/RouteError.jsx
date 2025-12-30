@@ -1,7 +1,7 @@
 import './routeError.scss';
 import { Link, useRouteError } from 'react-router-dom';
 
-const RouteError = () => (
+const RouteError = () => {
     const error = useRouteError();
     const message = error?.statusText || error?.message || 'Unexpected error.';
 
@@ -22,6 +22,6 @@ const RouteError = () => (
 	    </div>
 	</div>
     );
-);
+};
 
 export default RouteError;

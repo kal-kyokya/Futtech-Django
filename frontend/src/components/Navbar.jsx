@@ -47,7 +47,10 @@ const Navbar = () => {
 	userDispatch(userLogOut());
 	authDispatch(authLogOut());
 	setIsMobileMenuOpen(false); // Close Mobile menu on logout
-	navigate('/login', { replace: true });
+	navigate('/login', {
+	    replace: true,
+	    state: { notice: 'Logged out successfully.' },
+	});
     };
 
     const toggleMobileMenu = () => {
