@@ -1,6 +1,6 @@
 import './login.scss';
 import { useState, useContext, useEffect } from 'react';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../contexts/authContext/AuthContext';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import { ListContext } from '../../contexts/listContext/ListContext';
@@ -39,11 +39,20 @@ const Login = () => {
     const { dispatch: userDispatch } = useContext(UserContext);
 
     const navigate = useNavigate();
+    const location = useLocation();
     const fieldErrors = loginError?.fields || {};
+    const [notice, setNotice] = useState('');
 
     useEffect(() => (
 	() => authDispatch(clearAuthError())
     ), [authDispatch]);
+
+    useEffect(() => {
+	if (location.state?.notice) {
+	    setNotice(location.state.notice);
+	    navigate(location.pathname, { replace: true, state: {} });
+	}
+    }, [location.state, location.pathname, navigate]);
 
     const handleSignIn = async (e) => {
 	e.preventDefault(); // Prevents form reload and allows data submission
@@ -139,6 +148,12 @@ const Login = () => {
 		    <button onClick={handleSignIn} disabled={isFetching}>
 			Sign In
 		    </button>
+
+		    {notice && (
+			<div className='userPrompt'>
+			    {notice}
+			</div>
+		    )}
 
 		    {loginError?.message && (
 			<div className='userPrompt'>
