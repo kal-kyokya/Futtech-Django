@@ -10,7 +10,6 @@ from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework.validators import UniqueValidator
 from rest_framework_simplejwt.tokens import RefreshToken
 from video_management.models import UserProfile
 
@@ -28,20 +27,8 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     	features enabling data validation and serialization/deserialization.
     """
 
-    email = serializers.EmailField(
-        required=True,
-        validators=[UniqueValidator(
-            queryset=UserModel.objects.all(),
-            message='A user with this email already exists.'
-        )]
-    )
-    username = serializers.CharField(
-        required=True,
-        validators=[UniqueValidator(
-            queryset=UserModel.objects.all(),
-            message='A user with username already exists.'
-        )]
-    )
+    email = serializers.EmailField(required=True)
+    username = serializers.CharField(required=True)
 
     # 'write_only=True' ensures these sensitive fields are used for input
     # and validation, but never serialized and returned in any API response.
@@ -97,16 +84,25 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         	The 'attrs' dictionary if no validation error is raised.
         """
 
-        email = attrs.get('email')
-        username = attrs.get('username')
-
-        if (UserModel.objects.filter(Q(email=email) | Q(username=username)) :
-            raise AuthenticationFailed('Email or username already in use.')
-
         if attrs['password'] != attrs['passwordConfirm']:
             raise serializers.ValidationError({
                 'passwordConfirm': 'Password fields did not match'
             })
+
+        email = attrs.get('email')
+        username = attrs.get('username')
+
+        if email and username:
+            existing_users = UserModel.objects.filter(
+                Q(email__iexact=email) | Q(username__iexact=username)
+            )
+            if existing_users.exists():
+                errors = {}
+                if existing_users.filter(email__iexact=email).exists():
+                    errors['email'] = 'A user with this email already exists.'
+                if existing_users.filter(username__iexact=username).exists():
+                    errors['username'] = 'A user with this username already exists.'
+                raise serializers.ValidationError(errors)
 
         # Validate password strength with Django's built-in validation function
         try:
