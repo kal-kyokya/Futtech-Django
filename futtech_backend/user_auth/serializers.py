@@ -5,6 +5,7 @@
 		 objects, such as Django Model instances.
 """
 
+from django.db.models import Q
 from django.contrib.auth import get_user_model, authenticate
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
@@ -95,6 +96,12 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         Return:
         	The 'attrs' dictionary if no validation error is raised.
         """
+
+        email = attrs.get('email')
+        username = attrs.get('username')
+
+        if (UserModel.objects.filter(Q(email=email) | Q(username=username)) :
+            raise AuthenticationFailed('Email or username already in use.')
 
         if attrs['password'] != attrs['passwordConfirm']:
             raise serializers.ValidationError({

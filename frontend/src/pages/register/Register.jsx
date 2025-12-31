@@ -113,7 +113,7 @@ const Register = () => {
 
 		{ registrationError?.message && (
 		    <div className='userPrompt'>
-			{registrationError.message}.
+			{registrationError.message}
 		    </div>
 		)}
 
