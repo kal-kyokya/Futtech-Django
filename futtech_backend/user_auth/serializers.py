@@ -128,6 +128,9 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
         """
 
         validated_data.pop('passwordConfirm')
+        validated_data['email'] = UserModel.objects.normalize_email(
+            validated_data['email']
+        )
 
         # 'create_user' automatically handles password hashing
         user = UserModel.objects.create_user(**validated_data)
@@ -165,7 +168,7 @@ class UserLoginSerializer(serializers.Serializer):
         password = attrs.get('password')
 
         try:
-            user = UserModel.objects.get(email=email)
+            user = UserModel.objects.get(email__iexact=email)
         except UserModel.DoesNotExist:
             raise AuthenticationFailed('Invalid email or password.')
 
