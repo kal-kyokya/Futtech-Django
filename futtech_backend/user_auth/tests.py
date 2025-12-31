@@ -106,3 +106,39 @@ class UserAuthenticationFlowTests(TestCase):
             me_response.data['username'],
             self.registration_payload['username']
         )
+
+    def test_registration_rejects_existing_email_or_username(self):
+        """
+        Ensures duplicate emails or usernames are rejected gracefully.
+        """
+
+        # Create a user 'email=newuser@example.com' and 'username=newuser'
+        self.client.post(
+            self.registration_url,
+            self.registration_payload,
+            format='json'
+        )
+
+        duplicate_email_payload= {
+            **self.registration_payload,
+            'username': 'anotheruser',
+        }
+        duplicate_email_response = self.client.post(
+            self.registration_url,
+            duplicate_email_payload,
+            format='json'
+        )
+        self.assertEqual(duplicate_email_response.status_code, 400)
+        self.assertIn('email', duplicate_email_response.data)
+
+        duplicate_username_payload = {
+            **self.registration_payload,
+            'email': 'anotheruser@example.com',
+        }
+        duplicate_username_response = self.client.post(
+            self.registration_url,
+            duplicate_username_payload,
+            format='json'
+        )
+        self.assertEqual(duplicate_username_response.status_code, 400)
+        self.assertIn('username', duplicate_username_response.data)
