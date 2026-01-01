@@ -1,12 +1,12 @@
 #!/usr/bin/env python3
 """
-'test' contains classes verifying the public authentication API behaviour.
+'test.py' validates the public authentication API behaviour.
 """
 
 from django.contrib.auth import get_user_model
-from django.test import TestCase, override_settings
+from django.test import override_settings
 from django.urls import reverse
-from rest_framework.test import APIClient
+from rest_framework.test import APITestCase, APIClient
 
 
 TEST_DATABASES = {
@@ -23,42 +23,81 @@ TEST_PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
     DATABASES=TEST_DATABASES,
     PASSWORD_HASHERS=TEST_PASSWORD_HASHERS,
     SECRET_KEY='test-secret-key',
+    SECURE_SSL_REDIRECT=False,
 )
-class UserAuthenticationFlowTests(TestCase):
+class AuthTestBase(APITestCase):
     """
-    Ensures the high-level authentication endpoints behave as expected.
+    Provides shared helpers for authentication API tests.
     """
 
     def setUp(self):
         self.client = APIClient()
+        self.user_model = get_user_model()
         self.registration_url = reverse('user-registration')
         self.login_url = reverse('user-login')
         self.refresh_url = reverse('token-refresh')
+        self.logout_url = reverse('user-logout')
         self.me_url = reverse('get-current-user')
 
+        self.default_password = 'StrongPass123!'
         self.registration_payload = {
             'email': 'newuser@example.com',
             'username': 'newuser',
-            'password': 'StrongPass123!',
-            'passwordConfirm': 'StrongPass123!',
+            'password': self.default_password,
+            'passwordConfirm': self.default_password,
         }
 
-    def test_user_can_register_login_refresh_and_fetch_profile(self):
-        """
-        Exercises the main authentication endpoints as a single flow.
-        """
+        def create_user(self, email='existing@example.com',
+                        username='existing', password=None, **kwargs):
+            """
+            Executes a write on our DB and skips the need for an API call.
+            """
+            password = password or self.default_password
+            user = self.user_model.objects.create_user(
+                email=email,
+                username=username,
+                password=password,
+                **kwargs,
+            )
 
-        # Register a new account and secure tokens plus cookie are returned
-        register_response = self.client.post(
-            self.registration_url,
-            self.registration_payload,
-            format='json'
-        )
-        self.assertEqual(register_response.status_code, 201)
-        self.assertIn('access', register_response.data)
-        refresh_cookie = register_response.cookies.get('refresh_token')
-        self.assertIsNotNone(refresh_cookie)
-        self.assertTrue(refresh_cookie.value)
+            return user
+
+        def register_user(self, payload=None):
+            """
+            Makes a pseudo API call to the user registration endpoint.
+            """
+            return self.client.post(
+                self.registration_url,
+                payload or self.registration_payload,
+                format='json',
+                secure=True,
+            )
+
+        def login_user(self, email, password):
+            """
+            Makes a pseudo API call to the user login endpoint.
+            """
+            return self.client.post(
+                self.login_url,
+                {'email': email, 'password': password},
+                format='json',
+                secure=True,
+            )
+
+        def assert_field_error(self, response, field,
+                               message_substring=None):
+            """
+            Validates the existence, type and content of error fields.
+            """
+            self.assertIn(field, response.data)
+            field_errors = response.data[field]
+            self.assertIsInstance(field_errors, list)
+            if message_substring:
+                self.assertTrue(
+                    any(message_substring in str(err) for err in field_errors),
+                    msg=f"Expected '{message_substring}' in {field} errors."
+                )
+
 
         user_model = get_user_model()
         self.assertTrue(
@@ -72,7 +111,8 @@ class UserAuthenticationFlowTests(TestCase):
                 'email': self.registration_payload['email'],
                 'password': self.registration_payload['password']
             },
-            format='json'
+            format='json',
+            secure=True
         )
         self.assertEqual(login_response.status_code, 200)
         login_refresh_cookie = login_response.cookies.get('refresh_token')
@@ -86,7 +126,8 @@ class UserAuthenticationFlowTests(TestCase):
         refresh_response = self.client.post(
             self.refresh_url,
             {},
-            format='json'
+            format='json',
+            secure=True
         )
         self.assertEqual(refresh_response.status_code, 200)
         self.assertIn('access', refresh_response.data)
@@ -116,7 +157,8 @@ class UserAuthenticationFlowTests(TestCase):
         self.client.post(
             self.registration_url,
             self.registration_payload,
-            format='json'
+            format='json',
+            secure=True
         )
 
         duplicate_email_payload= {
@@ -126,7 +168,8 @@ class UserAuthenticationFlowTests(TestCase):
         duplicate_email_response = self.client.post(
             self.registration_url,
             duplicate_email_payload,
-            format='json'
+            format='json',
+            secure=True
         )
         self.assertEqual(duplicate_email_response.status_code, 400)
         self.assertIn('email', duplicate_email_response.data)
@@ -138,7 +181,8 @@ class UserAuthenticationFlowTests(TestCase):
         duplicate_username_response = self.client.post(
             self.registration_url,
             duplicate_username_payload,
-            format='json'
+            format='json',
+            secure=True
         )
         self.assertEqual(duplicate_username_response.status_code, 400)
         self.assertIn('username', duplicate_username_response.data)
