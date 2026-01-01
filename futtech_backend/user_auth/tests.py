@@ -118,7 +118,18 @@ class RegistrationTests(AuthTestBase):
         self.assertTrue(refresh_cookie.value)
 
     def test_registration_duplicate_email_returns_field_error(self):
-        
+        self.create_user(email=self.registration_payload['email'])
+
+        response = self.register_user({
+            **self.registration_payload,
+            'username': 'anotheruser',
+        })
+
+        self.assertEqual(response.status_code, 400)
+        self.assert_field_error(response, 'email', 'already exists')
+
+    def test_registration_duplicate_username_returns_field_error(self):
+
         # Authenticate the user and obtain a fresh access token
         login_response = self.client.post(
             self.login_url,
