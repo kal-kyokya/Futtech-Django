@@ -99,11 +99,26 @@ class AuthTestBase(APITestCase):
                 )
 
 
-        user_model = get_user_model()
-        self.assertTrue(
-            user_model.objects.filter(email=self.registration_payload['email']).exists()
-        )
+class RegistrationTests(AuthTestBase):
+    """
+    Covers registration happy-paths and edge cases.
+    """
 
+    def test_registration_happy_path_returns_tokens_and_cookie(self):
+        response = self.register_user()
+
+        self.assertEqual(response.status_code, 201)
+        self.assertEqual(response.data['message'], 'User registered successfully')
+        self.assertIn('access', response.data)
+        self.assertIn('user', response.data)
+        self.assertEqual(response.data['user']['email'], self.registration_payload['email'])
+        self.assertEqual(response.data['user']['username'], self.registration_payload['username'])
+        refresh_cookie = response.cookies.get('refresh_token')
+        self.assertIsNotNone(refresh_cookie)
+        self.assertTrue(refresh_cookie.value)
+
+    def test_registration_duplicate_email_returns_field_error(self):
+        
         # Authenticate the user and obtain a fresh access token
         login_response = self.client.post(
             self.login_url,
