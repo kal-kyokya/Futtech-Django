@@ -237,44 +237,20 @@ class TokenRefreshTests(AuthTestBase):
         self.assertTrue(response.data['access'])
 
     def test_refresh_with_invalid_token_returns_401(self):
-        
-
+        response = self.client.post(
             self.refresh_url,
-            {},
+            {'refresh': 'invalid.token.value'},
             format='json',
             secure=True
         )
-        self.assertEqual(refresh_response.status_code, 200)
-        self.assertIn('access', refresh_response.data)
 
-        # Use the latest access token (post-refresh if provided) to call /me/
-        final_access_token = refresh_response.data.get('access', access_token)
-        self.client.credentials(
-            HTTP_AUTHORIZATION=f'Bearer {final_access_token}'
-        )
-        me_response = self.client.get(self.me_url)
-        self.assertEqual(me_response.status_code, 200)
-        self.assertEqual(
-            me_response.data['email'],
-            self.registration_payload['email']
-        )
-        self.assertEqual(
-            me_response.data['username'],
-            self.registration_payload['username']
-        )
+        self.assertEqual(response.status_code, 401)
 
-    def test_registration_rejects_existing_email_or_username(self):
-        """
-        Ensures duplicate emails or usernames are rejected gracefully.
-        """
 
-        # Create a user 'email=newuser@example.com' and 'username=newuser'
-        self.client.post(
-            self.registration_url,
-            self.registration_payload,
-            format='json',
-            secure=True
-        )
+class LogoutTests(AuthTestBase):
+    """
+    Covers logout and blacklist behavior.
+    """
 
         duplicate_email_payload= {
             **self.registration_payload,
