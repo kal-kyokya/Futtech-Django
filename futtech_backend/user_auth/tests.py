@@ -274,7 +274,15 @@ class LogoutTests(AuthTestBase):
 
         self.assertEqual(refresh_response.status_code, 401)
 
-    
+    def test_logout_missing_refresh_token_returns_400(self):
+        response = self.client.post(self.logout_url, {},
+                                    format='json', secure=True)
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(response.data['detail'], 'Refresh token is required to log out.')
+
+
+class ProfileTests(AuthTestBase):
 
         self.assertEqual(duplicate_username_response.status_code, 400)
         self.assertIn('username', duplicate_username_response.data)
