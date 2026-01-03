@@ -162,9 +162,17 @@ class RegistrationTests(AuthTestBase):
         self.assert_field_error(response, 'password')
 
     def test_registration_invalid_json_returns_400(self):
-        
-        # Authenticate the user and obtain a fresh access token
-        login_response = self.client.post(
+        response = self.client.post(
+            self.registration_url,
+            data='{"email": "badjson"',
+            content_type='application/json',
+            secure=True,
+        )
+
+        self.assertEqual(response.status_code, 400)
+
+
+class LoginTests(AuthTestBase):
             self.login_url,
             {
                 'email': self.registration_payload['email'],
