@@ -200,6 +200,15 @@ class LoginTests(AuthTestBase):
         self.assertEqual(response.data['detail'], 'Invalid email or password.')
 
     def test_login_inactive_user_returns_401(self):
+        user = self.create_user(is_active=False)
+
+        response = self.login_user(user.email, self.default_password)
+
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.data['detail'], 'User account is disabled.')
+
+    def test_login_invalid_json_returns_400(self):
+        
 
             self.login_url,
             {
