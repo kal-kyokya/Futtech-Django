@@ -208,26 +208,20 @@ class LoginTests(AuthTestBase):
         self.assertEqual(response.data['detail'], 'User account is disabled.')
 
     def test_login_invalid_json_returns_400(self):
-        
-
+        response = self.client.post(
             self.login_url,
-            {
-                'email': self.registration_payload['email'],
-                'password': self.registration_payload['password']
-            },
-            format='json',
+            data='{"email": "badjson"',
+            content_type='application/json',
             secure=True
         )
-        self.assertEqual(login_response.status_code, 200)
-        login_refresh_cookie = login_response.cookies.get('refresh_token')
-        self.assertIsNotNone(login_refresh_cookie)
-        self.assertTrue(login_refresh_cookie.value)
 
-        access_token = login_response.data['access']
+        self.assertEqual(response.status_code, 400)
 
-        # Refresh tokens using the cookie-based fallback
-        self.client.cookies['refresh_token'] = login_refresh_cookie.value
-        refresh_response = self.client.post(
+
+class TokenRefreshTests(AuthTestBase):
+    """
+    Cover refresh token behavior.
+    """
             self.refresh_url,
             {},
             format='json',
