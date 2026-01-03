@@ -297,3 +297,13 @@ class ProfileTests(AuthTestBase):
         )
 
     def test_me_returns_current_user_profile(self):
+        user = self.create_user(email='me@example.com', username='meuser')
+        login_response = self.login_user(user.email, self.default_password)
+        access_token = login_response.data['access']
+
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {access_token}')
+        response = self.client.get(self.me_url, secure=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('user', response.data)
+        self.assertEqual(response.data['user'], user.id)
