@@ -192,7 +192,14 @@ class LoginTests(AuthTestBase):
         self.assertTrue(refresh_cookie.value)
 
     def test_login_with_invalid_credentials_returns_401(self):
-        
+        user = self.create_user()
+
+        response = self.login_user(user.email, 'WrongPassword!')
+
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(response.data['detail'], 'Invalid email or password.')
+
+    def test_login_inactive_user_returns_401(self):
 
             self.login_url,
             {
