@@ -173,6 +173,27 @@ class RegistrationTests(AuthTestBase):
 
 
 class LoginTests(AuthTestBase):
+    """
+    Covers login behavior and error handling.
+    """
+
+    def test_login_with_valid_credentials_returns_tokens(self):
+        user = self.create_user()
+
+        response = self.login_user(user.email, self.default_password)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['message'], 'User logged in successfully')
+        self.assertIn('access', response.data)
+        self.assertEqual(response.data['user']['email'], user.email)
+        self.assertEqual(response.data['user']['username'], user.username)
+        refresh_cookie = response.cookies.get('refresh_token')
+        self.assertIsNotNone(refresh_cookie)
+        self.assertTrue(refresh_cookie.value)
+
+    def test_login_with_invalid_credentials_returns_401(self):
+        
+
             self.login_url,
             {
                 'email': self.registration_payload['email'],
