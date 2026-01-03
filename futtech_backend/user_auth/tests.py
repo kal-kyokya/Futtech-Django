@@ -252,28 +252,29 @@ class LogoutTests(AuthTestBase):
     Covers logout and blacklist behavior.
     """
 
-        duplicate_email_payload= {
-            **self.registration_payload,
-            'username': 'anotheruser',
-        }
-        duplicate_email_response = self.client.post(
-            self.registration_url,
-            duplicate_email_payload,
-            format='json',
-            secure=True
-        )
-        self.assertEqual(duplicate_email_response.status_code, 400)
-        self.assertIn('email', duplicate_email_response.data)
+    def test_logout_blacklists_refresh_token(self):
+        user = self.create_user()
+        login_response = self.login_user(user.email, self.default_password)
+        refresh_cookie = login_response.cookies.get('refresh_token')
+        self.client.cookies['refresh_token'] = refresh_cookie.value
 
-        duplicate_username_payload = {
-            **self.registration_payload,
-            'email': 'anotheruser@example.com',
-        }
-        duplicate_username_response = self.client.post(
-            self.registration_url,
-            duplicate_username_payload,
+        response = self.client.post(self.logout_url, {},
+                                    format='json', secure=True)
+
+        self.assertIn(response.status_code, [200, 204])
+        logout_cookie = response.cookies.get('refresh_token')
+        self.assertIsNotNone(logout_cookie)
+
+        refresh_response = self.client.post(
+            self.refresh_url,
+            {'refresh': refresh_cookie.value},
             format='json',
-            secure=True
+            secure=True,
         )
+
+        self.assertEqual(refresh_response.status_code, 401)
+
+    
+
         self.assertEqual(duplicate_username_response.status_code, 400)
         self.assertIn('username', duplicate_username_response.data)
