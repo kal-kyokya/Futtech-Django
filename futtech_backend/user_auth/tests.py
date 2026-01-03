@@ -151,7 +151,18 @@ class RegistrationTests(AuthTestBase):
         self.assert_field_error(response, 'password', 'required')
         self.assert_field_error(response, 'passwordConfirm', 'required')
 
+    def test_registration_weak_password_returns_field_errors(self):
+        response = self.register_user({
+            **self.registration_payload,
+            'password': '12345',
+            'passwordConfirm': '12345',
+        })
+
+        self.assertEqual(response.status_code, 400)
+        self.assert_field_error(response, 'password')
+
     def test_registration_invalid_json_returns_400(self):
+        
         # Authenticate the user and obtain a fresh access token
         login_response = self.client.post(
             self.login_url,
