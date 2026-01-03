@@ -283,6 +283,17 @@ class LogoutTests(AuthTestBase):
 
 
 class ProfileTests(AuthTestBase):
+    """
+    Covers profile retrieval with JWT auth.
+    """
 
-        self.assertEqual(duplicate_username_response.status_code, 400)
-        self.assertIn('username', duplicate_username_response.data)
+    def test_me_requires_authentication(self):
+        response = self.client.get(self.me_url, secure=True)
+
+        self.assertEqual(response.status_code, 401)
+        self.assertEqual(
+            response.data['detail'],
+            'Authentication credentials were not provided.'
+        )
+
+    def test_me_returns_current_user_profile(self):
