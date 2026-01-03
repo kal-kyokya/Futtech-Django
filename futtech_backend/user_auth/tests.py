@@ -220,8 +220,25 @@ class LoginTests(AuthTestBase):
 
 class TokenRefreshTests(AuthTestBase):
     """
-    Cover refresh token behavior.
+    Covers refresh token behavior.
     """
+
+    def test_refresh_with_valid_cookie_returns_new_access(self):
+        user = self.create_user()
+        login_response = self.login_user(user.email, self.default_password)
+        refresh_cookie = login_response.cookies.get('refresh_token')
+        self.client.cookies['refresh_token'] = refresh_cookie.value
+
+        response = self.client.post(self.refresh_url, {},
+                                    format='json', secure=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('access', response.data)
+        self.assertTrue(response.data['access'])
+
+    def test_refresh_with_invalid_token_returns_401(self):
+        
+
             self.refresh_url,
             {},
             format='json',
