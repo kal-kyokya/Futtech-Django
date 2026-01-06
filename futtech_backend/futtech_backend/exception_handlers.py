@@ -88,7 +88,7 @@ def _derive_message(data):
     return "Unexpected error."
 
 
-def customer_exception_handler(exc, context):
+def custom_exception_handler(exc, context):
     """
     Scaffolds DRF Views' "exception_handler()" in order to
     customize the response objects returned on error.
