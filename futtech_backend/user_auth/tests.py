@@ -89,7 +89,7 @@ class AuthTestBase(APITestCase):
         """
         Validates the existence, type and content of error fields.
         """
-        self.assertIn(field, response.data.fields)
+        self.assertIn(field, response.fields)
         field_errors = response.data[field]
         self.assertIsInstance(field_errors, list)
         if message_substring:
@@ -197,7 +197,7 @@ class LoginTests(AuthTestBase):
         response = self.login_user(user.email, 'WrongPassword!')
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.data['detail'], 'Invalid email or password.')
+        self.assertEqual(response.data['detail'], 'Invalid password.')
 
     def test_login_inactive_user_returns_401(self):
         user = self.create_user(is_active=False)
