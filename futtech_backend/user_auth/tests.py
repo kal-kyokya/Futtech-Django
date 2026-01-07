@@ -89,7 +89,7 @@ class AuthTestBase(APITestCase):
         """
         Validates the existence, type and content of error fields.
         """
-        self.assertIn(field, response.data)
+        self.assertIn(field, response.data.fields)
         field_errors = response.data[field]
         self.assertIsInstance(field_errors, list)
         if message_substring:
