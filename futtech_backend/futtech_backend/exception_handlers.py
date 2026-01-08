@@ -110,6 +110,12 @@ def custom_exception_handler(exc, context):
     data = response.data
 
     if isinstance(exc, ValidationError):
+        if (
+            isinstance(data, dict)
+            and len(data) == 1
+            and isinstance(next(iter(data.values())), dict)
+        ):
+            data = next(iter(data.values()))
         response.data = data
         response.fields = data
         return response

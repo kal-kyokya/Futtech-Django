@@ -100,7 +100,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             if existing_users.exists():
                 errors = {}
                 if existing_users.filter(email__iexact=email).exists():
-                    errors['email'] = ['A user with this email already exists.]'
+                    errors['email'] = ['A user with this email already exists.']
                 if existing_users.filter(username__iexact=username).exists():
                     errors['username'] = ['A user with this username already exists.']
                 raise serializers.ValidationError(errors)
