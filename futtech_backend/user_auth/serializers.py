@@ -7,6 +7,7 @@
 
 from django.db.models import Q
 from django.contrib.auth import get_user_model, authenticate
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
@@ -86,7 +87,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         if attrs['password'] != attrs['passwordConfirm']:
             raise serializers.ValidationError({
-                'passwordConfirm': 'Password fields did not match'
+                'passwordConfirm': '[Password fields did not match]'
             })
 
         email = attrs.get('email')
@@ -99,17 +100,18 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
             if existing_users.exists():
                 errors = {}
                 if existing_users.filter(email__iexact=email).exists():
-                    errors['email'] = 'A user with this email already exists.'
+                    errors['email'] = ['A user with this email already exists.]'
                 if existing_users.filter(username__iexact=username).exists():
-                    errors['username'] = 'A user with this username already exists.'
+                    errors['username'] = ['A user with this username already exists.']
                 raise serializers.ValidationError(errors)
 
         # Validate password strength with Django's built-in validation function
         try:
             validate_password(attrs['password'])
-        except serializers.ValidationError as err:
+        except (DjangoValidationError, serializers.ValidationError) as err:
+            messages = getattr(err, 'messages', [str(err)])
             raise serializers.ValidationError({
-                'password': list(err.messages)
+                'password': list(messages)
             })
 
         return attrs
