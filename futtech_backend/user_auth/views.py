@@ -17,6 +17,8 @@ from .serializers import (
     CurrentUserSerializer,
 )
 
+from video_management.models import UserProfile
+
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.views import (
@@ -278,6 +280,7 @@ class GetCurrentUserView(APIView):
         		  metadata about the request.
         """
 
-        serializer = CurrentUserSerializer(request.user)
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        serializer = CurrentUserSerializer(profile)
 
         return Response(serializer.data)
