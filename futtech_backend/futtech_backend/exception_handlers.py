@@ -109,6 +109,11 @@ def custom_exception_handler(exc, context):
     status_code = response.status_code
     data = response.data
 
+    if isinstance(exc, ValidationError):
+        response.data = data
+        response.fields = data
+        return response
+
     payload = {
         "status": status_code,
         "title": _STATUS_TITLES.get(status_code, "Error"),
@@ -122,9 +127,6 @@ def custom_exception_handler(exc, context):
     code = getattr(exc, "default_code", None)
     if code:
         payload["code"] = code
-
-    if isinstance(exc, ValidationError):
-        payload["title"] = _STATUS_TITLES[status.HTTP_400_BAD_REQUEST]
 
     response.data = payload
     return response
