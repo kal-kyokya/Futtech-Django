@@ -174,14 +174,14 @@ class UserLoginSerializer(serializers.Serializer):
         except UserModel.DoesNotExist:
             raise AuthenticationFailed('Invalid email.')
 
+        if not user.is_active:
+            raise AuthenticationFailed('User account is disabled.')
+
         # Authenticate the user using a Django built-in authentication function
         authenticated_user = authenticate(username=user,
                                           password=password)
         if not authenticated_user:
             raise AuthenticationFailed(f'Invalid password.')
-
-        if not authenticated_user.is_active:
-            raise AuthenticationFailed('User account is disabled.')
 
         return {
             'user': authenticated_user,
