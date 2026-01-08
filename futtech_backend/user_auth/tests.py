@@ -91,10 +91,10 @@ class AuthTestBase(APITestCase):
         """
         self.assertIn(field, response.data)
         field_errors = response.data
-        self.assertIsInstance(field_errors, list)
+        self.assertIsInstance(field_errors[field], list)
         if message_substring:
             self.assertTrue(
-                any(message_substring in str(err) for err in field_errors),
+                any(message_substring in str(err) for err in field_errors[field]),
                 msg=f"Expected '{message_substring}' in {field} errors."
             )
 
