@@ -173,10 +173,10 @@ class UserLoginSerializer(serializers.Serializer):
             raise AuthenticationFailed('Invalid email.')
 
         # Authenticate the user using a Django built-in authentication function
-        authenticated_user = authenticate(username=user.username,
+        authenticated_user = authenticate(username=user,
                                           password=password)
         if not authenticated_user:
-            raise AuthenticationFailed('Invalid password.')
+            raise AuthenticationFailed(f'Invalid password.')
 
         if not authenticated_user.is_active:
             raise AuthenticationFailed('User account is disabled.')
