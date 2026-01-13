@@ -138,8 +138,7 @@ class RegistrationTests(AuthTestBase):
         })
 
         self.assertEqual(response.status_code, 400)
-        self.assert_field_error(response, 'username',
-                                'already exists')
+        self.assert_field_error(response, 'username', 'already exists')
 
     def test_registration_missing_password_returns_field_errors(self):
         response = self.register_user({
