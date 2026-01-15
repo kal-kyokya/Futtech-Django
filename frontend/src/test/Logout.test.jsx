@@ -15,3 +15,31 @@ const TestRoutes = () => (
 	<Route path='/login' element={<Login />} />
     </Routes>
 );
+
+describe('Logout', () => {
+    it('clears local auth state even when logout endpoint fails', async () => {
+	// Force logout endpoint failure to verify client cleanup behavior.
+	server.use(
+	    htpp.post('*/auth/logout/', async () => HttpResponse.json(
+		{ message: 'Server error.' },
+		{ status: 500 },
+	    )),
+	);
+
+	const user = userEvent.setup();
+	seedAuthState({
+	    user: { id: 5, email: 'test@example.com', profilePic: '/blank.png' },
+	    token: 'access-token',
+	});
+
+	renderWithProviders(<TestRoutes />, { route: '/profile', path: null });
+
+	const logoutButtons = screen.getAllByText('Logout');
+	await user.click(logoutButtons[0]);
+
+	// verify UI notice and local auth storage cleared.
+	expect(await screen.findByText('Logged out successfully.')).toBeInTheDocument();
+	expect(tokenService.hasTokens()).toBe(false);
+	expect(localStorage.getItem('user')).toBe('null');
+    });
+});
