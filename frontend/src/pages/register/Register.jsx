@@ -111,6 +111,12 @@ const Register = () => {
 		</h2>
 		<h4>Ready to watch? Enter your details to create or restart your membership.</h4>
 
+		{ registrationError?.message && (
+		    <div className='userPrompt'>
+			{registrationError.message}
+		    </div>
+		)}
+
 		{ email ? (
 		    <form className='membership' onSubmit={handleRegister}>
 			<input type='password'
