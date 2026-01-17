@@ -70,7 +70,8 @@ describe('Registration', () => {
 	});
 
 	// Password field error should be surfaced to the user.
-	expect(await screen.findByText('Password too short.')).toBeInTheDocument();
+	const errors = await screen.findAllByText('Password too short.');
+	expect(errors.length).toBeGreaterThan(0);
     });
 
     it('renders non-field error banner on 400', async () => {

@@ -63,14 +63,14 @@
 	max-width: 60rem;
 	width: 100%;
 	height: 100%;
-	padding: 2rem;
+	padding: 0 2rem 2rem 2rem;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
 	text-align: center;
 	margin-top: 5vh;
-	margin-bottom: 5vh;
+	margin-bottom: 3vh;
     }
 
     h1 {
@@ -140,6 +140,10 @@
 @media (min-width: 768px) {
     .register {
 	background-position: left;
+    }
+
+    .container {
+	margin-bottom: 8vh;
     }
 
     .membership {
