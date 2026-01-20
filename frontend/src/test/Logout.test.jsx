@@ -20,7 +20,7 @@ describe('Logout', () => {
     it('clears local auth state even when logout endpoint fails', async () => {
 	// Force logout endpoint failure to verify client cleanup behavior.
 	server.use(
-	    htpp.post('*/auth/logout/', async () => HttpResponse.json(
+	    http.post('*/auth/logout/', async () => HttpResponse.json(
 		{ message: 'Server error.' },
 		{ status: 500 },
 	    )),

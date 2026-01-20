@@ -51,7 +51,7 @@ describe('Login', () => {
 	   });
 
 	   // Assert user-visible error and still on login page.
-	   expect(await screen.findByText('Invalid credentials')).toBeInTheDocument();
+	   expect(await screen.findByText('Invalid credentials.')).toBeInTheDocument();
 	   expect(screen.getByRole('heading', { name: /sign in/i })).toBeInTheDocument();
        });
 

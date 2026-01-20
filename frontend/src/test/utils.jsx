@@ -9,7 +9,7 @@ import tokenService from '../services/tokenService';
 // Seed localStorage + tokenService to simulate authenticated users.
 export const seedAuthState = ({ user, token }) => {
     if (user) {
-	localStorage.setItem('user', JSON.Stringify(user));
+	localStorage.setItem('user', JSON.stringify(user));
     }
 
     if (token) {
