@@ -32,6 +32,15 @@ export const handlers = [
 	    { status: 200 },
 	);
     }),
+    http.post('*/auth/token/refresh/', async () => {
+	await delay(50);
+	return HttpResponse.json(
+	    {
+		access: 'access-token',
+	    },
+	    { status: 200 },
+	);
+    }),
     http.post('*/auth/logout/', async () => {
 	await delay(50);
 	return HttpResponse.json({ message: 'Logged out.' }, { status: 200 });
