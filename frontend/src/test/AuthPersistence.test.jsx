@@ -83,7 +83,7 @@ describe('Auth persistence and /me', () => {
 	renderWithProviders(<TestRoutes />, { route: '/', path: null });
 
 	// Login page should be visible and token cleared after redirect.
-	expect(await screen.findByTest('Sign In')).toBeInTheDocument();
+	expect(await screen.findByText('Sign In')).toBeInTheDocument();
 	expect(tokenService.hasTokens()).toBe(false);
 	expect(localStorage.getItem('user')).toBe('null');
     });
