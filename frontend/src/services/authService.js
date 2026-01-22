@@ -35,9 +35,9 @@ class AuthService {
 	    const playlistsPromise = this.fetchInitialContent();
 
 	    return {
+		success: true,
 		user,
 		message,
-		success: true,
 		playlistsPromise,
 	    };
 	} catch (error) {

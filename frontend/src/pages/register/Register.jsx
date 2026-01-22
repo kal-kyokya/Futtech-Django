@@ -1,6 +1,7 @@
 import './register.scss';
 import { Link, useNavigate } from 'react-router-dom';
-import apiClient, { normalizeError } from '../../services/apiClient';
+import { normalizeError } from '../../services/apiClient';
+import authService from '../../services/authService';
 import { useState, useRef, useContext, useEffect } from 'react';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import {
@@ -65,12 +66,28 @@ const Register = () => {
 	}
 
 	try {
-	    const response = await apiClient.post(
-		'/auth/register/',
-		{ username, email, password, passwordConfirm },
-	    );
+	    const result = await authService.register({
+		email,
+		username,
+		password,
+		passwordConfirm,
+	    });
 
-	    dispatch(registrationSuccess(response.data));
+	    if (!result.success) {
+		const normalizedError = result.error || normalizeError(new Error('Registration failed.'));
+
+		if (normalizedError?.fields?.email || normalizedError?.fields?.username) {
+		    setEmail('');
+		    setUsername('');
+		    setPassword('');
+		    setPasswordConfirm('');
+		}
+
+		dispatch(registrationFailure(normalizedError));
+		return;
+	    }
+
+	    dispatch(registrationSuccess(result.user));
 	    navigate('/login');
 	} catch (error) {
 	    const normalizedError = error?.normalized || normalizeError(error);
