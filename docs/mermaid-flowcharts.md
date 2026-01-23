@@ -63,3 +63,12 @@ flowchart TD
 
 - Refresh tokens are stored as HttpOnly cookies and scoped to `/api/v2/auth/`.
 - Access tokens are kept client-side in the token service and attached to future API requests.
+
+# Auth Persistence Flowchart (Client ⇄ Server ⇄ Client)
+
+```mermaid
+flowchart TD
+	  A[App loads / refreshes] --> B[tokenService.rehydrate reads stored access token]
+	  B --> C{Access token present?}
+
+```
