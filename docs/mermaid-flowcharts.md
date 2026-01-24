@@ -95,3 +95,35 @@ flowchart TD
 
 - Refresh tokens are stored as HttpOnly cookies and scoped to `/api/v2/auth/`.
 - Access tokens are stored client-side and refreshed automatically when expired.
+
+# Logout Flowchart (Client ⇄ Server ⇄ Client)
+
+```mermaid
+flowchart TD
+	  A[User initiates logout in UI] --> B[AuthService.logout posts logout request]
+	  B --> C[apiClient POST /auth/logout/]
+	  C --> D[Backend LogoutView reads refresh token]
+	  D --> E{Refresh token present/valid?}
+	  E -- No or invalid --> F[Return 400 + delete refresh cookie]
+	  F --> G[Logout UI shows error or clears state]
+
+	  E -- Yes --> H[Blacklist refresh token]
+	  H --> I[Delete refresh_token HttpOnly cookie]
+	  I --> J[Return 204 No Content]
+	  J --> K[Client clears access token + auth state]
+	  K --> L[Redirect to login]
+```
+
+## Key Components
+
+- **Frontend**
+  - `AuthService.logout` sends the logout request and reports success or failure.
+  - `apiClient` includes credentials to send the refresh token cookie.
+  - Client-side logout handlers clears access tokens and redirect to `/login`.
+- **Backend**
+  - `LogoutView` reads the refresh token from the request body or cookie, blacklists it when valid, and deletes the refresh cookie.
+
+## Notes
+
+- Refresh tokens are stored as HttpOnly cookies and scoped to `/api/v2/auth`.
+- Access tokens are cleared client-side on logout success or failure to prevent reuse.
