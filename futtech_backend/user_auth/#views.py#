@@ -244,6 +244,7 @@ class LogoutView(APIView):
                 {'detail': 'Refresh token is invalid or expired.'},
                 status=status.HTTP_400_BAD_REQUEST,
             )
+
             response.delete_cookie(
                 'refresh_token',
                 path='api/v2/auth/',
@@ -252,6 +253,7 @@ class LogoutView(APIView):
             return response
 
         response = Response(status=status.HTTP_204_NO_CONTENT)
+
         response.delete_cookie(
             'refresh_token',
             path='/api/v2/auth/',
