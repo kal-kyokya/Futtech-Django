@@ -70,5 +70,28 @@ flowchart TD
 flowchart TD
 	  A[App loads / refreshes] --> B[tokenService.rehydrate reads stored access token]
 	  B --> C{Access token present?}
-
+	  C -- No --> D[Redirect user to login]
+	  C -- Yes --> E[apiClient attaches Bearer token to requests]
+	  E --> F[Request protected resource]
+	  F --> G{Backend returns 401?}
+	  G -- No --> H[Request succeeds]
+	  G -- Yes --> I[apiClient calls /auth/token/refresh]
+	  I --> J{Refresh token cookie valid?}
+	  J -- No --> K[Clear access token + redirect to login]
+	  J -- Yes --> L[Issue new access token]
+	  L --> M[tokenService updates access token]
+	  M --> N[Retry original request]
 ```
+
+## Key Components
+
+- **Frontend**
+  - `tokenService.rehydrate` restores access tokens on app load.
+  - `apiClient` attaches access tokens to requests and handles automatic refresh on 401 responses.
+- **Backend**
+  - `RefreshTokenCookieView` issues a new access token when a valid refresh token cookie is present.
+
+## Notes
+
+- Refresh tokens are stored as HttpOnly cookies and scoped to `/api/v2/auth/`.
+- Access tokens are stored client-side and refreshed automatically when expired.
