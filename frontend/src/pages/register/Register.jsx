@@ -56,6 +56,7 @@ const Register = () => {
 	    dispatch(registrationFailure({ message }));
 	    return;
 	}
+	    
 
 	if (password !== passwordConfirm) {
 	    dispatch(registrationFailure({
@@ -128,7 +129,7 @@ const Register = () => {
 		</h2>
 		<h4>Ready to watch? Enter your details to create or restart your membership.</h4>
 
-		{ registrationError?.message && (
+		{ !registrationError?.fields && registrationError?.message && (
 		    <div className='userPrompt'>
 			{registrationError.message}
 		    </div>
