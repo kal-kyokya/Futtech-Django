@@ -48,14 +48,23 @@ const Register = () => {
 	dispatch(registrationStart());
 
 	if (!email || !username || !password || !passwordConfirm) {
-	    const message = !email
-		  ? 'Email required.'
+	    const fieldRequired = !email
+		  ? {
+		      message: 'Email required.',
+		      fields: { email: 'Email required.' },
+		  }
 		  : !username
-		  ? 'Username required.'
-		  : 'Password required.';
-	    dispatch(registrationFailure({ message }));
-	    return;
-	}
+		  ? {
+		      message: 'Username required.',
+		      fields: { username: 'Username required.' },
+		  }
+		  : {
+		      message: 'Password required.',
+		      fields: { password: 'Password required.' },
+		  };
+
+	    dispatch(registrationFailure(fieldRequired));
+	    return;}
 	    
 
 	if (password !== passwordConfirm) {
