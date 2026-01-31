@@ -18,6 +18,11 @@ const apiClient = axios.create({
     withCredentials: true,
 });
 
+const isAuthEndpoint = (url = '') =>
+      url.includes('/auth/login') ||
+      url.includes('/auth/register') ||
+      url.includes('/auth/refresh');
+
 export const normalizeError = (error) => {
     const response = error?.response;
     const status = response?.status ?? null;
@@ -95,6 +100,11 @@ apiClient.interceptors.response.use(
     (response) => response,
     async (error) => {
 	const originalRequest = error.config;
+
+	// If this was a login/register/refresh request, NEVER try refresh/redirect here.
+	if (isAuthEndpoint(originalRequest?.url)) {
+	    return Promise.reject(error);
+	}
 
 	// Check if error is 401 and we haven't already tried to refresh
 	if (error.response?.status === 401 && !originalRequest._retry) {
