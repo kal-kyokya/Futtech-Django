@@ -155,12 +155,6 @@ const Login = () => {
 			</div>
 		    )}
 
-		    {loginError?.message && (
-			<div className='userPrompt'>
-			    {loginError.message}
-			</div>
-		    )}
-
 		    <span className='resetPassword'>
 			<Link to='/reset-password' className='link'>
 			    <u>Forgot Password?</u>
