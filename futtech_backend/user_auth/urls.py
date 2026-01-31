@@ -23,7 +23,7 @@ urlpatterns = [
     path('login/',
          ObtainTokenCookieView.as_view(),
          name='user-login'),
-    path('token/refresh',
+    path('token/refresh/',
          RefreshTokenCookieView.as_view(),
          name='token-refresh'),
     path('logout/',
