@@ -28,7 +28,7 @@ const Register = () => {
 	() => dispatch(clearUserError())
     ), [dispatch]);
 
-    const handleEmail = () => {
+    const handleStart = () => {
 	const emailRegEx = /^[a-zA-Z0-9_.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 	if (!emailRef.current) {
@@ -36,36 +36,21 @@ const Register = () => {
 	}
 
 	if (emailRegEx.test(emailRef.current.value)) {
-	    setEmail(emailRef.current.value);
 	    dispatch(clearUserError());
+
+	    if (username) {
+		setEmail(emailRef.current.value);
+	    } else {
+		dispatch(registrationFailure({ message: 'Invalid Username.' }));
+	    }
 	} else {
-	    dispatch(registrationFailure({ message: 'Invalid Email' }));
+	    dispatch(registrationFailure({ message: 'Invalid Email.' }));
 	}
     };
 
     const handleRegister = async (e) => {
 	e.preventDefault(); // Prevents form reload and allows data submission
 	dispatch(registrationStart());
-
-	if (!email || !username || !password || !passwordConfirm) {
-	    const fieldRequired = !email
-		  ? {
-		      message: 'Email required.',
-		      fields: { email: 'Email required.' },
-		  }
-		  : !username
-		  ? {
-		      message: 'Username required.',
-		      fields: { username: 'Username required.' },
-		  }
-		  : {
-		      message: 'Password required.',
-		      fields: { password: 'Password required.' },
-		  };
-
-	    dispatch(registrationFailure(fieldRequired));
-	    return;}
-	    
 
 	if (password !== passwordConfirm) {
 	    dispatch(registrationFailure({
@@ -202,7 +187,7 @@ const Register = () => {
 
 			<button className='getStarted'
 				type='button'
-				onClick={handleEmail}>
+				onClick={handleStart}>
 			    <span>
 				Get Started
 			    </span>
