@@ -67,8 +67,6 @@ const Login = () => {
 
 	    if (!result.success) {
 		const normalizedError = result.error || normalizeError(new Error('Login failed'));
-		console.log(result);
-		console.log(normalizedError);
 		authDispatch(loginFailure(normalizedError));
 		userDispatch(updateFailure(normalizedError));
 		videoDispatch(getVideosFailure());
