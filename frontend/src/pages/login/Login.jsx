@@ -3,7 +3,7 @@ import { useState, useContext, useEffect } from 'react';
 import { useNavigate, Link, useLocation } from 'react-router-dom';
 import { AuthContext } from '../../contexts/authContext/AuthContext';
 import { UserContext } from '../../contexts/userContext/UserContext';
-import { ListContext } from '../../contexts/listContext/ListContext';
+import { PlaylistContext } from '../../contexts/playlistContext/PlaylistContext';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import {
     loginStart,
@@ -19,9 +19,9 @@ import {
     getVideosSuccess,
     getVideosFailure } from '../../contexts/videoContext/VideoActions';
 import {
-    getListsStart,
-    getListsSuccess,
-    getListsFailure } from '../../contexts/listContext/ListActions';
+    getPlaylistsStart,
+    getPlaylistsSuccess,
+    getPlaylistsFailure } from '../../contexts/playlistContext/PlaylistActions';
 import authService from '../../services/authService';
 import { normalizeError } from '../../services/apiClient';
 
@@ -35,7 +35,7 @@ const Login = () => {
 	    error: loginError } = useContext(AuthContext);
 
     const { dispatch: videoDispatch } = useContext(VideoContext);
-    const { dispatch: listDispatch } = useContext(ListContext);
+    const { dispatch: playlistDispatch } = useContext(PlaylistContext);
     const { dispatch: userDispatch } = useContext(UserContext);
 
     const navigate = useNavigate();
@@ -60,7 +60,7 @@ const Login = () => {
 	authDispatch(loginStart());
 	userDispatch(updateStart());
 	videoDispatch(getVideosStart());
-	listDispatch(getListsStart());
+	playlistDispatch(getPlaylistsStart());
 
 	try {
 	    const result = await authService.login({ email, password });
@@ -70,7 +70,7 @@ const Login = () => {
 		authDispatch(loginFailure(normalizedError));
 		userDispatch(updateFailure(normalizedError));
 		videoDispatch(getVideosFailure());
-		listDispatch(getListsFailure());
+		playlistDispatch(getPlaylistsFailure());
 		return;
 	    }
 
@@ -87,18 +87,18 @@ const Login = () => {
 		    }
 
 		    if (Array.isArray(playlists)) {
-			listDispatch(getListsSuccess(playlists));
+			playlistDispatch(getPlaylistsSuccess(playlists));
 		    } else {
-			listDispatch(getListsSuccess(playlists?.results ?? []));
+			playlistDispatch(getPlaylistsSuccess(playlists?.results ?? []));
 		    }
 		} catch (contentError) {
 		    console.error('Failed to load initial content: ', contentError);
 		    videoDispatch(getVideosFailure());
-		    listDispatch(getListsFailure());
+		    playlistDispatch(getPlaylistsFailure());
 		}
 	    } else {
 		videoDispatch(getVideosSuccess([]));
-		listDispatch(getListsSuccess([]));
+		playlistDispatch(getPlaylistsSuccess([]));
 	    }
 
 	    navigate('/', { replace: true });
@@ -108,7 +108,7 @@ const Login = () => {
 	    authDispatch(loginFailure(normalizedError));
 	    userDispatch(updateFailure(normalizedError));
 	    videoDispatch(getVideosFailure());
-	    listDispatch(getListsFailure());
+	    playlistDispatch(getPlaylistsFailure());
 	}
     };
 
