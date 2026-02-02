@@ -1,92 +1,92 @@
 /**
- * A reducer function linking stages of list retrieval
+ * A reducer function linking stages of playlist retrieval
  * to all the states (data) internally managed by React.
  *
  * Something of a router for potential stages reached.
  */
 
-const ListReducer = (state, action) => {
+const PlaylistReducer = (state, action) => {
     switch (action.type) {
-      case 'CREATE_LIST_START':
+      case 'CREATE_PLAYLIST_START':
 	return {
 	    ...state,
 	    isFetching: true,
 	    error: false,
 	};
 
-      case 'CREATE_LIST_SUCCESS':
+      case 'CREATE_PLAYLIST_SUCCESS':
 	return {
-	    lists: [ ...state.lists, action.payload ],
+	    playlists: [ ...state.playlists, action.payload ],
 	    isFetching: false,
 	    error: false,
 	};
 
-      case 'CREATE_LIST_FAILURE':
+      case 'CREATE_PLAYLIST_FAILURE':
 	return {
 	    ...state,
 	    isFetching: false,
 	    error: true,
 	};
 
-      case 'GET_LISTS_START':
+      case 'GET_PLAYLISTS_START':
 	return {
-	    lists: [],
+	    playlists: [],
 	    isFetching: true,
 	    error: false,
 	};
 
-      case 'GET_LISTS_SUCCESS':
+      case 'GET_PLAYLISTS_SUCCESS':
 	return {
-	    lists: action.payload,
+	    playlists: action.payload,
 	    isFetching: false,
 	    error: false,
 	};
 
-      case 'GET_LISTS_FAILURE':
+      case 'GET_PLAYLISTS_FAILURE':
 	return {
-	    lists: [],
+	    playlists: [],
 	    isFetching: false,
 	    error: true,
 	};
 
-      case 'UPDATE_LIST_START':
+      case 'UPDATE_PLAYLIST_START':
 	return {
 	    ...state,
 	    isFetching: true,
 	    error: false,
 	};
 
-      case 'UPDATE_LIST_SUCCESS':
+      case 'UPDATE_PLAYLIST_SUCCESS':
 	return {
-	    lists: state.lists.map(
-		(list) => list._id === action.payload._id ? action.payload : list
+	    playlists: state.playlists.map(
+		(playlist) => playlist._id === action.payload._id ? action.payload : playlist
 	    ),
 	    isFetching: false,
 	    error: false,
 	};
 
-      case 'UPDATE_LIST_FAILURE':
+      case 'UPDATE_PLAYLIST_FAILURE':
 	return {
 	    ...state,
 	    isFetching: false,
 	    error: true,
 	};
 
-      case 'DELETE_LIST_START':
+      case 'DELETE_PLAYLIST_START':
 	return {
 	    ...state,
 	    isFetching: true,
 	    error: false,
 	};
 
-      case 'DELETE_LIST_SUCCESS':
+      case 'DELETE_PLAYLIST_SUCCESS':
 	return {
-	    lists: state.lists.filter((list) => list._id !== action.payload._id),
+	    playlists: state.playlists.filter((playlist) => playlist._id !== action.payload._id),
 	    isFetching: false,
 	    error: false,
 	};
 
-      case 'DELETE_LIST_FAILURE':
+      case 'DELETE_PLAYLIST_FAILURE':
 	return {
 	    ...state,
 	    isFetching: false,
@@ -98,4 +98,4 @@ const ListReducer = (state, action) => {
     }
 };
 
-export default ListReducer;
+export default PlaylistReducer;
