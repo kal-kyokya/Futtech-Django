@@ -74,6 +74,99 @@ class ContentService {
 	}
     }
 
+    // Playlist CRUD operations
+
+    /**
+     * Asynchronous function.
+     * Fetches a single playlist by its unique identifier.
+     *
+     * @param {string} playlistId - UUID tied to the playlist object.
+     *
+     * @returns {Object|null} The playlist record if found.
+     */
+    async fetchPlaylist(playlistId) {
+	const cacheKey = `playlist_detail_${playlistId}`;
+
+	if (this.cache.has(cacheKey)) {
+	    return this.cache.get(cacheKey);
+	}
+
+	try {
+	    const response = await apiClient.get(`/playlists/${playlistId}`);
+	    const playlist = response.data;
+
+	    this.cache.set(cacheKey, playlist);
+
+	    return playlist;
+	} catch (error) {
+	    console.error(`Failed to fetch playlist ${playlistId}: `, error);
+	    return null;
+	}
+    }
+
+    /**
+     * Asynchronous function.
+     * Creates a new playlist for the current user.
+     *
+     * @param {Object} payload - The playlist attributes to persist.
+     *
+     * @returns {Object|null} The created playlist object.
+     */
+    async createPlaylist(payload) {
+	try {
+	    const response = await apiClient.post('/playlists/', payload);
+
+	    return response.data;
+	} catch (error) {
+	    console.error('Failed to create playlist: ', error);
+	    return null;
+	}
+    }
+
+    /**
+     * Asynchronous function.
+     * Updates a playlist with new data.
+     *
+     * @param {string} playlistId - UUID tied to the playlist object.
+     * @param {Object} payload - The playlist attributes to update.
+     *
+     * @returns {Object|null} The updated playlist object.
+     */
+    async updatePlaylist(playlistId, payload) {
+	try {
+	    const response = await apiClient.patch(`/playlists/{playlistId}`, payload);
+	    const playlist = response.data;
+
+	    this.cache.set(`playlist_detail_${playlistId}`, playlist);
+
+	    return playlist;
+	} catch (error) {
+	    console.error(`Failed to update playlist ${playlistId}`, error);
+	    return null;
+	}
+    }
+
+    /**
+     * Asynchronous function.
+     * Deletes a playlist for the current user.
+     *
+     * @param {string} playlistId - UUID tied to the playlist object.
+     *
+     * @returns {boolean} True when deletion succeeds, false otherwise.
+     */
+    async deletePlaylist(playlistId) {
+	try {
+	    await apiClient.delete(`/playlists/${playlistId}`);
+
+	    this.cache.delete(`playlist_detail_${playlistId}`);
+
+	    return True;
+	} catch (error) {
+	    console.error(`Failed to delete playlist ${playlistId}`, error);
+	    return false;
+	}
+    }
+
     /**
      * Asynchronous function.
      * Fetches videos for a specific playlist with pagination
@@ -93,7 +186,7 @@ class ContentService {
 	}
 
 	try {
-	    const response = await apiClient.get(`/playlists/${playlistId/videos/}`, {
+	    const response = await apiClient.get(`/playlists/${playlistId}/videos/}`, {
 		params: { page, limit },
 	    });
 
@@ -221,7 +314,7 @@ class ContentService {
 	});
     }
 
-    // Clear cache (useful for memory management)
+    // Clears cache (useful for memory management)
     clearCache() {
 	this.cache.clear();
     }
