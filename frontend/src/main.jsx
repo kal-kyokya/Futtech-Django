@@ -4,16 +4,16 @@ import App from './App.jsx'
 import { AuthContextProvider } from './contexts/authContext/AuthContext.jsx';
 import { UserContextProvider } from './contexts/userContext/UserContext.jsx';
 import { VideoContextProvider } from './contexts/videoContext/VideoContext.jsx';
-import { ListContextProvider } from './contexts/listContext/ListContext.jsx';
+import { PlaylistContextProvider } from './contexts/playlistContext/PlaylistContext.jsx';
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
       <AuthContextProvider>
 	  <UserContextProvider>
 	      <VideoContextProvider>
-		  <ListContextProvider>
+		  <PlaylistContextProvider>
 		      <App />
-		  </ListContextProvider>
+		  </PlaylistContextProvider>
 	      </VideoContextProvider>
 	  </UserContextProvider>
       </AuthContextProvider>
