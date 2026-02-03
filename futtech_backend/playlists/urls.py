@@ -16,7 +16,7 @@ urlpatterns = [
          name='playlist-list'
     ),
     path(
-        '<int:pk>',
+        '<int:pk>/',
         PlaylistViewSet.as_view({
             'get': 'retrieve',
             'put': 'update',
