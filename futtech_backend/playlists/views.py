@@ -24,7 +24,7 @@ class PlaylistViewSet(viewsets.ModelViewSet):
 
     serializer_class = PlaylistSerializer
     pagination_class = PlaylistPagination
-    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReady]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
     def get_queryset(self):
         """

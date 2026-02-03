@@ -25,6 +25,7 @@ TEST_PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
     DATABASES=TEST_DATABASES,
     PASSWORD_HASHERS=TEST_PASSWORD_HASHERS,
     SECRET_KEY='test-secret-key',
+    SECURE_SSL_REDIRECT=False,
 )
 class PlaylistViewSetTests(TestCase):
     """
