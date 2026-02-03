@@ -10,6 +10,7 @@ from rest_framework.response import Response
 from .models import Playlist
 from .serializers import PlaylistSerializer
 from .pagination import PlaylistPagination
+from .permissions import IsOwnerOrReadOnly
 
 
 class PlaylistViewSet(viewsets.ModelViewSet):
@@ -23,7 +24,7 @@ class PlaylistViewSet(viewsets.ModelViewSet):
 
     serializer_class = PlaylistSerializer
     pagination_class = PlaylistPagination
-    permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated, IsOwnerOrReady]
 
     def get_queryset(self):
         """
