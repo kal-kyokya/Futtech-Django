@@ -96,3 +96,87 @@ class PlaylistViewSetTests(TestCase):
         playlist = Playlist.objects.get(name='Fresh playlist')
         self.assertEqual(playlist.owner, self.owner)
         self.assertTrue(playlist.is_public)
+
+    def test_retrieve_playlist_returns_expected_fields(self):
+        """
+        Retrieving a playlist should return its serialized details.
+        """
+
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.get(
+            reverse('playlist-detail', args=[self.owner_playlist.pk])
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['name'], self.owner_playlist.name)
+        self.assertEqual(response.data['owner'], self.owner.id)
+        self.assertIn('description', response.data)
+
+    def test_update_playlist_persists_change(self):
+        """
+        Updating a playlist should persist changes in the database.
+        """
+
+        self.client.force_authenticate(user=self.owner)
+        payload = {
+            'name': 'Updated playlist name',
+            'description': 'Updated description',
+            'is_public': True,
+        }
+        response = self.client.patch(
+            reverse('playlist-detail', args=[self.owner_playlist.pk]),
+            payload,
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.owner_playlist.refresh_from_db()
+        self.assertEqual(self.owner_playlist.name, payload['name'])
+        self.assertEqual(self.owner_playlist.description, payload['description'])
+        self.assertTrue(self.owner_playlist.is_public)
+
+    def test_delete_playlist_removes_record(self):
+        """
+        Deleting a playlist should remove it from the database.
+        """
+
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.delete(
+            reverse('playlist-detail', args=[self.owner_playlist.pk]),
+        )
+
+        self.assertEqual(response.status_code, 204)
+        self.assertFalse(
+            Playlist.objects.filter(pk=self.owner_playlist.pk).exists(),
+        )
+
+    def test_non_owner_cannot_update_playlist(self):
+        """
+        Non-owners should be forbidden from updating playlists.
+        """
+
+        self.client.force_authenticate(user=self.other_user)
+        response = self.client.patch(
+            reverse('playlist-detail', args=[self.owner_playlist.pk]),
+            { 'name': 'Forbidden update' },
+            format='json',
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.owner_playlist.refresh_from_db()
+        self.assertNotEqual(self.owner_playlist.name, 'Forbidden update')
+
+    def test_non_owner_cannot_delete_playlist(self):
+        """
+        Non-owners should be forbidden from deleting playlists.
+        """
+
+        self.client.force_authenticate(user=self.other_user)
+        response = self.client.delete(
+            reverse('playlist-detail', args=[self.owner_playlist.pk]),
+        )
+
+        self.assertEqual(response.status_code, 403)
+        self.assertTrue(
+            Playlist.objects.filter(pk=self.owner_playlist.pk).exists(),
+        )
