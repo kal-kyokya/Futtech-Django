@@ -3,7 +3,7 @@ import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { AuthContextProvider } from '../contexts/authContext/AuthContext';
 import { UserContextProvider } from '../contexts/userContext/UserContext';
 import { VideoContextProvider } from '../contexts/videoContext/VideoContext';
-import { ListContextProvider } from '../contexts/listContext/ListContext';
+import { PlaylistContextProvider } from '../contexts/playlistContext/PlaylistContext';
 import tokenService from '../services/tokenService';
 
 // Seed localStorage + tokenService to simulate authenticated users.
@@ -38,10 +38,10 @@ export const renderWithProviders = (
 	    <AuthContextProvider>
 		<UserContextProvider>
 		    <VideoContextProvider>
-			<ListContextProvider>
+			<PlaylistContextProvider>
 			    {/* Allow rendering either a single route or full route tree. */}
 			    {content}
-			</ListContextProvider>
+			</PlaylistContextProvider>
 		    </VideoContextProvider>
 		</UserContextProvider>
 	    </AuthContextProvider>
