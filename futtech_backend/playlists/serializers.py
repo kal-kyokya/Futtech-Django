@@ -63,3 +63,6 @@ class PlaylistSerializer(serializers.ModelSerializer):
 
         model = Playlist
         fields = '__all__'
+        extra_kwargs = {
+            'owner': {'read_only': True},
+        }
