@@ -26,15 +26,32 @@ class PlaylistViewSet(viewsets.ModelViewSet):
     pagination_class = PlaylistPagination
     permission_classes = [permissions.IsAuthenticated, IsOwnerOrReadOnly]
 
+    def perform_create(self, serializer):
+        """
+        Handles POST request creating new playlists.
+
+        Params:
+        	self - Object representation of the class instantiation.
+        	serializer - A validated Django model friendly data set.
+
+        Return:
+        	None. A side effect: The creation of a playlist.
+        """
+        serializer.save(owner=self.request.user)
+
+
     def get_queryset(self):
         """
         Ensures videos are prefetched for all playlists in one DB hit
         """
         user = self.request.user
 
-        queryset = Playlist.objects.filter(
-            models.Q(owner=user) | models.Q(is_public=True)
-        ).prefetch_related('videos')
+        if self.action in {'update', 'partial_update', 'destroy'}:
+            queryset = Playlist.objects.all().prefetch_related('videos')
+        else:
+            queryset = Playlist.objects.filter(
+                models.Q(owner=user) | models.Q(is_public=True)
+            ).prefetch_related('videos')
 
         return queryset
 
@@ -69,17 +86,3 @@ class PlaylistViewSet(viewsets.ModelViewSet):
 
         serializer = self.get_serializer(queryset, many=True)
         return Response(serializer.data)
-
-
-    def perform_create(self, serializer):
-        """
-        Handles POST request creating new playlists.
-
-        Params:
-        	self - Object representation of the class instantiation.
-        	serializer - A validated Django model friendly data set.
-
-        Return:
-        	None. A side effect: The creation of a playlist.
-        """
-        serializer.save(owner=self.request.user)
