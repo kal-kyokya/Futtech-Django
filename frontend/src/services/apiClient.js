@@ -38,14 +38,22 @@ export const normalizeError = (error) => {
     }
 
     if (data && typeof data === 'object') {
-	const message = data.detail || data.message || fallbackMessage;
+	const nonFieldErrors = data.non_field_errors;
+	const message = data.detail
+	      || data.message
+	      || (Array.isArray(nonFieldErrors)
+		  ? nonFieldErrors.join(', ')
+		  : nonFieldErrors)
+	      || fallbackMessage;
 	const fields = data.fields
 	      || Object.fromEntries(
 		  Object.entries(data)
-		      .filter(([key]) => !['detail', 'message', 'status', 'title', 'code'].includes(key))
+		      .filter(([key]) => !['detail', 'message', 'status', 'title', 'code', 'non_field_errors'].includes(key))
 		      .map(([key, value]) => [
 			  key,
-			  Array.isArray(value) ? value.join(', ') : String(value),
+			  Array.isArray(value)
+			      ? value.join(', ')
+			      : String(value),
 		      ]),
 	      );
 
