@@ -11,7 +11,7 @@ describe('Playlist CRUD service flows', () => {
     it('creates a playlist via the API', async () => {
 	const payload = {
 	    name: 'Shooting drills',
-	    description: "A collection of training session video working the pklayer's shooting technique",
+	    description: "Videos of players working on their shooting",
 	    is_public: true,
 	};
 	const responsePayload = { id: 72, ...payload };
@@ -34,7 +34,7 @@ describe('Playlist CRUD service flows', () => {
 	const responsePayload = {
 	    id: Number(playlistId),
 	    name: 'Assertive moments',
-	    description: 'A collection of videos showing players bravely express themselves',
+	    description: 'Videos of players bravely express themselves',
 	    is_public: false,
 	};
 

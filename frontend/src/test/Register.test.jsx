@@ -21,7 +21,7 @@ describe('Registration', () => {
 		return HttpResponse.json(
 		    {
 			message: 'Email already used.',
-			email: ['Email already used'],
+			email: ['Email already used.'],
 		    },
 		    { status: 400 },
 		);
