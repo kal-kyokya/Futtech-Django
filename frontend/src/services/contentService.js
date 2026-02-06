@@ -134,7 +134,7 @@ class ContentService {
      */
     async updatePlaylist(playlistId, payload) {
 	try {
-	    const response = await apiClient.patch(`/playlists/{playlistId}`, payload);
+	    const response = await apiClient.patch(`/playlists/${playlistId}`, payload);
 	    const playlist = response.data;
 
 	    this.cache.set(`playlist_detail_${playlistId}`, playlist);
@@ -160,7 +160,7 @@ class ContentService {
 
 	    this.cache.delete(`playlist_detail_${playlistId}`);
 
-	    return True;
+	    return true;
 	} catch (error) {
 	    console.error(`Failed to delete playlist ${playlistId}`, error);
 	    return false;
