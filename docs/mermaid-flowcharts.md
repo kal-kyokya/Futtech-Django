@@ -127,3 +127,52 @@ flowchart TD
 
 - Refresh tokens are stored as HttpOnly cookies and scoped to `/api/v2/auth`.
 - Access tokens are cleared client-side on logout success or failure to prevent reuse.
+
+# Playlist CRUD Flowchart (Client ⇄ Server ⇄ Client)
+
+```mermaid
+flowchart TD
+	  A[User interacts with playlists in UI] --> B{Operation type?}
+
+	  B -- Read list --> C[contentService.fetchPlaylists calls apiClient GET /api/v2/playlists/]
+	  C --> D[PlaylistViewSet.list filters owned + public playlists]
+	  D --> E[PlaylistPagination paginates results]
+	  E --> F[PlaylistSerializer returns playlist + videos]
+	  F --> G[Client updates playlist list state]
+
+	  B -- Read detail --> H[apiClient GET /api/v2/playlists/:id]
+	  H --> I[PlaylistViewSet.retrieve loads playlist + videos]
+	  I --> J[PlaylistSerializer returns playlist detail]
+	  J --> K[Client renders playlist detail view]
+
+	  B -- Create --> L[UI submits playlist form]
+	  L --> M[apiClient POST /api/v2/playlists/]
+	  M --> N[PlaylistViewSet.create assigns owner + saves playlist]
+	  N --> O[PlaylistSerializer returns new playlist]
+	  O --> P[Client refreshes playlists or inserts new item]
+
+	  B -- Update --> Q[UI edits playlist details]
+	  Q --> R[apiClient PATCH /api/v2/playlist/:id]
+	  R --> S[PlaylistViewSet.partial_update validates + saves]
+	  S --> T[PlaylistSerializer returns updated playlist]
+	  T --> U[Client updates playlist state]
+
+	  B -- Delete --> V[UI triggers delete]
+	  V --> W[apiClient DELETE /api/v2/playlists/:id]
+	  W --> X[PlaylistViewSet.destroy removes playlist]
+	  X --> Y[Client removes playlist from state]
+```
+
+# Key Components
+
+- **Frontend**
+  - `contentService.fetchPlaylists` calls `api/v2/playlists/` and normalizes paginated lists for UI state.
+  - Playlist detail, create, update, and delete flows call the API client and update local states after responses.
+- **Backend**
+  - `PlaylistViewSet` powers list/retrieve/create/update/destroy operations with pagination.
+  - `PlaylistSerializer` returns nested video data in playlist responses.
+
+## Notes
+
+- Listing combines playlists owned by the owner and public playlists.
+- Playlist detail responses include related videos for the UI detail view.

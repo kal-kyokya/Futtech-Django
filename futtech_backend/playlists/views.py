@@ -42,7 +42,7 @@ class PlaylistViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """
-        Ensures videos are prefetched for all playlists in one DB hit
+        Ensures videos are prefetched for all playlists in one DB hit.
         """
         user = self.request.user
 
