@@ -18,9 +18,9 @@ import Home from './pages/home/Home';
 import NewVideo from './pages/newVideo/NewVideo';
 import User from './pages/user/User';
 import Watch from './pages/watch/Watch';
-import NewList from './pages/newList/NewList';
+import NewPlaylist from './pages/newPlaylist/NewPlaylist';
 import Video from './pages/video/Video';
-import Lists from './pages/lists/Lists';
+import Playlists from './pages/playlists/Playlists';
 import Pricing from './pages/pricing/Pricing';
 import VideoList from './pages/videoList/VideoList';
 
@@ -102,9 +102,9 @@ const App = () => {
 			       <NewVideo />
 			   </PrivateRoute>
 		       } />
-		<Route path='new-list' element={
+		<Route path='new-playlist' element={
 			   <PrivateRoute isReady={authReady}>
-			       <NewList />
+			       <NewPlaylist />
 			   </PrivateRoute>
 		       } />
 		<Route path='video-list' element={
@@ -117,9 +117,9 @@ const App = () => {
 			       <Video />
 			   </PrivateRoute>
 		       } />
-		<Route path='lists' element={
+		<Route path='playlists' element={
 			   <PrivateRoute isReady={authReady}>
-			       <Lists />
+			       <Playlists />
 			   </PrivateRoute>
 		       } />
 		<Route path='*' element={ <Navigate to='/' replace />} />
