@@ -1,30 +1,30 @@
-import './newList.scss';
+import './newPlaylist.scss';
 import { useState, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { ListContext } from '../../contexts/listContext/ListContext';
+import { PlaylistContext } from '../../contexts/playlistContext/PlaylistContext';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import {
-    createListStart, createListSuccess, createListFailure,
-} from '../../contexts/listContext/ListActions';
+    createPlaylistStart, createPlaylistSuccess, createPlaylistFailure,
+} from '../../contexts/playlistContext/PlaylistActions';
 import Navbar from '../../components/Navbar';
 import apiClient from '../../services/apiClient';
 
-const NewList = () => {
-    const [list, setList] = useState({
+const NewPlaylist = () => {
+    const [playlist, setPlaylist] = useState({
 	title: '', category: '',
 	subCategory: '', thumbnail: null,
 	content: [],
     });
     const navigate = useNavigate();
 
-    const { dispatch } = useContext(ListContext);
+    const { dispatch } = useContext(PlaylistContext);
     const { videos } = useContext(VideoContext);
 
     const handleChange = (e) => {
 	const { name, value, files } = e.target;
 	const fieldValue = name === 'thumbnail' && files ? files[0] : value;
 
-	setList((prev) => ({
+	setPlaylist((prev) => ({
 	    ...prev,
 	    [name]: fieldValue,
 	}));
@@ -36,7 +36,7 @@ const NewList = () => {
 	    (option) => option.value,
 	);
 
-	setList((prev) => ({
+	setPlaylist((prev) => ({
 	    ...prev,
 	    [e.target.name]: selectedValues,
 	}));
@@ -44,23 +44,23 @@ const NewList = () => {
 
     const handleSubmit = async (e) => {
 	e.preventDefault();
-	dispatch(createListStart());
+	dispatch(createPlaylistStart());
 
 	try {
 	    const payload = {
-		title: list.title,
-		category: list.category,
-		subCategory: list.subCategory,
-		content: list.content
+		title: playlist.title,
+		category: playlist.category,
+		subCategory: playlist.subCategory,
+		content: playlist.content
 	    };
 
-	    const response = await apiClient.post('/lists/', payload);
+	    const response = await apiClient.post('/playlists/', payload);
 
-	    dispatch(createListSuccess(response.data));
-	    navigate('/lists');
+	    dispatch(createPlaylistSuccess(response.data));
+	    navigate('/playlists');
 	} catch (error) {
-	    console.error('Failed to create list: ', error);
-	    dispatch(createListFailure());
+	    console.error('Failed to create playlist: ', error);
+	    dispatch(createPlaylistFailure());
 	}
     };
 
@@ -68,44 +68,44 @@ const NewList = () => {
 	<>
 	    <Navbar />
 
-	    <div className='newList'>
-		<h1 className='newListTitle'>New List</h1>
+	    <div className='newPlaylist'>
+		<h1 className='newPlaylistTitle'>New Playlist</h1>
 
-		<form className='newListForm' onSubmit={handleSubmit}>
-		    <div className='newListTop'>
-			<div className='newListLeft'>
-			    <div className='newListItem'>
+		<form className='newPlaylistForm' onSubmit={handleSubmit}>
+		    <div className='newPlaylistTop'>
+			<div className='newPlaylistLeft'>
+			    <div className='newPlaylistItem'>
 				<label>Title</label>
 				<input type='text'
-				       placeholder='List title'
-				       className='newListInput'
+				       placeholder='Playlist title'
+				       className='newPlaylistInput'
 				       name='title'
-				       value={list.title}
+				       value={playlist.title}
 				       onChange={handleChange}
 				       required
 				/>
 			    </div>
-			    <div className='newListItem'>
+			    <div className='newPlaylistItem'>
 				<label>Category</label>
 				<input type='text'
 				       placeholder='Category'
-				       className='newListInput'
+				       className='newPlaylistInput'
 				       name='category'
-				       value={list.category}
+				       value={playlist.category}
 				       onChange={handleChange}
 				/>
 			    </div>
-			    <div className='newListItem'>
+			    <div className='newPlaylistItem'>
 				<label>Sub-category</label>
 				<input type='text'
 				       placeholder='Sub-category'
-				       className='newListInput'
+				       className='newPlaylistInput'
 				       name='subCategory'
-				       value={list.subCategory}
+				       value={playlist.subCategory}
 				       onChange={handleChange}
 				/>
 			    </div>
-			    <div className='newListItem'>
+			    <div className='newPlaylistItem'>
 				<label>Thumbnail</label>
 				<input type='file'
 				       id='thumbnail'
@@ -116,13 +116,13 @@ const NewList = () => {
 			    </div>
 			</div>
 
-			<div className='newListRight'>
-			    <div className='newListItem'>
-				<label>List Content</label>
-				<select className='newListSelect'
+			<div className='newPlaylistRight'>
+			    <div className='newPlaylistItem'>
+				<label>Playlist Content</label>
+				<select className='newPlaylistSelect'
 					multiple
 					name='content'
-					value={list.content}
+					value={playlist.content}
 					onChange={handleSelect}
 					style={ { height: '260px' } }
 				>
@@ -142,8 +142,8 @@ const NewList = () => {
 			</div>
 		    </div>
 
-		    <div className='newListBottom'>
-			<button className='newListButton'
+		    <div className='newPlaylistBottom'>
+			<button className='newPlaylistButton'
 				type='submit'
 			>
 			    Create
@@ -155,4 +155,4 @@ const NewList = () => {
     );
 };
 
-export default NewList;
+export default NewPlaylist;
