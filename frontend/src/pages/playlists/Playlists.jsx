@@ -1,46 +1,46 @@
-import './lists.scss';
+import './playlists.scss';
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
 import { Link } from 'react-router-dom';
 import { useState, useContext, useEffect } from 'react';
-import { ListContext } from '../../contexts/listContext/ListContext';
+import { PlaylistContext } from '../../contexts/playlistContext/PlaylistContext';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import {
-    getListsStart, getListsSuccess, getListsFailure
-} from '../../contexts/listContext/ListActions';
+    getPlaylistsStart, getPlaylistsSuccess, getPlaylistsFailure
+} from '../../contexts/playlistContext/PlaylistActions';
 import Navbar from '../../components/Navbar';
 import axios from 'axios';
 
-const Lists = () => {
-    const { lists, dispatch } = useContext(ListContext);
+const Playlists = () => {
+    const { playlists, dispatch } = useContext(PlaylistContext);
     const { user } = useContext(UserContext);
     const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     const handleDelete = async (id) => {
-	dispatch(deleteListStart());
+	dispatch(deletePlaylistStart());
 
 	try {
-	    await axios.delete(`${baseURL}/lists/` + id, {
+	    await axios.delete(`${baseURL}/playlists/` + id, {
 		headers: {
 		    'auth-token': user.accessToken
 		}
 	    });
 
-	    dispatch(deleteListSuccess(id));
+	    dispatch(deletePlaylistSuccess(id));
 	} catch (err) {
 	    console.log(err);
-	    dispatch(deleteListFailure());
+	    dispatch(deletePlaylistFailure());
 	}
     };
 
     const columns = [
 	{ field: '_id', headerName: 'ID', width: 119 },
-	{ field: 'list', headerName: 'List', width: 195, renderCell: (params) => {
+	{ field: 'playlist', headerName: 'Playlist', width: 195, renderCell: (params) => {
 	    return (
-		<div className='listsCell'>
+		<div className='playlistsCell'>
 		    <img className='profile' src={ params.row.thumbnail }
-			 alt='List Thumbnail'
+			 alt='Playlist Thumbnail'
 		    />
 		    { params.row.title }
 		</div>
@@ -52,10 +52,10 @@ const Lists = () => {
 	{
 	    field: 'manage', headerName: 'Manage', width: 91, renderCell: (params) => {
 		return (
-		    <div className='manageList'>
-			<Link to={ '/lists/get' + params.row._id }
+		    <div className='managePlaylist'>
+			<Link to={ '/playlists/get' + params.row._id }
 			      className='link'>
-			    <button className='manageListButton'>Edit</button>
+			    <button className='managePlaylistButton'>Edit</button>
 			</Link>
 			<DeleteOutlineIcon className='deleteIcon'
 					   onClick={ () => handleDelete(params.row._id) }/>
@@ -72,10 +72,10 @@ const Lists = () => {
 	<>
 	    <Navbar />
 
-	    <div className='lists'>
+	    <div className='playlists'>
 		<Paper sx={{ height: '100%', width: '100%' }}>
 		    <DataGrid
-			rows={ lists }
+			rows={ playlists }
 			columns={ columns }
 			disableRowSelectionOnClick
 			checkboxSelection		    
@@ -90,4 +90,4 @@ const Lists = () => {
     );
 };
 
-export default Lists;
+export default Playlists;
