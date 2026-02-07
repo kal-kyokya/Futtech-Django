@@ -1,4 +1,4 @@
-import './list.scss';
+import './playlist.scss';
 import SportsSoccerIcon from '@mui/icons-material/SportsSoccer';
 import CalendarMonthOutlinedIcon from '@mui/icons-material/CalendarMonthOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
@@ -7,127 +7,127 @@ import { Link, useLocation } from 'react-router-dom';
 import ClassOutlinedIcon from '@mui/icons-material/ClassOutlined';
 import ListOutlinedIcon from '@mui/icons-material/ListOutlined';
 import { useState, useContext } from 'react';
-import { ListContext } from '../../contexts/listContext/ListContext';
+import { PlaylistContext } from '../../contexts/playlistContext/PlaylistContext';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import axios from 'axios';
 
-const List = () => {
-    const { list } = useLocation();
-    const [updatedList, setUpdatedList] = useState(null);
-    const { dispatch } = useContext(ListContext);
+const Playlist = () => {
+    const { playlist } = useLocation();
+    const [updatedPlaylist, setUpdatedPlaylist] = useState(null);
+    const { dispatch } = useContext(PlaylistContext);
     const { user } = useContext(UserContext);
     const baseURL = import.meta.env.VITE_API_BASE_URL;
 
     const handleChange = (e) => {
-	setUpdatedList({ ...updatedList, [e.target.name]: e.target.value });
+	setUpdatedPlaylist({ ...updatedPlaylist, [e.target.name]: e.target.value });
     };
 
     const handleSubmit = (e) => {
 	e.preventDefault();
-	setUpdatedList({ ...updatedList, content: list.content });
-	dispatch(updateListStart());
+	setUpdatedPlaylist({ ...updatedPlaylist, content: playlist.content });
+	dispatch(updatePlaylistStart());
 
 	try {
-	    const res = await axios.put(`${baseURL}/lists/` + list._id, list, {
+	    const res = await axios.put(`${baseURL}/playlists/` + playlist._id, playlist, {
 		headers: {
 		    'auth-token': user.accessToken
 		}
 	    });
 
-	    dispatch(updateListSuccess(res.data));
+	    dispatch(updatePlaylistSuccess(res.data));
 	} catch (err) {
 	    console.error(err);
-	    dispatch(updateListFailure());
+	    dispatch(updatePlaylistFailure());
 	}
     };
 
     return (
-	<div className='list'>
-	    <div className='listTopSection'>
-		<h1 className='listEditTitle'>Manage List</h1>
-		<Link to='/newList'>
-		    <button className='listCreateButton'>Create list</button>
+	<div className='playlist'>
+	    <div className='playlistTopSection'>
+		<h1 className='playlistEditTitle'>Manage Playlist</h1>
+		<Link to='/newPlaylist'>
+		    <button className='playlistCreateButton'>Create playlist</button>
 		</Link>
 	    </div>
 
-	    <div className='listContainer'>
-		<div className='listDetails'>
+	    <div className='playlistContainer'>
+		<div className='playlistDetails'>
 
-		    <div className='listDetailsTop'>
+		    <div className='playlistDetailsTop'>
 			<img className='profile'
-			     src='{list.thumbnail}'
-			     alt='List Thumbnail'
+			     src='{playlist.thumbnail}'
+			     alt='Playlist Thumbnail'
 			/>
-			<div className='listInfos'>
-			    <div className='listName'>{ 'list.title' }</div>
-			    <div className='listCategory'>{ 'list.category' }</div>
+			<div className='playlistInfos'>
+			    <div className='playlistName'>{ 'playlist.title' }</div>
+			    <div className='playlistCategory'>{ 'playlist.category' }</div>
 			</div>
 		    </div>
 
-		    <div className='listDetailsBottom'>
-			<span className='listDetailsTitle'>List details</span>
-			<div className='listDetailsDiv'>
-			    <ClassOutlinedIcon className='listDetailsIcon' />
-			    <div className='listDetailsContent'>{ 'list.subCategory' }</div>
+		    <div className='playlistDetailsBottom'>
+			<span className='playlistDetailsTitle'>Playlist details</span>
+			<div className='playlistDetailsDiv'>
+			    <ClassOutlinedIcon className='playlistDetailsIcon' />
+			    <div className='playlistDetailsContent'>{ 'playlist.subCategory' }</div>
 			</div>
-			<div className='listDetailsDiv'>
-			    <ListOutlinedIcon className='listDetailsIcon' />
-			    <div className='listDetailsContent'>{ 'list.content' }</div>
+			<div className='playlistDetailsDiv'>
+			    <ListOutlinedIcon className='playlistDetailsIcon' />
+			    <div className='playlistDetailsContent'>{ 'playlist.content' }</div>
 			</div>
-			<div className='listDetailsDiv'>
-			    <CalendarMonthOutlinedIcon className='listDetailsIcon' />
-			    <div className='listDetailsContent'>{ 'list.date' }</div>
+			<div className='playlistDetailsDiv'>
+			    <CalendarMonthOutlinedIcon className='playlistDetailsIcon' />
+			    <div className='playlistDetailsContent'>{ 'playlist.date' }</div>
 			</div>
 		    </div>
 		</div>
 
-		<div className='listUpdate'>
-		    <div className='listUpdateTitle'>Edit</div>
-		    <form className='listUpdateForm'>
-			<div className='listUpdateTop'>
-			    <div className='listUpdateItem'>
-				<label>List Title</label>
+		<div className='playlistUpdate'>
+		    <div className='playlistUpdateTitle'>Edit</div>
+		    <form className='playlistUpdateForm'>
+			<div className='playlistUpdateTop'>
+			    <div className='playlistUpdateItem'>
+				<label>Playlist Title</label>
 				<input type='text'
-				       placeholder={'list.title'}
-				       className='listUpdateInput'
+				       placeholder={'playlist.title'}
+				       className='playlistUpdateInput'
 				       name='title'
 				       onChange={handleChange}
 				/>
 			    </div>
-			    <div className='listUpdateItem'>
+			    <div className='playlistUpdateItem'>
 				<label>Category</label>
 				<input type='text'
-				       placeholder={'list.category'}
-				       className='listUpdateInput'
+				       placeholder={'playlist.category'}
+				       className='playlistUpdateInput'
 				       name='category'
 				       onChange={handleChange}
 				/>
 			    </div>
-			    <div className='listUpdateItem'>
+			    <div className='playlistUpdateItem'>
 				<label>Sub-category</label>
 				<input type='text'
-				       placeholder={'list.subCategory'}
-				       className='listUpdateInput'
+				       placeholder={'playlist.subCategory'}
+				       className='playlistUpdateInput'
 				       name='subCategory'
 				       onChange={handleChange}
 				/>
 			    </div>
 			</div>
 
-			<div className='listUpdateBottom'>
-			    <div className='listUpdateUpload'>
-				<img className='listUpdateImg'
+			<div className='playlistUpdateBottom'>
+			    <div className='playlistUpdateUpload'>
+				<img className='playlistUpdateImg'
 				     src='/logo.png'
-				     alt='List Profile'
+				     alt='Playlist Profile'
 				     name='thumbnail'
 				/>
 				<label htmlFor='file'>
-				    <PublishIcon className='listUpdateIcon' />
+				    <PublishIcon className='playlistUpdateIcon' />
 				</label>
 				<input id='file' type='file'
 				       style={{ display: 'none' }}/>
 			    </div>
-			    <button className='listUpdateButton'>Update</button>
+			    <button className='playlistUpdateButton'>Update</button>
 			</div>
 		    </form>
 		</div>
@@ -136,4 +136,4 @@ const List = () => {
     );
 };
 
-export default List;
+export default Playlist;

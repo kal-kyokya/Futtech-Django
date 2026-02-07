@@ -1,20 +1,20 @@
 import './home.scss';
 import Navbar from '../../components/Navbar';
 import Featured from '../../components/featured/Featured';
-import List from '../../components/list/List';
+import Playlist from '../../components/playlist/Playlist';
 import { useState, useEffect, useContext } from 'react';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import apiClient from '../../services/apiClient';
 
 const Home = ({ category }) => {
-    const [lists, setLists] = useState([]);
+    const [playlists, setPlaylists] = useState([]);
     const [subCategory, setSubCategory] = useState('');
     const { videos } = useContext(VideoContext);
 
     useEffect(() => {
 	let isMounted = true;
 
-	const fetchLists = async () => {
+	const fetchPlaylists = async () => {
 	    const params = new URLSearchParams();
 
 	    if (category) {
@@ -25,29 +25,29 @@ const Home = ({ category }) => {
 		params.append('subCategory', subCategory);
 	    }
 
-	    const endpoint = params.toString() ? `/lists?${params.toString()}` : '/lists';
+	    const endpoint = params.toString() ? `/playlists?${params.toString()}` : '/playlists';
 
 	    try {
 		const response = await apiClient.get(endpoint);
 		if (isMounted) {
-		    setLists(response.data || [])
+		    setPlaylists(response.data || [])
 		}
 	    } catch (error) {
-		console.error('Failed to fetch lists: ', error);
+		console.error('Failed to fetch playlists: ', error);
 		if (isMounted) {
-		    setLists([]);
+		    setPlaylists([]);
 		}
 	    }
 	};
 
-	fetchLists();
+	fetchPlaylists();
 
 	return () => {
 	    isMounted = false;
 	};
     }, [category, subCategory]);
 
-    const hasLists = Array.isArray(lists) && lists.length > 0;
+    const hasPlaylists = Array.isArray(playlists) && playlists.length > 0;
     const hasVideos = Array.isArray(videos) && videos.length > 0;
 
     return (
@@ -55,13 +55,13 @@ const Home = ({ category }) => {
 	    <Navbar />
 	    <Featured category={ category } />
 
-	    {hasLists
-	     ? lists.map((list) => {
-		 <List key={list._id || list.title} list={ list } />
+	    {hasPlaylists
+	     ? playlists.map((playlist) => {
+		 <Playlist key={playlist._id || playlist.title} playlist={ playlist } />
 	     })
 	     : hasVideos && (
-		 <List
-		     list={{
+		 <Playlist
+		     playlist={{
 			 'title': 'Recommendations',
 			 'content': videos.slice(-10).map(video => video._id)
 		     }}
