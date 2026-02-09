@@ -1,10 +1,10 @@
-/* --- frontend/src/components/list/list.scss --- */
+/* --- frontend/src/components/playlist/playlist.scss --- */
 
-.list {
+.playlist {
     width: 100%;
     margin: 2rem 0;
 
-    .listTitle {
+    .playlistTitle {
 	color: white;
 	font-size: 1rem; // Base font size
 	font-weight: 500;
@@ -61,11 +61,11 @@
 
 /* --- Media Queries for Mobile Responsiveness (Max-width: 767px) ---*/
 @media (max-width: 767px) {
-    .list {
+    .playlist {
 	margin-top: 1rem; // Adjust top margin for mobile
 	margin-bottom: 1.5rem; // Reduce bottom margin on mobile
 
-	.listTitle {
+	.playlistTitle {
 	    font-size: 0.9rem; // Smaller font size for mobile
 	    margin-left: 2rem; // Use rem for margin on mobile
 	}
@@ -81,7 +81,7 @@
 
 	    .container {
 		margin-left: 2rem; // Same as the width of a 'sliderArrow'
-		// No fixed width here, as ListItem will handle its own width on mobile
+		// No fixed width here, as PlaylistItem will handle its own width on mobile
 	    }
 	}
     }

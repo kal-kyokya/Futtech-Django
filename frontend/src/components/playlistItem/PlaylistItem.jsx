@@ -1,11 +1,11 @@
-import './listItem.scss';
+import './playlistItem.scss';
 import { useState, useEffect, useContext } from 'react';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 
-const ListItem = ({ videoId, index }) => {
+const PlaylistItem = ({ videoId, index }) => {
     const [isHovered, setIsHovered] = useState(false);
     const { user } = useContext(UserContext);
     const { videos } = useContext(VideoContext);
@@ -13,10 +13,10 @@ const ListItem = ({ videoId, index }) => {
 
     return (
 	<Link to='/watch'
-	      state={ { video, origin: "list" } }
+	      state={ { video, origin: "playlist" } }
 	      className='link'
 	>
-	    <div className='listItem'
+	    <div className='playlistItem'
 		 style={{
 		     transform: isHovered ? "scale(1.2)" : "scale(1)",
 		     zIndex: isHovered ? 10 : 1
@@ -35,4 +35,4 @@ const ListItem = ({ videoId, index }) => {
     );
 }
 
-export default ListItem;
+export default PlaylistItem;
