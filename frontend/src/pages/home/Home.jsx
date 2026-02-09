@@ -75,7 +75,7 @@ const Home = ({ category }) => {
     const hasLists = normalizedLists.length > 0;
     const hasVideos = Array.isArray(videos) && videos.length > 0;
     const fallbackList = {
-	title: 'Recommendations'
+	title: 'Recommendations',
 	content: videos.slice(-10).map(getVideoId).filter(Boolean),
     };
 
