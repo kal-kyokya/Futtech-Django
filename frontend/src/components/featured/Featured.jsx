@@ -4,7 +4,7 @@ import apiClient from '../../services/apiClient';
 
 const buildFeaturedEndpoint = () => '/videos/featured/?limit=10';
 
-const normalizedFeaturedItems = (payload) => {
+const normalizeFeaturedItems = (payload) => {
     if (Array.isArray(payload)) {
 	return payload;
     }
