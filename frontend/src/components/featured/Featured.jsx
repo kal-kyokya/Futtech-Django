@@ -1,24 +1,57 @@
 import './featured.scss';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import apiClient from '../../services/apiClient';
+
+const buildFeaturedEndpoint = () => '/videos/featured/?limit=10';
+
+const normalizedFeaturedItems = (payload) => {
+    if (Array.isArray(payload)) {
+	return payload;
+    }
+
+    if (Array.isArray(payload?.results)) {
+	return payload.results;
+    }
+
+    return payload ? [payload] : [];
+};
+
+const pickFeaturedItem = (items, category) => {
+    if (!Array.isArray(items) || items.length === 0) {
+	return null;
+    }
+
+    if (!category) {
+	return items[0];
+    }
+
+    if (category === 'analysis') {
+	return items.find((item) => item?.is_analysis) || items[0];
+    }
+
+    if (category === 'video') {
+	return items.find((item) => !item?.is_analysis) || items[0];
+    }
+
+    return items[0];
+};
 
 const Featured = ({ category }) => {
     const [content, setContent] = useState(null);
+
+    const endpoint = useMemo(() => buildFeaturedEndpoint(), []);
 
     useEffect(() => {
 	let isMounted = true;
 
 	const getContent = async () => {
-	    const endpoint = category
-		  ? `/videos/random?category=${encodeURIComponent(category)}`
-		  : '/videos/random';
-
 	    try {
 		const response = await apiClient.get(endpoint);
-		const data = Array.isArray(response.data) ? response.data[0] : response.data;
+		const items = normalizeFeaturedItems(response.data);
+		const selected = pickFeaturedItem(items, category);
 
 		if (isMounted) {
-		    setContent(data || null);
+		    setContent(selected || null);
 		}
 	    } catch (error) {
 		console.error('Failed to fetch featured content:', error);
@@ -33,7 +66,7 @@ const Featured = ({ category }) => {
 	return () => {
 	    isMounted = false;
 	}
-    }, [category]);
+    }, [category, endpoint]);
 
     const fallbackImage = category === 'video'
 	  ? '/drone.jpg'
