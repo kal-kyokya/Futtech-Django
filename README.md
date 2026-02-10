@@ -10,9 +10,9 @@ Football is the most popular sport on Earth, uniting people across education, cl
 
 Football is one such skill, and technology is a powerful tool that can facilitate its mastery.
 
-# Futtech
+# What, Why and How?
 
-Futtech is a full-stack football training with a Django + Django REST Framework backend and a React (Vite) frontend. The backend handles identity, video metadata, Stripe billing data, and playlist APIs; the frontend handles authentication UX, protected routing, and content browsing.
+Futtech is a full-stack football training platform with a Django + Django REST Framework backend and a React (Vite) frontend. The backend handles identity, video metadata, Stripe billing data, and playlist APIs; the frontend handles authentication UX, protected routing, and content browsing.
 
 If you are new to the project, start by understanding two end-to-end flows: **authentication** and **playlist CRUD**. This README gives a quick map, then points to the deeper docs in [`docs/`](docs/).
 
