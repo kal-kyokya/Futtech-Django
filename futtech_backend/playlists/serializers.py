@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""
-'serializers.py' contains definition of the serializer object to be
-		 attached to the 'Playlist' Django model.
+"""Serializers for playlist endpoints.
+
+Playlist responses embed a trimmed video representation so frontend screens
+can render playlist cards/details without extra per-video requests.
 """
 
 from rest_framework import serializers
@@ -48,6 +49,7 @@ class PlaylistSerializer(serializers.ModelSerializer):
 			       	      serialization and deserialization.
     """
 
+    # Videos are attached through M2M relations from dedicated endpoints/admin.
     videos = VideoSerializer(many=True,
                              read_only=True)
 
