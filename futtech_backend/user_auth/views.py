@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""
-'views.py' is a collection of Django class-based views each handling
-	   http requests made to the Futtech backend for the '/auth/' URL.
+"""Authentication endpoints for JWT + cookie-based session continuity.
+
+This module owns registration/login/refresh/logout/current-user APIs.
+Access tokens are returned in JSON for the frontend to store client-side,
+while refresh tokens are written as HttpOnly cookies to reduce XSS exposure.
 """
 
 from rest_framework import generics, status
@@ -29,9 +31,9 @@ from rest_framework_simplejwt.views import (
 
 def _refresh_cookie_options():
     """
-    Bundles, inside a dictionary, data to be attached to the refresh token
-    once it gets set as an HttpOnly cookie.
+    Returns a consistent refresh cookie policy for all auth responses.
     """
+
     cookie_domain = getattr(settings, 'DOMAIN_NAME', None)
     return {
         'domain': cookie_domain or None,
@@ -166,7 +168,7 @@ class RefreshTokenCookieView(TokenRefreshView):
 
     def post(self, request, *args, **kwargs):
         """
-        Overrides the parent-defined post method.
+        Bridge cookie-based refresh into SimpleJWT's body-based API.
         """
         if 'refresh' not in request.data and 'refresh_token' in request.COOKIES:
             data = request.data.copy()
@@ -216,7 +218,7 @@ class LogoutView(APIView):
         	request - A dictionary-like object holding the client request. 
         """
 
-        # If refresh is stored as a cookie, we can read and blacklist it:
+        # Supports clients that send refresh in either body or cookie.
         refresh = request.data.get('refresh') or request.COOKIES.get('refresh_token')
         cookie_domain = getattr(settings, 'DOMAIN_NAME', None) or None
 
@@ -284,6 +286,7 @@ class GetCurrentUserView(APIView):
         		  metadata about the request.
         """
 
+        # Keeps the endpoint idempotent even for legacy users missing profiles.
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
         serializer = CurrentUserSerializer(profile)
 
