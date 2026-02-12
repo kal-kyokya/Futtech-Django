@@ -18,11 +18,20 @@ const apiClient = axios.create({
     withCredentials: true,
 });
 
+/**
+ * Skip refresh recursion on auth endpoints to avoid infinite retry loops
+ * (e.g. failed login should surface to UI, not trigger refresh).
+ */
 const isAuthEndpoint = (url = '') =>
       url.includes('/auth/login') ||
       url.includes('/auth/register') ||
       url.includes('/auth/refresh');
 
+/**
+ * Normalize heterogenous backend/network failures into one UI-friendly shape.
+ *
+ * Returns: { status, message, fields, code?, title? }
+ */
 export const normalizeError = (error) => {
     const response = error?.response;
     const status = response?.status ?? null;
@@ -93,7 +102,7 @@ apiClient.interceptors.request.use(
 let isRefreshing = false;
 let refreshSubscribers = [];
 
-// Queue failed requests while refreshing
+// Queue failed requests while a single refresh call is in flight.
 const subscribeTokenRefresh = (cb) => {
     refreshSubscribers.push(cb);
 };
@@ -118,7 +127,7 @@ apiClient.interceptors.response.use(
 	if (error.response?.status === 401 && !originalRequest._retry) {
 
 	    if (isRefreshing) {
-		// If already refreshing, queue this request
+		// Avoid racing multiple refresh calls; replay once token arrives.
 		return new Promise((resolve) => {
 		    subscribeTokenRefresh((token) => {
 			originalRequest.headers.Authorization = `Bearer ${token
@@ -152,7 +161,7 @@ apiClient.interceptors.response.use(
 		return apiClient(originalRequest);
 
 	    } catch (refreshError) {
-		// Refresh failed - Clear tokens and redirect to login
+		// Hard-fail auth: clear volatile token and force a clean login.
 		tokenService.clearAccessToken();
 		window.location.href = '/login';
 

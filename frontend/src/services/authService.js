@@ -97,7 +97,12 @@ class AuthService {
 	}
     }
 
-    // Fetches the first batch of playlists and their associated videos
+    /**
+     * Fetch homepage bootstrap payload after successful auth.
+     *
+     * Failure is intentionally non-fatal: caller can keep user logged in and
+     * render with empty collections.
+     */
     async fetchInitialContent() {
 
 	try {

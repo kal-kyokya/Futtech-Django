@@ -1,3 +1,9 @@
+/**
+ * Playlist context stores list-fetch state and a cached playlist collection.
+ *
+ * Data is persisted to localStorage to reduce empty-state flashes between
+ * page reloads while fresh network data is loading.
+ */
 import { createContext, useReducer, useEffect } from 'react';
 import PlaylistReducer from './PlaylistReducer';
 
