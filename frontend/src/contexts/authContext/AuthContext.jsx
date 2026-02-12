@@ -1,3 +1,10 @@
+/**
+ * Auth context keeps session-scoped UI auth state in sync with token storage.
+ *
+ * Source of truth split:
+ * - access token => tokenService
+ * - user profile snapshot => localStorage/context state
+ */
 import { createContext, useReducer, useEffect } from 'react';
 import AuthReducer from './AuthReducer';
 import tokenService from '../../services/tokenService';
@@ -23,6 +30,7 @@ export const AuthContextProvider = ({ children }) => {
 
     useEffect(() => {
 	if (!tokenService.hasTokens() && state.user) {
+	    // Prevent stale persisted user data from appearing authenticated.
 	    dispatch({ type: 'LOGOUT' });
 	}
     }, [state.user]);
