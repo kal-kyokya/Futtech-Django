@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
-"""
-'views.py' handles all HTTP requests made to the Django backend for
-	   playlist-related operations.
+"""Playlist API viewset definitions.
+
+This module owns CRUD behavior for playlists and applies read/write access
+rules: authenticated users can read their own + playlists, but only
+owners can mutate playlist records.
 """
 
 from django.db import models
@@ -42,11 +44,16 @@ class PlaylistViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         """
-        Ensures videos are prefetched for all playlists in one DB hit.
+        Return playlists visible for the current action and user.
+
+        Read operations expose owned playlists plus public playlists.
+        Write operations use the full queryset and rely on object-level
+        permissions (`IsOwnerOrReadOnly`) to enforce ownership checks.
         """
         user = self.request.user
 
-        if self.action in {'update', 'partial_update', 'destroy'}:
+        if self.action in {'partial_update', 'update', 'destroy'}:
+            # Keep write query unrestricted; permission class decides ownership
             queryset = Playlist.objects.all().prefetch_related('videos')
         else:
             queryset = Playlist.objects.filter(
