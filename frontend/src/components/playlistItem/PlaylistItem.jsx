@@ -1,18 +1,15 @@
 import './playlistItem.scss';
-import { useState, useEffect, useContext } from 'react';
-import axios from 'axios';
+import { useState, useContext } from 'react';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../../contexts/userContext/UserContext';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 
 const PlaylistItem = ({ videoId, index }) => {
     const [isHovered, setIsHovered] = useState(false);
-    const { user } = useContext(UserContext);
     const { videos } = useContext(VideoContext);
-    const video = videos.filter((video) => video._id === videoId)[0];
+    const video = videos.filter((item) => (item.id || item._id) === videoId)[0];
 
     return (
-	<Link to='/watch'
+	<Link to={`/watch/${videoId}`}
 	      state={ { video, origin: "playlist" } }
 	      className='link'
 	>
@@ -28,8 +25,7 @@ const PlaylistItem = ({ videoId, index }) => {
 		 <img src={ video.thumbnail }
 		      alt='Video Content'
 		 />}
-		{isHovered &&
-		 <video src={ video.content } autoPlay={true} loop />}
+		{isHovered && <video src={ video?.thumbnail } autoPlay loop muted />}
 	    </div>
 	</Link>
     );
