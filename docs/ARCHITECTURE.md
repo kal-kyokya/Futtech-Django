@@ -26,7 +26,7 @@ The backend serves JSON APIs under `api/v2/*` and persists core entities (users,
   - List endpoint combines owner playlists and public playlists.
 - `video_management/`
   - Video metadata, featured videos, upload lifecycle, playback token endpoint.
-  - Integration with Mux (uploads!playback) and Stripe (billing/subscription paths)
+  - Integration with Bunny Stream (uploads!playback) and Stripe (billing/subscription paths)
 
 ## Frontend (`frontend/src/`)
 
