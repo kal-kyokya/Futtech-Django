@@ -7,7 +7,7 @@ This guide focuses on local setup, debugging habits, and day-to-day commands.
 - Python 3.11+
 - Node.js 18+
 - npm
-- PostgreSQL/Redis/Stripe/Mux credentials as required by environment
+- PostgreSQL/Redis/Stripe/Bunny Stream credentials as required by environment
 
 ## Local setup
 
