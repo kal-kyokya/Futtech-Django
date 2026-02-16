@@ -1,7 +1,6 @@
 import './newVideo.scss';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import Navbar from '../../components/Navbar';
 import apiClient from '../../services/apiClient';
 
@@ -25,7 +24,7 @@ const NewVideo = () => {
 	e.preventDefault(); // Prevents automatic submission of form content
 
 	if (!videoFile || !title) {
-	    setError("A title and video file are required");
+	    setError('A title and video file are required');
 	    return;
 	}
 
@@ -34,44 +33,30 @@ const NewVideo = () => {
 	setUploadProgress(0);
 
 	try {
-	    const createResponse = await apiClient.post('/video/upload/', {
-		title,
-		description,
-		is_premium: isPremium,
-		is_drone: isDrone,
-		is_analysis: isAiAnalysis,
-	    });
+	    const formData = new FormData();
+	    formData.append('title', title);
+	    formData.append('description', description);
+	    formData.append('is_premium', String(isPremium));
+	    formData.append('is_drone', String(isDrone));
+	    formData.append('is_analysis', String(isAiAnalysis));
+	    formData.append('file', videoFile);
 
-	    const { upload_url, video_id, mux_upload_id } = createResponse.data;
-
-	    if (!upload_url) {
-		throw new Error('Could not retrieve an upload URL from the server');
-	    }
-
-	    await axios.put(upload_url, videoFile, {
-		headers: {
-		    'Content-Type': videoFile.type,
-		},
+	    const createResponse = await apiClient.post('/video/upload/', formData, {
+		headers: { 'Content-Type': 'multipart/form-data' },
 		onUploadProgress: (progressEvent) => {
 		    if (!progressEvent.total) {
 			return;
 		    }
 
-		    const percent = Math.round(
-			(progressEvent.loaded * 100) / progressEvent.total,
-		    );
+		    const percent = Math.round((progressEvent.loaded * 100) / progressEvent.total);
 		    setUploadProgress(percent);
 		},
 	    });
 
-	    await apiClient.patch(`/videos/${video_id}/upload-complete/`, {
-		mux_asset_id: mux_asset_id,
-	    });
-
-	    navigate(`/watch/${video_id}`);
-	} catch (error) {
-	    console.error('Upload process failed: ', error);
-	    setError('An error occured during the upload. Please try again.');
+	    navigate(`/watch/${createResponse.data.video_id}`);
+	} catch (uploadError) {
+	    console.error('Upload process failed: ', uploadError);
+	    setError(uploadError?.response?.error || 'An error occured during the upload. Please try again.');
 	    setUploadProgress(0);
 	} finally {
 	    setIsUploading(false);
