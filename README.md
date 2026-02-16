@@ -20,7 +20,7 @@ If you are new to the project, start by understanding two end-to-end flows: **au
 
 This repository powers the Futtech web application.
 
-- **Backend (`futtech_backend`)**: API endpoints for auth, playlists, and video workflows (including Mux/Stripe integrations).
+- **Backend (`futtech_backend`)**: API endpoints for auth, playlists, and video workflows (including Bunny Stream/Stripe integrations).
 - **Frontend (`frontend/`)**: user interface, local auth state, API client, and playlist/video pages.
 - **Docs (`docs/`)**: architecture and flow explanations, including Mermaid diagrams for auth and playlist flows.
 
@@ -39,7 +39,7 @@ python manage.py runserver
 
 Backend default dev URL: `htpp://127.0.0.1:8000`
 
-> Configuration: copy value from `futtech_backend/env.sample` into your environment (or `.env` loader flow), especially DB/JWT/Mux/Stripe settings.
+> Configuration: copy value from `futtech_backend/env.sample` into your environment (or `.env` loader flow), especially DB/JWT/Bunny Stream/Stripe settings.
 
 ## 2) Frontend setup (React + Vite)
 
