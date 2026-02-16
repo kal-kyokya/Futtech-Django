@@ -11,7 +11,7 @@ This guide describes backend app responsibilities and common API patterns.
   - Playlist model, serialization, owner-based write permission, paginated list APIs.
 - `video_management`
   - Video records, featured content endpoint, upload completion, playback token handling.
-  - Mux webhook intake and Stripe-linked endpoints.
+  - Bunny Stream webhook intake and Stripe-linked endpoints.
 
 ## Common DRF patterns in this repo
 
