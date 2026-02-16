@@ -1,4 +1,4 @@
-# API Overviez
+# API Overview
 
 Base path: `/api/v2`
 
@@ -49,11 +49,16 @@ Playlist flow reference:
 Representative endpoints used by the frontend:
 
 - `GET /videos/featured/`
-- `GET /video/<uuid:video_id>/`
-- `GET /video/<uuid:video_id>/get-playback-token/`
-- `POST /video/upload`
-- `PATCH /video/<uuid:video_id>/upload-complete`
-- `POST /webhooks/mux`
+- `GET /video/<uuid:video_id>/` (metadata)
+- `GET /video/<uuid:video_id>/playback/` (signed Bunny embed URL)
+- `POST /video/upload/` (multipart upload: metadata + file)
+- `GET /videos/` (owner videos)
+
+## Bunny Stream notes
+
+- Playback iframe format: `https://iframe.mediadelivery.net/embed/{libraryId}/{videoId}`
+- If `BUNNY_STREAM_EMBED_TOKEN_KEY` is configured, backend appends short-lived embed token query params.
+- No Bunny secrets are returned to the frontend.
 
 ## Error shape expectations
 
