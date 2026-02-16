@@ -77,7 +77,7 @@ const App = () => {
 			       <Home category='analysis'/>
 			   </PrivateRoute>
 		       } />
-		<Route path='watch' element={
+		<Route path='watch/:videoId' element={
 			   <PrivateRoute isReady={authReady}>
 			       <Watch />
 			   </PrivateRoute>
