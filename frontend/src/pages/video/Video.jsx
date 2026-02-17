@@ -211,7 +211,7 @@ const Video = () => {
 			    )}
 
 			    <div className='videoInfos'>
-				<Link to='/watch'
+				<Link to={'/watch/${video.id || video._id}'}
 				      state={ { video } }
 				      className='link'
 				>

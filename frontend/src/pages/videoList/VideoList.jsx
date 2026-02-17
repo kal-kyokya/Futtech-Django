@@ -41,7 +41,7 @@ const VideoList = () => {
 	{ field: 'video', headerName: 'Video', width: 505, renderCell: (params) => {
 	    return (
 		<div className='videoListCell'>
-		    <Link to='/watch'
+		    <Link to={'/watch/${params.row.id || params.row._id}'}
 			  state={ { video: params.row } }
 			  className='link'
 			  style={{ 'display': 'flex' }}
