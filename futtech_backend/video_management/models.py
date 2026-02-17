@@ -12,7 +12,6 @@ from django.contrib.auth import get_user_model
 from .choices import (
     PlayerPosition, UserSex,
     VideoStatus, VideoCategory,
-    VideoPolicy
 )
 from django.utils import timezone
 
@@ -172,28 +171,20 @@ class Video(models.Model):
     description = models.TextField(blank=True,
                                    null=True)
 
-    # Mux-specific fields
-    mux_asset_id = models.CharField(max_length=255,
-                                    unique=True,
-                                    null=True,
-                                    blank=True)
-    mux_playback_id = models.CharField(max_length=255,
-                                       unique=True,
-                                       null=True,
-                                       blank=True)
-    mux_playback_policy = models.CharField(max_length=6,
-                                           choices=VideoPolicy,
-                                           default=VideoPolicy.PUBLIC)
-    mux_upload_id = models.CharField(max_length=255,
-                                    unique=True,
-                                    null=True,
-                                    blank=True)
+    # Bunny Stream fields
+    video_library_id = models.CharField(max_length=64,
+                                        null=True,
+                                        blank=True)
+    bunny_video_id = models.CharField(max_length=255,
+                                      unique=True,
+                                      null=True,
+                                      blank=True)
 
     status = models.CharField(max_length=20,
                               choices=VideoStatus.choices,
-                              default=VideoStatus.PENDING)
-    duration = models.DurationField(null=True,
-                                    blank=True)
+                              default=VideoStatus.CREATED)
+    duration_seconds = models.PositiveIntegerField(null=True,
+                                                   blank=True)
     is_premium = models.BooleanField(default=False)
     is_drone = models.BooleanField(default=False)
     is_analysis = models.BooleanField(default=False)
