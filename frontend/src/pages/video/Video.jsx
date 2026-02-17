@@ -172,7 +172,7 @@ const Video = () => {
 		<div className='videoTopSection'>
 		    <h1 className='videoEditTitle'>Manage Video</h1>
 		    <div className='options'>
-			<Link to='/watch'
+			<Link to={'/watch/${video.id || video._id}'}
 			      state={ { video: videos.filter((item) => item._id === video._id)[0] } }
 			      className='link'
 			>
