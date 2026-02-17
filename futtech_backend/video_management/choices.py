@@ -1,7 +1,6 @@
 #!/usr/bin/env python3
 """
-'choices.py' groups all 'models.textChoices' subclasses required for
-definition of Django models associated with the video_management App.	
+Choice enums for video management models.
 """
 
 from django.db import models
@@ -35,8 +34,7 @@ class PlayerPosition(models.TextChoices):
 
 class UserSex(models.TextChoices):
     """
-    Leverages OOP (Object-oriented programming) to avail a list
-    sex options for new users.
+    Avails a list sex options for new users.
 
     Inheritance:
     	models.TextChoices - Base class facilitating creation of
@@ -50,8 +48,7 @@ class UserSex(models.TextChoices):
 
 class VideoStatus(models.TextChoices):
     """
-    Leverages OOP (Object-oriented programming) to avail a list of
-    states in which the video is at all time during its loading.
+    Avails a list of potential video states during its loading.
 
     Inheritance:
     	models.TextChoices - Base class facilitating creation of
@@ -59,7 +56,8 @@ class VideoStatus(models.TextChoices):
     """
 
     # These are tuples created using Python's Tuple Packing
-    PENDING = 'pending', 'Pending'
+    CREATED = 'created', 'Created'
+    UPLOADING = 'uploading', 'Uploading'
     PROCESSING = 'processing', 'Processing'
     READY = 'ready', 'Ready'
     ERROR = 'error', 'Error'
@@ -67,8 +65,7 @@ class VideoStatus(models.TextChoices):
 
 class VideoCategory(models.TextChoices):
     """
-    Leverages OOP (Object-oriented programming) to avail a list of
-    categories associated with each element.
+    Avails a list of categories associated with each element.
 
     Inheritance:
     	models.TextChoices - Base class facilitating creation of
@@ -78,18 +75,3 @@ class VideoCategory(models.TextChoices):
     # These are tuples created using Python's Tuple Packing
     GAME = 'game', 'Game'
     TRAINING = 'training', 'Training'
-
-
-class VideoPolicy(models.TextChoices):
-    """
-    Leverages OOP (Object-oriented programming) to avail a list of
-    playback policy associated with each mux video asset.
-
-    Inheritance:
-    	models.TextChoices - Base class facilitating creation of
-    	enumerated string choices.
-    """
-
-    # These are tuples created using Python's Tuple Packing
-    PUBLIC = 'public', 'Public'
-    SIGNED = 'signed', 'Signed'
