@@ -1,9 +1,6 @@
 #!/usr/bin/env python3
 """
-'video_management/urls.py' is a URL configuration file.
-
-'The `urlpatterns` list' routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/5.2/topics/http/urls/
+URL routing for video management endpoints.
 """
 
 from django.urls import path
@@ -12,9 +9,9 @@ from . import views
 
 urlpatterns = [
     # User-heavy URLS
-    path('video/<uuid:video_id>/get-playback-token/',
-         views.get_playback_token,
-         name='get_playback_token'),
+    path('video/<uuid:video_id>/playback/',
+         views.get_video_playback,
+         name='get_video_playback'),
     path('video/<uuid:video_id>/',
          views.get_video_data,
          name='get_video_data'),
@@ -38,15 +35,9 @@ urlpatterns = [
     path('video/upload',
          views.VideoUploadView.as_view(),
          name='upload-video'),
-    path('video/<uuid:video_id>/upload-complete',
-         views.UploadCompleteView.as_view(),
-         name='video-upload-complete'),
-    path('webhooks/mux',
-         views.mux_webhook,
-         name='mux-webhook'),
     path('videos/',
          views.VideoViewSet.as_view({
-             'get': 'retrieve',
+             'get': 'list',
          }),
          name='crud-videos'),
 ]
