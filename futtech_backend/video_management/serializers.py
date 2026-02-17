@@ -50,12 +50,7 @@ class VideoSerializer(ModelSerializer):
 
     class Meta:
         model = Video
-        exclude = (
-            'mux_playback_id',
-            'mux_playback_policy',
-            'updated_at',
-            'created_at',
-        )
+        exclude = ('updated_at', 'created_at')
 
 
 class VideoCreationSerializer(ModelSerializer):
@@ -75,5 +70,4 @@ class VideoCreationSerializer(ModelSerializer):
         model = Video
 
         # Model fields to exclude from the serialized output
-        exclude = ('mux_playback_id', 'mux_playback_policy',
-                   'updated_at', 'created_at')
+        exclude = ('updated_at', 'created_at')
