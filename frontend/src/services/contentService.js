@@ -270,7 +270,7 @@ class ContentService {
 
     /**
      * Asynchronous function.
-     * Gets a video's details with Mux playback info excluded.
+     * Gets a video's details with Bunny playback metadata excluded.
      *
      * @param {string} videoId - UUID of the video whose details are needed.
      *
