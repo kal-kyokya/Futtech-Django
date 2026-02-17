@@ -208,3 +208,8 @@ SIMPLE_JWT = {
     'ROTATE_REFRESH_TOKENS': True, # Refresh endpoint returns a new Refr_Token
     'BLACKLIST_AFTER_ROTATION': True,
 }
+
+
+BUNNY_STREAM_API_KEY = os.environ.get('BUNNY_STREAM_API_KEY', '')
+BUNNY_STREAM_LIBRARY_ID = os.environ.get('BUNNY_STREAM_LIBRARY_ID', '')
+BUNNY_STREAM_EMBED_TOKEN_KEY = os.environ.get('BUNNY_STREAM_EMBED_TOKEN_KEY', '')
