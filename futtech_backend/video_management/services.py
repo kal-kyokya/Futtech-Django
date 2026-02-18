@@ -1,178 +1,111 @@
 #!/usr/bin/env python3
 """
-'services.py' contains the logic allowing the Futtech Backend to hit the API of
-the designated VPaaS (Mux|27-Aug-2025) while mitigating 'vendor lock-in' risks.
+Service helpers for Bunny Stream video upload and private playback embeds.
 """
 
 # Imports are sorted alphabetically with dotted files at the bottom
-import datetime
-from django.conf import settings
-from dotenv import load_dotenv
-import jwt
-import mux_python
+import base64
+import hashlib
+import os
 import time
+from urllib.parse import urlencode
 
-from . import mux_webhooks
-from .choices import VideoStatus
+import requests
+from django.config import settings
+
 from .logs import logger
-from .models import Video
 
-# --------------------------
-# Mux API Configuration
-# --------------------------
-
-# Basic Authentication Setup
-load_dotenv()
-
-configuration = mux_python.Configuration()
-configuration.username = settings.MUX_TOKEN_ID
-configuration.password = settings.MUX_TOKEN_SECRET
-configs = mux_python.ApiClient(configuration)
-
-# API Clients Initialization
-web_inputs_api = mux_python.WebInputsApi(configs)
-uploads_api = mux_python.DirectUploadsApi(configs)
-
-# JWT Signing Configuration
-signing_key_id = settings.MUX_SIGNING_KEY_ID
-private_key_pem = settings.MUX_PRIVATE_KEY
+BUNNY_API_BASE_URL = "https://video.bunnycdn.com"
 
 
-def generate_signed_playback_token(playback_id):
+def _headers(content_type="application/json"):
+    return {
+        "AccessKey": settings.BUUNY_STREAM_API_KEY,
+        "Content-Type": content_type,
+    }
+
+def create_video_entry(title: str, collection_id: str | None = None):
     """
-    Generates a signed JWT off of the Mux Playback ID input parameter.
-
-    Params:
-    	playback_id - A dictionary-like object to be encoded in the JWT.
-
-    Return:
-    	A JSON Web Token allowing streaming of the requested Mux asset
-    	and enabling stateless server authentication and
-    	authorization. A modus operandi of modern web development.
+    Create a Bunny Stream video object and return the API payload.
     """
+    payload = {"title": title}
+    if collection_id:
+        payload["collectionId"] = collection_id
 
-    if not signing_key_id or not private_key_pem:
-        logger.error("Misconfiguration, cannot generate a signed token.")
-        return None
-    try:
-        # Token expires in 1 hour
-        expiration_time = int(time.time()) + 3600
-
-        token = jwt.encode(
-            {
-                'sub': playback_id,
-                'aud': 'v', # Targeted audience (Recipient) claim
-                'exp': expiration_time,
-                'kid': signing_key_id,
-            },
-            private_key_pem,
-            algorithm='RS256',
-        )
-
-        return token
-    except Exception as err:
-        logger.error("Error generating JWT: {}".format(err))
-        return None
-
-
-def create_direct_upload_url():
-    """
-    Creates a MUX upload URL for client-side video creation.
-
-    Return:
-    	A URL enabling a direct upload to Mux, from the frontend.
-    """
-
-    create_asset_request = mux_python.CreateAssetRequest(
-        playback_policy=[
-            mux_python.PlaybackPolicy.PUBLIC,
-        ]
+    response = requests.post(
+        f"{BUNNY_API_BASE_URL}/library/{settings.BUNNY_STREAM_LIBRARY_ID}/videos",
+        headers=_headers(),
+        json=payload,
+        timeout=30,
     )
-    create_upload_request = mux_python.CreateUploadRequest(
-        timeout=3600,
-        new_asset_settings=create_asset_request,
-        cors_origin='https://futtech.kalkyokya.tech'
+    response.raise_for_status()
+    return response.json()
+
+
+def upload_video_file(video_id: str, uploaded_file):
+    """
+    Upload raw bytes into a Bunny Stream video object.
+    """
+    response = requests.put(
+        f"{BUNNY_API_BASE_URL}/library/{settings.BUNNY_STREAM_LIBRARY_ID}/videos/{video_id}",
+        hearders=_headers(content_type="application/octet-stream"),
+        data=uploaded_file,
+        timeout=300,
     )
+    response.raise_for_status()
+    return response.json() if response.content else {"success": True}
 
-    try:
-        create_upload_response = uploads_api.create_direct_upload(
-            create_upload_request
-        )
-        logger.debug(str(create_upload_response))
-
-        assert create_upload_response != None
-        assert create_upload_response.data != None
-        assert create_upload_response.data.id != None
-
-        return create_upload_response.data
-    except mux_python.ApiException as err:
-        logger.error("Exception when calling DirectUploadsApi->create_direct_api: {}".format(err))
-        return None
-
-
-def handle_mux_webhook(raw_body, payload, signature_header):
+def build_embed_url(library_id: str, bunny_video_id: str, token_ttl_seconds=600):
     """
-    Verifies and processes incoming Mux webhooks (Automated notifications from
-    Mux to this App signaling completion status of asynchronous event).
-
-    Params:
-    	raw_body - As the name suggest, primitive format of the data received
-    	payload - JSON object containing the status of the Mux event.
-    	signature_header - Hash of the request body and timestamp for security,
-    			   generated using a unique Mux webhook secret key.
-
-    Return:
-    	A boolean, 'True' if no exception is raised during processing.
+    Build Bunny Stream iframe URL with optional short-lived embed token.
     """
+    base_path = f"/embed/{library_id}/{bunny_video_id}"
+    base_url = f"https://iframe.mediadelivery.net{base_path}"
 
-    # It is CRITICAL to verify the webhook signature for security
-    webhook_secret = settings.MUX_WEBHOOK_SIGNING_SECRET
-    if not webhook_secret:
-        logger.error("Mux webhook secret is not configured")
-        return False, "Webhook secret is not configured"
-    if not signature_header:
-        logger.error("Missing Mux-Signature header on webhook request.")
-        return False, "Missing webhook signature"
+    token_key = getattr(settings, "BUNNY_STREAM_EMBED_TOKEN", "")
+    if not token_key:
+        return base_url
 
-    is_valid, message = mux_webhooks.verify_signature(raw_body,
-                                                      signature_header,
-                                                      webhook_secret)
+    expires = int(time.time()) + token_ttl_seconds
+    digest_input = f"{token_key}{base_path}{expires}".encode("utf-8")
+    token = base64.urlsafe_b64encode(haslib.sha256(digest_input).digest()).decode("utf-8").rstrip("=")
 
-    if not is_valid:
-        logger.error("Exception verifying the Mux webhook: {}".format(message))
-        return False, message
+    params = urlencode(
+        {
+            "token": token,
+            "expires": expires,
+            "token_path": base_path,
+        }
+    )
+    return f"{base_url}?{params}"
 
-    event_data = payload.get('data', {})
-    event_type = payload.get('type')
-    success_message = message
 
-    if event_type == 'video.asset.ready':
-        asset_id = event_data.get('id')
-        playback_id = event_data.get('playback_ids', [{}])[0].get('id')
-        duration = event_data.get('duration')
+def refresh_video_status(video):
+    """
+    Sync status metadata from Bunny for a stored video record.
+    """
+    response = requests.get(
+        f"{BUNNY_API_BASE_URL}/library/{video.video_library_id}/videos/{video.bunny_video_id}",
+        headers=_headers(),
+        timeout=30,
+    )
+    response.raise_for_status()
+    payload = response.json()
 
-        # Find the corresponding video in our database and update it
-        try:
-            video = Video.objects.get(mux_asset_id=asset_id)
-            video.mux_playback_id = playback_id
-            video.duration = datetime.timedelta(seconds=duration)
-            video.status = VideoStatus.READY
-            video.save()
-            success_message = "Video asset marked as ready"
+    status = payload.get("status", 0)
+    # Bunny status: 0 created, 1 uploaded, 2 processing, 3 transcoding, 4 finished, 5 error
+    if status == 4:
+        video.status = "ready"
+    elif status == 5:
+        video.status = "error"
+    elif status in {0, 1}:
+        video.status = "uploading"
+    else:
+        video.status = "error"
 
-        except Video.DoesNotExist as err:
-            logger.error("Exception updating video object upon Mux creation: {}".format(err))
-    elif event_type == 'video.asset.errored':
-        asset_id = event_data.get('id')
+    length = payload.get("length")
+    if length is not None:
+        video.duration_seconds = int(length)
 
-        try:
-            video = Video.objects.get(mux_asset_id=asset_id)
-            video.status = VideoStatus.ERROR
-            video.save()
-            success_message = "Video asset marked as errored"
-
-        except Video.DoesNotExist as err:
-            logger.error("Exception updating video after Mux creation err: {}".format(err))
-
-    # End of verification and processing of webhooks from Mux
-    return True, success_message
+    video.save(update_fields=["status", "duration_seconds", "updated_at"])
+    return video
