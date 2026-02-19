@@ -1,127 +1,114 @@
 #!/usr/bin/env python3
 """
-'video_management.views.py' is the entry point to this application's
-private layer (logic and data tiers), accessed via declared URL patterns.
+API views for video upload, metadata and private Bunny playback.
 """
 
 import json
+import subprocess
 
 from django.conf import settings
-from django.contrib import messages
-from django.contrib.auth import get_user_model # Reliable way to get the correct/active User model class.
 from django.contrib.auth.decorators import login_required
-from django.http import (
-    HttpResponseBadRequest,
-    HttpResponseForbidden,
-    HttpResponseRedirect,
-    JsonResponse,
-)
-from django.urls import reverse
-from django.views.decorators.http import require_POST
-from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponseForbidden, JsonResponse
 
+from djstripe.models import Customer
 from djstripe.settings import djstripe_settings
-from djstripe.models import Customer, Subscription
-
+from rest_framework import status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework import status
-
-from mux_python.rest import ApiException
-
-from . import services
-from .logs import logger
-from .models import Video, PlaybackHistory
-from .serializers import (
-    VideoSerializer,
-    VideoUploadSerializer,
-    PlaybackHistorySerializer,
-)
-
 
 import stripe # Was pip installed with 'djstripe'
 
+from . import services
+from .logs import logger
+from .models import PlaybackHistory, Video
+from .serializers import PlaybackHistorySerializer, VideoSerializer
 
-# Configure stripe for secure consumption of its API
 stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
 
+MAX_VIDEO_DURATION_SECONDS = 300
+MAX_VIDEO_SIZE_BYTES = 250 * 1024 * 1024
 
-@login_required
-def get_playback_token(request, video_id):
+def _check_video_duration(uploaded_file):
     """
-    Handles GET requests for playback-ready Mux video assets.
-
-    Params:
-    	request - A dictionary object representing the client's request.
-    	video_id - A string representing the requested Mux asset ID.
-
-    Return:
-    	A JSON Web Token containing a signed version of the
-    	requested video's playback ID.
+    Try ffprobe for duration; fallback to file-size hard limit.
     """
+    if uploaded_file.size >  MAX_VIDEO_SIZE_BYTES:
+        return False, "Video file is too large for the 5-minute upload policy."
 
     try:
-        video = Video.objects.get(pk=video_id)
-    except Video.DoesNotExist as err:
-        logger.error("Error retrieving video ID - {} from DB: {}".format(
-            video_id, err
-        ))
-        return JsonResponse({'error': 'Video not found'}, status=404)
-
-    # Ensures that the video is free to watch or the user is subscribed
-    if not video.is_premium or request.user.profile.has_active_subscription():
-        token = services.generate_signed_playback_token(
-            video.mux_playback_id
+        probe = subprocess.run(
+            [
+                "ffprobe",
+                "-v",
+                "error",
+                "-show_entries",
+                "format=duration",
+                "-of",
+                "default=noprint_wrappers=1:nokey=1",
+                uploaded_file.temporary_file_path(),
+            ],
+            check=True,
+            capture_output=True,
+            text=True,
         )
-        if token:
-            return JsonResponse({'token': token})
-        else:
-            return JsonResponse(
-                {'error': 'Could not generate token'}, status=500
-            )
+        duration = float((probe.stdout or "0").strip())
+        if duration > MAX_VIDEO_DURATION_SECONDS:
+            return False, "Video duration exceeds 5 minutes."
+    except Exception:
+        logger.warning("ffprobe unavailable; duration check fell back to siwe-only validation.")
 
-    logger.info("Unauthorized request for a playback ID.")
-    return HttpResponseForbidden("You do not have permission to view this video.")
+    return True, None
 
+def _can_access_video(user, video):
+    if video.owner_id == user.id:
+        return True
+    if not video.is_premium:
+        return True
+    return user.profile.has_active_subscription()
+
+@login_required
+def get_video_playback(request, video_id):
+    try:
+        video = Video.objects.get(pk=video_id)
+    except Video.DoesNotExist:
+        return JsonResponse({"error": "Video not found"}, status=404)
+
+    if not _can_access_video(request.user, video):
+        return HttpResponseForbidden("You do not have permission to view this video.")
+
+    if not video.video_library_id or not video.bunny_video_id:
+        return JsonResponse({"error": "Video is not linked to Bunny Stream"}, status=400)
+
+    if video.status != "ready":
+        try:
+            services.refresh_video_status(video)
+        except Exception as err:
+            logger.error("Could not sync Bunny status for %s: %s", video.id, err)
+
+    embed_url = services.embed_url(video.video_library_id, video.bunny_video_id)
+    return JsonResponse({"embed_url": embed_url, "status": video.status})
 
 @login_required
 def get_video_data(request, video_id):
-    """
-    Handles GET requests for details of Mux video assets.
-
-    Params:
-    	request - A dictionary object representing the frontend request.
-    	video_id - A string representing the requested video ID in DB.
-
-    Return:
-    	A JSON response containing the requested Video model instance.
-    """
-
     try:
         video = Video.objects.get(pk=video_id)
-    except Video.DoesNotExist as err:
-        logger.error("Error retrieving video ID - {} from DB: {}".format(
-            video_id, err
-        ))
+    except Video.DoesNotExist:
         return JsonResponse({'error': 'Video not found'}, status=404)
 
-    # We make sure that the video belongs to the requesting user
-    if video.owner == request.user:
-        serializer = VideoSerializer(video)
-        return JsonResponse(serializer.data)
-    else:
-        logger.info(f"Unauthorized request for video {video_id}.")
+    if not _can_access_video(request.user, video):
         return HttpResponseForbidden("You do not have permission to view this video.")
+
+    return JsonResponse(VideoSerializer(video).data)
 
 
 @api_view(['GET'])
 @permission_classes([IsAuthenticated])
 def get_featured_videos(request):
     """
-    Returns a limited list of the newest ready videos for the authenticated user.
+    Returns a limited list of the public videos for the authenticated user.
 
     Params:
     	request - The HTTP request containing the optional query parameter 'limit'.
@@ -138,9 +125,8 @@ def get_featured_videos(request):
     # Keep limits sane and non-negative to avoid unexpected query slices.
     limit = max(1, min(limit, 50))
 
-    videos = Video.objects.filter(status='ready').order_by('-created_at')[:limit]
-    serializer = VideoSerializer(videos, many=True)
-    return Response(serializer.data)
+    videos = Video.objects.filter(is_premium='false', status='ready').order_by('-created_at')[:limit]
+    return Response(VideoSerializer(videos, many=True).data)
 
 
 @login_required
@@ -176,104 +162,38 @@ def get_subscription_confirmation(request):
     """
 
     # Extract the session ID from the URL & fetch its associated Stripe session
-    session_id = request.GET.get(session_id)
+    session_id = request.GET.get('session_id')
     if not session_id:
-        logger.warning(
-            "Subscription confirmation requested without a session_id query parameter."
-        )
-        return HttpBadRequest("Missing session identifier")
+        return JsonResponse({'error': 'Missing session identifier'}, status=400)
 
     session = stripe.checkout.Session.retrieve(session_id)
+    user = request.user
+    customer_id = session.get('customer')
 
     # Ensure match between he who initiated the session and a user in our DB
-    client_reference_id = int(session.client_reference_id)
-    subscription_holder = get_user_model().objects.get(id=client_reference_id)
+    if customer_id:
+        customer = Customer.objects.filter(id+customer_id).first()
+        if customer and hasattr(user, 'profile'):
+            user.profile.customer = customer
+            user.profile.save(update_fields=['customer'])
 
-    assert client_reference_id == subscription_holder.id
-
-    # Think of a subscription as a contract between Futtech and a user
-    # This finds the contract and stores it locally
-    subscription = stripe.Subscription.retrieve(session.subscription)
-    djstripe_subscription = Subscription.sync_from_stripe_data(subscription)
-
-    # Update our user's subscription field to allow streaming
-    profile = subscription_holder.profile
-    profile.subscription = djstripe_subscription
-    profile.customer = djstripe_subscription.customer
-    profile.save()
-
-    # Notify the user of the subscription status and redirect
-    messages.success(request, f"You have successfully subscribed. Thanks for the support!")
-    return HttpResponseRedirect(reverse("create_portal_session"))
+    return JsonResponse({'status': 'ok'})
 
 
 @login_required
-@require_POST
 def create_portal_session(request):
-    """
-    Allows users to access Stripe's customer portal and manage subscriptions.
+    profile = request.user.profile
+    if not profile.customer:
+        return JsonResponse({'error': 'No billing customer found'}, status=404)
 
-    Param:
-    	request - A dictionary object representing the HTTP request.
-
-    Return:
-    	A redirect to Stripe's customer portal.
-    """
-
-    return_path = 'https://{}/stripe-profile/'.format(settings.DOMAIN_NAME)
-
-    portal_session = stripe.billing_portal.Session.create(
-        customer=request.user.customer.id,
-        return_url=return_path,
+    session = stripe.billing_portal.Session.create(
+        customer=profile.customer.id,
+        return_url=request.build_absolute_uri('/pricing-page'),
     )
-
-    # I'm tempted to think that this should be a JSONResponse
-    return HttpResponseRedirect(portal_session.url)
+    return JsonResponse({'url': session.url})
 
 
-@login_required
-@require_POST
-def create_checkout_session(request):
-    """
-    Handles client-side requests for a Stripe checkout session.
-
-    Param:
-    	request - The user request having initiated this workflow.
-
-    Return:
-    	A checkout URL generated by the Stripe API.
-    """
-
-    price_id = request.POST.get('price_id')
-
-    # Get or create a Stripe Customer for the logged-in user
-    customer, _ = Customer.get_or_create(subscriber=request.user)
-
-    try:
-        checkout_session = stripe.checkout.Session.create(
-            customer=customer.id,
-            success_url=settings.DOMAIN_NAME + '/success/',
-            cancel_url=settings.DOMAIN_NAME + '/cancel',
-            payment_method_types=['card'],
-            mode='subscription',
-            line_items=[{
-                'price': price_id,
-                'quantity': 1,
-            }],
-        )
-        return JsonResponse({'checkout_url': checkout_session.url})
-
-    except Exception as err:
-        logger.error("Error checking out price ID - {} from Stripe: {}".format(
-            price_id, err
-        ))
-        return JsonResponse(
-            {'error': str(err)},
-            status=500
-        )
-
-
-class UpdateWatchProgressView(APIView):
+class PlaybackHistoryView(APIView):
     """
     Handles POST or PATCH request to update video watch progress.
 
@@ -312,142 +232,41 @@ class VideoUploadView(APIView):
     permission_classes = [IsAuthenticated]
 
     def post(self, request):
-        """
-        Handles calls for MUX direct uploads and stores metadata.
+        uploaded_file = request.FILES.get('file')
+        if not uploaded_file:
+            return Response({'error': 'file is required'}, status=400)
 
-        Params:
-        	self - An instance of the current class-based view.
-        	request - The client-side generated HTTP request object.
+        is_valid, error = _check_video_duration(uploaded_file)
+        if not is_valid:
+            return Response({'error': error}, status=400)
 
-        Return:
-        	A DRF response object containing the video ID, the
-        	upload URL, as well as the Mux upload ID.
-        """
+        title = request.data.get('title', '').strip()
+        if not title:
+            return Response({'error': 'title is required'}, status=400)
 
-        upload = services.create_direct_upload_url()
+        description = request.data.get('description', '')
 
-        serializer_output = VideoUploadSerializer(data=request.data)
-        if serializer_output.is_valid():
-            data = serializer_output.validated_data
+        try:
+            bunny_video = services.create_video_entry(title=title)
+            upload_file.seek(0)
+            services.upload_video_file(bunny_video['guid'], uploaded_file)
 
-            # Create the video inside our Django model - 'Video'
             video = Video.objects.create(
                 owner=request.user,
-                title=data['title'],
-                description=data['description'],
-                is_premium=data['is_premium'],
-                is_drone=data['is_drone'],
-                is_analysis=data['is_analysis'],
-                mux_upload_id=upload.id,
-                status='pending'
+                title=title,
+                description=escription,
+                is_premium=str(request.data.get('is_premium', 'false')).lower() == 'true',
+                is_drone=str(request.data.get('is_drone', 'false')).lower() == 'true',
+                is_analysis=str(request.data.get('is_analysis', 'false')).lower() == 'true',
+                bunny_video_id=bunny_video['guid'],
+                video_library_id=str(settings.BUNNY_STREAM_LIBRARY_ID),
+                status='processing',
             )
+        except Exception as err:
+            logger.error("Bunny upload failed: %s", err)
+            return Response({'error': 'Unable to upload video to Bunny Stream'}, status=502)
 
-            return Response(
-                {
-                    'video_id': video.id,
-                    'mux_upload_id': upload.id,
-                    'upload_url': upload.url,
-                },
-                status=status.HTTP_201_CREATED,
-            )
-
-        return Response(serializer_output.errors, status=400)
-
-
-class UploadCompleteView(APIView):
-    """
-    Handles postupload workflows such as confirmation of video presence in DB.
-
-    Inheritance:
-    	APIView - Empowers this view with a set of predefined class attributes
-    		  from the 'Base of all views in Django REST Framework'.
-    """
-
-    permission_classes = [IsAuthenticated]
-
-    def patch(self, request, video_id):
-        """
-        Marks upload as completed, once the frontend finishes direct upload.
-
-        Params:
-        	self - The current instance of the APIView subclass.
-        	request - A dictionary-like python object containing
-        		  the frontend's request data.
-        	video_id - A unique identifier tied to the Video model.
-
-        Return:
-        	A DRF response object containing the video and Mux asset IDs.
-        """
-
-        try:
-            video = Video.objects.get(id=video_id,
-                                      owner=request.user)
-        except Video.DoesNotExist:
-            return Response({'error': 'Video not found'},
-                            status=404)
-
-        # Fetch the asset linked to the upload
-        try:
-            upload = services.uploads_api.get_direct_upload(
-                video.mux_upload_id
-            )
-            asset_id = upload.data.asset_id
-        except ApiException:
-            return Response({'error': 'Mux upload not ready'},
-                            status=400)
-
-        video.mux_asset_id = asset_id
-        video.status = 'processing'
-        video.save()
-
-        return Response({
-            'video_id': video.id,
-            'mux_asset_id': asset_id
-        })
-
-
-@csrf_exempt
-@api_view(['POST'])
-def mux_webhook(request):
-    """
-    Listens for webhooks updating the upload status of video files.
-
-    Param:
-    	request - A Python dictionary-like object containing Mux data.
-
-    Return:
-    	A DRF Response object declaring the upload status.
-    """
-
-    raw_body = request.body or b''
-
-    try:
-        payload = json.loads(raw_body.decode('utf-8') or '{}')
-    except (UnicodeDecodeError, json.JSONDecodeError) as err:
-        logger.error("Invalid JSON payload received from Mux webhook: {}".format(err))
-        return Response(
-            {
-                'status': 'error',
-                'detail': 'Invalid JSON payload',
-            },
-            status=status.HTTP_400_BAD_REQUEST,
-        )
-
-    verification_status, message = services.handle_mux_webhook(
-        raw_body,
-        payload,
-        request.headers.get('Mux-Signature'),
-    )
-
-    response_status = status.HTTP_200_OK if verification_status else status.HTTP_400_BAD_REQUEST
-
-    return Response(
-        {
-            'status': 'ok' if verification_status else 'error',
-            'detail': message
-        },
-        status=response_status,
-    )
+        return Response({'video_id': str(video.id), 'bunny_video_id': video.bunny_video_id}, status=201)
 
 
 class VideoViewSet(ModelViewSet):
@@ -472,5 +291,4 @@ class VideoViewSet(ModelViewSet):
         	A filtered Django model query set.
         """
 
-        return Video.objects.filter(owner=self.request.user,
-                                    status='ready')
+        return Video.objects.filter(owner=self.request.user)
