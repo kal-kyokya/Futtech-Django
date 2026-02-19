@@ -62,13 +62,13 @@ def build_embed_url(library_id: str, bunny_video_id: str, token_ttl_seconds=600)
     base_path = f"/embed/{library_id}/{bunny_video_id}"
     base_url = f"https://iframe.mediadelivery.net{base_path}"
 
-    token_key = getattr(settings, "BUNNY_STREAM_EMBED_TOKEN", "")
+    token_key = getattr(settings, "BUNNY_STREAM_EMBED_TOKEN_KEY", "")
     if not token_key:
         return base_url
 
     expires = int(time.time()) + token_ttl_seconds
     digest_input = f"{token_key}{base_path}{expires}".encode("utf-8")
-    token = base64.urlsafe_b64encode(haslib.sha256(digest_input).digest()).decode("utf-8").rstrip("=")
+    token = base64.urlsafe_b64encode(hashlib.sha256(digest_input).digest()).decode("utf-8").rstrip("=")
 
     params = urlencode(
         {
