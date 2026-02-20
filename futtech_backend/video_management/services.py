@@ -11,7 +11,7 @@ import time
 from urllib.parse import urlencode
 
 import requests
-from django.config import settings
+from django.conf import settings
 
 from .logs import logger
 
@@ -20,7 +20,7 @@ BUNNY_API_BASE_URL = "https://video.bunnycdn.com"
 
 def _headers(content_type="application/json"):
     return {
-        "AccessKey": settings.BUUNY_STREAM_API_KEY,
+        "AccessKey": settings.BUNNY_STREAM_API_KEY,
         "Content-Type": content_type,
     }
 
@@ -48,7 +48,7 @@ def upload_video_file(video_id: str, uploaded_file):
     """
     response = requests.put(
         f"{BUNNY_API_BASE_URL}/library/{settings.BUNNY_STREAM_LIBRARY_ID}/videos/{video_id}",
-        hearders=_headers(content_type="application/octet-stream"),
+        headers=_headers(content_type="application/octet-stream"),
         data=uploaded_file,
         timeout=300,
     )
