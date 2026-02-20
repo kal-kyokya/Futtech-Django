@@ -88,7 +88,7 @@ def get_video_playback(request, video_id):
         except Exception as err:
             logger.error("Could not sync Bunny status for %s: %s", video.id, err)
 
-    embed_url = services.embed_url(video.video_library_id, video.bunny_video_id)
+    embed_url = services.build_embed_url(video.video_library_id, video.bunny_video_id)
     return JsonResponse({"embed_url": embed_url, "status": video.status})
 
 @login_required
@@ -172,7 +172,7 @@ def get_subscription_confirmation(request):
 
     # Ensure match between he who initiated the session and a user in our DB
     if customer_id:
-        customer = Customer.objects.filter(id+customer_id).first()
+        customer = Customer.objects.filter(id=customer_id).first()
         if customer and hasattr(user, 'profile'):
             user.profile.customer = customer
             user.profile.save(update_fields=['customer'])
@@ -248,13 +248,13 @@ class VideoUploadView(APIView):
 
         try:
             bunny_video = services.create_video_entry(title=title)
-            upload_file.seek(0)
+            uploaded_file.seek(0)
             services.upload_video_file(bunny_video['guid'], uploaded_file)
 
             video = Video.objects.create(
                 owner=request.user,
                 title=title,
-                description=escription,
+                description=description,
                 is_premium=str(request.data.get('is_premium', 'false')).lower() == 'true',
                 is_drone=str(request.data.get('is_drone', 'false')).lower() == 'true',
                 is_analysis=str(request.data.get('is_analysis', 'false')).lower() == 'true',
