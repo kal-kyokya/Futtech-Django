@@ -103,12 +103,19 @@ let isRefreshing = false;
 let refreshSubscribers = [];
 
 // Queue failed requests while a single refresh call is in flight.
-const subscribeTokenRefresh = (cb) => {
-    refreshSubscribers.push(cb);
+const subscribeTokenRefresh = (subscriber) => {
+    refreshSubscribers.push(subscriber);
 };
 
-const onRefreshed = (token) => {
-    refreshSubscribers.forEach((cb) => cb(token));
+const flushRefreshSubscribers = ({ token = null, error = null } = {}) => {
+    refreshSubscribers.forEach(( { resolve, reject }) => {
+	if (token) {
+	    resolve(token);
+	    return;
+	}
+
+	reject(error || new Error('Token refresh failed'));
+    });
     refreshSubscribers = [];
 };
 
@@ -128,12 +135,11 @@ apiClient.interceptors.response.use(
 
 	    if (isRefreshing) {
 		// Avoid racing multiple refresh calls; replay once token arrives.
-		return new Promise((resolve) => {
-		    subscribeTokenRefresh((token) => {
-			originalRequest.headers.Authorization = `Bearer ${token
-}`;
-			resolve(apiClient(originalRequest));
-		    });
+		return new Promise((resolve, reject) => {
+		    subscribeTokenRefresh({ resolve, reject });
+		}).then((token) => {
+		    originalRequest.headers.Authorization = `Bearer ${token}`;
+		    return apiClient(originalRequest);
 		});
 	    }
 
@@ -154,13 +160,16 @@ apiClient.interceptors.response.use(
 		tokenService.setAccessToken(access);
 
 		// Retry all queued requests
-		onRefreshed(access);
+		flushRefreshSubscribers({ token: access });
 
 		// Retry the original request
 		originalRequest.headers.Authorization = `Bearer ${access}`;
 		return apiClient(originalRequest);
 
 	    } catch (refreshError) {
+		// Ensure queued requests fail fast if refresh cannot recover auth.
+		flushRefreshSubscribers({ error: refreshError });
+
 		// Hard-fail auth: clear volatile token and force a clean login.
 		tokenService.clearAccessToken();
 		window.location.href = '/login';
