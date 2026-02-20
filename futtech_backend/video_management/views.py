@@ -13,11 +13,13 @@ from django.http import HttpResponseForbidden, JsonResponse
 from djstripe.models import Customer
 from djstripe.settings import djstripe_settings
 from rest_framework import status
+from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework.viewsets import ModelViewSet
+from rest_framework_simplejwt.authentication import JWTAuthentication
 
 import stripe # Was pip installed with 'djstripe'
 
@@ -207,6 +209,7 @@ class PlaybackHistoryView(APIView):
     """
 
     permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
 
     def post(self, request, *args, **kwargs):
         serializer = PlaybackHistorySerializer(data=request.data)
@@ -225,15 +228,9 @@ class PlaybackHistoryView(APIView):
 
 
 class VideoUploadView(APIView):
-    """
-    Handles on-demand provision of MUX direct upload URLs to the frontend.
-
-    Inheritance:
-    	APIView - Empowers this view with a set of predefined class attributes
-    		  from the 'Base of all views in Django REST Framework'.
-    """
 
     permission_classes = [IsAuthenticated]
+    authentication_classes = [JWTAuthentication, SessionAuthentication]
 
     def post(self, request):
         uploaded_file = request.FILES.get('file')

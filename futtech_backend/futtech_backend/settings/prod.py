@@ -4,6 +4,7 @@
 """
 
 from .base import *
+import sys
 
 DEBUG = False
 
@@ -38,6 +39,10 @@ CORS_ALLOW_ALL_ORIGINS = False
 
 # Redirect all HTTP -> HTTPS (behind Nginx/Certbot)
 SECURE_SSL_REDIRECT = True
+# Prevent forced HTTPS redirects from breaking test-client assertions
+# when production settings are used for test execution.
+if "test" in sys.argv:
+    SECURE_SSL_REDIRECT = False
 
 # HSTS: will start with a small value to test (e.g., 300 seconds), then raise
 # 1 year|31536000 secs after I verified

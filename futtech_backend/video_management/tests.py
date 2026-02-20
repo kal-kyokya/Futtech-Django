@@ -32,7 +32,7 @@ class BunnyEmbedTokenTests(TestCase):
         self.assertIn('iframe.mediadelivery.net/embed/12345/video-guid', url)
         self.assertIn('token=', url)
         self.assertIn('expires=', url)
-        self.assert('secret-token-key', url)
+        self.assertNotIn('secret-token-key', url)
 
 @override_settings(DATABASES=TEST_DATABASES)
 class PlaybackAuthTests(TestCase):
@@ -91,7 +91,7 @@ class VideoUploadIntegrationSanityTests(TestCase):
                 'file': SimpleUploadedFile('clip.mp4', b'fake-video-content', content_type='video/mp4'),
             },
         )
-        self.asserEqual(upload_response.status_code, 201)
+        self.assertEqual(upload_response.status_code, 201)
         video_id = upload_response.json()['video_id']
 
         video = Video.objects.get(id=video_id)
