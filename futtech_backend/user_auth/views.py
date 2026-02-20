@@ -230,7 +230,7 @@ class LogoutView(APIView):
 
             response.delete_cookie(
                 'refresh_token',
-                path='api/v2/auth/',
+                path='/api/v2/auth/',
                 domain=cookie_domain,
             )
             return response
@@ -249,7 +249,7 @@ class LogoutView(APIView):
 
             response.delete_cookie(
                 'refresh_token',
-                path='api/v2/auth/',
+                path='/api/v2/auth/',
                 domain=cookie_domain,
             )
             return response
