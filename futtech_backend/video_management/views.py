@@ -23,6 +23,7 @@ import stripe # Was pip installed with 'djstripe'
 
 from . import services
 from .logs import logger
+from .choices import VideoStatus
 from .models import PlaybackHistory, Video
 from .serializers import PlaybackHistorySerializer, VideoSerializer
 
@@ -125,7 +126,10 @@ def get_featured_videos(request):
     # Keep limits sane and non-negative to avoid unexpected query slices.
     limit = max(1, min(limit, 50))
 
-    videos = Video.objects.filter(is_premium='false', status='ready').order_by('-created_at')[:limit]
+    videos = Video.objects.filter(
+        is_premium=False,
+        status=VideoStatus.READY
+    ).order_by('-created_at')[:limit]
     return Response(VideoSerializer(videos, many=True).data)
 
 
