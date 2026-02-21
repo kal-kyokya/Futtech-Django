@@ -12,7 +12,7 @@ Football is one such skill, and technology is a powerful tool that can facilitat
 
 # What, Why and How?
 
-Futtech is a full-stack football training platform with a Django + Django REST Framework backend and a React (Vite) frontend. The backend handles identity, video metadata, Stripe billing data, and playlist APIs; the frontend handles authentication UX, protected routing, and content browsing.
+Futtech is a full-stack football training platform with a Django + Django REST Framework backend and a React (Vite) frontend. The backend handles identity, video metadata, provider-agnostic payments (M-Pesa primary, Stripe fallback), and playlist APIs; the frontend handles authentication UX, protected routing, and content browsing, and checkout.
 
 If you are new to the project, start by understanding two end-to-end flows: **authentication** and **playlist CRUD**. This README gives a quick map, then points to the deeper docs in [`docs/`](docs/).
 
@@ -39,7 +39,7 @@ python manage.py runserver
 
 Backend default dev URL: `htpp://127.0.0.1:8000`
 
-> Configuration: copy value from `futtech_backend/env.sample` into your environment (or `.env` loader flow), especially DB/JWT/Bunny Stream/Stripe settings.
+> Configuration: copy value from `futtech_backend/env.sample` into your environment (or `.env` loader flow), especially DB/JWT/Bunny Stream/M-Pesa/Stripe settings.
 
 ## 2) Frontend setup (React + Vite)
 
@@ -92,6 +92,7 @@ Request flow (UI → API  → DB → UI state):
 - [API overview](docs/API.md)
 - [Frontend implementation notes](docs/FRONTEND.md)
 - [Backend implementation notes](docs/BACKEND.md)
+- [Payment integration guide](docs/payment-integration.md)
 - [Auth + playlist Mermaid flowcharts](docs/mermaid-flowcharts.md)
 
 For auth behavior (register/login/persistence/logout), prefer the Mermaid diagrams above as source of truth.
