@@ -11,7 +11,8 @@ This guide describes backend app responsibilities and common API patterns.
   - Playlist model, serialization, owner-based write permission, paginated list APIs.
 - `video_management`
   - Video records, featured content endpoint, upload completion, playback token handling.
-  - Bunny Stream webhook intake and Stripe-linked endpoints.
+  - Bunny Stream webhook intake and provider-agnostic payment endpoints.
+  - M-Pesa (primary) + Stripe (fallback) checkout and callback/webhook processing.
 
 ## Common DRF patterns in this repo
 
