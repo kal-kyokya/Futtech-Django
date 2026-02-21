@@ -1,20 +1,37 @@
-import { useEffect, useRef } from 'react';
+import { useState } from 'react';
 
-const Payment = ({ pricingTableId, publishableKey, clientReferenceId }) => {
-    const ref = useRef();
+const Payment = ({ amountKes, onMpesaPay, onStripe, pending, statusMessage }) => {
+    const [provider, setProvider] = useState('MPESA');
+    const [phoneNumber, setPhoneNumber] = useState('');
 
-    useEffect(() => {
-	if (!ref.current) return;
-
-	// Set attributes manually to be React-safe
-	ref.current.setAttribute('pricing-table-id', pricingTableId);
-	ref.current.setAttribute('publishable-key', publishableKey);
-	ref.current.setAttribute('client-reference-id', clientReferenceId);
-    }, [pricingTableId, publishableKey, clientReferenceId]);
+    const isMpesa = provider === 'MPESA';
 
     return (
-	    <stripe-pricing-table ref={ref}>
-	    </stripe-pricing-table>
+	<div style={{ maxWidth: '520px', margin: '1.5rem auto', padding: '1rem', background: '#111', color: '#fff', borderRadius: '12px' }}>
+	    <h2>Checkout</h2>
+	    <p></p>
+
+	    <div>
+		<button></button>
+		<button></button>
+	    </div>
+
+	    <div>
+		<strong></strong>
+	    </div>
+
+	    {isMpesa ? (
+		<>
+		    <label></label>
+		    <input/>
+		    <button></button>
+		</>
+	    ) : (
+		<button></button>
+	    )}
+
+	    {statusMessage ? <p></p> : null}
+	</div>
     );
 };
 
