@@ -213,3 +213,21 @@ SIMPLE_JWT = {
 BUNNY_STREAM_API_KEY = os.environ.get('BUNNY_STREAM_API_KEY', '')
 BUNNY_STREAM_LIBRARY_ID = os.environ.get('BUNNY_STREAM_LIBRARY_ID', '')
 BUNNY_STREAM_EMBED_TOKEN_KEY = os.environ.get('BUNNY_STREAM_EMBED_TOKEN_KEY', '')
+
+# Provider-agnostic payment defaults
+PAYMENT_SUBSCRIPTION_DAYS = int(os.environ.get('PAYMENT_SUBSCRIPTION_DAYS', '30'))
+PAYMENT_SUBSCRIPTION_PRICE_KES = os.environ.get('PAYMENT_SUBSCRIPTION_PRICE_KES', '1500')
+PAYMENT_SUBSCRIPTION_USD = os.environ.get('PAYMENT_SUBSCRIPTION_USD', '15')
+
+# Stripe fallback settings
+STRIPE_FALLBACK_PRICE_ID = os.environ.get('STRIPE_FALLBACK_PRICE_ID', '')
+
+# M-Pesa Daraja settings
+MPESA_ENV = os.environ.get('MPESA_ENV', 'sandbox')
+MPESA_CONSUMER_KEY = os.environ.get('MPESA_CONSUMER_KEY', '')
+MPESA_CONSUMER_SECRET = os.environ.get('MPESA_CONSUMER_SECRET', '')
+MPESA_SHORTCODE = os.environ.get('MPESA_SHORTCODE', '')
+MPESA_PASSKEY = os.environ.get('MPESA_PASSKEY', '')
+MPESA_CALLBACK_URL = os.environ.get('MPESA_CALLBACK_URL', '')
+MPESA_TIMEOUT_SECONDS = int(os.environ.get('', '30'))
+MPESA_BASE_URL = os.environ.get('MPESA_BASE_URL', '')
