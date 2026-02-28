@@ -38,7 +38,7 @@ def handle_customer_subscription_created(sender, **kwargs):
 
 @djstripe_receiver('customer.subscription.updated')
 def handle_customer_subscription_updated(sender, **kwargs):
-    handle_customer_subscription_updated(sender, **kwargs)
+    handle_customer_subscription(sender, **kwargs)
 
 
 @djstripe_receiver('charge.succeeded')
