@@ -30,6 +30,18 @@ urlpatterns = [
     path('user/stripe-profile',
          views.create_portal_session,
          name='get_stripe_profile'),
+    path('payments/checkout/initiate',
+         views.initiate_checkout,
+         name='initiate_checkout'),
+    path('payments/checkout/status/<uuid:transaction_id>',
+         views.payment_status,
+         name='payment_status'),
+    path('payments/callbacks/mpesa',
+         views.mpesa_callback,
+         name='mpesa_callback'),
+    path('payments/callbacks/stripe',
+         views.stripe_callback,
+         name='stripe_callback'),
 
     # Admin-related URLS
     path('video/upload',
