@@ -114,6 +114,10 @@ class UserProfile(models.Model):
                              related_name='team_members',
                              help_text='The team whose enterprise subscription a user has access to')
 
+    # Provider-agnostic access marker used by non-stripe providers.
+    access_expires_at = models.DateTimeField(null=True,
+                                             blank=True)
+
     def has_active_subscription(self):
         """
         Runs a series of checks permitting a user to stream Futtech content.
@@ -124,6 +128,9 @@ class UserProfile(models.Model):
         Return:
         	A boolean determining whether or not a user is subscribed.
         """
+
+        if self.access_expires_at and self.access_expires_at >= timezone.now():
+            return True
 
         if not self.subscription:
             return False
@@ -140,15 +147,74 @@ class UserProfile(models.Model):
 
         return self.subscription.status == 'active'
 
-    def __str__(self):
-        """
-        Defines the 'string representation' of any instance of
-        the 'UserProfile' class.
 
-        Return:
-        	The username associated with the instantiated user.
-        """
-        return self.user.username
+class PaymentProvider(models.TextChoices):
+    MPESA = 'MPESA', 'M-Pesa'
+    STRIPE = 'STRIPE', 'Stripe'
+
+
+class PaymentStatus(models.TextChoices):
+    PENDING = 'PENDING', 'Pending'
+    PROCESSING = 'PROCESSING', 'Processing'
+    SUCCEEDED = 'SUCCEEDED', 'Succeeded'
+    FAILED = 'FAILED', 'Failed'
+    CANCELED = 'CANCELED', 'Canceled'
+    EXPIRED = 'EXPIRED', 'Expired'
+
+
+class PaymentTransaction(models.Model):
+    id = models.UUIDField(default=uuid.uuid4,
+                          editable=False,
+                          primary_key=True)
+    user = models.ForeignKey(UserModel,
+                             on_delete=models.CASCADE,
+                             related_name='payment_transactions')
+    provider = models.CharField(choices=PaymentProvider.choices,
+                                max_length=20)
+    status = models.CharField(choices=PaymentStatus.choices,
+                              default=PaymentStatus.PENDING,
+                              max_length=20)
+    amount = models.DecimalField(decimal_places=2,
+                                 max_digits=10)
+    currency = models.CharField(default='KES',
+                                max_length=3)
+    purpose = models.CharField(default='subscription',
+                               max_length=64)
+    external_reference = models.CharField(blank=True,
+                                          default='',
+                                          max_length=255)
+    merchant_reference = models.CharField(blank=True,
+                                          default='',
+                                          max_length=255)
+    provider_transaction_id = models.CharField(blank=True,
+                                               default='',
+                                               max_length=255)
+    provider_checkout_request_id = models.CharField(blank=True,
+                                                    default='',
+                                                    max_length=255)
+    metadata = models.JSONField(blank=True,
+                                default=dict)
+    idempotency_key = models.CharField(max_length=128,
+                                       unique=True)
+    error_code = models.CharField(blank=True,
+                                  default='',
+                                  max_length=128)
+    error_message = models.TextField(blank=True,
+                                     default='')
+    fulfilled_at = models.DateTimeField(blank=True,
+                                        null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        indexes = [
+            models.Index(fields=['provider', 'status']),
+            models.Index(fields=['provider_checkout_request_id']),
+            models.Index(fields=['external_reference']),
+        ]
+
+    def __str__(self):
+        return f"{self.id} {self.provider} {self.status}"
 
 
 class Video(models.Model):
