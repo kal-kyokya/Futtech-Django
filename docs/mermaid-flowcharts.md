@@ -203,3 +203,34 @@ flowchart TD
 	  Q --> |Yes| S["Set transaction PROCESSING and persist session id"]
 	  S --> T["Return 200 with redirect_url and transaction payload"]
 ```
+
+# Callback & Fulfillment Flow
+
+```mermaid
+flowchart TD
+	  A[Provider callback/webhook hits public endpoint] --> B{Provider source?}
+
+	  B --> |MPESA| C[POST /api/v2/payments/callbacks/mpesa]
+	  C --> D[Parse callback metadata and CheckoutRequestID]
+	  D --> E{Matching PaymentTransaction found?}
+	  E --> |No| F[Return accepted response without mutation]
+	  E --> |Yes| G{ResultCode == 0?}
+	  G --> |Yes| H[mark_payment_result SUCCEEDED + receipt metadata]
+	  G --> |No| I[mark_payment_result FAILED + error code/message]
+
+	  B --> |STRIPE| J[POST api/v2/payments/callbacks/stripe]
+	  J --> K[Verify signature and construct event]
+	  K --> L{Event maps to PaymentTransaction?}
+	  L --> |No| M[Log and return ok]
+	  L --> |Yes| N{Event outcome}
+	  N --> |Success events| O[mark_payment_result SUCCEEDED]
+	  N --> |Expired/failed events| P[mark_payment_result EXPIRED or FAILED]
+
+	  H --> Q{Status changed to SUCCEEDED?}
+	  O --> Q
+	  Q --> |No| R[Stop: no fulfillment changes]
+	  Q --> |Yes| S[fulfill_transaction acquires profile lock]
+	  S --> T[Extend UserProfile.access_expires_at by configured days]
+	  T --> U[Set fulfilled_at guard to ensure idempotency]
+	  U --> V[Return success/accepted callback response]
+```
