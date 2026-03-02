@@ -234,3 +234,15 @@ flowchart TD
 	  T --> U["Set fulfilled_at guard to ensure idempotency"]
 	  U --> V["Return success/accepted callback response"]
 ```
+
+# Transaction Status Polling Flow
+
+```mermaid
+flowchart TD
+	  A["Frontend polls payment status page/state"] --> B["GET /api/v2/payments/checkout/status/{transaction_id}"]
+	  B --> C["Backend filters by transaction_id + current_user"]
+	  C --> D{"Transaction exists for user?"}
+	  D --> |No| E["Return 404 payment transaction not found"]
+	  D --> |Yes| F["serialize_payment returns normalized state"]
+	  F --> G["Frontend updates UI for PENDING/PROCESSING/SUCCEEDED/FAILED/EXPIRED"]
+```
