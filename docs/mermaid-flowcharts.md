@@ -5,7 +5,7 @@ flowchart TD
 	  A["User submits registration form in UI"] --> B["AuthService.register posts user data"]
 	  B --> C["apiClient POST /auth/register/ with user data"]
 	  C --> D["Backend UserRegistrationView validates input"]
-	  D --> E{Registration valid?}
+	  D --> E{"Registration valid?"}
 	  E -- No --> F["Return 400/validation error"]
 	  F --> G["apiClient normalizes error"]
 	  G --> H["Registration UI shows error state"]
@@ -38,7 +38,7 @@ flowchart TD
 	  A["User submits email/password in login UI"] --> B["AuthService.login posts credentials"]
 	  B --> C["apiClient POST /auth/login/ with credentials"]
 	  C --> D["Backend ObtainCookieView validates credentials"]
-	  D --> E{Credentials valid?}
+	  D --> E{"Credentials valid?"}
 	  E -- No --> F["Return 401/validation error"]
 	  F --> G["apiClient normalizes error"]
 	  G --> H["Login UI shows error state"]
@@ -69,14 +69,14 @@ flowchart TD
 ```mermaid
 flowchart TD
 	  A["App loads / refreshes"] --> B["tokenService.rehydrate reads stored access token"]
-	  B --> C{Access token present?}
+	  B --> C{"Access token present?"}
 	  C -- No --> D["Redirect user to login"]
 	  C -- Yes --> E["apiClient attaches Bearer token to requests"]
 	  E --> F["Request protected resource"]
-	  F --> G{Backend returns 401?}
+	  F --> G{"Backend returns 401?"}
 	  G -- No --> H["Request succeeds"]
 	  G -- Yes --> I["apiClient calls /auth/token/refresh"]
-	  I --> J{Refresh token cookie valid?}
+	  I --> J{"Refresh token cookie valid?"}
 	  J -- No --> K["Clear access token + redirect to login"]
 	  J -- Yes --> L["Issue new access token"]
 	  L --> M["tokenService updates access token"]
@@ -103,7 +103,7 @@ flowchart TD
 	  A["User initiates logout in UI"] --> B["AuthService.logout posts logout request"]
 	  B --> C["apiClient POST /auth/logout/"]
 	  C --> D["Backend LogoutView reads refresh token"]
-	  D --> E{Refresh token present/valid?}
+	  D --> E{"Refresh token present/valid?"}
 	  E -- No or invalid --> F["Return 400 + delete refresh cookie"]
 	  F --> G["Logout UI shows error or clears state"]
 
@@ -132,7 +132,7 @@ flowchart TD
 
 ```mermaid
 flowchart TD
-	  A["User interacts with playlists in UI"] --> B{Operation type?}
+	  A["User interacts with playlists in UI"] --> B{"Operation type?"}
 
 	  B -- Read list --> C["contentService.fetchPlaylists calls apiClient GET /api/v2/playlists/"]
 	  C --> D["PlaylistViewSet.list filters owned + public playlists"]
@@ -185,20 +185,20 @@ flowchart TD
 	  B --> C["Backend validates provider and request payload"]
 	  C --> D["get_checkout_price chooses provider-specific amount/currency"]
 	  D --> E["create_payment_transaction creates PaymentTransaction with PENDING status"]
-	  E --> F{Selected provider?}
+	  E --> F{"Selected provider?"}
 
 	  F -- MPESA --> G["Normalize Kenyan phone number"]
-	  G --> H{Phone valid?}
+	  G --> H{"Phone valid?"}
 	  H -- No --> I["Mark transaction FAILED and return 400"]
 	  H -- Yes --> J["Set transaction to PROCESSING and store phone metadata"]
 	  J --> K["MpesaClient initiates STK Push"]
-	  K --> L{STK initiation success?}
+	  K --> L{"STK initiation success?"}
 	  L -- No --> M["mark_payment_result FAILED and return 502"]
 	  L -- Yes --> N["Store CheckoutRequestID/MerchantRequestID metadata"]
 	  N --> O["Return 202 with transaction_id and pending instructions"]
 
 	  F -- STRIPE --> P["create_stripe_checkout_session builds Checkout Session"]
-	  P --> Q{Session creation success?}
+	  P --> Q{"Session creation success?"}
 	  Q -- No --> R["mark_payment_result FAILED and return 500/502"]
 	  Q -- Yes --> S["Set transaction PROCESSING and persist session id"]
 	  S --> T["Return 200 with redirect_url and transaction payload"]
