@@ -176,3 +176,30 @@ flowchart TD
 
 - Listing combines playlists owned by the owner and public playlists.
 - Playlist detail responses include related videos for the UI detail view.
+
+# Payment Checkout Flow (Provider-Agnostic)
+
+```mermaid
+flowchart TD
+	  A[Authenticated user selects subscription plan] --> B[Frontend POST /api/v2/payments/checkout/initiate]
+	  B --> C[Backend validates provider and request payload]
+	  C --> D[get_checkout_price chooses provider-specific amount/currency]
+	  D --> E[create_payment_transaction creates PaymentTransaction with PENDING status]
+	  E --> F{Selected provider?}
+
+	  F -- MPESA --> G[Normalize Kenyan phone number]
+	  G --> H{Phone valid?}
+	  H -- No --> I[Mark transaction FAILED and return 400]
+	  H -- Yes --> J[Set transaction to PROCESSING and store phone metadata]
+	  J --> K[MpesaClient initiates STK Push]
+	  K --> L{STK initiation success?}
+	  L -- No --> M[mark_payment_result FAILED and return 502]
+	  L -- Yes --> N[Store CheckoutRequestID/MerchantRequestID metadata]
+	  N --> O[Return 202 with transaction_id and pending instructions]
+
+	  F -- STRIPE --> P[create_stripe_checkout_session builds Checkout Session]
+	  P --> Q{Session creation success?}
+	  Q -- No --> R[mark_payment_result FAILED and return 500/502]
+	  Q -- Yes --> S[Set transaction PROCESSING and persist session id]
+	  S --> T[Return 200 with redirect_url and transaction payload]
+```
