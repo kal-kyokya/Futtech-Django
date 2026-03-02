@@ -6,11 +6,11 @@ flowchart TD
 	  B --> C["apiClient POST /auth/register/ with user data"]
 	  C --> D["Backend UserRegistrationView validates input"]
 	  D --> E{"Registration valid?"}
-	  E -- No --> F["Return 400/validation error"]
+	  E --> |No| F["Return 400/validation error"]
 	  F --> G["apiClient normalizes error"]
 	  G --> H["Registration UI shows error state"]
 
-	  E -- Yes --> I["Create user + issue JWT access token"]
+	  E --> |Yes| I["Create user + issue JWT access token"]
 	  I --> J["Set refresh_token HttpOnly cookie"]
 	  J --> K["Return response with access token + user payload"]
 	  K --> L["AuthService stores access token in tokenService"]
@@ -39,11 +39,11 @@ flowchart TD
 	  B --> C["apiClient POST /auth/login/ with credentials"]
 	  C --> D["Backend ObtainCookieView validates credentials"]
 	  D --> E{"Credentials valid?"}
-	  E -- No --> F["Return 401/validation error"]
+	  E --> |No| F["Return 401/validation error"]
 	  F --> G["apiClient normalizes error"]
 	  G --> H["Login UI shows error state"]
 
-	  E -- Yes --> I["Issue JWT access token"]
+	  E --> |Yes| I["Issue JWT access token"]
 	  I --> J["Set refresh_token HttpOnly cookie"]
 	  J --> K["Return response with access token + user payload"]
 	  K --> L["AuthService stores access token in tokenService"]
@@ -70,15 +70,15 @@ flowchart TD
 flowchart TD
 	  A["App loads / refreshes"] --> B["tokenService.rehydrate reads stored access token"]
 	  B --> C{"Access token present?"}
-	  C -- No --> D["Redirect user to login"]
-	  C -- Yes --> E["apiClient attaches Bearer token to requests"]
+	  C --> |No| D["Redirect user to login"]
+	  C --> |Yes| E["apiClient attaches Bearer token to requests"]
 	  E --> F["Request protected resource"]
 	  F --> G{"Backend returns 401?"}
-	  G -- No --> H["Request succeeds"]
-	  G -- Yes --> I["apiClient calls /auth/token/refresh"]
+	  G --> |No| H["Request succeeds"]
+	  G --> |Yes| I["apiClient calls /auth/token/refresh"]
 	  I --> J{"Refresh token cookie valid?"}
-	  J -- No --> K["Clear access token + redirect to login"]
-	  J -- Yes --> L["Issue new access token"]
+	  J --> |No| K["Clear access token + redirect to login"]
+	  J --> |Yes| L["Issue new access token"]
 	  L --> M["tokenService updates access token"]
 	  M --> N["Retry original request"]
 ```
@@ -104,10 +104,10 @@ flowchart TD
 	  B --> C["apiClient POST /auth/logout/"]
 	  C --> D["Backend LogoutView reads refresh token"]
 	  D --> E{"Refresh token present/valid?"}
-	  E -- No or invalid --> F["Return 400 + delete refresh cookie"]
+	  E --> |No or invalid| F["Return 400 + delete refresh cookie"]
 	  F --> G["Logout UI shows error or clears state"]
 
-	  E -- Yes --> H["Blacklist refresh token"]
+	  E --> |Yes| H["Blacklist refresh token"]
 	  H --> I["Delete refresh_token HttpOnly cookie"]
 	  I --> J["Return 204 No Content"]
 	  J --> K["Client clears access token + auth state"]
@@ -134,30 +134,30 @@ flowchart TD
 flowchart TD
 	  A["User interacts with playlists in UI"] --> B{"Operation type?"}
 
-	  B -- Read list --> C["contentService.fetchPlaylists calls apiClient GET /api/v2/playlists/"]
+	  B --> |Read list| C["contentService.fetchPlaylists calls apiClient GET /api/v2/playlists/"]
 	  C --> D["PlaylistViewSet.list filters owned + public playlists"]
 	  D --> E["PlaylistPagination paginates results"]
 	  E --> F["PlaylistSerializer returns playlist + videos"]
 	  F --> G["Client updates playlist list state"]
 
-	  B -- Read detail --> H["apiClient GET /api/v2/playlists/:id"]
+	  B --> |Read detail| H["apiClient GET /api/v2/playlists/:id"]
 	  H --> I["PlaylistViewSet.retrieve loads playlist + videos"]
 	  I --> J["PlaylistSerializer returns playlist detail"]
 	  J --> K["Client renders playlist detail view"]
 
-	  B -- Create --> L["UI submits playlist form"]
+	  B --> |Create| L["UI submits playlist form"]
 	  L --> M["apiClient POST /api/v2/playlists/"]
 	  M --> N["PlaylistViewSet.create assigns owner + saves playlist"]
 	  N --> O["PlaylistSerializer returns new playlist"]
 	  O --> P["Client refreshes playlists or inserts new item"]
 
-	  B -- Update --> Q["UI edits playlist details"]
+	  B --> |Update| Q["UI edits playlist details"]
 	  Q --> R["apiClient PATCH /api/v2/playlist/:id"]
 	  R --> S["PlaylistViewSet.partial_update validates + saves"]
 	  S --> T["PlaylistSerializer returns updated playlist"]
 	  T --> U["Client updates playlist state"]
 
-	  B -- Delete --> V["UI triggers delete"]
+	  B --> |Delete| V["UI triggers delete"]
 	  V --> W["apiClient DELETE /api/v2/playlists/:id"]
 	  W --> X["PlaylistViewSet.destroy removes playlist"]
 	  X --> Y["Client removes playlist from state"]
@@ -187,19 +187,19 @@ flowchart TD
 	  D --> E["create_payment_transaction creates PaymentTransaction with PENDING status"]
 	  E --> F{"Selected provider?"}
 
-	  F -- MPESA --> G["Normalize Kenyan phone number"]
+	  F --> |MPESA| G["Normalize Kenyan phone number"]
 	  G --> H{"Phone valid?"}
-	  H -- No --> I["Mark transaction FAILED and return 400"]
-	  H -- Yes --> J["Set transaction to PROCESSING and store phone metadata"]
+	  H --> |No| I["Mark transaction FAILED and return 400"]
+	  H --> |Yes| J["Set transaction to PROCESSING and store phone metadata"]
 	  J --> K["MpesaClient initiates STK Push"]
 	  K --> L{"STK initiation success?"}
-	  L -- No --> M["mark_payment_result FAILED and return 502"]
-	  L -- Yes --> N["Store CheckoutRequestID/MerchantRequestID metadata"]
+	  L --> |No| M["mark_payment_result FAILED and return 502"]
+	  L --> |Yes| N["Store CheckoutRequestID/MerchantRequestID metadata"]
 	  N --> O["Return 202 with transaction_id and pending instructions"]
 
-	  F -- STRIPE --> P["create_stripe_checkout_session builds Checkout Session"]
+	  F --> |STRIPE| P["create_stripe_checkout_session builds Checkout Session"]
 	  P --> Q{"Session creation success?"}
-	  Q -- No --> R["mark_payment_result FAILED and return 500/502"]
-	  Q -- Yes --> S["Set transaction PROCESSING and persist session id"]
+	  Q --> |No| R["mark_payment_result FAILED and return 500/502"]
+	  Q --> |Yes| S["Set transaction PROCESSING and persist session id"]
 	  S --> T["Return 200 with redirect_url and transaction payload"]
 ```
