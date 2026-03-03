@@ -10,7 +10,7 @@ from decimal import Decimal
 
 import requests
 import stripe
-from django.conf import
+from django.conf import settings
 from django.core.cache import cache
 from django.db import transaction
 from django.utils import timezone
@@ -20,7 +20,7 @@ from .models import PaymentProvider, PaymentStatus, PaymentTransaction, UserProf
 
 
 def normalize_kenyan_phone(phone_number: str) -> str:
-    cleaned = ''.join(ch for in (phone_number or '') if ch.isdigit())
+    cleaned = ''.join(ch for ch in (phone_number or '') if ch.isdigit())
     if cleaned.startsWith('0') and len(cleaned) == 10:
         cleaned = f'254{cleaned[1:]}'
     if cleaned.startsWith('7') and len(cleaned) == 9:

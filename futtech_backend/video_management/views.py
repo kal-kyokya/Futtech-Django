@@ -233,7 +233,7 @@ def initiate_checkout(request):
         except ValueError as err:
             payment.status = PaymentStatus.FAILED
             payment.error_message = str(err)
-            payment.save(update_fields=['status': 'error_message', 'updated_at'])
+            payment.save(update_fields=['status', 'error_message', 'updated_at'])
             return Response({'error': str(err)}, status=400)
 
         callback_url = settings.MPESA_CALLBACK_URL
@@ -263,13 +263,13 @@ def initiate_checkout(request):
         except Exception as err:
             logger.exception('M-Pesa initiation failed: %s', err)
             mark_payment_result(payment, PaymentStatus.FAILED, error_message='Failed to intiate M-Pesa STK push.')
-            return Response('error': 'Unable to intiate M-Pesa at this time. Please try again.'}, status=502)
+            return Response({'error': 'Unable to intiate M-Pesa at this time. Please try again.'}, status=502)
 
     try:
         session = create_stripe_checkout_session(payment, request)
     except ValueError as err:
         mark_payment_result(payment, PaymentStatus.FAILED, error_message=str(err))
-        return Response({'error': str(err), status=500})
+        return Response({'error': str(err)}, status=500)
     except Exception as err:
         logger.exception('Stripe session initiation failed: %s', err)
         mark_payment_result(payment, PaymentStatus.FAILED, error_message='Failed to initiate Stripe checkout.')
