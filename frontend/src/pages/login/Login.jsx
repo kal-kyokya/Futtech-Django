@@ -24,6 +24,7 @@ import {
     getPlaylistsFailure } from '../../contexts/playlistContext/PlaylistActions';
 import authService from '../../services/authService';
 import { normalizeError } from '../../services/apiClient';
+import AuthHeroVideo from '../../components/auth/AuthHeroVideo';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -123,67 +124,70 @@ const Login = () => {
 	    </div>
 
 	    <div className='container'>
-		<form>
-		    <h1>Sign In</h1>
-		    <input type='email'
-			   placeholder='Email address'
-			   onChange={(e) => setEmail(e.target.value)}
-		    />
-		    {fieldErrors.email && (
-			<div className='fieldError'>
-			    {fieldErrors.email}
-			</div>
-		    )}
-		    <input type='password'
-			   placeholder='Password'
-			   autoComplete='Password'
-			   onChange={(e) => setPassword(e.target.value)}
-		    />
-		    {fieldErrors.password && (
-			<div className='fieldError'>
-			    {fieldErrors.password}
-			</div>
-		    )}
+		<div className='authPanels'>
+		    <AuthHeroVideo title='Watch Futtech in action' />
+		    <form>
+			<h1>Sign In</h1>
+			<input type='email'
+			       placeholder='Email address'
+			       onChange={(e) => setEmail(e.target.value)}
+			/>
+			{fieldErrors.email && (
+			    <div className='fieldError'>
+				{fieldErrors.email}
+			    </div>
+			)}
+			<input type='password'
+			       placeholder='Password'
+			       autoComplete='Password'
+			       onChange={(e) => setPassword(e.target.value)}
+			/>
+			{fieldErrors.password && (
+			    <div className='fieldError'>
+				{fieldErrors.password}
+			    </div>
+			)}
 
-		    <button onClick={handleSignIn} disabled={isFetching}>
-			Sign In
-		    </button>
+			<button onClick={handleSignIn} disabled={isFetching}>
+			    Sign In
+			</button>
 
-		    {notice && (
-			<div className='userPrompt'>
-			    {notice}
-			</div>
-		    )}
+			{notice && (
+			    <div className='userPrompt'>
+				{notice}
+			    </div>
+			)}
 
-		    {loginError?.message && (
-			<div className='userPrompt'>
-			    {loginError.message}
-			</div>
-		    )}
+			{loginError?.message && (
+			    <div className='userPrompt'>
+				{loginError.message}
+			    </div>
+			)}
 
-		    <span className='resetPassword'>
-			<Link to='/reset-password' className='link'>
-			    <u>Forgot Password?</u>
-			</Link>
-		    </span>
+			<span className='resetPassword'>
+			    <Link to='/reset-password' className='link'>
+				<u>Forgot Password?</u>
+			    </Link>
+			</span>
 
-		    <span className='text'>
-			New to Futtech? Sign up 
-			<Link to='/register' className='link'>
+			<span className='text'>
+			    New to Futtech? Sign up 
+			    <Link to='/register' className='link'>
 				<b> <u>here</u></b>.
-			</Link>
-		    </span>
+			    </Link>
+			</span>
 
-		    <div className='captcha'>
-			<p className='small-1'>
-			    <i>This page is protected by Google reCAPTCHA to ensure you're not a bot.</i>
-			</p>
+			<div className='captcha'>
+			    <p className='small-1'>
+				<i>This page is protected by Google reCAPTCHA to ensure you're not a bot.</i>
+			    </p>
 
-			<p className='small-2'>
-			    <i>Learn more.</i>
-			</p>
-		    </div>
-		</form>
+			    <p className='small-2'>
+				<i>Learn more.</i>
+			    </p>
+			</div>
+		    </form>
+		</div>
 	    </div>
 	</div>
     );
