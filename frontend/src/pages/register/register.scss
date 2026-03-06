@@ -60,7 +60,7 @@
     }
 
     .container {
-	max-width: 60rem;
+	max-width: 78rem;
 	width: 100%;
 	height: 100%;
 	padding: 0 2rem 2rem 2rem;
@@ -69,8 +69,24 @@
 	justify-content: center;
 	align-items: center;
 	text-align: center;
-	margin-top: 5vh;
+	margin-top: 3vh;
 	margin-bottom: 3vh;
+
+	.authPanels {
+	    width: 100%;
+	    display: flex;
+	    flex-direction: column;
+	    align-items: center;
+	    gap: 1.5rem;
+	}
+
+	.authContent {
+	    width: 100%;
+	    max-width: 30rem;
+	    display: flex;
+	    flex-direction: column;
+	    align-items: center;
+	}
     }
 
     h1 {
@@ -123,8 +139,7 @@
     }
 
     .userPrompt {
-	position: absolute;
-	bottom: 1rem;
+	margin-top: 0.5rem;
 	color: #05F283;
     }
 
@@ -140,23 +155,38 @@
 @media (min-width: 768px) {
     .register {
 	background-position: left;
-    }
 
-    .container {
-	margin-bottom: 8vh;
-    }
+	.container {
+	    margin-bottom: 8vh;
 
-    .membership {
-	width: 50%;
-	flex-wrap: nowrap;
-    }
+	    .authPanels {
+		flex-direction: row;
+		align-items: center;
+		justify-content: center;
+		gap: 2rem;
+	    }
 
-    input {
-	margin-bottom: 0;
-	flex: 9;
-    }
+	    .authHeroVideo {
+		max-width: 34rem;
+	    }
 
-    button {
-	flex: 3;
+	    .authContent {
+		max-width: 28rem;
+	    }
+	}
+
+	.membership {
+	    width: 50%;
+	    flex-wrap: nowrap;
+	}
+
+	input {
+	    margin-bottom: 0;
+	    flex: 9;
+	}
+
+	button {
+	    flex: 3;
+	}
     }
 }
