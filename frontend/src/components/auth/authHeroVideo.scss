@@ -12,11 +12,10 @@
 
     .authHeroVideoFrame {
 	width: 100%;
-	aspect-ratio: 16 / 9;
-	border-radius: 0.75rem;
+	aspect-ratio: 5 / 5;
 	overflow: hidden;
 	box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.45);
-	border: 1px solid rgba(255, 255, 255, 0.12);
+	border: none;
 	background: rgba(0, 0, 0, 0.55);
 
 	iframe {

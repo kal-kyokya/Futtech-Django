@@ -8,7 +8,7 @@ const AuthHeroVideo = ({ title = 'Futtech Preview', className = '' }) => (
 		src='https://player.mediadelivery.net/embed/603147/bfb7224d-d5f5-4239-9370-395750a5798f'
 		title='Futtech Bunny Stream preview video'
 		loading='lazy'
-		allow='autoplay; fullscreen; picture-in-picture'
+		allow='loop; autoplay; fullscreen; picture-in-picture'
 		allowFullScreen
 	    />
 	</div>
