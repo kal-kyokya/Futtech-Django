@@ -118,7 +118,6 @@ const Register = () => {
 	    </div>
 
 	    <div className='container'>
-		<div className='authContent'>
 		    <AuthHeroVideo title='See what membership unlocks' />
 
 		    <div className='authContent'>
@@ -201,7 +200,6 @@ const Register = () => {
 			)}
 		    </div>
 		</div>
-	    </div>
 
 	</div>
     );
