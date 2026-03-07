@@ -1,0 +1,124 @@
+.authPage {
+    width: 100vw;
+    height: 100vh;
+    background: linear-gradient(
+	to bottom,
+	rgba(0, 0, 0, 0),
+	rgba(0, 0, 10, 0.65) 40%,
+	rgba(0, 0, 0, 0.85) 66.66%
+    ), url('https://raw.githubusercontent.com/kal-kyokya/Futtech/refs/heads/main/frontend/public/background.jpg');
+    background-position: center;
+    background-repeat: repeat;
+    background-size: auto 100%;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    overflow-y: auto;
+
+    .top {
+	width: 100%;
+	padding: 0 3.125rem;
+	z-index: 1;
+
+	.logo {
+	    height: 4.75rem;
+	    max-height: 6rem;
+	    border-radius: 2.5rem;
+	    width: auto;
+	}
+    }
+}
+
+.authPage__container {
+    width: 100%;
+    max-width: 78rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem 2rem 2rem;
+    flex: 1;
+}
+
+.authPage__panelGrid {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr;
+    align-items: start;
+    gap: 1.5rem;
+}
+
+.authHeroVideo {
+    width: 100%;
+    color: white;
+
+    h3 {
+	font-size: 1rem;
+	margin-bottom: 0.5rem;
+	font-weight: 600;
+	text-align: center;
+    }
+
+    .authHeroVideo__frame {
+	width: 100%;
+	height: clamp(12rem, 38vw, 16rem);
+	border-radius: 0.75rem;
+	overflow: hidden;
+	box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.45);
+	background: rgba(0, 0, 0, 0.55);
+
+	iframe {
+	    width: 100%;
+	    height: 100%;
+	    border: none !important;
+	    outline: none !important;
+	    box-shadow: none !important;
+	    display: block;
+	}
+    }
+}
+
+.authFormCard {
+    width: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    border-radius: 0.75rem;
+    padding: 1rem 1.25rem;
+}
+
+@media (min-width: 768px) {
+    .authPage {
+	background-position: left;
+    }
+    .authPage__container {
+	padding: 2rem;
+    }
+
+    .authPage__panelGrid {
+	grid-template-columns: minmax(20rem, 25rem) minmax(22rem, 28rem);
+	justify-content: center;
+	align-items: center;
+	gap: 2.25rem;
+	max-width: 56rem;
+    }
+
+    .authHeroVideo {
+	h3 {
+	    font-size: 1.1rem;
+	    margin-bottom: 0.75rem;
+	}
+
+	.authHeroVideo__frame {
+	    height: 25rem;
+	    aspect-ratio: 1 / 1;
+	}
+    }
+
+    .authFormCard {
+	min-height: 28rem;
+	padding: 1.25rem 2rem;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+    }
+}
+
