@@ -1,150 +1,82 @@
 .login {
-    width: 100vw;
-    height: 100vh;
-    background: linear-gradient(
-	to bottom,
-	rgba(0, 0, 0, 0),
-	rgba(0, 0, 10, 0.65) 40%,
-	rgba(0, 0, 0, 0.85) 66.66%
-    ), url('https://raw.githubusercontent.com/kal-kyokya/Futtech/refs/heads/main/frontend/public/background.jpg');
-    background-position: center;
-    background-repeat: repeat;
-    background-size: auto 100%;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    overflow-y: auto;
-
-    .top {
+    form {
 	width: 100%;
-	padding: 0 3.125rem;
-
-	.logo {
-	    height: 4.75rem;
-	    max-height: 6rem;
-	    border-radius: 2.5rem;
-	    width: auto;
-	}
-    }
-
-    .container {
-	width: 100%;
-	max-width: 78rem;
-	height: 100%;
+	max-width: 24rem;
+	min-height: 28rem;
 	display: flex;
-	justify-content: center;
-	align-items: center;
-	padding: 1rem 2rem 2rem;
+	flex-direction: column;
+	justify-content: space-evenly;
+	gap: 0.5rem;
 
-	.authPanels {
-	    width: 100%;
-	    display: flex;
-	    flex-direction: column;
-	    align-items: center;
-	    gap: 1.5rem;
+	input {
+	    height: 3rem;
+	    max-height: 3rem;
+	    padding: 0 0.625rem;
+	    font-size: 1rem;
+	    border-radius: 0.25rem;
+	    border: 1px solid grey;
+	    background: rgba(0, 0, 0, 0.6);
+	    color: grey;
 	}
 
-	form {
-	    width: 100%;
-	    max-width: 24rem;
-	    min-height: 30rem;
-	    display: flex;
-	    flex-direction: column;
-	    justify-content: space-evenly;
-	    background: rgba(0, 0, 0, 0.5);
+	button {
+	    height: 2.75rem;
+	    max-height: 2.75rem;
+	    border: none;
+	    background-color: #05F283;
+	    color: #002B56;
 	    border-radius: 0.25rem;
-	    padding: 0.75rem 2.5rem;
+	    font-size: 1rem;
+	    font-weight: 600;
+	    cursor: pointer;
+	    padding: 0.25rem;
+	}
 
-	    input {
-		height: 3rem;
-		max-height: 3rem;
-		padding: 0 0.625rem;
-		font-size: 1rem;
-		border-radius: 0.25rem;
-		border: 1px solid grey;
-		background: rgba(0, 0, 0, 0.6);
-		color: grey;
-	    }
- 
-	    button {
-		height: 2.5rem;
-		max-height: 2.5rem;
-		border: none;
-		background-color: #05F283;
-		color: #002B56;
-		border-radius: 0.25rem;
-		font-size: 1rem;
-		font-weight: 500;
-		cursor: pointer;
-		padding: 0.25rem;
-	    }
+	.userPrompt {
+	    color: #05F283;
+	    display: flex;
+	    justify-content: center;
+	    text-align: center;
+	}
 
-	    .userPrompt {
-		color: #05F283;
-		display: flex;
-		justify-content: center;
-		text-align: center;
-	    }
+	.fieldError {
+	    color: #F05353;
+	    font-size: 0.85rem;
+	    margin-top: -0.15rem;
+	}
 
-	    .fieldError {
-		color: #F05353;
-		font-size: 0.85rem;
-		margin-top: -0.25rem;
-		margin-bottom: 0.5rem;
-	    }
+	span {
+	    color: lightgrey;
+	}
 
-	    span {
-		color: lightgrey;
-	    }
+	.resetPassword {
+	    font-size: 0.875rem;
+	    font-weight: 200;
+	    text-align: center;
+	}
 
-	    .resetPassword {
-		font-size: 0.875rem;
-		font-weight: 200;
-		text-align: center;
-	    }
+	.text {
+	    font-size: 0.875rem;
+	    font-weight: 200;
+	}
 
-	    .text {
-		font-size: 0.875rem;
-		font-weight: 200;
-	    }
+	.small-1,
+	.small-2 {
+	    font-size: 0.75rem;
+	    font-weight: 200;
+	}
 
-	    .small-1 {
-		font-size: 0.75rem;
-		font-weight: 200;
-	    }
-
-	    .small-2 {
-		color: #028ECA;
-		font-size: 0.75rem;
-		font-weight: 200;
-		cursor: pointer;
-	    }
+	.small-2 {
+	    color: #028ECA;
+	    cursor: pointer;
 	}
     }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 767px) {
     .login {
-	background-position: left;
-
-	.container {
-	    .authPanels {
-		flex-direction: row;
-		align-items: stretch;
-		justify-content: center;
-		gap: 2rem;
-	    }
-
-	    .authHeroVideo {
-		max-width: 25rem;
-		align-self: center;
-	    }
-
-	    form {
-		max-width: 22rem;
-	    }
+	form {
+	    min-height: 29rem;
 	}
     }
 }
