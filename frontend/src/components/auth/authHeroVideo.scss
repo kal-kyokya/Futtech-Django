@@ -1,6 +1,6 @@
 .authHeroVideo {
     width: 100%;
-    max-width: 38rem;
+    max-width: 25rem;
     color: white;
 
     h3 {
@@ -13,8 +13,9 @@
     .authHeroVideoFrame {
 	width: 100%;
 	aspect-ratio: 5 / 5;
+	border-radius: 0.75rem;
 	overflow: hidden;
-	border: none;
+	box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.45);
 	background: rgba(0, 0, 0, 0.55);
 
 	iframe {
@@ -22,7 +23,6 @@
 	    height: 100%;
 	    border: none;
 	    display: block;
-	    aspect-ratio: 5 / 5;
 	}
     }
 }
