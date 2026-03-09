@@ -84,7 +84,7 @@ const About = () => {
 		<ul>
 		    <li>Google OAuth login/registration</li>
 		    <li>Upload and management of video content through Bunny Stream</li>
-		    <li>Subscription and payment workflows via m-Pesa</li>
+		    <li>Subscription and payment workflows via M-Pesa</li>
 		    <li>Time-based access control for premium analysis content</li>
 		    <li>Content update and deletion functionality</li>
 		</ul>
@@ -136,20 +136,17 @@ const About = () => {
 		— Jean-Paul De Marie KYOKYA Kalulu</p>
 
 		<p>
-		    <a href="https://github.com/kal-kyokya/Futtech" target="_blank" rel="noopener noreferrer">
-			Link to GitHub for the project
-		    </a><br />
 		    <a href="https://futtech.kalkyokya.tech/" target="_blank" rel="noopener noreferrer">
-			Link to the deployed project page
+			Official website
+		    </a><br />
+		    <a href="https://github.com/kal-kyokya/Futtech-Django" target="_blank" rel="noopener noreferrer">
+			GitHub repository
 		    </a><br />
 		    <a href="https://www.linkedin.com/in/jean-paul-kyokya-b21892223/" target="_blank" rel="noopener noreferrer">
-			Link to my LinkedIn profile
+			LinkedIn Profile
 		    </a><br />
-                    <a href="https://twitter.com/JPDemarie" target="_blank" rel="noopener noreferrer">
-                        Link to my X (Twitter) profile
-                    </a><br />
                     <a href="https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5" target="_blank" rel="noopener noreferrer">
-                        Link to the full article on Medium
+                        Full article on Medium
                     </a>
 		</p>
 
