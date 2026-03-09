@@ -32,7 +32,7 @@
     }
 
     .registerFormCard {
-	padding: 1.5rem;
+	padding: 1.25rem;
     }
 
     .authContent {
@@ -41,6 +41,7 @@
 	flex-direction: column;
 	align-items: center;
 	text-align: center;
+	gap: 0.5rem;
     }
 
     h1 {
@@ -63,18 +64,22 @@
 	max-width: 450px;
 	width: 100%;
 	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: space-between;
-	margin-top: 1.25rem;
-	min-height: 50px;
-	height: 2rem;
+	flex-direction: column;
+	align-items: stretch;
+	justify-content: flex-start;
+	gap: 0.7rem;
+	margin-top: 1rem;
 	border-radius: 0.25rem;
+	box-sizing: border-box;
+
+	input,
+	button {
+	    width: 100%;
+	    box-sizing: border-box;
+	}
 
 	input {
-	    flex: 1 1 100%;
 	    min-height: 48px;
-	    margin-bottom: 0.8rem;
 	    padding: 0 0.625rem;
 	    border: 1px solid grey;
 	    border-radius: 0.25rem;
@@ -84,7 +89,6 @@
 	}
 
 	button {
-	    flex: 1 1 100%;
 	    min-height: 48px;
 	    font-size: 1.1rem;
 	    background-color: #05F283;
@@ -103,7 +107,7 @@
 	color: #F05353;
 	font-size: 0.85rem;
 	margin-top: -0.25rem;
-	margin-bottom: 0.5rem;
+	margin-bottom: 0.2rem;
 	width: 100%;
 	text-align: left;
     }
