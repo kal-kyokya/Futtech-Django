@@ -9,7 +9,7 @@ import {
     registrationSuccess,
     registrationFailure,
     clearUserError } from '../../contexts/userContext/UserActions';
-import AuthHeroVideo from '../../components/auth/AuthHeroVideo';
+import AuthLayout from '../../components/auth/AuthLayout';
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -98,110 +98,110 @@ const Register = () => {
     };
 
     return (
-	<div className='register'>
-	    <div className='top'>
-		<div className='wrapper'>
-		    <img
-			className='logo'
-			src='/logo.png'
-			alt='Logo of the Futtech Company'
-		    />
+	<AuthLayout
+	    pageClassName='register'
+	    videoTitle='See what membership unlocks'
+	    formClassName='registerFormCard'
+	    header={
+		<div className='top'>
+		    <div className='wrapper'>
+			<img
+			    className='logo'
+			    src='/logo.png'
+			    alt='Logo of the Futtech Company'
+			/>
 
-		    <Link to='/login' className='link'>
-			<button className='logIn'>
-			    <span>
-				Log In
-			    </span>
-			</button>
-		    </Link>
-		</div>
-	    </div>
-
-	    <div className='container'>
-		    <AuthHeroVideo title='See what membership unlocks' />
-
-		    <div className='authContent'>
-			<h1>Drone Footage, Tactical/Technical Analysis, and more</h1>
-			<h2>
-			    Learn more <Link to='/about'>here.</Link>
-			</h2>
-			<h4>Ready to watch? Enter your details to create or restart your membership.</h4>
-
-			{ !registrationError?.fields && registrationError?.message && (
-			    <div className='userPrompt'>
-				{registrationError.message}
-			    </div>
-			)}
-
-			{ email ? (
-			    <form className='membership' onSubmit={handleRegister}>
-				<input type='password'
-				       placeholder='Password'
-				       onChange={(e) => setPassword(e.target.value)}
-				       required
-				/>
-				{fieldErrors.password && (
-				    <div className='fieldError'>
-					{fieldErrors.password}
-				    </div>
-				)}
-				<input type='password'
-				       placeholder='Confirm password'
-				       onChange={(e) => setPasswordConfirm(e.target.value)}
-				       required
-				/>
-				{fieldErrors.passwordConfirm && (
-				    <div className='fieldError'>
-					{fieldErrors.passwordConfirm}
-				    </div>
-				)}
-
-				<button className='finish'
-					type='submit'
-					disabled={isFetching}
-				>
-				    <span>
-					Start
-				    </span>
-				</button>
-			    </form>
-
-			) : (
-			    <div className='membership'>
-				<input type='email'
-				       placeholder='Email address'
-				       ref={emailRef}
-				       required
-				/>
-				{fieldErrors.email && (
-				    <div className='fieldError'>
-					{fieldErrors.email}
-				    </div>
-				)}
-				<input type='text'
-				       placeholder='Username'
-				       onChange={(e) => setUsername(e.target.value)}
-				       required
-				/>
-				{fieldErrors.username && (
-				    <div className='fieldError'>
-					{fieldErrors.username}
-				    </div>
-				)}
-
-				<button className='getStarted'
-					type='button'
-					onClick={handleStart}>
-				    <span>
-					Get Started
-				    </span>
-				</button>
-			    </div>
-			)}
+			<Link to='/login' className='link'>
+			    <button className='logIn'>
+				<span>
+				    Log In
+				</span>
+			    </button>
+			</Link>
 		    </div>
 		</div>
+	    }
+	>
+	    <div className='authContent'>
+		<h1>Drone Footage, Tactical/Technical Analysis, and more</h1>
+		<h2>
+		    Learn more <Link to='/about'>here.</Link>
+		</h2>
+		<h4>Ready to watch? Enter your details to create or restart your membership.</h4>
 
-	</div>
+		{ !registrationError?.fields && registrationError?.message && (
+		    <div className='userPrompt'>
+			{registrationError.message}
+		    </div>
+		)}
+
+		{ email ? (
+		    <form className='membership' onSubmit={handleRegister}>
+			<input type='password'
+			       placeholder='Password'
+			       onChange={(e) => setPassword(e.target.value)}
+			       required
+			/>
+			{fieldErrors.password && (
+			    <div className='fieldError'>
+				{fieldErrors.password}
+			    </div>
+			)}
+			<input type='password'
+			       placeholder='Confirm password'
+			       onChange={(e) => setPasswordConfirm(e.target.value)}
+			       required
+			/>
+			{fieldErrors.passwordConfirm && (
+			    <div className='fieldError'>
+				{fieldErrors.passwordConfirm}
+			    </div>
+			)}
+
+			<button className='finish'
+				type='submit'
+				disabled={isFetching}
+			>
+			    <span>
+				Start
+			    </span>
+			</button>
+		    </form>
+
+		) : (
+		    <div className='membership'>
+			<input type='email'
+			       placeholder='Email address'
+			       ref={emailRef}
+			       required
+			/>
+			{fieldErrors.email && (
+			    <div className='fieldError'>
+				{fieldErrors.email}
+			    </div>
+			)}
+			<input type='text'
+			       placeholder='Username'
+			       onChange={(e) => setUsername(e.target.value)}
+			       required
+			/>
+			{fieldErrors.username && (
+			    <div className='fieldError'>
+				{fieldErrors.username}
+			    </div>
+			)}
+
+			<button className='getStarted'
+				type='button'
+				onClick={handleStart}>
+			    <span>
+				Get Started
+			    </span>
+			</button>
+		    </div>
+		)}
+	    </div>
+	</AuthLayout>
     );
 };
 

@@ -1,22 +1,4 @@
 .register {
-    width: 100vw;
-    height: 100vh;
-    background: linear-gradient(
-	to bottom,
-	rgba(0, 0, 0, 0),
-	rgba(0, 0, 10, 0.65) 40%,
-	rgba(0, 0, 0, 0.85) 66.66%
-    ), url('https://raw.githubusercontent.com/kal-kyokya/Futtech/refs/heads/main/frontend/public/background.jpg');
-    background-position: center;
-    background-repeat: repeat;
-    background-size: auto 100%;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
-    overflow-y: auto;
-
     button {
 	min-width: 8rem;
 	min-height: 3rem;
@@ -32,22 +14,12 @@
     }
 
     .top {
-	width: 100%;
-	padding: 0 3.125rem;
-
 	.wrapper {
 	    width: 100%;
 	    max-width: 120rem;
 	    display: flex;
 	    align-items: center;
 	    justify-content: space-between;
-
-	    .logo {
-		height: 4.75rem;
-		max-height: 6rem;
-		border-radius: 2.5rem;
-		width: auto;
-	    }
 
 	    .logIn {
 		background-color: #05F283;
@@ -59,63 +31,45 @@
 	}
     }
 
-    .container {
-	max-width: 78rem;
+    .registerFormCard {
+	padding: 1.5rem;
+    }
+
+    .authContent {
 	width: 100%;
-	height: 100%;
-	padding: 0 2rem 2rem 2rem;
 	display: flex;
-	flex-direction: row;
-	justify-content: center;
+	flex-direction: column;
 	align-items: center;
 	text-align: center;
-	margin-top: 3vh;
-	margin-bottom: 3vh;
-
-	.authPanels {
-	    width: 100%;
-	    display: flex;
-	    flex-direction: column;
-	    align-items: center;
-	    gap: 1.5rem;
-	}
-
-	.authContent {
-	    width: 100%;
-	    max-width: 30rem;
-	    display: flex;
-	    flex-direction: column;
-	    align-items: center;
-	}
     }
 
     h1 {
-	font-size: 2.5rem;
+	font-size: 2rem;
 	text-align: center;
 	width: 100%;
+	margin-bottom: 0.8rem;
     }
 
     h2 {
-	margin: 1.25rem;
+	margin: 0 0 1rem;
     }
 
-    p {
-	font-size: 1.125rem;
+    h4 {
+	font-weight: 500;
+	margin-bottom: 1rem;
     }
 
     .membership {
 	max-width: 450px;
-	width: 90%;
+	width: 100%;
 	display: flex;
 	flex-wrap: wrap;
 	align-items: center;
 	justify-content: space-between;
 	margin-top: 1.25rem;
-	background-color: grey;
 	min-height: 50px;
 	height: 2rem;
 	border-radius: 0.25rem;
-	background: rgba(0, 0, 0, 0.5);
 
 	input {
 	    flex: 1 1 100%;
@@ -135,6 +89,8 @@
 	    font-size: 1.1rem;
 	    background-color: #05F283;
 	    color: #002B56;
+	    border: none;
+	    border-radius: 0.25rem;
 	}
     }
 
@@ -148,45 +104,23 @@
 	font-size: 0.85rem;
 	margin-top: -0.25rem;
 	margin-bottom: 0.5rem;
+	width: 100%;
+	text-align: left;
     }
-
 }
 
-@media (min-width: 768px) {
+@media (min-width: 767px) {
     .register {
-	background-position: left;
+	.registerFormCard {
+	    padding: 1.75rem 2rem;
+	}
 
-	.container {
-	    margin-bottom: 8vh;
-
-	    .authPanels {
-		flex-direction: row;
-		align-items: center;
-		justify-content: center;
-		gap: 2rem;
-	    }
-
-	    .authHeroVideo {
-		max-width: 25rem;
-	    }
-
-	    .authContent {
-		max-width: 28rem;
-	    }
+	h1 {
+	    font-size: 2.35rem
 	}
 
 	.membership {
-	    width: 50%;
-	    flex-wrap: nowrap;
-	}
-
-	input {
-	    margin-bottom: 0;
-	    flex: 9;
-	}
-
-	button {
-	    flex: 3;
+	    margin-top: 1rem;
 	}
     }
 }
