@@ -1,6 +1,6 @@
 import './authLayout.scss';
 import AuthHeroVideo from './AuthHeroVideo';
-import AuthFormcard from './AuthFormcard';
+import AuthFormCard from './AuthFormCard';
 
 const AuthLayout = ({
     pageClassName,
