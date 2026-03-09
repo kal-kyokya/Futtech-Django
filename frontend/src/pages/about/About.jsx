@@ -137,16 +137,16 @@ const About = () => {
 
 		<p>
 		    <a href="https://futtech.kalkyokya.tech/" target="_blank" rel="noopener noreferrer">
-			-> Official website
+			1. Official website
 		    </a><br />
 		    <a href="https://github.com/kal-kyokya/Futtech-Django" target="_blank" rel="noopener noreferrer">
-			-> GitHub repository
+			2. GitHub repository
 		    </a><br />
 		    <a href="https://www.linkedin.com/in/jean-paul-kyokya-b21892223/" target="_blank" rel="noopener noreferrer">
-			-> LinkedIn Profile
+			3. LinkedIn Profile
 		    </a><br />
                     <a href="https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5" target="_blank" rel="noopener noreferrer">
-                        -> Full article on Medium
+                        4. Full article on Medium
                     </a>
 		</p>
 
