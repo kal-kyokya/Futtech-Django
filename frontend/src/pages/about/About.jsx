@@ -55,8 +55,8 @@ const About = () => {
 		<img src="/registerPage.png"
 		     alt="Futtech Register page"/>
 		<p>Futtech is a startup that helps football players and coaches gain tactical awareness of their strengths and weaknesses through online provision of drone footage and Artificial Intelligent targeted feedback.<br />
-		    As an engineering problem, It focuses on three objectives: creating a web and mobile-friendly experience, building cost-effective camera-equipped drones, and designing a reliable AI model.<br />
-		This is the <i>web and mobile-friendly</i> online platform, onto which drone footage is to be uploaded before AI analysis and feedback generation—<a href="http://www.futtech.kalkyokya.tech" target="_blank" rel="noopener noreferrer">Demo here</a>.</p>
+		    As an engineering problem, it focuses on three objectives: creating a web and mobile-friendly experience, building cost-effective camera-equipped drones, and designing a reliable AI model.<br />
+		This is the <i>web and mobile-friendly</i> online platform where footage is uploaded, analyzed, and delivered back to users with a modern streaming and payments stack—<a href="http://www.futtech.kalkyokya.tech" target="_blank" rel="noopener noreferrer">Demo here</a>.</p>
 
 		<h3>WHY FUTTECH</h3>
 		<p>Being a big fan of Football, this was an easy project focus to commit to. I am a hobbyist footballer, and recently learned that my father, and his father before him, played for the great <a href="https://en.wikipedia.org/wiki/TP_Mazembe#Honours" target="_blank" rel="noopener noreferrer">TP Mazembe</a> in Congo, DRC.<br />
@@ -70,13 +70,22 @@ const About = () => {
 		<p><em>The drone captures video data, which is asynchronously sent to an AI processing unit—it analyzes footage and generates feedback on player positioning, movement, and decision-making. The data is uploaded to the web platform for user (players & coaches) access.</em></p>
 
 		<h4>Technology Used</h4>
-		<p>Futtech is a MERN Stack Application.<br />
-		I chose this stack to grow my backend skills while learning React and <a href="https://www.w3schools.com/sass/sass_intro.asp" target="_blank" rel="noopener noreferrer">Sass</a> for building functional, scalable client-side interfaces.</p>
+		<p>Futtech began as a MERN experiment and has now transitioned to a <b>React + Django REST</b> architecture.<br />
+		The Django backend improved maintainability, API structure, and data modeling for long-term product growth, while React + <a href="https://www.w3schools.com/sass/sass_intro.asp" target="_blank" rel="noopener noreferrer">Sass</a> continue powering the client-side experience.</p>
+
+		<h4>New Infrastructure in This Version</h4>
+		<ul>
+		    <li><b>Bunny Stream</b> for reliable video ingestion, processing, and playback delivery</li>
+		    <li><b>M-Pesa integration</b> to support local mobile-money payments for subscriptions and access control</li>
+		    <li>Structured Django services for video management, user, access, and transaction tracking</li>
+		</ul>
 
 		<h4>Notable Features</h4>
 		<ul>
 		    <li>Google OAuth login/registration</li>
-		    <li>Upload and management of video content</li>
+		    <li>Upload and management of video content through Bunny Stream</li>
+		    <li>Subscription and payment workflows via m-Pesa</li>
+		    <li>Time-based access control for premium analysis content</li>
 		    <li>Content update and deletion functionality</li>
 		</ul>
 
@@ -97,11 +106,11 @@ const About = () => {
 
 		<h3>LESSONS LEARNED</h3>
 		<h4>Technical Takeaways</h4>
-		<p>The MERN stack offers a satisfying full-stack experience.<br />
-		Sass improved my frontend understanding, and working through deployment deepened my backend expertise.</p>
+		<p>Migrating from MERN to Django reinforced the value of choosing backend frameworks based on domain complexity and operational needs.<br />
+		Integrating Bunny Stream and M-Pesa highlighted how product decisions are often infrastructure decisions: developer velocity, reliability, and regional payment realities all matter.</p>
 
 		<h4>What I Might Do Differently</h4>
-		<p>I would design automated test scripts to avoid overreliance on manual testing and debugging.</p>
+		<p>I would introduce automated integration tests for payment callbacks and streaming workflows earlier in the project lifecycle to reduce regression risk as the platform scales.</p>
 
 		<h4>What I Learned About Myself</h4>
 		<p>I am willing to put in long hours to master full-cycle software development.<br />
@@ -121,8 +130,8 @@ const About = () => {
 		I remain convinced that honesty and technical integrity are essential to building scalable, sustainable applications.</p>
 
 		<h3>Closing Thoughts</h3>
-		<p>The journey toward completing Futtech and Everything IoT excites me.<br />
-		    There’s much more to learn—I look forward to growing as a person, an engineer and as footballer.<br /><br />
+		<p>The Django transition marks a new phase for Futtech: from prototype to a more production-ready football intelligence platform.<br />
+		    There’s still much to build—from richer AI analysis to stronger coaching workflows—but the current foundation is far more robust and regionally practical thanks to services like Bunny Stream and M-Pesa.<br /><br />
 		    Thank you for your time!<br />
 		— Jean-Paul De Marie KYOKYA Kalulu</p>
 
