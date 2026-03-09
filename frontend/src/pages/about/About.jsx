@@ -37,7 +37,7 @@ const About = () => {
 		</Link>
 		<div className="socials">
 		    <span>Detailed version:&ensp;</span>
-		    <a href="https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5"
+		    <a href="https://medium.com/@kal-kyokya/futtech-a-journey-of-engineering-prototyping-debugging-entrepreneurship-6085b2958d32"
 		       target="_blank"
 		       rel="noopener noreferrer">
 			<img alt="Medium badge"
@@ -137,16 +137,16 @@ const About = () => {
 
 		<p>
 		    <a href="https://futtech.kalkyokya.tech/" target="_blank" rel="noopener noreferrer">
-			Official website
+			-> Official website
 		    </a><br />
 		    <a href="https://github.com/kal-kyokya/Futtech-Django" target="_blank" rel="noopener noreferrer">
-			GitHub repository
+			-> GitHub repository
 		    </a><br />
 		    <a href="https://www.linkedin.com/in/jean-paul-kyokya-b21892223/" target="_blank" rel="noopener noreferrer">
-			LinkedIn Profile
+			-> LinkedIn Profile
 		    </a><br />
                     <a href="https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5" target="_blank" rel="noopener noreferrer">
-                        Full article on Medium
+                        -> Full article on Medium
                     </a>
 		</p>
 
