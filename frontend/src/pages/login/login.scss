@@ -1,3 +1,6 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
 .login {
     form {
 	width: 100%;
@@ -6,81 +9,72 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: space-evenly;
-	gap: 0.5rem;
+	gap: $space-2;
+
+	input,
+	button {
+	    width: 100%;
+	    min-height: 3rem;
+	    font-size: $font-size-md;
+	    border-radius: $radius-sm;
+	}
 
 	input {
-	    width: 100%;
-	    box-sizing: border-box;
-	    height: 3rem;
-	    max-height: 3rem;
-	    padding: 0 0.625rem;
-	    font-size: 1rem;
-	    border-radius: 0.25rem;
-	    border: 1px solid grey;
-	    background: rgba(0, 0, 0, 0.6);
-	    color: grey;
+	    padding-inline: 0.625rem;
+	    border: 1px solid $color-border;
+	    background: $color-bg-input;
+	    color: $color-text-muted;
 	}
 
 	button {
-	    width: 100%;
-	    box-sizing: border-box;
-	    height: 2.75rem;
-	    max-height: 2.75rem;
-	    border: none;
-	    background-color: #05F283;
-	    color: #002B56;
-	    border-radius: 0.25rem;
-	    font-size: 1rem;
+	    min-height: 2.75rem;
+	    border: 0;
+	    background-color: $color-primary;
+	    color: $color-primary-contrast;
 	    font-weight: 600;
 	    cursor: pointer;
-	    padding: 0.25rem;
+	    padding: $space-1;
 	}
 
 	.userPrompt {
-	    color: #05F283;
+	    color: $color-primary;
 	    display: flex;
 	    justify-content: center;
 	    text-align: center;
 	}
 
 	.fieldError {
-	    color: #F05353;
+	    color: $color-danger;
 	    font-size: 0.85rem;
 	    margin-top: -0.15rem;
 	}
 
 	span {
-	    color: lightgrey;
+	    color: $color-text-muted;
 	}
 
-	.resetPassword {
-	    font-size: 0.875rem;
-	    font-weight: 200;
-	    text-align: center;
-	}
-
+	.resetPassword,
 	.text {
-	    font-size: 0.875rem;
-	    font-weight: 200;
+	    font-size: $font-size-sm;
+	    font-weight: 300;
+	    text-align: center;
 	}
 
 	.small-1,
 	.small-2 {
-	    font-size: 0.75rem;
-	    font-weight: 200;
+	    font-size: $font-size-xs;
+	    font-weight: 300;
 	}
 
 	.small-2 {
-	    color: #028ECA;
+	    color: $color-link;
 	    cursor: pointer;
 	}
     }
 }
 
-@media (min-width: 767px) {
-    .login {
-	form {
-	    min-height: 29rem;
-	}
+@include tablet-up {
+    .login form {
+	min-height: 29rem;
     }
 }
