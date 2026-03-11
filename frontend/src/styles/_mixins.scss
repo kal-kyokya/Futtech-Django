@@ -1,0 +1,38 @@
+@use './tokens' as *;
+
+@mixin mobile-up {
+    @media (min-width: $bp-mobile) {
+	@content;
+    }
+}
+
+@mixin tablet-up {
+    @media (min-width: $bp-tablet) {
+	@content;
+    }
+}
+
+@mixin desktop-up {
+    @media (min-width: $bp-desktop) {
+	@content;
+    }
+}
+
+@mixin page-container($max-width: $container-max-width) {
+    width: 100%;
+    max-width: $max-width;
+    margin: 0 auto;
+    padding-inline: $container-pad-mobile;
+
+    @include tablet-up {
+	padding-inline: $container-pad-desktop;
+    }
+}
+
+@mixin app-card {
+    width: 100%;
+    background: $color-bg-elevated;
+    border-radius: $radius-lg;
+    padding: $space-5;
+    box-sizing: border-box;
+}
