@@ -1,3 +1,6 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
 .register {
     button {
 	min-width: 8rem;
@@ -7,32 +10,31 @@
 
 	span {
 	    display: flex;
-	    line-height: 100%;
+	    line-height: 1;
 	    align-items: center;
 	    justify-content: center;
 	}
     }
 
-    .top {
-	.wrapper {
-	    width: 100%;
-	    max-width: 120rem;
-	    display: flex;
-	    align-items: center;
-	    justify-content: space-between;
+    .top .wrapper {
+	width: 100%;
+	max-width: 120rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 
-	    .logIn {
-		background-color: #05F283;
-		color: #002B56;
-		font-size: 1rem;
-		font-weight: 700;
-		border-radius: 0.25rem;
-	    }
+	.logIn {
+	    background-color: $color-primary;
+	    color: $color-primary-contrast;
+	    font-size: $font-size-md;
+	    font-weight: 700;
+	    border-radius: $radius-sm;
+	    border: 0;
 	}
     }
 
     .registerFormCard {
-	padding: 1.25rem;
+	padding: $space-5;
     }
 
     .authContent {
@@ -41,70 +43,62 @@
 	flex-direction: column;
 	align-items: center;
 	text-align: center;
-	gap: 0.5rem;
+	gap: $space-2;
     }
 
     h1 {
-	font-size: 2rem;
-	text-align: center;
+	font-size: $font-size-xl;
 	width: 100%;
 	margin-bottom: 0.8rem;
     }
 
-    h2 {
-	margin: 0 0 1rem;
+    h2,
+    h4 {
+	margin: $space-4;
     }
 
     h4 {
 	font-weight: 500;
-	margin-bottom: 1rem;
     }
 
     .membership {
-	max-width: 450px;
+	max-width: 28rem;
 	width: 100%;
 	display: flex;
 	flex-direction: column;
-	align-items: stretch;
-	justify-content: flex-start;
 	gap: 0.7rem;
-	margin-top: 1rem;
-	border-radius: 0.25rem;
-	box-sizing: border-box;
+	margin-top: $space-4;
 
 	input,
 	button {
 	    width: 100%;
-	    box-sizing: border-box;
+	    min-height: 3rem;
+	    border-radius: $radius-sm;
 	}
 
 	input {
-	    min-height: 48px;
-	    padding: 0 0.625rem;
-	    border: 1px solid grey;
-	    border-radius: 0.25rem;
-	    font-size: 1rem;
+	    padding-inline: 0.625rem;
+	    border: 1px solid $color-border;
+	    font-size: $font-size-md;
 	    background: rgba(255, 255, 255, 0.18);
-	    color: white;
+	    color: $color-text;
 	}
 
 	button {
-	    min-height: 48px;
 	    font-size: 1.1rem;
-	    background-color: #05F283;
-	    color: #002B56;
-	    border: none;
-	    border-radius: 0.25rem;
+	    background-color: $color-primary;
+	    color: $color-primary-contrast;
+	    border: 0;
 	}
     }
 
     .userPrompt {
-	margin-top: 0.5rem;
-	color: #05F283;
+	margin-top: $space-2;
+	color: $color-primary;
     }
 
     .fieldError {
-	color: #F05353;
+	color: $color-danger;
 	font-size: 0.85rem;
 	margin-top: -0.25rem;
 	margin-bottom: 0.2rem;
@@ -113,18 +107,14 @@
     }
 }
 
-@media (min-width: 767px) {
+@include tablet-up {
     .register {
 	.registerFormCard {
-	    padding: 1.75rem 2rem;
+	    padding: 1.75rem $space-8;
 	}
 
 	h1 {
-	    font-size: 2.35rem
-	}
-
-	.membership {
-	    margin-top: 1rem;
+	    font-size: $font-size-2xl;
 	}
     }
 }
