@@ -1,14 +1,20 @@
-/* --- frontend/src/components/playlist/playlist.scss --- */
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
+$arrow-width-mobile: 2.25rem;
+$arrow-width-desktop: 3rem;
 
 .playlist {
     width: 100%;
-    margin: 2rem 0;
+    margin: $space-6 0;
 
     .playlistTitle {
-	color: white;
-	font-size: 1rem; // Base font size
+	display: block;
+	margin-inline: $arrow-width-mobile $space-4;
+	margin-bottom: $space-2;
+	color: $color-text;
+	font-size: $font-size-sm;
 	font-weight: 500;
-	margin-left: 3rem; // Base margin
 	white-space: nowrap; // Prevent title from wrapping
 	overflow: hidden;
 	text-overflow: ellipsis; // Add ellipsis for long titles
@@ -16,22 +22,20 @@
 
     .wrapper {
 	position: relative;
-	overflow: hidden; // Hide overflow to prevent scrollbars appearing prematurely
 	width: 100%;
+	overflow: hidden; // Hide overflow to prevent scrollbars appearing prematurely
 
 	.sliderArrow {
-	    width: 3rem; // Base width for arrows
-	    height: 100%;
-	    background-color: rgb(1, 1, 1, 0.5);
 	    position: absolute;
-	    z-index: 99;
 	    top: 0;
 	    bottom: 0;
-	    margin: auto;
-	    cursor: pointer;
+	    z-index: 99;
+	    width: $arrow-width-mobile; // Base width for arrows
 	    display: flex; // Use flex to center arrow icon
-	    justify-content: center;
 	    align-items: center;
+	    justify-content: center;
+	    background-color: rgb(1, 1, 1, 0.5);
+	    cursor: pointer;
 
 	    &.left {
 		left: 0;
@@ -43,45 +47,41 @@
 
 	    // Style for the actual MUI Icon within the arrow div
 	    .MuiSvgIcon-root {
-		font-size: 2.5rem; // Larger icon size for easier clicking
+		font-size: 1.8rem; // Larger icon size for easier clicking
 	    }
 	}
 
 	.container {
 	    display: flex;
-	    margin: 0.5rem 0 0.5rem 3rem; // Base margins
 	    width: max-content;
-	    transform: translateX(0px);
-	    transition: all 0.5s ease;
-	    background-color: turquoise;
-	    padding: 0.625rem 0;
+	    margin: $space-2 0 $space-2 $arrow-width-mobile; // Base margins
+	    padding: 0.625rem;
+	    transform: translateX(0);
+	    transition: transform 0.5s ease;
 	}
     }
 }
 
-/* --- Media Queries for Mobile Responsiveness (Max-width: 767px) ---*/
-@media (max-width: 767px) {
+@include tablet-up {
     .playlist {
-	margin-top: 1rem; // Adjust top margin for mobile
-	margin-bottom: 1.5rem; // Reduce bottom margin on mobile
+	margin: $space-8 0;
 
 	.playlistTitle {
-	    font-size: 0.9rem; // Smaller font size for mobile
-	    margin-left: 2rem; // Use rem for margin on mobile
+	    margin-inline: $arrow-width-desktop $space-6;
+	    font-size: $font-size-md;
 	}
 
 	.wrapper {
 	    .sliderArrow {
-		width: 2rem; // Smaller width for arrows on mobile
+		width: $arrow-width-desktop;
 
 		.MuiSvgIcon-root {
-		    font-size: 1.8rem; // Smaller icon size
+		    font-size: 2.5rem;
 		}
 	    }
 
 	    .container {
-		margin-left: 2rem; // Same as the width of a 'sliderArrow'
-		// No fixed width here, as PlaylistItem will handle its own width on mobile
+		margin-left: $arrow-width-desktop; // Same as the width of a 'sliderArrow'
 	    }
 	}
     }
