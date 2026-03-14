@@ -50,7 +50,7 @@ const Home = ({ category }) => {
 
     const getVideoId = (video) => video?.id ?? video?._id;
 
-    const normalizedLists = useMemo(() => {
+    const normalizedPlaylists = useMemo(() => {
 	if (!Array.isArray(playlists)) {
 	    return [];
 	}
@@ -64,7 +64,7 @@ const Home = ({ category }) => {
 
 	    return {
 		key: playlist.id ?? playlist._id ?? playlist.name ?? playlist.title,
-		list: {
+		playlist: {
 		    title: playlist.name ?? playlist.title ?? 'Untitled playlist',
 		    content: playlistVideos,
 		},
@@ -72,9 +72,9 @@ const Home = ({ category }) => {
 	});
     }, [playlists]);
 
-    const hasLists = normalizedLists.length > 0;
+    const hasPlaylists = normalizedPlaylists.length > 0;
     const hasVideos = Array.isArray(videos) && videos.length > 0;
-    const fallbackList = {
+    const fallbackPlaylist = {
 	title: 'Recommendations',
 	content: videos.slice(-10).map(getVideoId).filter(Boolean),
     };
@@ -84,9 +84,9 @@ const Home = ({ category }) => {
 	    <Navbar />
 	    <Featured category={ category } />
 
-	    {hasLists
-	     ? normalizedLists.map(({ key, list }) => (
-		 <Playlist key={key} playlist={ list } />
+	    {hasPlaylists
+	     ? normalizedPlaylists.map(({ key, playlist }) => (
+		 <Playlist key={key} playlist={ playlist } />
 	     ))
 	     : hasVideos && (
 		 <Playlist playlist={ fallbackPlaylist } />
