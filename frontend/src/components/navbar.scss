@@ -157,8 +157,9 @@
     }
 
     // Hide desktop specific navigation items and icons
-    .desktop-nav-item {
-	display: none !important; // Hide these elements on mobile
+    .navbar .desktop-nav-item,
+    .mobile-menu .desktop-nav-item {
+	display: none; // Hide these elements on mobile
     }
 
     .navbar .left {
