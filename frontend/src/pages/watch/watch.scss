@@ -1,41 +1,83 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
 .watch {
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    min-height: 100vh;
+    padding-top: 4.75rem;
+    background-color: $color-bg;
+    color: $color-text;
+
+    &.error {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding-inline: $space-4;
+	text-align: center;
+    }
 
     .options {
+	position: fixed;
+	top: 4.75rem;
+	left: 0;
+	z-index: 10;
 	width: 100%;
 	display: flex;
 	align-itemns: center;
 	justify-content: space-between;
-	z-index: 10;
-	position: fixed;
+	padding: $space-3 $space-4;
+	background: linear-gradient(to bottom, rgba(0, 0, 0, 0.55), transparent);
 
 	.videoIcon {
-	    display: flex;
+	    display: inline-flex;
+	    align-items: center;
+	    gap: $space-1;
 	    cursor: pointer;
-
-	    .arrow {
-		margin-right: 0.25rem;
-	    }
+	    font-weight: 500;
 	}
     }
-    
+
+    .back {
+	display: inline-flex;
+	align-items: center;
+	gap: $space-1;
+	margin: $space-3 $space-4;
+	font-weight: 600;
+    }
+
+    .bunnyPlayerWrapper,
     video {
 	width: 100%;
-	height: 100%;
-	object-fit: contain;
-	padding: 0;
-	background-color: #0D1C23;
+	background-color: $color-bg;
     }
 
     .videoDetails {
 	display: flex;
 	flex-direction: column;
-	color: white;
-	margin-top: -0.5rem;
-	padding: 0.75rem 2.5rem;
-	margin-bottom: 2.5rem;
-	background-color: black;
+	gap: $space-4;
+	margin-bottom: $space-10;
+	padding: $space-4;
+	background-color: rgba(0, 0, 0, 0.92);
+
+	.videoTitle {
+	    font-size: clamp(1.5rem, 3.5vw, 2rem);
+	    line-height: 1.2;
+	}
+
+	.videoDescription {
+	    color: rgba(255, 255, 255, 0.82);
+	    line-height: 1.5;
+	}
+
+	.premiumBadge {
+	    align-self: flex-start;
+	    border-radius: $radius-pill;
+	    padding: $space-1 $space-3;
+	    background-color: $color-primary;
+	    color: $color-primary-contrast;
+	    font-size: $font-size-sm;
+	    font-weight: 600;
+	}
 
 	.videoDetailsTop {
 	    display: flex;
@@ -44,12 +86,12 @@
 	    .profile {
 		width: 4rem;
 		height: 4rem;
-		border: 1px solid grey;
+		margin-right: $space-4;
+		border: 1px solid $color-border;
 		border-radius: 50%;
+		background-color: $color-text;
 		object-fit: cover;
 		cursor: pointer;
-		background-color: white;
-		margin-right: 1rem;
 	    }
 
 	    .videoInfos {
@@ -57,8 +99,8 @@
 		flex-direction: column;
 
 		.videoName {
+		    color: $color-link;
 		    font-weight: 600;
-		    color: #028ECA;
 		}
 
 		.videoCategory {
@@ -68,27 +110,41 @@
 	}
 
 	.videoDetailsBottom {
-	    margin-top: 1rem;
+	    margin-top: $space-2;
 
 	    .videoDetailsTitle {
-		color: rgba(255, 255, 255, 0.52);
+		color: rgba(255, 255, 255, 0.6);
 		font-weight: 300;
 	    }
 
 	    .videoDetailsDiv {
 		display: flex;
 		align-items: center;
-		margin: 0.75rem 0;
-		color: rgba(255, 255, 255, 0.78);
+		margin: $space-3 0;
+		color: rgba(255, 255, 255, 0.8);
 
 		.videoDetailsIcon {
-		    margin-right: 1rem;
+		    margin-right: $space-4;
 		}
 
 		.videoDetailsContent {
-		    font-weight: 1rem;
+		    font-weight: 400;
 		}
 	    }
+	}
+    }
+}
+    
+@include tablet-up {
+    .watch {
+	.options,
+	.back,
+	.videoDetails {
+	    padding-inline: $space-10;
+	}
+
+	.videoDetails {
+	    gap: $space-5;
 	}
     }
 }
