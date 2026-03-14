@@ -1,5 +1,7 @@
+@use '../../styles/tokens' as *;
+@use '../../styles/mixins' as *;
+
 .authPage {
-    width: 100vw;
     min-height: 100vh;
     background: linear-gradient(
 	to bottom,
@@ -10,35 +12,31 @@
     background-position: center;
     background-repeat: repeat;
     background-size: auto 100%;
-    position: relative;
     display: flex;
     flex-direction: column;
     align-items: center;
-    overflow-y: auto;
-    padding: 0.75rem 0.75rem 1.25rem;
+    padding: $space-3 $space-3 $space-5;
 
     .top {
-	width: 100%;
-	padding: 0 1rem;
+	@include page-container(78rem);
 	z-index: 1;
 
 	.logo {
 	    height: 4.75rem;
 	    max-height: 6rem;
-	    border-radius: 2.5rem;
 	    width: auto;
+	    border-radius: $radius-pill;
 	}
     }
 }
 
 .authPage__container {
-    width: 100%;
-    max-width: 78rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 1rem 0.5rem 2rem;
+    @include page-container(78rem);
     flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding-block: $space-4 $space-8;
 }
 
 .authPage__panelGrid {
@@ -46,56 +44,46 @@
     display: grid;
     grid-template-columns: minmax(0, 1fr);
     align-items: start;
-    gap: 1.25rem;
+    gap: $space-5;
 }
 
 .authHeroVideo {
     width: 100%;
-    color: white;
+    color: $color-text;
 
     h3 {
-	font-size: 1rem;
-	margin-bottom: 0.5rem;
+	font-size: $font-size-md;
+	margin-bottom: $space-2;
 	font-weight: 600;
 	text-align: center;
     }
 
     .authHeroVideo__frame {
 	width: 100%;
-	height: clamp(12rem, 38vw, 16rem);
 	aspect-ratio: 1 / 1;
-	border-radius: 0.75rem;
+	min-height: 12rem;
+	border-radius: $radius-lg;
 	overflow: hidden;
-	box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.45);
+	box-shadow: $shadow-card;
 	background: rgba(0, 0, 0, 0.55);
 
 	iframe {
 	    width: 100%;
 	    height: 100%;
-	    border: none !important;
-	    outline: none !important;
-	    box-shadow: none !important;
+	    border: 0;
 	    display: block;
 	}
     }
 }
 
 .authFormCard {
-    width: 100%;
-    background: rgba(0, 0, 0, 0.5);
-    border-radius: 0.75rem;
-    padding: 1rem 1.25rem;
-    box-sizing: border-box;
+    @include app-card;
 }
 
-@media (min-width: 768px) {
+@include tablet-up {
     .authPage {
 	background-position: left;
-	padding: 1rem 1.5rem 2rem;
-    }
-
-    .authPage__container {
-	padding: 1.5rem 1rem 2rem;
+	padding: $space-4 $space-6 $space-8;
     }
 
     .authPage__panelGrid {
@@ -108,19 +96,18 @@
 
     .authHeroVideo {
 	h3 {
+	    margin-bottom: $space-3;
 	    font-size: 1.1rem;
-	    margin-bottom: 0.75rem;
 	}
 
 	.authHeroVideo__frame {
-	    height: 25rem;
-	    aspect-ratio: 5 / 5;
+	    min-height: 25rem;
 	}
     }
 
     .authFormCard {
 	min-height: 28rem;
-	padding: 1.5rem 2rem;
+	padding: $space-6 $space-8;
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
