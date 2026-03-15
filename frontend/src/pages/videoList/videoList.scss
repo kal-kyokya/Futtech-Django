@@ -44,3 +44,31 @@
 	margin-top: 60px;
     }
 }
+
+.dashboardHeader {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 0.5rem 0 1rem;
+    padding: 0.75rem;
+    background: rgba(0, 0, 0, 0.04);
+    border-radius: 12px;
+
+    img {
+        width: 56px;
+        height: 56px;
+        object-fit: contain;
+        border-radius: 12px;
+        background: #fff;
+        padding: 0.2rem;
+    }
+
+    h2 {
+        margin: 0;
+    }
+
+    p {
+        margin: 0.2rem 0 0;
+        font-weight: 600;
+    }
+}
