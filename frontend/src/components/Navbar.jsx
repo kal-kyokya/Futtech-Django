@@ -15,7 +15,6 @@ import tokenService from '../services/tokenService';
 import { useBranding } from '../contexts/BrandingContext.tsx';
 
 
-
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
