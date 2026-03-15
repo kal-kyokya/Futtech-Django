@@ -2,3 +2,39 @@
     background-color: var(--main-color);
     overflow: hidden;
 }
+
+.landing-branding {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1.5rem 2rem;
+    background: rgba(0, 0, 0, 0.35);
+
+    img {
+        width: 56px;
+        height: 56px;
+        object-fit: contain;
+        border-radius: 12px;
+        background: white;
+        padding: 0.25rem;
+    }
+
+    h1 {
+        margin: 0;
+        font-size: 1.5rem;
+    }
+
+    p {
+        margin: 0.25rem 0 0;
+        opacity: 0.85;
+    }
+}
+
+.tenant-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem 2rem;
+    font-size: 0.95rem;
+    opacity: 0.95;
+}
