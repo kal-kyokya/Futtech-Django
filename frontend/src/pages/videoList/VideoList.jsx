@@ -12,12 +12,14 @@ import {
 } from '../../contexts/videoContext/VideoActions';
 import axios from 'axios';
 import Navbar from '../../components/Navbar';
+import { useBranding } from '../contexts/BrandingContext.tsx';
 
 
 const VideoList = () => {
     const { videos, dispatch } = useContext(VideoContext);
     const { user } = useContext(UserContext);
     const baseURL = import.meta.env.VITE_API_BASE_URL;
+    const { brand } = useBranding();
 
     const handleDelete = async (id, owner) => {
 	dispatch(deleteVideoStart());
@@ -82,6 +84,13 @@ const VideoList = () => {
 	    <Navbar />
 
 	    <div className='videoList'>
+		<div className='dashboardHeader'>
+		    <img src={brand.logo || '/logo.png'} alt={`${brand.name} logo`} />
+		    <div>
+			<h2>{brand.name} Dashboard</h2>
+			<p style={{ color: brand.primary_color }}>Manage your video library</p>
+		    </div>
+		</div>
 		<Paper sx={{ height: '100%', width: '100%' }}>
 		    <DataGrid
 			rows={ videos }
