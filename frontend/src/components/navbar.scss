@@ -30,6 +30,17 @@
 	display: flex;
 	align-items: center;
 
+	.tenant-brand {
+	    display: flex;
+	    align-items: center;
+	}
+
+	.tenant-name {
+	    margin-right: 1rem;
+	    font-weight: 700;
+	    color: var(--tenant-primary-color, #028ECA);
+	}
+
 	img {
 	    height: 4.6875rem; // (75px)
 	    margin-right: 2.5rem; // (40px)
@@ -43,7 +54,7 @@
 	    transition: color 0.3s ease;
 
 	    &:hover {
-		color: var(--accent-color, #028ECA);
+		color: var(--tenant-primary-color, #028ECA);
 	    }
 	}
     }
@@ -71,7 +82,7 @@
 	    padding: 0.5rem 0.3125rem;
 	    cursor: pointer;
 	    font-weight: 600;
-	    background-color: #028ECA;
+	    background-color: var(--tenant-primary-color, #028ECA);
 	    margin-right: 1rem;
 	    transition: background-color 0.3s ease;
 
@@ -260,7 +271,7 @@
 	    display: flex;
 	    justify-content: center;
 	    margin-top: 30px;
-	    background-color: #028ECA;
+	    background-color: var(--tenant-primary-color, #028ECA);
 	    color: white;
 	    padding: 12px 0px;
 	    border-radius: 5px;
