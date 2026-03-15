@@ -81,6 +81,7 @@ INSTALLED_APPS = [
     'user_auth.apps.UserAuthConfig',
     'video_management.apps.VideoManagementConfig',
     'playlists.apps.PlaylistsConfig',
+    'tenants.apps.TenantsConfig',
 ]
 
 MIDDLEWARE = [
@@ -88,6 +89,7 @@ MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
+    'tenants.middleware.TenantMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
@@ -231,3 +233,6 @@ MPESA_PASSKEY = os.environ.get('MPESA_PASSKEY', '')
 MPESA_CALLBACK_URL = os.environ.get('MPESA_CALLBACK_URL', '')
 MPESA_TIMEOUT_SECONDS = int(os.environ.get('', '30'))
 MPESA_BASE_URL = os.environ.get('MPESA_BASE_URL', '')
+
+MEDIA_URL = '/media/'
+MEDIA_ROOT = BASE_DIR / 'media'
