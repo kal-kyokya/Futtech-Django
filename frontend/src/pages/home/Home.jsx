@@ -11,10 +11,13 @@ import {
     getPlaylistsFailure
 } from '../../contexts/playlistContext/PlaylistActions';
 import contentService from '../../services/contentService';
+import { useBranding } from '../contexts/BrandingContext.tsx';
+
 
 const Home = ({ category }) => {
     const { videos } = useContext(VideoContext);
     const { playlists, dispatch, isFetching } = useContext(PlaylistContext);
+    const { brand } = useBranding();
 
     useEffect(() => {
 	let isMounted = true;
@@ -83,6 +86,13 @@ const Home = ({ category }) => {
 	<div className='home'>
 	    <Navbar />
 	    <Featured category={ category } />
+	    <header className='landing-branding'>
+		<img src={brand.logo || '/logo.png'} alt={`${brand.name} logo`} />
+		<div>
+		    <h1>{brand.name}</h1>
+		    <p>{brand.description || 'Football intelligence for modern coaching.'}</p>
+		</div>
+	    </header>
 
 	    {hasPlaylists
 	     ? normalizedPlaylists.map(({ key, playlist }) => (
@@ -91,6 +101,10 @@ const Home = ({ category }) => {
 	     : hasVideos && (
 		 <Playlist playlist={ fallbackPlaylist } />
 	     )}
+	    <footer className='tenant-footer'>
+		<span>{brand.name}</span>
+		<span style={{ color: brand.primary_color }}>Powered by Futtech</span>
+	    </footer>
 	</div>
     );
 };
