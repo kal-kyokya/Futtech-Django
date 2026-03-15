@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="240" height="240" viewBox="0 0 240 240">
+  <rect width="240" height="240" rx="24" fill="#003366"/>
+  <polygon points="120,40 170,120 120,200 70,120" fill="#fff"/>
+  <text x="120" y="220" text-anchor="middle" font-size="24" fill="#fff" font-family="Arial">TPM</text>
+</svg>
