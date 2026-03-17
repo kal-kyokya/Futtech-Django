@@ -30,6 +30,7 @@
 	display: flex;
 	align-items: center;
 
+<<<<<<< HEAD
 	.tenant-brand {
 	    display: flex;
 	    align-items: center;
@@ -41,6 +42,8 @@
 	    color: var(--tenant-primary-color, #0D1C23);
 	}
 
+=======
+>>>>>>> parent of 2e20892 (Modify the Navbar's SCSS to accomodate tenant architecture)
 	img {
 	    height: 4.6875rem; // (75px)
 	    margin-right: 2.5rem; // (40px)
@@ -54,7 +57,11 @@
 	    transition: color 0.3s ease;
 
 	    &:hover {
+<<<<<<< HEAD
 		color: var(--tenant-primary-color, #0D1C23);
+=======
+		color: var(--accent-color, #028ECA);
+>>>>>>> parent of 2e20892 (Modify the Navbar's SCSS to accomodate tenant architecture)
 	    }
 	}
     }
@@ -82,7 +89,11 @@
 	    padding: 0.5rem 0.3125rem;
 	    cursor: pointer;
 	    font-weight: 600;
+<<<<<<< HEAD
 	    background-color: var(--tenant-primary-color, #0D1C23);
+=======
+	    background-color: #028ECA;
+>>>>>>> parent of 2e20892 (Modify the Navbar's SCSS to accomodate tenant architecture)
 	    margin-right: 1rem;
 	    transition: background-color 0.3s ease;
 
@@ -271,7 +282,11 @@
 	    display: flex;
 	    justify-content: center;
 	    margin-top: 30px;
+<<<<<<< HEAD
 	    background-color: var(--tenant-primary-color, #0D1C23);
+=======
+	    background-color: #028ECA;
+>>>>>>> parent of 2e20892 (Modify the Navbar's SCSS to accomodate tenant architecture)
 	    color: white;
 	    padding: 12px 0px;
 	    border-radius: 5px;
