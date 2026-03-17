@@ -12,8 +12,6 @@ import { logOut as authLogOut } from '../contexts/authContext/AuthActions';
 import MenuIcon from '@mui/icons-material/Menu';
 import authService from '../services/authService';
 import tokenService from '../services/tokenService';
-import { useBranding } from '../contexts/BrandingContext.tsx';
-
 
 const Navbar = () => {
     const [isScrolled, setIsScrolled] = useState(false);
@@ -22,7 +20,6 @@ const Navbar = () => {
     const { dispatch: authDispatch } = useContext(AuthContext);
     const navigate = useNavigate();
     const location = useLocation();
-    const { brand } = useBranding();
 
     // Using useEffect for window.onscroll to prevent
     // potential memory leaks and ensure cleanup
@@ -70,11 +67,10 @@ const Navbar = () => {
 	    <div className={isScrolled ? 'navbar scrolled' : 'navbar'}>
 		<div className='container'>
 		    <div className='left'>
-			<Link className='link tenant-brand' to='/'>
-			    <img src={brand.logo || '/logo.png'}
-				 alt={`Logo of ${brand.name}`}
+			<Link className='link' to='/'>
+			    <img src='/logo.png'
+				 alt='Logo of the Futtech Company'
 			    />
-			    <span className='tenant-name'>{brand.name}</span>
 			</Link>
 
 			{/* Desktop Navigation Links - These will be hidden by CSS on mobile */}
@@ -113,7 +109,7 @@ const Navbar = () => {
 			<Link className='link desktop-nav-item'
 			      to='/video-list'
 			>
-			    <button className='navbarButton' style={{ backgroundColor: brand.primary_color }}>
+			    <button className='navbarButton'>
 				Manage
 			    </button>
 			</Link>
