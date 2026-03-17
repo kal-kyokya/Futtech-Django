@@ -12,7 +12,7 @@ const defaultBrand: TenantBrand = {
     slug: 'default',
     name: 'Futtech',
     logo: '/logo.png',
-    primary_color: '#028ECA',
+    primary_color: '#0D1C23',
     description: 'Default Futtech branding',
 };
 
@@ -57,8 +57,8 @@ export const BrandingProvider = ({ children }: { children: ReactNode }) => {
 
     useEffect(() => {
         document.title = `${brand.name} | Futtech`;
-        document.documentElement.style.setProperty('--tenant-primary-color', brand.primary_color || '#028ECA');
-        document.documentElement.style.setProperty('--main-color', brand.primary_color || '#028ECA');
+        document.documentElement.style.setProperty('--tenant-primary-color', brand.primary_color || '#0D1C23');
+        document.documentElement.style.setProperty('--main-color', brand.primary_color || '#0D1C23');
     }, [brand]);
 
     const value = useMemo(() => ({ brand, tenantSlug, isLoading }), [brand, tenantSlug, isLoading]);

@@ -2,7 +2,7 @@
 @use './styles/mixins' as *;
 
 :root {
-    --main-color: #{$color-bg};
+    --main-color: #0D1C23;
     color: $color-text;
     scroll-behavior: smooth;
 }
