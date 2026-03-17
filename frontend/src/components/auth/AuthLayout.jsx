@@ -6,6 +6,7 @@ const AuthLayout = ({
     pageClassName,
     header,
     videoTitle,
+    videoLink,
     formClassName = '',
     children,
 }) => (
@@ -13,7 +14,7 @@ const AuthLayout = ({
 	{header}
 	<div className='authPage__container'>
 	    <div className='authPage__panelGrid'>
-		<AuthHeroVideo title={videoTitle} />
+		<AuthHeroVideo video={videoLink} title={videoTitle} />
 		<AuthFormCard className={formClassName}>
 		    {children}
 		</AuthFormCard>
