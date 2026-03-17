@@ -12,7 +12,7 @@ import {
 } from '../../contexts/videoContext/VideoActions';
 import axios from 'axios';
 import Navbar from '../../components/Navbar';
-import { useBranding } from '../contexts/BrandingContext.tsx';
+import { useBranding } from '../../contexts/BrandingContext.tsx';
 
 
 const VideoList = () => {

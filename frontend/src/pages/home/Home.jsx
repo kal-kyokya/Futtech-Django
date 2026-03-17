@@ -11,7 +11,7 @@ import {
     getPlaylistsFailure
 } from '../../contexts/playlistContext/PlaylistActions';
 import contentService from '../../services/contentService';
-import { useBranding } from '../contexts/BrandingContext.tsx';
+import { useBranding } from '../../contexts/BrandingContext.tsx';
 
 
 const Home = ({ category }) => {
