@@ -117,7 +117,7 @@ const Login = () => {
 	<AuthLayout
 	    pageClassName='login'
 	    videoTitle='Watch Futtech in action'
-	    videoLink='https://player.mediadelivery.net/play/603147/666d7cca-a1b7-4964-8dbf-2d0f728be110'
+	    videoLink='https://player.mediadelivery.net/play/603147/ce5d072d-e53a-49fc-bcca-475aab60715e'
 	    header={
 		<div className='top'>
 		    <img
