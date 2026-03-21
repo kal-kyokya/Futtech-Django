@@ -1,6 +1,7 @@
 import './featured.scss';
 import { useState, useEffect, useMemo } from 'react';
 import apiClient from '../../services/apiClient';
+import resolveVideoThumbnail from '../../utils/videoThumbnail';
 
 const buildFeaturedEndpoint = () => '/videos/featured/?limit=10';
 
@@ -87,7 +88,7 @@ const Featured = ({ category }) => {
 	     </div>
 	    }
 
-	    <img src={ content?.thumbnail || fallbackImage }
+	    <img src={ resolveVideoThumbnail(content) || fallbackImage }
 		 alt="Featured section's image"
 	    />
 
