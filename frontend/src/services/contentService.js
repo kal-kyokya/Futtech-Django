@@ -5,6 +5,7 @@
  */
 
 import apiClient from './apiClient';
+import resolveVideoThumbnail from '../utils/videoThumbnail';
 
 /**
  * @class
@@ -307,9 +308,11 @@ class ContentService {
 	if (!videos || videos.length === 0) return;
 
 	videos.forEach((video) => {
-	    if (video.thumbnail_url) {
+	    const thumbnailSrc = resolveVideoThumbnail(video);
+
+	    if (thumbnailSrc) {
 		const img = new Image();
-		img.src = video.thumbnail_url;
+		img.src = thumbnailSrc;
 	    }
 	});
     }
