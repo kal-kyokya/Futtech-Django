@@ -12,6 +12,7 @@ import {
 } from '../../contexts/videoContext/VideoActions';
 import axios from 'axios';
 import Navbar from '../../components/Navbar';
+import resolveVideoThumbnail from '../../utils/videoThumbnail';
 
 
 const VideoList = () => {
@@ -47,7 +48,7 @@ const VideoList = () => {
 			  style={{ 'display': 'flex' }}
 		    >
 			<img className='profile'
-			     src={ params.row.thumbnail }
+			     src={ resolveVideoThumbnail(params.row) }
 			     alt='Video Thumbnail'
 			/>
 			<span> { params.row.title } </span>
