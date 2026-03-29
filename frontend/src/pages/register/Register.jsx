@@ -101,7 +101,7 @@ const Register = () => {
 	<AuthLayout
 	    pageClassName='register'
 	    videoTitle='See what membership unlocks'
-	    videoLink='https://player.mediadelivery.net/embed/603147/bfb7224d-d5f5-4239-9370-395750a5798f'
+	    videoLink='https://player.mediadelivery.net/play/603147/3de68463-e9ff-493c-9bbe-942a7faa7e05'
 	    formClassName='registerFormCard'
 	    header={
 		<div className='top'>
