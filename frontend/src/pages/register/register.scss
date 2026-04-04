@@ -27,7 +27,12 @@
 	}
     }
 
-    .button--primary,
+    .button--primary {
+	background: #05F283;
+	color: #052414;
+	box-shadow: 0 10px 30px rgba(5, 242, 131, 0.35);
+    }
+
     .getStarted,
     .finish,
     .logIn {
@@ -140,7 +145,7 @@
 	    border-radius: $radius-md;
 	    background: rgba(0, 0, 0, 0.4);
 	    border: 1px solid rgba(255, 255, 255, 0.15);
-	    aspect-ratio: 16 / 10;
+	    aspect-ratio: 1 / 1.21;
 
 	    iframe {
 		width: 100%;
@@ -261,8 +266,14 @@
  	}
 	
 	.heroSection {
-	    grid-template-columns: 1.1fr 0.9fr;
-	    align-items: center;
+	    grid-template-columns: minmax(0, 1.06fr) minmax(0, 0.94fr);
+	    align-items: stretch;
+
+	    &__content {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	    }
  	}
     }
 }
