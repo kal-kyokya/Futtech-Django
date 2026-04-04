@@ -27,15 +27,15 @@
 	}
     }
 
-    .button--primary {
+    .button--primary,
+    .logIn {
 	background: #05F283;
 	color: #052414;
 	box-shadow: 0 10px 30px rgba(5, 242, 131, 0.35);
     }
 
     .getStarted,
-    .finish,
-    .logIn {
+    .finish {
 	background: linear-gradient(135deg, #028eca, #05a9f2);
 	color: $color-primary-contrast;
 	box-shadow: 0 10px 30px rgba(2, 142, 202, 0.3);
@@ -272,7 +272,7 @@
 	    &__content {
 		display: flex;
 		flex-direction: column;
-		justify-content: center;
+		justify-content: space-evenly;
 	    }
  	}
     }

@@ -6,7 +6,7 @@ const HeroSection = () => (
 	<div className='heroSection__content'>
 	    <p className='heroSection__badge'>Football Video Analysis</p>
 	    <h1 id='hero-heading'>
-		Football Video Analysis | Match Breakdown, Player Analysis &amp; High-Performance Edits
+		Football Video Analysis | Match Breakdown, Player Analysis, Drone Footage &amp; High-Performance Edits
 	    </h1>
 	    <p className='heroSection__subheadline'>
 		We help football players, coaches and content creators turn raw match footage into clear, actionable insights.
