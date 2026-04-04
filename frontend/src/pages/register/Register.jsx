@@ -9,7 +9,11 @@ import {
     registrationSuccess,
     registrationFailure,
     clearUserError } from '../../contexts/userContext/UserActions';
-import AuthLayout from '../../components/auth/AuthLayout';
+import HeroSection from '../../components/landing/HeroSection';
+import ServicesSection from '../../components/landing/ServicesSection';
+import AboutValueSection from '../../components/landing/AboutValueSection';
+import DifferentiationSection from '../../components/landing/DifferentiationSection';
+import BottomCtaSection from '../../components/landing/BottomCtaSection';
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -50,7 +54,7 @@ const Register = () => {
     };
 
     const handleRegister = async (e) => {
-	e.preventDefault(); // Prevents form reload and allows data submission
+	e.preventDefault();
 	dispatch(registrationStart());
 
 	if (password !== passwordConfirm) {
@@ -98,111 +102,122 @@ const Register = () => {
     };
 
     return (
-	<AuthLayout
-	    pageClassName='register'
-	    videoTitle='See what membership unlocks'
-	    videoLink='https://player.mediadelivery.net/play/603147/5badff92-9cfa-4893-b1db-60b53d91c8de'
-	    formClassName='registerFormCard'
-	    header={
-		<div className='top'>
-		    <div className='wrapper'>
-			<img
-			    className='logo'
-			    src='/logo.png'
-			    alt='Logo of the Futtech Company'
-			/>
+	<div className='register'>
+	    <header className='top'>
+		<div className='wrapper'>
+		    <img
+			className='logo'
+			src='/logo.png'
+			alt='Logo of the Futtech Company'
+		    />
 
-			<Link to='/login' className='link'>
+		    <div className='topActions'>
+			<Link
+			    to='/about'
+			    className='link topLink'
+			>
+			    About
+			</Link>
+			<Link
+			    to='/login'
+			    className='link'
+			>
 			    <button className='logIn'>
-				<span>
-				    Log In
-				</span>
+				<span>Log In</span>
 			    </button>
 			</Link>
 		    </div>
 		</div>
-	    }
-	>
-	    <div className='authContent'>
-		<h1>Drone Footage, Tactical/Technical Analysis, and more</h1>
-		<h2>
-		    Learn more <Link to='/about'>here.</Link>
-		</h2>
-		<h4>Ready to watch? Enter your details to create or restart your membership.</h4>
+	    </header>
 
-		{ !registrationError?.fields && registrationError?.message && (
-		    <div className='userPrompt'>
-			{registrationError.message}
+	    <main className='registerMain'>
+		<HeroSection />
+		<AboutValueSection />
+		<ServicesSection />
+		<DifferentiationSection />
+
+		<section
+		    className='landingSection conversionSection'
+		    id='registration-form'
+		    aria-labelledby='registration-heading'
+		>
+		    <div className='landingSection__header'>
+			<h2 id='registration-heading'>Get started with your first analysis</h2>
+			<p>Create your Futtech account and send your footage for review.</p>
 		    </div>
-		)}
 
-		{ email ? (
-		    <form className='membership' onSubmit={handleRegister}>
-			<input type='password'
-			       placeholder='Password'
-			       onChange={(e) => setPassword(e.target.value)}
-			       required
-			/>
-			{fieldErrors.password && (
-			    <div className='fieldError'>
-				{fieldErrors.password}
-			    </div>
-			)}
-			<input type='password'
-			       placeholder='Confirm password'
-			       onChange={(e) => setPasswordConfirm(e.target.value)}
-			       required
-			/>
-			{fieldErrors.passwordConfirm && (
-			    <div className='fieldError'>
-				{fieldErrors.passwordConfirm}
-			    </div>
-			)}
+		    { !registrationError?.fields && registrationError?.message && (
+			<div className='userPrompt'>
+			    {registrationError.message}
+			</div>
+		    )}
 
-			<button className='finish'
-				type='submit'
-				disabled={isFetching}
-			>
-			    <span>
-				Start
-			    </span>
-			</button>
-		    </form>
+		    { email ? (
+			<form className='membership' onSubmit={handleRegister}>
+			    <input type='password'
+				   placeholder='Password'
+				   onChange={(e) => setPassword(e.target.value)}
+				   required
+			    />
+			    {fieldErrors.password && (
+				<div className='fieldError'>
+				    {fieldErrors.password}
+				</div>
+			    )}
+			    <input type='password'
+				   placeholder='Confirm password'
+				   onChange={(e) => setPasswordConfirm(e.target.value)}
+				   required
+			    />
+			    {fieldErrors.passwordConfirm && (
+				<div className='fieldError'>
+				    {fieldErrors.passwordConfirm}
+				</div>
+			    )}
 
-		) : (
-		    <div className='membership'>
-			<input type='email'
-			       placeholder='Email address'
-			       ref={emailRef}
-			       required
-			/>
-			{fieldErrors.email && (
-			    <div className='fieldError'>
-				{fieldErrors.email}
-			    </div>
-			)}
-			<input type='text'
-			       placeholder='Username'
-			       onChange={(e) => setUsername(e.target.value)}
-			       required
-			/>
-			{fieldErrors.username && (
-			    <div className='fieldError'>
-				{fieldErrors.username}
-			    </div>
-			)}
+			    <button className='finish'
+				    type='submit'
+				    disabled={isFetching}
+			    >
+				<span>Start</span>
+			    </button>
+			</form>
 
-			<button className='getStarted'
-				type='button'
-				onClick={handleStart}>
-			    <span>
-				Get Started
-			    </span>
-			</button>
-		    </div>
-		)}
-	    </div>
-	</AuthLayout>
+		    ) : (
+			<div className='membership'>
+			    <input type='email'
+				   placeholder='Email address'
+				   ref={emailRef}
+				   required
+			    />
+			    {fieldErrors.email && (
+				<div className='fieldError'>
+				    {fieldErrors.email}
+				</div>
+			    )}
+			    <input type='text'
+				   placeholder='Username'
+				   onChange={(e) => setUsername(e.target.value)}
+				   required
+			    />
+			    {fieldErrors.username && (
+				<div className='fieldError'>
+				    {fieldErrors.username}
+				</div>
+			    )}
+
+			    <button className='getStarted'
+				    type='button'
+				    onClick={handleStart}>
+				<span>Get Started</span>
+			    </button>
+			</div>
+		    )}
+		</section>
+
+		<BottomCtaSection />
+	    </main>
+	</div>
     );
 };
 
