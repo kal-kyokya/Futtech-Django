@@ -1,4 +1,4 @@
-const HeroSection = () = (
+const HeroSection = () => (
     <section
 	className='landingSection heroSection'
 	aria-labelledby='hero-heading'

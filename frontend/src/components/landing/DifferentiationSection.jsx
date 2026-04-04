@@ -1,4 +1,4 @@
-const DifferentiationSection = () = (
+const DifferentiationSection = () => (
     <section
 	className='landingSection differentiationSection'
 	aria-labelledby='differentiation-heading'
