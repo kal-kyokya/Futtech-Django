@@ -2,119 +2,267 @@
 @use '../../styles/mixins' as *;
 
 .register {
-    button {
-	min-width: 8rem;
-	min-height: 3rem;
-	padding: 0.8rem 1.6rem;
-	cursor: pointer;
+    min-height: 100vh;
+    color: $color-text;
+    background:
+	linear-gradient(180deg, rgba(5, 8, 16, 0.92) 0%, rgba(5, 8, 16, 0.98) 100%),
+	url('/background.jpg') center / cover fixed;
 
-	span {
+    button,
+    .button {
+ 	min-height: 3rem;
+	padding: 0.75rem 1.2rem;
+	border-radius: $radius-sm;
+	font-weight: 600;
+	border: 0;
+ 	cursor: pointer;
+	transition: transform 0.25s ease, opacity 0.25s ease, box-shadow 0.25s ease;
+	text-decoration: none;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+
+	&:hover {
+	    transform: translateY(-2px);
+	}
+    }
+
+    .button--primary,
+    .getStarted,
+    .finish,
+    .logIn {
+	background: linear-gradient(135deg, #028eca, #05a9f2);
+	color: $color-primary-contrast;
+	box-shadow: 0 10px 30px rgba(2, 142, 202, 0.3);
+    }
+
+    .button--secondary {
+	background: transparent;
+	color: $color-text;
+	border: 1px solid rgba(255, 255, 255, 0.4);
+    }
+
+    .top {
+	position: sticky;
+	top: 0;
+	backdrop-filter: blur(12px);
+	background: rgba(6, 10, 20, 0.72);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+	z-index: 100;
+	padding: $space-3;
+	
+	.wrapper {
+	    @include page-container(75rem);
+	    width: 100%;
 	    display: flex;
-	    line-height: 1;
+	    justify-content: space-between;
 	    align-items: center;
-	    justify-content: center;
+	}
+
+	.logo {
+	    height: 3.6rem;
+	    width: auto;
+	    border-radius: $radius-pill;
+	}
+
+	.topActions {
+ 	    display: flex;
+ 	    align-items: center;
+	    gap: 0.8rem;
+	}
+
+	.topLink {
+	    font-weight: 500;
+	    opacity: 0.9;
+ 	}
+    }
+    
+    .registerMain {
+	@include page-container(75rem);
+	padding: $space-5 $space-3 $space-8;
+	display: grid;
+	gap: $space-5;
+    }
+    
+    .landingSection {
+	background: rgba(255, 255, 255, 0.06);
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	border-radius: $radius-lg;
+	padding: clamp(1.2rem, 2vw, 2rem);
+	box-shadow: $shadow-card;
+	animation: fadeUp 0.55s ease both;
+
+	&__header {
+	    max-width: 46rem;
+	    margin-bottom: $space-3;
+	}
+
+	h2 {
+	    font-size: clamp(1.5rem, 3.3vw, 2rem);
+	    margin-bottom: 0.8rem;
 	}
     }
 
-    .top .wrapper {
-	width: 100%;
-	max-width: 120rem;
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
+    .heroSection {
+	display: grid;
+	gap: $space-4;
 
-	.logIn {
-	    background-color: $color-primary;
-	    color: $color-primary-contrast;
-	    font-size: $font-size-md;
-	    font-weight: 700;
+	&__badge {
+	    display: inline-flex;
+	    background: rgba(5, 242, 131, 0.18);
+	    color: #8af8c6;
+	    border: 1px solid rgba(138, 248, 198, 0.5);
+	    border-radius: $radius-pill;
+	    padding: 0.32rem 0.7rem;
+	    font-size: 0.83rem;
+	    margin-bottom: 0.8rem;
+	}
+
+	h1 {
+	    font-size: clamp(1.9rem, 4.5vw, 3rem);
+	    line-height: 1.2;
+	}
+
+	&__subheadline {
+	    margin: $space-3 0;
+	    color: rgba(255, 255, 255, 0.86);
+	    max-width: 43rem;
+	}
+
+	&__actions {
+	    display: flex;
+	    gap: 0.75rem;
+	    flex-wrap: wrap;
+	}
+
+	&__previewFrame {
+	    overflow: hidden;
+	    border-radius: $radius-md;
+	    background: rgba(0, 0, 0, 0.4);
+	    border: 1px solid rgba(255, 255, 255, 0.15);
+	    aspect-ratio: 16 / 10;
+
+	    iframe {
+		width: 100%;
+		height: 100%;
+		border: 0;
+		display: block;
+	    }
+ 	}
+    }
+    
+    .aboutValue p,
+    .differentiationSection li,
+    .serviceCard p,
+    .conversionSection p {
+	color: rgba(255, 255, 255, 0.82);
+    }
+    
+    .servicesSection__grid {
+	display: grid;
+	gap: 0.85rem;
+	grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    }
+    
+    .serviceCard {
+	background: rgba(4, 8, 18, 0.58);
+	border: 1px solid rgba(255, 255, 255, 0.09);
+	border-radius: $radius-md;
+	padding: 1rem;
+	transition: transform 0.25s ease, border-color 0.25s ease;
+
+	&:hover {
+	    transform: translateY(-3px);
+	    border-color: rgba(5, 169, 242, 0.7);
+	}
+
+	&__icon {
+	    font-size: 1.35rem;
+	}
+
+	h3 {
+	    margin: 0.5rem 0;
+	    font-size: 1.03rem;
+	}
+    }
+    .differentiationSection ul {
+	padding-left: 1.2rem;
+	display: grid;
+	gap: 0.7rem;
+    }
+    
+    .conversionSection {
+	max-width: 36rem;
+	margin-inline: auto;
+	width: 100%;
+    }
+    
+    .membership {
+ 	width: 100%;
+ 	display: flex;
+ 	flex-direction: column;
+	gap: 0.75rem;
+	margin-top: $space-3;
+	
+ 	input,
+ 	button {
+ 	    width: 100%;
+ 	    min-height: 3rem;
+ 	}
+	
+ 	input {
+	    border: 1px solid rgba(255, 255, 255, 0.18);
 	    border-radius: $radius-sm;
-	    border: 0;
-	}
+	    padding-inline: 0.8rem;
+	    background: rgba(255, 255, 255, 0.08);
+ 	    color: $color-text;
+	    font-size: $font-size-md;
+ 	}
     }
-
-    .registerFormCard {
-	padding: $space-5;
-    }
-
-    .authContent {
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	text-align: center;
-	gap: $space-2;
-    }
-
-    h1 {
-	font-size: $font-size-xl;
-	width: 100%;
-	margin-bottom: 0.8rem;
-    }
-
-    h2,
-    h4 {
-	margin: $space-4;
-    }
-
-    h4 {
+    
+    .userPrompt {
+ 	margin-top: $space-2;
+	color: #ffd1a8;
 	font-weight: 500;
     }
-
-    .membership {
-	max-width: 28rem;
-	width: 100%;
-	display: flex;
-	flex-direction: column;
-	gap: 0.7rem;
-	margin-top: $space-4;
-
-	input,
-	button {
-	    width: 100%;
-	    min-height: 3rem;
-	    border-radius: $radius-sm;
-	}
-
-	input {
-	    padding-inline: 0.625rem;
-	    border: 1px solid $color-border;
-	    font-size: $font-size-md;
-	    background: rgba(255, 255, 255, 0.18);
-	    color: $color-text;
-	}
-
-	button {
-	    font-size: 1.1rem;
-	    background-color: $color-primary;
-	    color: $color-primary-contrast;
-	    border: 0;
-	}
-    }
-
-    .userPrompt {
-	margin-top: $space-2;
-	color: $color-primary;
-    }
-
+    
     .fieldError {
-	color: $color-danger;
-	font-size: 0.85rem;
-	margin-top: -0.25rem;
-	margin-bottom: 0.2rem;
-	width: 100%;
-	text-align: left;
+ 	color: $color-danger;
+ 	font-size: 0.85rem;
+	margin-top: -0.2rem;
+    }
+
+    .bottomCtaSection {
+	text-align: center;
+
+	h2 {
+	    max-width: 52rem;
+	    margin: 0 auto 1.2rem;
+	}
+    }
+}
+
+@keyframes fadeUp {
+    from {
+	opacity: 0;
+	transform: translateY(12px);
+    }
+
+    to {
+	opacity: 1;
+	transform: translateY(0);
     }
 }
 
 @include tablet-up {
     .register {
-	.registerFormCard {
-	    padding: 1.75rem $space-8;
-	}
-
-	h1 {
-	    font-size: $font-size-2xl;
-	}
+	.registerMain {
+	    padding-top: $space-6;
+ 	}
+	
+	.heroSection {
+	    grid-template-columns: 1.1fr 0.9fr;
+	    align-items: center;
+ 	}
     }
 }
