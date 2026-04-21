@@ -23,6 +23,8 @@ import Video from './pages/video/Video';
 import Playlists from './pages/playlists/Playlists';
 import Pricing from './pages/pricing/Pricing';
 import VideoList from './pages/videoList/VideoList';
+import Showcase from './pages/showcase/Showcase';
+import ShowcaseVideo from './pages/showcaseVideo/ShowcaseVideo';
 
 
 const App = () => {
@@ -43,6 +45,22 @@ const App = () => {
 	return AuthService.isAuthenticated() ? <Home /> : component;
     };
 
+    const renderLanding = () => {
+	if (!authReady) {
+	    return <div className='auth-loading'>
+		       Loading...
+		   </div>;
+	}
+
+	return AuthService.isAuthenticated() ? (
+	    <PrivateRoute>
+		<Home />
+	    </PrivateRoute>
+	) : (
+	    <Showcase />
+	);
+    };
+
     const RootLayout = () => (
 	<div className='app-shell'>
 	    <Outlet />
@@ -61,11 +79,9 @@ const App = () => {
 		<Route path='login' element={
 			   renderPublic(<Login />)
 		       } />
-		<Route index element={
-			   <PrivateRoute isReady={authReady}>
-			       <Home />
-			   </PrivateRoute>
-		       } />
+		<Route index element={renderLanding()} />
+		<Route path='showcase' element={<Showcase />} />
+		<Route path='showcase/:slug' element={<ShowcaseVideo />} />
 		<Route path='about' element={<About />} />
 		<Route path='videos' element={
 			   <PrivateRoute isReady={authReady}>
