@@ -7,6 +7,7 @@ for this App to handle CRUD operations facilitating video streaming.
 import uuid
 import datetime
 from django.db import models
+from django.utils.text import slugify
 # from django.contrib.auth.models import User
 from django.contrib.auth import get_user_model
 from .choices import (
@@ -230,6 +231,9 @@ class Video(models.Model):
     id = models.UUIDField(primary_key=True,
                           default=uuid.uuid4,
                           editable=False)
+    slug = models.SlugField(max_length=280,
+                            unique=True,
+                            blank=True)
     owner = models.ForeignKey(UserModel,
                               on_delete=models.CASCADE,
                               related_name='uploaded_videos')
@@ -252,6 +256,7 @@ class Video(models.Model):
     duration_seconds = models.PositiveIntegerField(null=True,
                                                    blank=True)
     is_premium = models.BooleanField(default=False)
+    is_showcase = models.BooleanField(default=False)
     is_drone = models.BooleanField(default=False)
     is_analysis = models.BooleanField(default=False)
 
@@ -283,6 +288,18 @@ class Video(models.Model):
         """
         return "'{}' by {}".format(self.title,
                                    self.owner.username)
+
+    def save(self, *args, **kwargs):
+        if not self.slug:
+            base_slug = slugify(self.title)[:240] or 'video'
+            slug == base_slug
+            counter = 1
+            while Video.objects.filter(slug=slug).exclude(pk=self.pk).exists():
+                counter += 1
+                slug = f'{base_slug}-{counter}'
+            self.slug = slug
+
+        super().save(*args, **kwargs)
 
 
 class PlaybackHistory(models.Model):
