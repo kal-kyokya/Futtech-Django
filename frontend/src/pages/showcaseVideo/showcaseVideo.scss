@@ -1,0 +1,28 @@
+.showcaseVideoPage {
+    min-height: 100vh;
+    background: #0d1c23;
+    color: #fff;
+}
+
+.showcaseVideo {
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 1.5rem;
+
+    h1 {
+        margin: 0.6rem 0;
+    }
+}
+
+.showcaseVideo__back {
+    color: #89d7ff;
+}
+
+.showcaseVideo__note {
+    color: rgba(255, 255, 255, 0.75);
+    margin-bottom: 1rem;
+}
+
+.showcaseVideo__error {
+    color: #ff9f9f;
+}
