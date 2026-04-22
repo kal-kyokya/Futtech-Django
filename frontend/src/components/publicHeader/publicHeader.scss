@@ -1,0 +1,38 @@
+.publicHeader {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    background: #0d1c23;
+    position: sticky;
+    top: 0;
+    z-index: 20;
+}
+
+.publicHeader__brand {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+
+    img {
+        width: 36px;
+        height: 36px;
+        object-fit: contain;
+    }
+}
+
+.publicHeader__nav {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.publicHeader__cta {
+    border: 1px solid rgba(255, 255, 255, 0.35);
+    padding: 0.35rem 0.8rem;
+    border-radius: 999px;
+}
