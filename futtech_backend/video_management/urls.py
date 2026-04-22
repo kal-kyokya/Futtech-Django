@@ -8,6 +8,13 @@ from . import views
 
 
 urlpatterns = [
+    path('public/showcase/',
+         views.get_public_showcase,
+         name='public_showcase'),
+    path('public/showcase/<slug:slug>/',
+         views.get_public_showcase_detail,
+         name='public_showcase_detail'),
+
     # User-heavy URLS
     path('video/<uuid:video_id>/playback/',
          views.get_video_playback,
