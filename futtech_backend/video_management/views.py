@@ -9,6 +9,7 @@ from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.http import HttpResponseForbidden, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.shortcuts import get_object_or_404
 
 from djstripe.models import Customer
 from djstripe.settings import djstripe_settings
@@ -38,7 +39,7 @@ from .payment_services import (
     process_stripe_event,
     serialize_payment,
 )
-from .serializers import PlaybackHistorySerializer, VideoSerializer
+from .serializers import PlaybackHistorySerializer, VideoSerializer, PublicShowcaseVideoSerializer
 
 stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
 
@@ -144,6 +145,39 @@ def get_featured_videos(request):
         status=VideoStatus.READY
     ).order_by('-created_at')[:limit]
     return Response(VideoSerializer(videos, many=True).data)
+
+
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def get_public_showcase(request):
+    try:
+        limit = int(request.query_params.get('limit', 12))
+    except (TypeError, ValueError):
+        limit = 12
+
+    limit = max(1, min(limit, 30))
+
+    videos = Video.objects.filter(
+        is_showcase=True,
+        status=VideoStatus.READY,
+    ).order_by('-created_at')[:limit]
+
+    return Response(PublicShowcaseVideoSerializer(videos, many=True).data)
+
+
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([AllowAny])
+def get_public_showcase_detail(request, slug):
+    videos = get_object_or_404(
+        Video,
+        slug=slug,
+        is_showcase=True,
+        status=VideoStatus.READY,
+    )
+
+    return Response(PublicShowcaseVideoSerializer(video).data)
 
 
 @login_required
