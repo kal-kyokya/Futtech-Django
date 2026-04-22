@@ -61,6 +61,65 @@ class PlaybackAuthTests(TestCase):
 
 
 @override_settings(DATABASES=TEST_DATABASES)
+class PublicShowcaseAccessTests(TestCase):
+    def setUp(self):
+        user_model = get_user_model()
+        self.owner = user_model.objects.create_user(
+            username='showcase-owner',
+            email='showcase-owner@example.com',
+            password='OwnerPass123!',
+        )
+        Userprofile.objects.create(user=self.owner)
+
+        self.public_video = Video.objects.create(
+            owner=self.owner,
+            title='Admissions Showcase Clip',
+            description='Public sample for visitors.',
+            status='ready',
+            is_showcase=True,
+            video_library_id='12345',
+            bunny_video_id='public-guid-1',
+        ),
+        self.private_video = Video.objects.create(
+            owner=self.owner,
+            title='Private Team Review',
+            description='Should remain hidden',
+            status='ready',
+            is_showcase=False,
+            video_library_id='12345',
+            bunny_video_id='private-guid-2',
+        )
+
+        def test_anon_can_list_showcase_videos_only(self):
+            response = self.client.get(reverse('public_showcase'))
+
+            self.assertEqual(response.status_code, 200)
+            payload = response.json()
+            self.assertEqual(len(payload), 1)
+            self.assertEqual(payload[0]['slug'], self.public_video.slug)
+            self.assertIn('embed_url', payload[0])
+
+        def test_anon_can_view_public_showcase_detail(self):
+            response = self.client.get(
+                reverse('public_showcase_detail',
+                        kwargs={'slug': self.public_video.slug})
+            )
+
+            self.assertEqual(response.status_code, 200)
+            payload = response.json()
+            self.assertEqual(payload['slug'], self.public_video.slug)
+            self.assertEqual(payload['title'], self.public_video.title)
+
+        def test_anon_cannot_view_non_showcase_detail(self):
+            response = self.client.get(
+                reverse('public_showcase_detail',
+                        kwargs={'slug': self.private_video.slug})
+            )
+
+            self.assertEqual(response.status_code, 404)
+
+
+@override_settings(DATABASES=TEST_DATABASES)
 class VideoUploadIntegrationSanityTests(TestCase):
     def setUp(self):
         user_model = get_user_model()
