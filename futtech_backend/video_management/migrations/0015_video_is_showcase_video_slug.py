@@ -1,11 +1,12 @@
 from django.db import migrations, models
 
 
-def populate_video_slugs(app, schema_editor):
-    Video = app.get_model('video_management', 'Video')
+def populate_video_slugs(apps, schema_editor):
+    Video = apps.get_model('video_management', 'Video')
 
     for video in Video.objects.all().order_by('created_at', 'id'):
-        if video.slug:
+        existing_slug = (video.slug or '').strip()
+        if existing_slug:
             continue
 
         base_slug = (video.title or 'video').strip().lower().replace(' ', '-')[:240] or 'video'
@@ -34,7 +35,12 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='video',
             name='slug',
-            field=models.SlugField(blank=True, max_length=280, unique=True),
+            field=models.SlugField(blank=True, max_length=280, null=True),
         ),
         migrations.RunPython(populate_video_slugs, migrations.RunPython.noop),
+        migrations.AddField(
+            model_name='video',
+            name='slug',
+            field=models.SlugField(blank=True, max_length=280, unique=True),
+        ),
     ]

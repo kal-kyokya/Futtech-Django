@@ -233,7 +233,8 @@ class Video(models.Model):
                           editable=False)
     slug = models.SlugField(max_length=280,
                             unique=True,
-                            blank=True)
+                            blank=True,
+                            null=True)
     owner = models.ForeignKey(UserModel,
                               on_delete=models.CASCADE,
                               related_name='uploaded_videos')
