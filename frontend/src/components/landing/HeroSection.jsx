@@ -20,7 +20,7 @@ const HeroSection = () => (
 		</a>
 		<a
 		    className='button button--secondary'
-		    href='https://player.mediadelivery.net/play/603147/5badff92-9cfa-4893-b1db-60b53d91c8de'
+		    href='https://www.futtech.kalkyokya.tech/showcase'
 		    target='_blank'
 		    rel='noopener noreferrer'
 		>

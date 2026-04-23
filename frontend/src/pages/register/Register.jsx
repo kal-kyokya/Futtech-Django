@@ -113,6 +113,12 @@ const Register = () => {
 
 		    <div className='topActions'>
 			<Link
+			    to='/showcase'
+			    className='link topLink'
+			>
+			    Public Showcase
+			</Link>
+			<Link
 			    to='/about'
 			    className='link topLink'
 			>

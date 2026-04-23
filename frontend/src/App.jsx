@@ -57,7 +57,7 @@ const App = () => {
 		<Home />
 	    </PrivateRoute>
 	) : (
-	    <Showcase />
+	    <Register />
 	);
     };
 

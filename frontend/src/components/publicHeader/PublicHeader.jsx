@@ -22,10 +22,10 @@ const PublicHeader = () => (
 		Showcase
 	    </Link>
 	    <Link
-		to='/about'
+		to='/register'
 		className='link'
 	    >
-		About
+		Register
 	    </Link>
 	    <Link
 		to='/login'
