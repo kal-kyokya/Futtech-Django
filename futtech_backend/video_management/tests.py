@@ -247,7 +247,7 @@ class PaymentFlowTests(TestCase):
         self.assertEqual(response_one.status_code, 200)
         self.assertEqual(response_two.status_code, 200)
         self.assertEqual(tx.status, PaymentStatus.SUCCEEDED)
-        self.assertInNotNone(tx.fulfilled_at)
+        self.assertIsNotNone(tx.fulfilled_at)
         self.assertIsNotNone(profile.access_expires_at)
 
     def test_mpesa_callback_failed_does_not_fulfill(self):

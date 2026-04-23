@@ -5,7 +5,7 @@ const PublicHeader = () => (
     <header className='publicHeader'>
 	<Link
 	    to='/showcase'
-	    classname='publicHeader__brand link'
+	    className='publicHeader__brand link'
 	>
 	    <img
 		src='/logo.png'

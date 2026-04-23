@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import PublicHeader from '../../components/publicHeader/PublicHeader';
 import showcaseService from '../../services/showcaseService';
 
-const ShowCase = () => {
+const Showcase = () => {
     const [videos, setVideos] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState('');
@@ -12,7 +12,7 @@ const ShowCase = () => {
     useEffect(() => {
 	const loadShowcase = async () => {
 	    try {
-		const data = await showcaseService.fetchShowCaseVideos();
+		const data = await showcaseService.fetchShowcaseVideos();
 		setVideos(Array.isArray(data) ? data : []);
 	    } catch (err) {
 		console.error('Failed to load showcase videos', err);
@@ -30,7 +30,7 @@ const ShowCase = () => {
 	    <PublicHeader />
 
 	    <section className='showcaseHero'>
-		<p className='showcaseBadge'>Public Showcase . No account needed</p>
+		<p className='showcaseBadge'>Public Showcase · No account needed</p>
 		<h1>Explore Futtech video edits instantly</h1>
 		<p>
 		    Admissions reviewers, recruiters, and collaborators can watch selected clips right away. Sign in only for private member features.
@@ -55,7 +55,7 @@ const ShowCase = () => {
 		{loading && <p>Loading showcase...</p>}
 		{error && <p className='showcaseError'>{error}</p>}
 
-		{!loadind && !error && videos.length == 0 && (
+		{!loading && !error && videos.length == 0 && (
 		    <p>No showcase videos are published yet.</p>
 		)}
 

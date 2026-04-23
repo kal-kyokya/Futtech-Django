@@ -2,7 +2,7 @@ from django.db import migrations, models
 
 
 def populate_video_slugs(app, schema_editor):
-    Video = apps.get_model('video_management', 'Video')
+    Video = app.get_model('video_management', 'Video')
 
     for video in Video.objects.all().order_by('created_at', 'id'):
         if video.slug:

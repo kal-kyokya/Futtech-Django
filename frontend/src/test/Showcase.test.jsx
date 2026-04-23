@@ -11,7 +11,7 @@ describe('Showcase page', () => {
 	    http.get('*/public/showcase/', async () => HttpResponse.json([
 		{
 		    id: 'vid-1',
-		    slug: 'admissions-highligh',
+		    slug: 'admissions-highlight',
 		    title: 'Admissions Highlight',
 		    description: 'Public clip for reviewers',
 		    thumbnail: '',
