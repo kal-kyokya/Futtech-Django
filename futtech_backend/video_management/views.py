@@ -161,7 +161,7 @@ def get_public_showcase(request):
     videos = Video.objects.filter(
         is_showcase=True,
         status=VideoStatus.READY,
-    ).order_by('-created_at')[:limit]
+    ).order_by('created_at')[:limit]
 
     return Response(PublicShowcaseVideoSerializer(videos, many=True).data)
 
@@ -170,7 +170,7 @@ def get_public_showcase(request):
 @authentication_classes([])
 @permission_classes([AllowAny])
 def get_public_showcase_detail(request, slug):
-    videos = get_object_or_404(
+    video = get_object_or_404(
         Video,
         slug=slug,
         is_showcase=True,
