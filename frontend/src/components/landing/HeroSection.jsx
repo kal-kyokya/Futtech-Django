@@ -24,7 +24,7 @@ const HeroSection = () => (
 		    target='_blank'
 		    rel='noopener noreferrer'
 		>
-		    View Sample Analysis
+		    View Sample Videos
 		</a>
 	    </div>
 	</div>
