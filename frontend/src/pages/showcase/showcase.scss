@@ -63,7 +63,6 @@
     background: rgba(255, 255, 255, 0.06);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 14px;
-    overflow: hidden;
 }
 
 .showcaseCard__thumb {
@@ -71,6 +70,17 @@
     aspect-ratio: 16 / 9;
     display: grid;
     place-items: center;
+
+    img {
+	border: 1px solid rgba(255, 255, 255, 0.09);
+	border-radius: 0.5rem;
+	transition: transform 0.25s ease, border-color 0.25s ease;
+
+	&:hover {
+	    transform: scale(1.1, 1.1);
+	    border-color: rgba(5, 169, 242, 0.7);
+	}
+    }
 }
 
 .showcaseCard__content {

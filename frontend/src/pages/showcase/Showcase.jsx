@@ -65,15 +65,17 @@ const Showcase = () => {
 			    className='showcaseCard'
 			    key={video.id}
 			>
-			    <div className='showcaseCard__thumb'>
-				{video.thumbnail
-				 ? <img
-				       src={video.thumbnail}
-				       alt={video.title}
-				   />
-				 : <span>Showcase Video</span>
-				}
-			    </div>
+			    <Link to={`/showcase/${video.slug}`}>
+				<div className='showcaseCard__thumb'>
+				    {video.thumbnail
+				     ? <img
+					   src={video.thumbnail}
+					   alt={video.title}
+				       />
+				     : <span>Showcase Video</span>
+				    }
+				</div>
+			    </Link>
 			    <div className='showcaseCard__content'>
 				<h2>{video.title}</h2>
 				<p>{video.description || 'Selected public highlight from Futtech.'}</p>
