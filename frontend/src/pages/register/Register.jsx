@@ -114,19 +114,15 @@ const Register = () => {
 		    <div className='topActions'>
 			<Link
 			    to='/showcase'
-			    className='link'
+			    className='button button--secondary'
 			>
-			    <button>
-				<span>Public Showcase</span>
-			    </button>
+			    <span>Public Showcase</span>
 			</Link>
 			<Link
 			    to='/about'
-			    className='link'
+			    className='button button--secondary'
 			>
-			    <button>
-				<span>About</span>
-			    </button>
+			    <span>About</span>
 			</Link>
 			<Link
 			    to='/login'
