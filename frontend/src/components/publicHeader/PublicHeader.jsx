@@ -17,21 +17,15 @@ const PublicHeader = () => (
 	<nav className='publicHeader__nav'>
 	    <Link
 		to='/showcase'
-		className='link'
+		className='button button--secondary'
 	    >
-		Showcase
+		<span>Showcase</span>
 	    </Link>
 	    <Link
 		to='/register'
-		className='link'
+		className='button button--secondary'
 	    >
-		Register
-	    </Link>
-	    <Link
-		to='/login'
-		className='link'
-	    >
-		Sign in
+		<span>Register</span>
 	    </Link>
 	</nav>
     </header>
