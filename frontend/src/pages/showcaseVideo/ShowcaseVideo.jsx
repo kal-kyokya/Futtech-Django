@@ -43,15 +43,15 @@ const showcaseVideo = () => {
 
 		{!loading && !error && video && (
 		    <>
+			<VideoPlayer
+			    embedUrl={video.embed_url}
+			    title={video.title}
+			/>
 			<h1>{video.title}</h1>
 			<p>{video.description || 'Public Futtech showcase clip.'}</p>
 			<p className='showcaseVideo__note'>
 			    Public showcase view. No subscription or account is needed for this page.
 			</p>
-			<VideoPlayer
-			    embedUrl={video.embed_url}
-			    title={video.title}
-			/>
 		    </>
 		)}
 	    </main>
