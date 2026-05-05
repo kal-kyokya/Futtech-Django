@@ -161,7 +161,7 @@ def get_public_showcase(request):
     videos = Video.objects.filter(
         is_showcase=True,
         status=VideoStatus.READY,
-    ).order_by('created_at')[:limit]
+    ).order_by('title')[:limit]
 
     return Response(PublicShowcaseVideoSerializer(videos, many=True).data)
 
