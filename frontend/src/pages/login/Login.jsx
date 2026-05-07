@@ -150,7 +150,7 @@ const Login = () => {
 		    </div>
 		)}
 
-		<button type='submit' disabled={isFetching}>
+		<button type='submit' disabled='true'>
 		    Sign In
 		</button>
 
