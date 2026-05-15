@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-const Payment = ({ amountKes, onMpesaPay, onStripe, pending, statusMessage }) => {
+const Payment = ({ amountKes, onMpesaPay, onStripePay, pending, statusMessage }) => {
     const [provider, setProvider] = useState('MPESA');
     const [phoneNumber, setPhoneNumber] = useState('');
 
