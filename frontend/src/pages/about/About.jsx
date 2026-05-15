@@ -56,7 +56,7 @@ const About = () => {
 		     alt="Futtech Register page"/>
 		<p>Futtech is a startup that helps football players and coaches gain tactical awareness of their strengths and weaknesses through online provision of drone footage and Artificial Intelligent targeted feedback.<br />
 		    As an engineering problem, it focuses on three objectives: creating a web and mobile-friendly experience, building cost-effective camera-equipped drones, and designing a reliable AI model.<br />
-		This is the <i>web and mobile-friendly</i> online platform where footage is uploaded, analyzed, and delivered back to users with a modern streaming and payments stack—<a href="http://www.futtech.kalkyokya.tech" target="_blank" rel="noopener noreferrer">Demo here</a>.</p>
+		This is the <i>web and mobile-friendly</i> online platform where footage is captured, analyzed, published by the Futtech team, and delivered back to users with a modern streaming and payments stack—<a href="http://www.futtech.kalkyokya.tech" target="_blank" rel="noopener noreferrer">Demo here</a>.</p>
 
 		<h3>WHY FUTTECH</h3>
 		<p>Being a big fan of Football, this was an easy project focus to commit to. I am a hobbyist footballer, and recently learned that my father, and his father before him, played for the great <a href="https://en.wikipedia.org/wiki/TP_Mazembe#Honours" target="_blank" rel="noopener noreferrer">TP Mazembe</a> in Congo, DRC.<br />
