@@ -88,7 +88,7 @@ const Navbar = () => {
 			</Link>
 		    </div>
 
-		    {/* Hide CRUD operation buttons */}
+		    {/* Authenticated utility actions */}
 		    <div className='right'>
 
 			{/* Hamburger Menu Icon - Visible on mobile via CSS */}
@@ -99,20 +99,6 @@ const Navbar = () => {
 			    <span>Menu</span>
 			</div>
 
-			<Link className='link desktop-nav-item'
-			      to='/new-video'
-			>
-			    <button className='navbarButton'>
-				Create
-			    </button>
-			</Link>
-			<Link className='link desktop-nav-item'
-			      to='/video-list'
-			>
-			    <button className='navbarButton'>
-				Manage
-			    </button>
-			</Link>
 
 			{/* Hide search and Notification on Mobile */}
 			<SearchIcon className='icon desktop-nav-item'/>
@@ -172,12 +158,6 @@ const Navbar = () => {
 		    </li>
 		    <li>
 			<a onClick={() => handleNavLinkClick('/about')}>About</a>
-		    </li>
-		    <li>
-			<a onClick={() => handleNavLinkClick('/new-video')}>Create Video</a>
-		    </li>
-		    <li>
-			<a onClick={() => handleNavLinkClick('/video-list')}>Manage Videos</a>
 		    </li>
 		</ul>
 
