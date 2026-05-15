@@ -67,7 +67,7 @@ const About = () => {
 		<h4>Flow of Data through the System</h4>
 		<img src="/futtechArchitectureDiagram.png"
 		     alt="Futtech's Architectural Diagram"/>
-		<p><em>The drone captures video data, which is asynchronously sent to an AI processing unit—it analyzes footage and generates feedback on player positioning, movement, and decision-making. The data is uploaded to the web platform for user (players & coaches) access.</em></p>
+		<p><em>The drone captures video data, which is asynchronously sent to an AI processing unit—it analyzes footage and generates feedback on player positioning, movement, and decision-making. The resulting media is published to the web platform for user (players & coaches) access.</em></p>
 
 		<h4>Technology Used</h4>
 		<p>Futtech began as a MERN experiment and has now transitioned to a <b>React + Django REST</b> architecture.<br />
