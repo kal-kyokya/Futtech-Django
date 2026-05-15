@@ -15,14 +15,11 @@ import About from './pages/about/About';
 import Register from './pages/register/Register';
 import Login from './pages/login/Login';
 import Home from './pages/home/Home';
-import NewVideo from './pages/newVideo/NewVideo';
 import User from './pages/user/User';
 import Watch from './pages/watch/Watch';
 import NewPlaylist from './pages/newPlaylist/NewPlaylist';
-import Video from './pages/video/Video';
 import Playlists from './pages/playlists/Playlists';
 import Pricing from './pages/pricing/Pricing';
-import VideoList from './pages/videoList/VideoList';
 import Showcase from './pages/showcase/Showcase';
 import ShowcaseVideo from './pages/showcaseVideo/ShowcaseVideo';
 
@@ -113,24 +110,9 @@ const App = () => {
 			       <User />
 			   </PrivateRoute>
 		       } />
-		<Route path='new-video' element={
-			   <PrivateRoute isReady={authReady}>
-			       <NewVideo />
-			   </PrivateRoute>
-		       } />
 		<Route path='new-playlist' element={
 			   <PrivateRoute isReady={authReady}>
 			       <NewPlaylist />
-			   </PrivateRoute>
-		       } />
-		<Route path='video-list' element={
-			   <PrivateRoute isReady={authReady}>
-			       <VideoList />
-			   </PrivateRoute>
-		       } />
-		<Route path='video/:id' element={
-			   <PrivateRoute isReady={authReady}>
-			       <Video />
 			   </PrivateRoute>
 		       } />
 		<Route path='playlists' element={
