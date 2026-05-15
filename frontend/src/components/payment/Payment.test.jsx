@@ -5,7 +5,7 @@ import { describe, expect, it, vi } from 'vitest';
 import Payment from './Payment';
 
 describe('Payment component', () => {
-    it('', () => {
+    it('switches between M-Pesa and Stripe payment actions', async () => {
 	const user = userEvent.setup();
 	render(
 	    <Payment
