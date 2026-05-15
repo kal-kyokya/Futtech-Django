@@ -10,7 +10,7 @@ Futtech now supports a public, read-only showcase mode for visitors such as univ
 
 ## What remains private
 
-- Existing authenticated routes for dashboard, playlists, profile, upload, and member flows are unchanged.
+- Existing authenticated routes for dashboard, playlists, profile, playback, and member flows are unchanged; video creation/maintenance happens through Django admin/back-office workflows.
 - Premium/member logic and subcription checks still apply to private routes and endpoints.
 - Non-showcase videos are not returned by public endpoints.
 
