@@ -22,7 +22,7 @@ const SERVICES = [
     {
 	icon: '📱',
 	title: 'Short-form Football Content',
-	description: 'TikTok / YouTube Shorts optimized edits',
+	description: 'Instagram Reels / TikTok Videos / YouTube Shorts optimized edits',
     },
 ]
 
