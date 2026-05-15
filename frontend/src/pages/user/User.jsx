@@ -6,7 +6,6 @@ import EmailOutlinedIcon from '@mui/icons-material/EmailOutlined';
 import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import PublishIcon from '@mui/icons-material/Publish';
-import VideoLibraryIcon from '@mui/icons-material/VideoLibrary';
 import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
 import { Link, useNavigate } from 'react-router-dom';
 import { useState, useContext } from 'react';
@@ -149,18 +148,6 @@ const User = () => {
 			    </div>
 			</div>
 
-			<div className='userDetailsBottom'>
-			    <span className='userDetailsTitle'
-				  style={{'color': '#028ECA', 'fontWeight': '500'}}
-			    >
-				Manage
-			    </span>
-			    <Link className='link' to='/video-list'>
-				<div className='userDetailsLinks'>
-				    <VideoLibraryIcon className='userDetailsIcon' />
-				    Videos
-				</div>
-			    </Link>
 			    <Link className='link' to='/lists'>
 				<div className='userDetailsLinks'>
 				    <PlaylistPlayIcon className='userDetailsIcon' />
