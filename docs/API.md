@@ -51,11 +51,12 @@ Representative endpoints used by the frontend:
 - `GET /videos/featured/`
 - `GET /video/<uuid:video_id>/` (metadata)
 - `GET /video/<uuid:video_id>/playback/` (signed Bunny embed URL)
-- `POST /video/upload/` (multipart upload: metadata + file)
-- `GET /videos/` (owner videos)
+- `GET /public/showcase` (anonymous showcase listing)
+- `GET /public/showcase/<slug>/` (anonymous showcase detail)
 
 ## Bunny Stream notes
 
+- Videos are uploaded to Bunny Stream outside the React app and then recorded/maintained through Django admin or back-office workflows.
 - Playback iframe format: `https://iframe.mediadelivery.net/embed/{libraryId}/{videoId}`
 - If `BUNNY_STREAM_EMBED_TOKEN_KEY` is configured, backend appends short-lived embed token query params.
 - No Bunny secrets are returned to the frontend.
