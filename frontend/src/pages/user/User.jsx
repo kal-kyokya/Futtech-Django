@@ -148,6 +148,7 @@ const User = () => {
 			    </div>
 			</div>
 
+			<div className='userDetailsBottom'>
 			    <Link className='link' to='/lists'>
 				<div className='userDetailsLinks'>
 				    <PlaylistPlayIcon className='userDetailsIcon' />
