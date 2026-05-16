@@ -211,7 +211,7 @@ def process_stripe_event(payload: bytes, signature: str):
     obj = event['data']['object']
 
     payment = None
-    if event_type.startsWith('checkout.session'):
+    if event_type.startswith('checkout.session'):
         transaction_id = obj.get('metadata', {}).get('payment_transaction_id')
         if transaction_id:
             payment = PaymentTransaction.objects.filter(id=transaction_id, provider=PaymentProvider.STRIPE).first()
