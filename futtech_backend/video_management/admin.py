@@ -22,7 +22,33 @@ class VideoAdmin(admin.ModelAdmin):
     	fields to be displayed on the admin page.
     """
 
-    list_display = ('title', 'owner', 'description', 'created_at')
+    list_display = (
+        'title',
+        'owner',
+        'status',
+        'is_showcase',
+        'is_premium',
+        'bunny_video_id',
+        'created_at',
+    )
+    list_filter = ('status', 'is_showcase', 'is_premium', 'is_drone', 'is_analysis', 'category')
+    search_fields = ('title', 'description', 'bunny_video_id', 'owner__username', 'owner__email')
+    readonly_fields = ('id', 'slug', 'created_at', 'updated_at')
+    fieldsets = (
+        (None, {
+            'fields': ('id', 'owner', 'title', 'slug', 'description')
+        }),
+        ('Bunny Stream playback', {
+            'description': 'Videos are uploaded to Bunny Stream outside Futtech. Add the Bunny library/video identifiers here so Futtech can render playback and showcase embeds.',
+            'fields': ('video_library_id', 'bunny_video_id', 'status', 'duration_seconds', 'thumbnail'),
+        }),
+        ('Visibility and classification', {
+            'fields': ('is_showcase', 'is_premium', 'is_drone', 'is_analysis', 'category', 'location', 'recorded_on'),
+        }),
+        ('Timestamps', {
+            'fields': ('created_at', 'updated_at'),
+        }),
+    )
 
 
 @admin.register(UserProfile)
