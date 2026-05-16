@@ -49,14 +49,4 @@ urlpatterns = [
     path('payments/callbacks/stripe/',
          views.stripe_callback,
          name='stripe_callback'),
-
-    # Admin-related URLS
-    path('video/upload/',
-         views.VideoUploadView.as_view(),
-         name='upload-video'),
-    path('videos/',
-         views.VideoViewSet.as_view({
-             'get': 'list',
-         }),
-         name='crud-videos'),
 ]
