@@ -1,12 +1,11 @@
 #!/usr/bin/env python3
 """
-Service helpers for Bunny Stream video upload and private playback embeds.
+Service helpers for Bunny Stream private playback embeds and status sync.
 """
 
 # Imports are sorted alphabetically with dotted files at the bottom
 import base64
 import hashlib
-import os
 import time
 from urllib.parse import urlencode
 
@@ -23,37 +22,6 @@ def _headers(content_type="application/json"):
         "AccessKey": settings.BUNNY_STREAM_API_KEY,
         "Content-Type": content_type,
     }
-
-def create_video_entry(title: str, collection_id: str | None = None):
-    """
-    Create a Bunny Stream video object and return the API payload.
-    """
-    payload = {"title": title}
-    if collection_id:
-        payload["collectionId"] = collection_id
-
-    response = requests.post(
-        f"{BUNNY_API_BASE_URL}/library/{settings.BUNNY_STREAM_LIBRARY_ID}/videos",
-        headers=_headers(),
-        json=payload,
-        timeout=30,
-    )
-    response.raise_for_status()
-    return response.json()
-
-
-def upload_video_file(video_id: str, uploaded_file):
-    """
-    Upload raw bytes into a Bunny Stream video object.
-    """
-    response = requests.put(
-        f"{BUNNY_API_BASE_URL}/library/{settings.BUNNY_STREAM_LIBRARY_ID}/videos/{video_id}",
-        headers=_headers(content_type="application/octet-stream"),
-        data=uploaded_file,
-        timeout=300,
-    )
-    response.raise_for_status()
-    return response.json() if response.content else {"success": True}
 
 def build_embed_url(library_id: str, bunny_video_id: str, token_ttl_seconds=600):
     """
