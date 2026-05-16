@@ -237,7 +237,7 @@ class Video(models.Model):
                             null=True)
     owner = models.ForeignKey(UserModel,
                               on_delete=models.CASCADE,
-                              related_name='uploaded_videos')
+                              related_name='videos')
     title = models.CharField(max_length=255)
     description = models.TextField(blank=True,
                                    null=True)
@@ -293,7 +293,7 @@ class Video(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             base_slug = slugify(self.title)[:240] or 'video'
-            slug == base_slug
+            slug = base_slug
             counter = 1
             while Video.objects.filter(slug=slug).exclude(pk=self.pk).exists():
                 counter += 1
