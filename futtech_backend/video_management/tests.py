@@ -8,6 +8,7 @@ from unittest.mock import patch
 from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from rest_framework.test import APIClient
 
 from .models import PaymentProvider, PaymentStatus, PaymentTransaction, UserProfile, Video
 from .services import build_embed_url
@@ -69,7 +70,7 @@ class PublicShowcaseAccessTests(TestCase):
             email='showcase-owner@example.com',
             password='OwnerPass123!',
         )
-        Userprofile.objects.create(user=self.owner)
+        UserProfile.objects.create(user=self.owner)
 
         self.public_video = Video.objects.create(
             owner=self.owner,
@@ -79,7 +80,7 @@ class PublicShowcaseAccessTests(TestCase):
             is_showcase=True,
             video_library_id='12345',
             bunny_video_id='public-guid-1',
-        ),
+        )
         self.private_video = Video.objects.create(
             owner=self.owner,
             title='Private Team Review',
@@ -90,37 +91,37 @@ class PublicShowcaseAccessTests(TestCase):
             bunny_video_id='private-guid-2',
         )
 
-        def test_anon_can_list_showcase_videos_only(self):
-            response = self.client.get(reverse('public_showcase'))
+    def test_anon_can_list_showcase_videos_only(self):
+        response = self.client.get(reverse('public_showcase'))
 
-            self.assertEqual(response.status_code, 200)
-            payload = response.json()
-            self.assertEqual(len(payload), 1)
-            self.assertEqual(payload[0]['slug'], self.public_video.slug)
-            self.assertIn('embed_url', payload[0])
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(len(payload), 1)
+        self.assertEqual(payload[0]['slug'], self.public_video.slug)
+        self.assertIn('embed_url', payload[0])
 
-        def test_anon_can_view_public_showcase_detail(self):
-            response = self.client.get(
-                reverse('public_showcase_detail',
-                        kwargs={'slug': self.public_video.slug})
-            )
+    def test_anon_can_view_public_showcase_detail(self):
+        response = self.client.get(
+            reverse('public_showcase_detail',
+                    kwargs={'slug': self.public_video.slug})
+        )
 
-            self.assertEqual(response.status_code, 200)
-            payload = response.json()
-            self.assertEqual(payload['slug'], self.public_video.slug)
-            self.assertEqual(payload['title'], self.public_video.title)
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload['slug'], self.public_video.slug)
+        self.assertEqual(payload['title'], self.public_video.title)
 
-        def test_anon_cannot_view_non_showcase_detail(self):
-            response = self.client.get(
-                reverse('public_showcase_detail',
-                        kwargs={'slug': self.private_video.slug})
-            )
+    def test_anon_cannot_view_non_showcase_detail(self):
+        response = self.client.get(
+            reverse('public_showcase_detail',
+                    kwargs={'slug': self.private_video.slug})
+        )
 
-            self.assertEqual(response.status_code, 404)
+        self.assertEqual(response.status_code, 404)
 
 
 @override_settings(DATABASES=TEST_DATABASES)
-class VideoUploadIntegrationSanityTests(TestCase):
+class ManualVideoPlaybackTests(TestCase):
     def setUp(self):
         user_model = get_user_model()
         self.owner = user_model.objects.create_user(
@@ -130,37 +131,33 @@ class VideoUploadIntegrationSanityTests(TestCase):
         )
         UserProfile.objects.create(user=self.owner)
 
-    @patch('video_management.services.upload_video_file')
-    @patch('video_management.services.create_video_entry')
-    @patch('video_management.views._check_video_duration')
-    def test_upload_then_get_playback_url(self, mock_duration, mock_create, mock_upload):
-        from django.core.files.uploadedfile import SimpleUploadedFile
-
-        mock_duration.return_value = (True, None)
-        mock_create.return_value = {'guid': 'bunny-guid-1'}
-        mock_upload.return_value = {'success': True}
+    def test_admin_managed_video_can_return_playback_url(self):
+        video = Video.objects.create(
+            owner=self.owner,
+            title='Manually managed Bunny video',
+            description='Created through Django admin/back office workflow',
+            status='ready',
+            video_library_id='12345',
+            bunny_video_id='bunny-guid-1',
+        )
 
         self.client.login(username='owner2', password='OwnerPass123!')
 
-        upload_response = self.client.post(
-            reverse('upload-video'),
-            {
-                'title': 'Uploaded title',
-                'description': 'Uploaded desc',
-                'is_premium': 'false',
-                'file': SimpleUploadedFile('clip.mp4', b'fake-video-content', content_type='video/mp4'),
-            },
+        response = self.client.get(reverse('get_video_playback', kwargs={'video_id': video.id}))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('embed_url', response.json())
+        self.assertIn('bunny-guid-1', response.json()['embed_url'])
+
+    def test_video_slug_is_generated_for_manual_admin_records(self):
+        video = Video.objects.create(
+            owner=self.owner,
+            title='Manually Managed Highlight',
+            status='ready',
+            video_library_id='12345',
+            bunny_video_id='bunny-guid-2',
         )
-        self.assertEqual(upload_response.status_code, 201)
-        video_id = upload_response.json()['video_id']
 
-        video = Video.objects.get(id=video_id)
-        video.status = 'ready'
-        video.save(update_fields=['status'])
-
-        playback_response = self.client.get(reverse('get_video_playback', kwargs={'video_id': video.id}))
-        self.assertEqual(playback_response.status_code, 200)
-        self.assertIn('embed_url', playback_response.json())
+        self.assertEqual(video.slug, 'manually-managed-highlight')
 
 
 @override_settings(
@@ -179,7 +176,7 @@ class PaymentFlowTests(TestCase):
         UserProfile.objects.create(user=self.user)
 
     def _login(self):
-        self.client.login(username='payuser', password='PayPass123!')
+        self.client.force_authenticate(user=self.user)
 
     @patch('video_management.views.MpesaClient.initiate_stk_push')
     def test_mpesa_initiate_creates_processing_transaction(self, mock_initiate):
@@ -193,7 +190,7 @@ class PaymentFlowTests(TestCase):
         response = self.client.post(
             reverse('initiate_checkout'),
             data={'provider': 'MPESA', 'phone_number': '0712345678'},
-            content_type='application/json',
+            format='json',
         )
 
         self.assertEqual(response.status_code, 202)
@@ -206,7 +203,7 @@ class PaymentFlowTests(TestCase):
         response = self.client.post(
             reverse('initiate_checkout'),
             data={'provider': 'MPESA', 'phone_number': '12345'},
-            content_type='application/json',
+            format='json',
         )
         self.assertEqual(response.status_code, 400)
 
@@ -238,9 +235,9 @@ class PaymentFlowTests(TestCase):
             }
         }
 
-        response_one = self.client.post(reverse('mpesa_callback'), data=payload, content_type='application/json')
+        response_one = self.client.post(reverse('mpesa_callback'), data=payload, format='json')
 
-        response_two = self.client.post(reverse('mpesa_callback'), data=payload, content_type='application/json')
+        response_two = self.client.post(reverse('mpesa_callback'), data=payload, format='json')
         tx.refresh_from_db()
         profile = UserProfile.objects.get(user=self.user)
 
@@ -271,7 +268,7 @@ class PaymentFlowTests(TestCase):
                 }
             }
         }
-        self.client.post(reverse('mpesa_callback'), data=payload, content_type='application/json')
+        self.client.post(reverse('mpesa_callback'), data=payload, format='json')
         tx.refresh_from_db()
         profile = UserProfile.objects.get(user=self.user)
 
