@@ -21,11 +21,11 @@ from .models import PaymentProvider, PaymentStatus, PaymentTransaction, UserProf
 
 def normalize_kenyan_phone(phone_number: str) -> str:
     cleaned = ''.join(ch for ch in (phone_number or '') if ch.isdigit())
-    if cleaned.startsWith('0') and len(cleaned) == 10:
+    if cleaned.startswith('0') and len(cleaned) == 10:
         cleaned = f'254{cleaned[1:]}'
-    if cleaned.startsWith('7') and len(cleaned) == 9:
+    if cleaned.startswith('7') and len(cleaned) == 9:
         cleaned = f'254{cleaned}'
-    if not (cleaned.startsWith('2547') and len(cleaned) == 12):
+    if not (cleaned.startswith('2547') and len(cleaned) == 12):
         raise ValueError('Phone number must be valid Kenyan Safaricom mobile number')
     return cleaned
 
@@ -113,7 +113,7 @@ def fulfill_transaction(payment: PaymentTransaction):
     profile.access_expires_at = base_start + datetime.timedelta(days=days)
     profile.save(update_fields=['access_expires_at'])
 
-    payment.fullfilled_at = now
+    payment.fulfilled_at = now
     payment.save(update_fields=['fulfilled_at', 'updated_at'])
 
 
