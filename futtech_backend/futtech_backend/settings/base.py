@@ -189,6 +189,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME')
 
+# dj-stripe migrations need this setting in every environment, including tests
+DJSTRIPE_FOREIGN_KEY_TO_FIELD = 'id'
+
 # DRF's Authentication configuration
 
 REST_FRAMEWORK = {
