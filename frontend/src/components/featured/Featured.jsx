@@ -96,7 +96,7 @@ const Featured = ({ category }) => {
 	    }
 
 	    <img src='https://vz-6d210aca-5d4.b-cdn.net/d9aef4c4-9009-4657-92b7-cd023d91c5d0/thumbnail_5d7f0d0a.jpg'
-		 alt='Featured section's image'
+		 alt="Featured section's image"
 	    />
 
 	    <div className='info'>
