@@ -82,7 +82,12 @@ const App = () => {
 		<Route path='about' element={<About />} />
 		<Route path='videos' element={
 			   <PrivateRoute isReady={authReady}>
-			       <Home category='video'/>
+			       <Home category='videos'/>
+			   </PrivateRoute>
+		       } />
+		<Route path='drone-videos' element={
+			   <PrivateRoute isReady={authReady}>
+			       <Home category='drone'/>
 			   </PrivateRoute>
 		       } />
 		<Route path='ai-analysis' element={

@@ -80,7 +80,7 @@ const Navbar = () => {
 			<Link to='/videos' className='link desktop-nav-item'>
 			    <span>Videos</span>
 			</Link>
-			<Link to='/videos' className='link desktop-nav-item'>
+			<Link to='/drone-videos' className='link desktop-nav-item'>
 			    <span>Drone Footages</span>
 			</Link>
 			<Link to='/ai-analysis' className='link desktop-nav-item'>
