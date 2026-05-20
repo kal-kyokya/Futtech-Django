@@ -29,7 +29,7 @@ const About = () => {
 	    )}
 
 	    <nav className={ isScrolled ? "aboutNav scrolled" : "aboutNav"}>
-		<Link className='link' to='/'>
+		<Link className='link' to='/videos'>
 		    <span className='iconLeft'>
 			<ArrowBackIcon className='arrow'/>
 			Home
