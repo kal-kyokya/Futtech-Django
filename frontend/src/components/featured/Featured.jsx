@@ -79,7 +79,14 @@ const Featured = ({ category }) => {
 	<div className='featured'>
 	    {category &&
 	     <div className='category'>
-		 <span>{ category === 'video' ? 'Footages' : 'Analysis' }</span>
+		 <span>
+		     { category !== 'drone' ?
+		       category === 'videos' ?
+		       'Footages' :
+		       'Analysis' :
+		       'Drone views'
+		     }
+		 </span>
 		 <select name='category' id='category'>
 		     <option>Categories</option>
 		     <option value='training'>Training</option>
