@@ -15,7 +15,7 @@
 	font-weight: 500;
 
 	span {
-	    color: white; // Ensure text color is defined
+	    color: var(--main-color); // Ensure text color is defined
 	}
     }
 
@@ -99,39 +99,3 @@
 	}
     }
 }
-
-
-/* --- Media Query for very small phone (Max-width: 480px) --- */
-/*
-@media (max-width: 480px) {
-    .featured {
-	height: 45vh; // Even smaller height for very small screens
-	max-height: 300px; // Cap height for very compact displays
-    }
-
-    .featured .category {
-	top: 60px; // Further adjust top for very small screens
-	font-size: 1rem;
-
-	select {
-	    margin-left: 0.5rem;
-	    font-size: 0.8rem;
-	}
-    }
-
-    .featured .info {
-	width: calc(100% - 1rem); // Even tighter width
-	left: 0.5rem; // Even smaller left padding
-	padding: 0.5rem;
-	border-radius: 8px;
-
-	span {
-	    font-size: 0.9rem;
-	}
-
-	h4 {
-	    font-size: 0.8rem;
-	}
-    }
-}
-*/
