@@ -77,7 +77,7 @@ const Navbar = () => {
 			<Link to='/showcase' className='link desktop-nav-item'> {/* Add a class for specific hiding */}
 			    <span>Public Showcase</span>
 			</Link>
-			<Link to='/videos' className='link desktop-nav-item'>
+			<Link to='/' className='link desktop-nav-item'>
 			    <span>Videos</span>
 			</Link>
 			<Link to='/drone-videos' className='link desktop-nav-item'>
