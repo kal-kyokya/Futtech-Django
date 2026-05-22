@@ -56,7 +56,7 @@ const App = () => {
 	}
 
 	return AuthService.isAuthenticated() ? (
-	    <PrivateRoute>
+	    <PrivateRoute isReady={authReady}>
 		<Home />
 	    </PrivateRoute>
 	) : (
@@ -87,7 +87,7 @@ const App = () => {
 		<Route path='showcase/:slug' element={<ShowcaseVideo />} />
 		<Route path='about' element={<About />} />
 		<Route path='videos' element={
-			   <PrivateRoute isReady={authReady}>
+			   <PrivateRoute>
 			       <Home category='videos'/>
 			   </PrivateRoute>
 		       } />
