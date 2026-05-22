@@ -28,8 +28,14 @@ const App = () => {
     const [authReady, setAuthReady] = useState(false);
 
     useEffect(() => {
-	AuthService.rehydrate(); // Query localStorage ; Single Source of Truth
-	setAuthReady(true);
+	try {
+	    AuthService.rehydrate(); // Query localStorage ; Single Source of Truth
+	} catch (error) {
+	    console.error('Auth rehydration failed:', error);
+	} finally {
+	    // Never leave the app shell blocked on the loading fallback.
+	    setAuthReady(true);
+	}
     }, []);
 
     const renderPublic = (component) => {
