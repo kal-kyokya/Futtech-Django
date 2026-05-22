@@ -70,13 +70,13 @@ const App = () => {
 		   element={<RootLayout />}
 		   errorElement={<RouteError />}
 	    >
+		<Route index element={renderLanding()} />
 		<Route path='register' element={
 			   renderPublic(<Register />)
 		       } />
 		<Route path='login' element={
 			   renderPublic(<Login />)
 		       } />
-		<Route index element={renderLanding()} />
 		<Route path='showcase' element={<Showcase />} />
 		<Route path='showcase/:slug' element={<ShowcaseVideo />} />
 		<Route path='about' element={<About />} />
