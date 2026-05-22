@@ -53,8 +53,8 @@ const Watch = () => {
 	    <Navbar />
 	    <div className='watch'>
 		<Link className='link' to='/'>
-		    <div className='back'>
-			<ArrowBackIcon />
+		    <div className='iconLeft'>
+			<ArrowBackIcon className='arrow' />
 			Home
 		    </div>
 		</Link>
