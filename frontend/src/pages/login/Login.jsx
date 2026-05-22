@@ -102,7 +102,7 @@ const Login = () => {
 		playlistDispatch(getPlaylistsSuccess([]));
 	    }
 
-	    navigate('/videos', { replace: true });
+	    navigate('/', { replace: true });
 	} catch (error) {
 	    const normalizedError = error?.normalized || normalizeError(error);
 	    console.error('Login failed: ', normalizedError);

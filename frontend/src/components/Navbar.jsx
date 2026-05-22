@@ -67,7 +67,7 @@ const Navbar = () => {
 	    <div className={isScrolled ? 'navbar scrolled' : 'navbar'}>
 		<div className='container'>
 		    <div className='left'>
-			<Link className='link' to='/videos'>
+			<Link className='link' to='/'>
 			    <img src='/logo.png'
 				 alt='Logo of the Futtech Company'
 			    />
@@ -154,7 +154,7 @@ const Navbar = () => {
 			<a onClick={() => handleNavLinkClick('/')}>Home</a>
 		    </li>
 		    <li>
-			<a onClick={() => handleNavLinkClick('/videos')}>Drone Footages</a>
+			<a onClick={() => handleNavLinkClick('/drone-videos')}>Drone Footages</a>
 		    </li>
 		    <li>
 			<a onClick={() => handleNavLinkClick('/ai-analysis')}>AI-driven Analysis</a>
