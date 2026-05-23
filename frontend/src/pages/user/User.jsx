@@ -93,7 +93,7 @@ const User = () => {
 			    <div className='userDetailsDiv'>
 				<SportsSoccerIcon className='userDetailsIcon' />
 				<div className='userDetailsContent'>
-				    { (user?.sex && user.sex !== 'Sex') && `${user.sex} | ` : '' }{ user?.position }
+				    { (user?.sex && user.sex !== 'Sex') ? `${user.sex} | ` : '' }{ user?.position }
 				</div>
 			    </div>
 			    <div className='userDetailsDiv'>
@@ -124,7 +124,7 @@ const User = () => {
 				{[
 				    ['firstName', 'First Name', user?.firstName || ''],
 				    ['lastName', 'Last Name', user?.lastName || ''],
-				    ['username', 'First', user?.username || ''],
+				    ['username', 'Username', user?.username || ''],
 				    ['position', 'Position', user?.position || ''],
 				    ['profession', 'Profession', user?.profession || ''],
 				    ['phone', 'Phone', user?.phone || ''],
@@ -164,7 +164,7 @@ const User = () => {
 			    </div>
 
 			    <div className='userUpdateRight'>
-				<button className='userUpdateButton' onClick={handleSubmit}>
+				<button className='userUpdateButton' type='submit' disabled={isSaving}>
 				    { isSaving ? 'Saving...' : 'Update'}
 				</button>
 			    </div>
