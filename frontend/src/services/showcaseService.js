@@ -1,7 +1,7 @@
 import apiClient from './apiClient';
 
 class ShowcaseService {
-    async fetchShowcaseVideos(limit = 12) {
+    async fetchShowcaseVideos(limit = 16) {
 	const response = await apiClient.get('/public/showcase/', {
 	    params: { limit },
 	});
