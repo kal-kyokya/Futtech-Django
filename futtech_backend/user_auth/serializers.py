@@ -188,7 +188,7 @@ class UserLoginSerializer(serializers.Serializer):
         }
 
 
-class CurrentUserSerializer(serializers.ModelSerializer):
+class UserUpdateSerializer(serializers.ModelSerializer):
     """
     Validates and applies editable user/profile updates.
     """
