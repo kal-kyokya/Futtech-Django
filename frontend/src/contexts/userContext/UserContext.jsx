@@ -8,7 +8,11 @@ const hasAccessToken = tokenService.hasTokens();
 const INITIAL_STATE = {
     isFetching: false,
     error: false,
-    user: hasAccessToken ? storedUser : null,
+    user: hasAccessToken ?
+	{
+	    ...storedUser,
+	    'accessToken': tokenService.getAccessToken()
+	} : null,
     loggedOut: false
 };
 
