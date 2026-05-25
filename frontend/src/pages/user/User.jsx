@@ -33,7 +33,7 @@ const User = () => {
 
     const handleSubmit = async (event) => {
 	event.preventDefault();
-	if (!user?._id) {
+	if (!user?.id) {
 	    return;
 	}
 
@@ -41,7 +41,7 @@ const User = () => {
 	dispatch(updateStart());
 
 	try {
-	    const response = await apiClient.put(`/users/${user._id}`, updatedUser);
+	    const response = await apiClient.put(`/users/${user.id}`, updatedUser);
 	    dispatch(updateSuccess({
 		...response.data,
 		accessToken: user.accessToken,
