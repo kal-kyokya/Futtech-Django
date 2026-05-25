@@ -190,6 +190,61 @@ class UserLoginSerializer(serializers.Serializer):
 
 class CurrentUserSerializer(serializers.ModelSerializer):
     """
+    Validates and applies editable user/profile updates.
+    """
+
+    username = serializers.CharField(required=False)
+    firstName = serializers.CharField(required=False, source='first_name')
+    lastName = serializers.CharField(required=False, source='last_name')
+    email = serializers.EmailField(required=False)
+    profilePic = serializers.URLField(required=False, allow_blank=True, allow_null=True, source='avatar_url')
+    bio = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    position = serializers.CharField(required=False)
+    profession = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    sex = serializers.CharField(required=False)
+    birthday = serializers.DateField(required=False, allow_null=True)
+    phone = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    location = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+
+    def validate_username(self, value):
+        user = self.context['user']
+        if UserModel.objects.filter(username__iexact=value).exclude(pk=user.pk).exists():
+            raise serializers.ValidationError('A user with this username already exists.')
+        return value
+
+    def validate_email(self, value):
+        user = self.context['user']
+        normalized = UserModel.objects.normalize_email(value)
+        if UserModel.objects.filter(email__iexact=normalized).exclude(pk=user.pk).exists():
+            raise serializers.ValidationError('A user with this email already exists.')
+        return normalized
+
+    def update(self, instance, validated_data):
+        user = instance
+        profile = self.context['profile']
+
+        user_fields = ['username', 'first_name', 'last_name', 'email']
+        profile_fields = [
+            'avatar_url', 'bio', 'position', 'profession',
+            'sex', 'birthday', 'phone', 'location'
+        ]
+
+        for field in user_fields:
+            if field in validated_data:
+                setattr(user, field, validated_data[field])
+
+        for field in profile_fields:
+            if field in validated_data:
+                setattr(profile, field, validated_data[field])
+
+        user.save()
+        profile.save()
+
+        return profile
+
+
+class CurrentUserSerializer(serializers.ModelSerializer):
+    """
     Handles creation of a JSON-seriazable format off of an input HTTP request.
 
     Inheritance:

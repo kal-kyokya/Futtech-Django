@@ -16,6 +16,7 @@ from django.conf import settings
 from .serializers import (
     UserRegistrationSerializer,
     UserLoginSerializer,
+    UserUpdateSerializer,
     CurrentUserSerializer,
 )
 
@@ -291,3 +292,27 @@ class GetCurrentUserView(APIView):
         serializer = CurrentUserSerializer(profile)
 
         return Response(serializer.data)
+
+
+class UserUpdateView(APIView):
+    """
+    Handles profile update requests routed through /users/<id>.
+    """
+
+    permission_classes = (IsAuthenticated,)
+
+    def put(self, request, user_id):
+        if request.user.id != user_id:
+            return Response({'detail': 'You can only update your own profile.'}, status=status.HTTP_403_FORBIDDEN)
+
+        profile, _ = UserProfile.objects.get_or_create(user=request.user)
+        serializer = UserUpdateSerializer(
+            data=request.data,
+            partial=True,
+            context={'user': request.user, 'profile': profile},
+        )
+        serializer.is_valid(raise_exception=True)
+        updated_profile = serializer.update(request.user, serializer.validated_data)
+
+        response_serializer = CurrentUserSerializer(updated_profile)
+        return Response(response_serializer.data, status=status.HTTP_200_OK)

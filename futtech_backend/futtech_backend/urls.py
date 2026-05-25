@@ -34,10 +34,11 @@ urlpatterns = [
         'djstripe.urls',
         namespace='djstripe'
     )),
+    path('api/v2/', include('video_management.urls')),
+    path('api/v2/', include('user_auth.profile_urls')),
+    path('api/tenant/', include('tenants.urls')),
     path('api/v2/auth/', include('user_auth.urls')),
     path('api/v2/playlists/', include('playlists.urls')),
-    path('api/v2/', include('video_management.urls')),
-    path('api/tenant/', include('tenants.urls')),
 ]
 
 if settings.DEBUG:
