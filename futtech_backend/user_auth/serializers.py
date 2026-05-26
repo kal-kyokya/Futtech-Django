@@ -206,6 +206,16 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     phone = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     location = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
+    def to_internal_value(self, data):
+        mutable =dict(data)
+        sex = mutable.get('sex')
+        if isinstance(sex, str):
+            if sex.lower() == 'sex':
+                mutable['sex'] = 'blank'
+            else:
+                mutable['sex'] = sex.lower()
+        return super().to_internal_value(mutable)
+
     def validate_username(self, value):
         user = self.context['user']
         if UserModel.objects.filter(username__iexact=value).exclude(pk=user.pk).exists():
@@ -252,6 +262,20 @@ class CurrentUserSerializer(serializers.ModelSerializer):
     	features enabling data validation and serialization/deserialization.
     """
 
+    id = serializers.IntegerField(source='user.id', read_only=True)
+    username = serializers.CharField(source='user.username', read_only=True)
+    email = serializers.EmailField(source='user.email', read_only=True)
+    firstName = serializers.CharField(source='user.first_name', read_only=True)
+    lastName = serializers.CharField(source='user.last_name', read_only=True)
+    profilePic = serializers.URLField(source='avatar_url', read_only=True)
+
+
     class Meta:
         model = UserProfile
-        fields = '__all__'
+        fields = [
+            'id', 'username', 'email', 'firstName', 'lastName',
+            'profilePic', 'bio', 'position', 'profession', 'sex',
+            'birthday', 'phone', 'location', 'active_footballer',
+            'access_expires_at', 'team'
+        ]
+

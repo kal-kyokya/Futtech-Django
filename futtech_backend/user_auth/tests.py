@@ -304,5 +304,44 @@ class ProfileTests(AuthTestBase):
         response = self.client.get(self.me_url, secure=True)
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('user', response.data)
-        self.assertEqual(response.data['user'], user.id)
+        self.assertEqual(response.data['id'], user.id)
+        self.assertEqual(response.data['username'], user.username)
+
+class UserUpdateTests(AuthTestBase):
+    def setUp(self):
+        super().setUp()
+        self.user = self.create_user(email='user1@example.com', username='user1')
+        self.other = self.create_user(email='user2@example.com', username='user2')
+        login_response = self.login_user(self.user.email, self.default_password)
+        self.token = login_response['access']
+        self.update_url = reverse('user-update', kwargs={'user_id': self.user.id})
+
+    def _auth(self):
+        self.client.credentials(HTTP_AUTHORIZATION=f'Bearer {self.token}')
+
+    def test_update_profile_success(self):
+        self._auth()
+        payload = {'firstName': 'Ada', 'sex': 'Male', 'position': 'striker'}
+        response = self.client.put(self.update_url, payload, format='json', secure=True)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['firstName'], 'Ada')
+        self.assertEqual(response.data['sex'], 'male')
+        self.assertEqual(response.data['id'], self.user.id)
+
+    def test_update_profile_invalid_choice_returns_400(self):
+        self._auth()
+        payload = {'sex': 'unknown'}
+        response = self.client.put(self.update_url, payload, format='json', secure=True)
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('sex', response.data)
+
+    def test_update_profile_forbidden_for_other_user(self):
+        self._auth()
+        response = self.client.put(
+            reverse('user-update', kwargs={'user_id': self.other.id}),
+            {'firstName': 'Hack'},
+            format='json',
+            secure=True,
+        )
+        self.assertEqual(response.status_code, 403)
