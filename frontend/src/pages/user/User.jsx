@@ -33,7 +33,8 @@ const User = () => {
 
     const handleSubmit = async (event) => {
 	event.preventDefault();
-	if (!user?.id) {
+	const userId = user?._id || user?.id;
+	if (!userId) {
 	    return;
 	}
 
@@ -41,9 +42,12 @@ const User = () => {
 	dispatch(updateStart());
 
 	try {
-	    const response = await apiClient.put(`/users/${user.id}`, updatedUser);
+	    const response = await apiClient.put(`/users/${userId}/`, updatedUser);
 	    dispatch(updateSuccess({
+		...user,
 		...response.data,
+		_id: response.data?.id || user._id || user.id,
+		id: response.data?.id || user.id || user._id,
 		accessToken: user.accessToken,
 	    }));
 	    navigate('/profile');
