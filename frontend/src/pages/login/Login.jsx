@@ -120,11 +120,18 @@ const Login = () => {
 	    videoLink='https://player.mediadelivery.net/play/603147/ce5d072d-e53a-49fc-bcca-475aab60715e'
 	    header={
 		<div className='top'>
-		    <img
-			className='logo'
-			src='/logo.png'
-			alt='Logo of the Futtech Company'
-		    />
+		    <Link to='/' className='link'>
+			<img
+			    className='logo'
+			    src='/logo.png'
+			    alt='Logo of the Futtech Company'
+			/>
+		    </Link>
+		    <Link to='/register' className='link'>
+			<button className='button--primary'>
+			    <span>Register</span>
+			</button>
+		    </Link>
 		</div>
 	    }
 	>

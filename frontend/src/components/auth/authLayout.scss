@@ -19,6 +19,9 @@
 
     .top {
 	@include page-container(78rem);
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
 	z-index: 1;
 
 	.logo {
@@ -26,6 +29,12 @@
 	    max-height: 6rem;
 	    width: auto;
 	    border-radius: $radius-pill;
+	}
+
+	.button-primary {
+	    background: #05F283;
+	    color: #052414;
+	    box-shadow: 0 10px 30px rgba(5, 242, 131, 0.35);
 	}
     }
 }
