@@ -313,7 +313,7 @@ class UserUpdateTests(AuthTestBase):
         self.user = self.create_user(email='user1@example.com', username='user1')
         self.other = self.create_user(email='user2@example.com', username='user2')
         login_response = self.login_user(self.user.email, self.default_password)
-        self.token = login_response['access']
+        self.token = login_response.data['access']
         self.update_url = reverse('user-update', kwargs={'user_id': self.user.id})
 
     def _auth(self):
