@@ -296,13 +296,14 @@ class GetCurrentUserView(APIView):
 
 class UserUpdateView(APIView):
     """
-    Handles profile update requests routed through /users/<id>.
+    Handles profile update requests routed through /users/<user_id>.
     """
 
     permission_classes = (IsAuthenticated,)
 
     def put(self, request, user_id):
-        if request.user.id != user_id:
+        uuid = request.user.id or request.user._id
+        if uuid != user_id:
             return Response({'detail': 'You can only update your own profile.'}, status=status.HTTP_403_FORBIDDEN)
 
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
