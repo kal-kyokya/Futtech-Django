@@ -38,9 +38,4 @@ class Migration(migrations.Migration):
             field=models.SlugField(blank=True, max_length=280, null=True),
         ),
         migrations.RunPython(populate_video_slugs, migrations.RunPython.noop),
-        migrations.AddField(
-            model_name='video',
-            name='slug',
-            field=models.SlugField(blank=True, max_length=280, unique=True),
-        ),
     ]
