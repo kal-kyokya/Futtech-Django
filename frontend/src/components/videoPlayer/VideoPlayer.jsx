@@ -8,7 +8,7 @@ const VideoPlayer = ({ embedUrl, title }) => {
     return (
 	<div className='bunnyPlayerWrapper'>
 	    <iframe
-		src={embedUrl}
+		src={`${embedUrl}?loop=true`}
 		title={title || 'Video player'}
 		className='bunnyPlayer'
 		allow='autoplay; encrypted-media; picture-in-picture'
