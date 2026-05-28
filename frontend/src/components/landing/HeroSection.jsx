@@ -36,7 +36,7 @@ const HeroSection = () => (
 	    <div className='heroSection__previewFrame'>
 		<iframe
 		    title='Futtech sample football analysis'
-		    src='https://player.mediadelivery.net/play/603147/5badff92-9cfa-4893-b1db-60b53d91c8de'
+		    src='https://iframe.mediadelivery.net/embed/603147/5badff92-9cfa-4893-b1db-60b53d91c8de?loop=true'
 		    loading='lazy'
 		    allow='accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture;'
 		    allowFullScreen
