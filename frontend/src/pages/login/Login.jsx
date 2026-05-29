@@ -127,11 +127,18 @@ const Login = () => {
 			    alt='Logo of the Futtech Company'
 			/>
 		    </Link>
-		    <Link to='/register' className='link'>
-			<button className='button--primary'>
-			    <span>Register</span>
-			</button>
-		    </Link>
+		    <div className='topActions'>
+			<Link to='/showcase' className='link'>
+			    <button className='button--secondary'>
+				<span>Public Showcase</span>
+			    </button>
+			</Link>
+			<Link to='/register' className='link'>
+			    <button className='button--primary'>
+				<span>Register</span>
+			    </button>
+			</Link>
+		    </div>
 		</div>
 	    }
 	>
