@@ -117,7 +117,7 @@ const Login = () => {
 	<AuthLayout
 	    pageClassName='login'
 	    videoTitle='Watch Futtech in action'
-	    videoLink='https://iframe.mediadelivery.net/embed/603147/ce5d072d-e53a-49fc-bcca-475aab60715e?loop=true'
+	    videoLink='https://iframe.mediadelivery.net/embed/603147/eb570499-3ce6-4736-9dc4-0c6ae5d4ba93?loop=true'
 	    header={
 		<div className='top'>
 		    <Link to='/' className='link'>
