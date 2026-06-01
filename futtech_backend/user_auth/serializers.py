@@ -207,14 +207,43 @@ class UserUpdateSerializer(serializers.Serializer):
     phone = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     location = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
+    @staticmethod
+    def _normalize_text_choice(value, choices):
+        """
+        Accept both the stored choice value and its human-readable label.
+        """
+
+        if not isinstance(value, str):
+            return value
+
+        normalized_value = value.strip().lower
+        for choice_value, choice_label in choices:
+            if normalized_value in {
+                    str(choice_value).lower(),
+                    str(choice_label).lower(),
+            }:
+                return choice_value
+
+        return value
+
     def to_internal_value(self, data):
         mutable = dict(data)
+
+        if position in mutable:
+            mutable['position'] = self._normalize_text_choice(
+                mutable.get('position'),
+                PlayerPosition.choices,
+            )
+
         sex = mutable.get('sex')
         if isinstance(sex, str):
             if sex.lower() == 'sex':
                 mutable['sex'] = 'blank'
             else:
-                mutable['sex'] = sex.lower()
+                mutable['sex'] = self._normalize_text_choice(
+                    sex,
+                    UserSex.choices,
+                )
         return super().to_internal_value(mutable)
 
     def validate_username(self, value):
@@ -279,4 +308,3 @@ class CurrentUserSerializer(serializers.ModelSerializer):
             'birthday', 'phone', 'location', 'active_footballer',
             'access_expires_at', 'team'
         ]
-
