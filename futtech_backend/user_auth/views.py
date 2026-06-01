@@ -24,10 +24,7 @@ from video_management.models import UserProfile
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
-from rest_framework_simplejwt.views import (
-    TokenObtainPairView,
-    TokenRefreshView,
-)
+from rest_framework_simplejwt.views import TokenRefreshView
 
 
 def _refresh_cookie_options():
@@ -302,8 +299,7 @@ class UserUpdateView(APIView):
     permission_classes = (IsAuthenticated,)
 
     def put(self, request, user_id):
-        uuid = request.user.id or request.user._id
-        if uuid != user_id:
+        if request.user.pk != user_id:
             return Response({'detail': 'You can only update your own profile.'}, status=status.HTTP_403_FORBIDDEN)
 
         profile, _ = UserProfile.objects.get_or_create(user=request.user)
