@@ -202,7 +202,7 @@ class UserUpdateSerializer(serializers.Serializer):
     bio = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     position = serializers.ChoiceField(required=False, choices=PlayerPosition.choices)
     profession = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    sex = serializers.ChoiceField(required=False, choices=UserSex)
+    sex = serializers.ChoiceField(required=False, choices=UserSex.choices)
     birthday = serializers.DateField(required=False, allow_null=True)
     phone = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     location = serializers.CharField(required=False, allow_blank=True, allow_null=True)
@@ -216,7 +216,7 @@ class UserUpdateSerializer(serializers.Serializer):
         if not isinstance(value, str):
             return value
 
-        normalized_value = value.strip().lower
+        normalized_value = value.strip().lower()
         for choice_value, choice_label in choices:
             if normalized_value in {
                     str(choice_value).lower(),
@@ -229,7 +229,7 @@ class UserUpdateSerializer(serializers.Serializer):
     def to_internal_value(self, data):
         mutable = dict(data)
 
-        if position in mutable:
+        if 'position' in mutable:
             mutable['position'] = self._normalize_text_choice(
                 mutable.get('position'),
                 PlayerPosition.choices,

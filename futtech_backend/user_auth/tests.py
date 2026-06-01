@@ -321,12 +321,13 @@ class UserUpdateTests(AuthTestBase):
 
     def test_update_profile_success(self):
         self._auth()
-        payload = {'firstName': 'Ada', 'sex': 'Male', 'position': 'striker'}
+        payload = {'firstName': 'Ada', 'sex': 'Male', 'position': 'Striker'}
         response = self.client.put(self.update_url, payload, format='json', secure=True)
 
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response.data['firstName'], 'Ada')
         self.assertEqual(response.data['sex'], 'male')
+        self.assertEqual(response.data['position'], 'striker')
         self.assertEqual(response.data['id'], self.user.id)
 
     def test_update_profile_invalid_choice_returns_400(self):
