@@ -13,6 +13,7 @@ from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from video_management.models import UserProfile
+from video_management.choices import PlayerPosition, UserSex
 
 
 UserModel = get_user_model()
@@ -188,7 +189,7 @@ class UserLoginSerializer(serializers.Serializer):
         }
 
 
-class UserUpdateSerializer(serializers.ModelSerializer):
+class UserUpdateSerializer(serializers.Serializer):
     """
     Validates and applies editable user/profile updates.
     """
@@ -199,15 +200,15 @@ class UserUpdateSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=False)
     profilePic = serializers.URLField(required=False, allow_blank=True, allow_null=True, source='avatar_url')
     bio = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    position = serializers.CharField(required=False)
+    position = serializers.ChoiceField(required=False, choices=PlayerPosition.choices)
     profession = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    sex = serializers.CharField(required=False)
+    sex = serializers.ChoiceField(required=False, choices=UserSex)
     birthday = serializers.DateField(required=False, allow_null=True)
     phone = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     location = serializers.CharField(required=False, allow_blank=True, allow_null=True)
 
     def to_internal_value(self, data):
-        mutable =dict(data)
+        mutable = dict(data)
         sex = mutable.get('sex')
         if isinstance(sex, str):
             if sex.lower() == 'sex':
