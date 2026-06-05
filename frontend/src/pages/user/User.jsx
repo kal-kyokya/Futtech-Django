@@ -140,8 +140,8 @@ const User = () => {
 				<div className='userUpdateItem'>
 				    <label>Position</label>
 				    <select className='userUpdateInput' name='position' onChange={handleChange} id='position'>
-					<option value='coach'>Coach</option>
 					<option value='observer'>Observer</option>
+					<option value='coach'>Coach</option>
 					<option value='Position'>Select</option>
 					<option value='goalkeeper'>Goalkeeper</option>
 					<option value='sweeper'>Sweeper</option>
