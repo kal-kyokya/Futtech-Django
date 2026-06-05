@@ -29,6 +29,7 @@ class PlayerPosition(models.TextChoices):
     # Attack
     WINGER = 'winger', 'Winger'; STRIKER = 'striker', 'Striker'
 
+    COACH = 'coach', 'Coach'
     OBSERVER = 'observer', 'Observer'
 
 
