@@ -121,7 +121,6 @@ const User = () => {
 				    ['firstName', 'First Name', user?.firstName || ''],
 				    ['lastName', 'Last Name', user?.lastName || ''],
 				    ['username', 'Username', user?.username || ''],
-				    ['position', 'Position', user?.position || ''],
 				    ['profession', 'Profession', user?.profession || ''],
 				    ['phone', 'Phone', user?.phone || ''],
 				    ['location', 'Location', user?.location || ''],
@@ -137,6 +136,26 @@ const User = () => {
 					/>
 				    </div>
 				))}
+
+				<div className='userUpdateItem'>
+				    <label>Position</label>
+				    <select className='userUpdateInput' name='position' onChange={handleChange} id='position'>
+					<option value='coach'>Coach</option>
+					<option value='observer'>Observer</option>
+					<option value='Position'>Select</option>
+					<option value='goalkeeper'>Goalkeeper</option>
+					<option value='sweeper'>Sweeper</option>
+					<option value='center-back'>Center-Back</option>
+					<option value='full-back'>Full-Back</option>
+					<option value='wing-back'>Wing-Back</option>
+					<option value='defensive midfielder'>Defensive Midfielder</option>
+					<option value='central midfielder'>Central Midfielder</option>
+					<option value='attacking midfielder'>Attacking Midfielder</option>
+					<option value='winger'>Winger</option>
+					<option value='striker'>Striker</option>
+					<option value='striker'>Striker</option>
+				    </select>
+				</div>
 
 				<div className='userUpdateItem'>
 				    <label>Sex</label>
