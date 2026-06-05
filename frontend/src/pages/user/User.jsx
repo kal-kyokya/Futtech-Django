@@ -7,7 +7,6 @@ import LocalPhoneOutlinedIcon from '@mui/icons-material/LocalPhoneOutlined';
 import LocationOnOutlinedIcon from '@mui/icons-material/LocationOnOutlined';
 import { useMemo, useState, useContext } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import PlaylistPlayIcon from '@mui/icons-material/PlaylistPlay';
 import Navbar from '../../components/Navbar';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import {
@@ -82,13 +81,6 @@ const User = () => {
 			</div>
 
 			<div className='userDetailsBottom'>
-			    <Link className='link' to='/playlists'>
-				<div className='userDetailsLinks'>
-				    <PlaylistPlayIcon className='userDetailsIcon' />
-				    Playlists
-				</div>
-			    </Link>
-
 			    <span className='userDetailsTitle'>Account details</span>
 			    <div className='userDetailsDiv'>
 				<PermIdentityIcon className='userDetailsIcon' />
