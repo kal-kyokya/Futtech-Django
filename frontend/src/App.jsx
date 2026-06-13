@@ -96,7 +96,7 @@ const App = () => {
 			       <Home category='analysis'/>
 			   </PrivateRoute>
 		       } />
-		<Route path='watch/:videoId' element={
+		<Route path='watch/:slug' element={
 			   <PrivateRoute isReady={authReady}>
 			       <Watch />
 			   </PrivateRoute>
