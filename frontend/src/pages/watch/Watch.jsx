@@ -8,18 +8,18 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import apiClient from '../../services/apiClient';
 
 const Watch = () => {
-    const { videoId } = useParams();
+    const { slug } = useParams();
 
     const [video, setVideo] = useState(null);
     const [embedUrl, setEmbedUrl] = useState(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
 
-    // Refetch video data if the video ID changes
+    // Refetch video data if the video slug changes
     useEffect(() => {
 	const fetchVideoData = async () => {
-	    if (!videoId) {
-		setError('Missing video id');
+	    if (!slug) {
+		setError('Missing video slug');
 		setLoading(false);
 		return;
 	    }
@@ -28,10 +28,10 @@ const Watch = () => {
 	    setError(null);
 
 	    try {
-		const videoRes = await apiClient.get(`/video/${videoId}/`);
+		const videoRes = await apiClient.get(`/video/${slug}/`);
 		setVideo(videoRes.data);
 
-		const playbackRes = await apiClient.get(`/video/${videoId}/playback/`);
+		const playbackRes = await apiClient.get(`/video/${slug}/playback/`);
 		setEmbedUrl(playbackRes.data.embed_url);
 	    } catch (err) {
 		console.error('Failed to fetch video data', err);
@@ -42,7 +42,7 @@ const Watch = () => {
 	};
 
 	fetchVideoData();
-    }, [videoId]);
+    }, [slug]);
 
     if (loading) return <><Navbar /><div className='watch'>Loading video...</div></>
     if (error) return <><Navbar /><div className='watch error'>{error}</div></>
