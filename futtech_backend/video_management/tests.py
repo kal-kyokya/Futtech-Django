@@ -148,6 +148,39 @@ class ManualVideoPlaybackTests(TestCase):
         self.assertIn('embed_url', response.json())
         self.assertIn('bunny-guid-1', response.json()['embed_url'])
 
+    def test_admin_managed_video_can_return_data_by_slug(self):
+        video = Video.objects.create(
+            owner=self.owner,
+            title='Slug routed team video',
+            description='Created through Django admin/back office workflow'
+            status='ready',
+            video_library_id='12345',
+            bunny_video_id='bunny-guid-slug',
+        )
+
+        self.client.login(username='owner2', password='OwnerPass1234!')
+
+        response = self.client.get(reverse('get_video_data_by_slug', kwargs={'slug': video.slug}))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.json()['slug'], video.slug)
+
+    def test_admin_managed_video_can_return_playback_url_by_slug(self):
+        video = Video.objects.create(
+            owner=self.owner,
+            title='Slug managed Bunny video',
+            description='Created through Django admin/back office workflow'
+            status='ready',
+            video_library_id='12345',
+            bunny_video_id='bunny-guid-slug-playback',
+        )
+
+        self.client.login(username='owner2', password='OwnerPass1234!')
+
+        response = self.client.get(reverse('get_video_playback_by_slug', kwargs={'slug': video.slug}))
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('embed_url', response.json())
+        self.assertIn('bunny-guid-slug-playback', response.json()['embed_url'])
+
     def test_video_slug_is_generated_for_manual_admin_records(self):
         video = Video.objects.create(
             owner=self.owner,
