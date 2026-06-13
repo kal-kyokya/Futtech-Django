@@ -29,7 +29,7 @@ const PlaylistItem = ({ videoId, index }) => {
     }
 
     return (
-	<Link to={`/watch/${video.slug}`}
+	<Link to={`/watch/${video.slug || videoId}`}
 	      state={ { video, origin: 'playlist' } }
 	      className='link playlistItemLink'
 	      aria-label={`Watch ${video.title || 'video'}`}
