@@ -46,12 +46,22 @@ def _can_access_video(user, video):
         return True
     return user.profile.has_active_subscription()
 
-@login_required
-def get_video_playback(request, video_id):
-    try:
-        video = Video.objects.get(pk=video_id)
-    except Video.DoesNotExist:
-        return JsonResponse({"error": "Video not found"}, status=404)
+def _get_video_by_slug(slug):
+    return Video.objects.get(slug=slug)
+
+
+def _get_video_by_id(video_id):
+    return Video.objects.get(pk=video_id)
+
+
+def _get_video_response(request, video):
+    if not _can_access_video(request.user, video):
+        return HttpResponseForbidden("You do not have permission to view this video.")
+
+    return JsonResponse(VideoSerializer(video).data)
+
+
+def _get_playback_response(request, video):
 
     if not _can_access_video(request.user, video):
         return HttpResponseForbidden("You do not have permission to view this video.")
@@ -68,17 +78,45 @@ def get_video_playback(request, video_id):
     embed_url = services.build_embed_url(video.video_library_id, video.bunny_video_id)
     return JsonResponse({"embed_url": embed_url, "status": video.status})
 
+
 @login_required
-def get_video_data(request, video_id):
+def get_video_playback(request, video_id):
     try:
-        video = Video.objects.get(pk=video_id)
+        video = _get_video_by_id(video_id)
     except Video.DoesNotExist:
         return JsonResponse({'error': 'Video not found'}, status=404)
 
-    if not _can_access_video(request.user, video):
-        return HttpResponseForbidden("You do not have permission to view this video.")
+    return _get_playback_response(request, video)
 
-    return JsonResponse(VideoSerializer(video).data)
+
+@login_required
+def get_video_playback_by_slug(request, slug):
+    try:
+        video = _get_video_by_slug(slug)
+    except Video.DoesNotExist:
+        return JsonResponse({'error': 'Video not found'}, status=404)
+
+    return _get_playback_response(request, video)
+
+
+@login_required
+def get_video_data(request, video_id):
+    try:
+        video = _get_video_by_id(video_id)
+    except Video.DoesNotExist:
+        return JsonResponse({'error': 'Video not found'}, status=404)
+
+    return _get_video_response(request, video)
+
+
+@login_required
+def get_video_data_by_slug(request, slug):
+    try:
+        video = _get_video_by_slug(slug)
+    except Video.DoesNotExist:
+        return JsonResponse({'error': 'Video not found'}, status=404)
+
+    return _get_video_response(request, video)
 
 
 @api_view(['GET'])
