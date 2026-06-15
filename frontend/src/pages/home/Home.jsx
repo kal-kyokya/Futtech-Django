@@ -57,10 +57,10 @@ const Home = ({ category }) => {
 
 	return playlists.map((playlist) => {
 	    const playlistVideos = Array.isArray(playlist.videos)
-		? playlist.videos.map(getVideoId).filter(Boolean)
-		: Array.isArray(playlist.content)
-		? playlist.content
-		: [];
+		  ? playlist.videos.filter((video) => getVideoId(video))
+		  : Array.isArray(playlist.content)
+		  ? playlist.content
+		  : [];
 
 	    return {
 		key: playlist.id ?? playlist._id ?? playlist.name ?? playlist.title,
