@@ -105,11 +105,17 @@ const Playlist = ({ playlist }) => {
 
 		<div className='container' ref={playlistRef}>
 		    {
-			Array.isArray(playlist.content) && playlist.content.map((videoId, index) => {
+			Array.isArray(playlist.content) && playlist.content.map((playlistEntry, index) => {
+			    const videoId = typeof playlistEntry === 'object'
+				  ? playlistEntry?.id || playlistEntry?._id
+				  : playlistEntry;
+
 			    return (
-				<PlaylistItem videoId={ videoId }
-					  index={ index }
-					  key={ index }
+				<PlaylistItem
+				    videoId={ videoId }
+				    video={ typeof playlistEntry === 'object' ? playlistEntry : null }
+				    index={ index }
+				    key={ videoId || index }
 				/>
 			    )
 			})
