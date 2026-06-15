@@ -1,5 +1,5 @@
 import './watch.scss';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useLocation, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import VideoPlayer from '../../components/videoPlayer/VideoPlayer';
 
@@ -9,6 +9,7 @@ import apiClient from '../../services/apiClient';
 
 const Watch = () => {
     const { slug } = useParams();
+    const { state } = useLocation();
 
     const [video, setVideo] = useState(null);
     const [embedUrl, setEmbedUrl] = useState(null);
@@ -28,11 +29,37 @@ const Watch = () => {
 	    setError(null);
 
 	    try {
-		const videoRes = await apiClient.get(`/video/${slug}/`);
-		setVideo(videoRes.data);
+		const stateVideo = state?.video;
+		const identifiers = [
+		    slug,
+		    stateVideo?.slug,
+		    stateVideo?.id,
+		    stateVideo?._id,
+		].filter(
+		    Boolean
+		).filter(
+		    (identifier, index, all) => all.indexOf(identifier) === index
+		);
 
-		const playbackRes = await apiClient.get(`/video/${slug}/playback/`);
-		setEmbedUrl(playbackRes.data.embed_url);
+		let lastError = null;
+
+		for (const identifier of identifiers) {
+		    try {
+			const videoRes = await apiClient.get(`/video/${identifier}/`);
+			setVideo(videoRes.data);
+
+			const playbackRes = await apiClient.get(`/video/${identifier}/playback/`);
+			setEmbedUrl(playbackRes.data.embed_url);
+			return;
+		    } catch (err) {
+			lastError = err;
+			if (err?.response?.status !== 404) {
+			    throw err;
+			}
+		    }
+		}
+
+		throw lastError || new Error('Video not found');
 	    } catch (err) {
 		console.error('Failed to fetch video data', err);
 		setError(err?.response?.data?.error || 'Could not load video. It may be private or does not exist.');
@@ -42,7 +69,7 @@ const Watch = () => {
 	};
 
 	fetchVideoData();
-    }, [slug]);
+    }, [slug, state]);
 
     if (loading) return <><Navbar /><div className='watch'>Loading video...</div></>
     if (error) return <><Navbar /><div className='watch error'>{error}</div></>
