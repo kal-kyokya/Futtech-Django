@@ -4,17 +4,23 @@ import { Link } from 'react-router-dom';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import resolveVideoThumbnail from '../../utils/videoThumbnail';
 
-const PlaylistItem = ({ videoId, index }) => {
+const PlaylistItem = ({ videoId, video: playlistVideo, index }) => {
     const [isHovered, setIsHovered] = useState(false);
     const { videos } = useContext(VideoContext);
 
-    const video = useMemo(
-	() => (Array.isArray(videos)
-	       ? videos.find((item) => (item.id || item._id) === videoId) || null
-	       : null),
-	[videoId, videos],
-    );
+    const video = useMemo(() => {
+	if (playlistVideo && typeof playlistVideo === 'object') {
+	    return playlistVideo;
+	}
 
+	const lookupId = String(videoId ?? playlistVideo ?? '');
+	return Array.isArray(videos)
+	    ? videos.find((item) => (item.id || item._id) === lookupId) || null
+	    : null;
+    }, [playlistVideo, videoId, videos]);
+
+    const videoIdentifier = video?.id || video?._id || videoId || playlistVideo;
+    const watchSlug = video?.slug || videoIdentifier;
     const thumbnailSrc = resolveVideoThumbnail(video);
     const itemNumber = String(index + 1).padStart(2, '0');
 
@@ -29,7 +35,7 @@ const PlaylistItem = ({ videoId, index }) => {
     }
 
     return (
-	<Link to={`/watch/${video.slug || videoId}`}
+	<Link to={`/watch/${watchSlug}`}
 	      state={ { video, origin: 'playlist' } }
 	      className='link playlistItemLink'
 	      aria-label={`Watch ${video.title || 'video'}`}
