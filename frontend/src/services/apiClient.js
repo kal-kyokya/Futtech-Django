@@ -91,6 +91,7 @@ apiClient.interceptors.request.use(
 	const token = tokenService.getAccessToken();
 	if (token) {
 	    config.headers.Authorization = `Bearer ${token}`;
+	    config.headers.Accept = 'application/json';
 	}
 
 	return config;
