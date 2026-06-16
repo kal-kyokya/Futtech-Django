@@ -79,7 +79,7 @@ const Watch = () => {
 	<>
 	    <Navbar />
 	    <div className='watch'>
-		<Link className='link' to='/'>
+		<Link className='link' to='/home'>
 		    <div className='iconLeft'>
 			<ArrowBackIcon className='arrow' />
 			Home

@@ -67,7 +67,7 @@ const Navbar = () => {
 	    <div className={isScrolled ? 'navbar scrolled' : 'navbar'}>
 		<div className='container'>
 		    <div className='left'>
-			<Link className='link' to='/'>
+			<Link className='link' to='/home'>
 			    <img src='/logo.png'
 				 alt='Logo of the Futtech Company'
 			    />
@@ -77,7 +77,7 @@ const Navbar = () => {
 			<Link to='/showcase' className='link desktop-nav-item'> {/* Add a class for specific hiding */}
 			    <span>Public Showcase</span>
 			</Link>
-			<Link to='/' className='link desktop-nav-item'>
+			<Link to='/videos' className='link desktop-nav-item'>
 			    <span>Videos</span>
 			</Link>
 			<Link to='/drone-videos' className='link desktop-nav-item'>
