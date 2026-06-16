@@ -79,7 +79,8 @@ def _get_playback_response(request, video):
     return JsonResponse({"embed_url": embed_url, "status": video.status})
 
 
-@login_required
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_video_playback(request, video_id):
     try:
         video = _get_video_by_id(video_id)
@@ -89,7 +90,8 @@ def get_video_playback(request, video_id):
     return _get_playback_response(request, video)
 
 
-@login_required
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_video_playback_by_slug(request, slug):
     try:
         video = _get_video_by_slug(slug)
@@ -99,7 +101,8 @@ def get_video_playback_by_slug(request, slug):
     return _get_playback_response(request, video)
 
 
-@login_required
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_video_data(request, video_id):
     try:
         video = _get_video_by_id(video_id)
@@ -109,7 +112,8 @@ def get_video_data(request, video_id):
     return _get_video_response(request, video)
 
 
-@login_required
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
 def get_video_data_by_slug(request, slug):
     try:
         video = _get_video_by_slug(slug)
