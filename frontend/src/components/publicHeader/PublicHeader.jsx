@@ -22,10 +22,10 @@ const PublicHeader = () => (
 		<span>Showcase</span>
 	    </Link>
 	    <Link
-		to='/register'
+		to='/home'
 		className='button button--secondary'
 	    >
-		<span>Register</span>
+		<span>Home</span>
 	    </Link>
 	</nav>
     </header>
