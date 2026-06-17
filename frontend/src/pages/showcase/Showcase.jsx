@@ -44,7 +44,7 @@ const Showcase = () => {
 		    </Link>
 		    <a
 			className='link heroAction secondary'
-			href='mailto:hello@futtech.io'
+			href='mailto:kalkyokya7@gmail.com'
 		    >
 			Contact Futtech
 		    </a>
