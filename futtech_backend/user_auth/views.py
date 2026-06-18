@@ -138,7 +138,14 @@ class ObtainTokenCookieView(APIView):
                 'user': {
                     'id': user.id,
                     'username': user.username,
-                    'email': user.email,
+                    'firstName': user.first_name,
+                    'lastName': user.last_name,
+                    'profession': user.profession,
+                    'phone': user.phone,
+                    'location': user.location,
+                    'position': user.position,
+                    'sex': user.sex,
+                    'birthday': user.birthday,
                 },
             },
             status=status.HTTP_200_OK
