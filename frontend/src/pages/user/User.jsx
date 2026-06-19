@@ -21,7 +21,7 @@ const User = () => {
     const navigate = useNavigate();
 
     const [updatedUser, setUpdatedUser] = useState({});
-    const [isSaving, setIsSaving] = useState(false);
+    const [isProcessing, setIsProcessing] = useState(false);
 
     const birthdayValue = useMemo(() => user?.birthday?.split('T')[0] || '', [user?.birthday]);
 
@@ -37,7 +37,7 @@ const User = () => {
 	    return;
 	}
 
-	setIsSaving(true);
+	setIsProcessing(true);
 	dispatch(updateStart());
 
 	try {
@@ -54,7 +54,7 @@ const User = () => {
 	    console.error('Failed to update profile:', error?.normalized || error);
 	    dispatch(updateFailure(error?.normalized || error));
 	} finally {
-	    setIsSaving(false);
+	    setIsProcessing(false);
 	}
     };
 
@@ -71,7 +71,7 @@ const User = () => {
 			<div className='userDetailsTop'>
 			    <img
 				className='profile'
-				src={user?.profilePic}
+				src={user?.profilePic || '/BlankProfile.png'}
 				alt='Profile Pic'
 			    />
 			    <div className='userInfos'>
@@ -179,8 +179,8 @@ const User = () => {
 			    </div>
 
 			    <div className='userUpdateRight'>
-				<button className='userUpdateButton' type='submit' disabled={isSaving}>
-				    { isSaving ? 'Saving...' : 'Update'}
+				<button className='userUpdateButton' type='submit' disabled={isProcessing}>
+				    { isProcessing ? 'Processing...' : 'Update/Refresh'}
 				</button>
 			    </div>
 			</form>
