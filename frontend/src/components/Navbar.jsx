@@ -151,7 +151,10 @@ const Navbar = () => {
 	    <div className={`mobile-menu ${isMobileMenuOpen ? 'active' : 'hidden'}`}>
 		<ul>
 		    <li>
-			<a onClick={() => handleNavLinkClick('/')}>Home</a>
+			<a onClick={() => handleNavLinkClick('/showcase')}>Public Showcase</a>
+		    </li>
+		    <li>
+			<a onClick={() => handleNavLinkClick('/videos')}>Videos</a>
 		    </li>
 		    <li>
 			<a onClick={() => handleNavLinkClick('/drone-videos')}>Drone Footages</a>
