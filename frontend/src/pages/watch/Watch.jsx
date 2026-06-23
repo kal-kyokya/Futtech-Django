@@ -77,12 +77,11 @@ const Watch = () => {
 
     return (
 	<>
-	    <Navbar />
 	    <div className='watch'>
 		<Link className='link' to='/home'>
 		    <div className='iconLeft'>
 			<ArrowBackIcon className='arrow' />
-			Home
+			Back to the Home Page
 		    </div>
 		</Link>
 
