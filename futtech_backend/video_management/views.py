@@ -42,7 +42,7 @@ stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
 def _can_access_video(user, video):
     if video.owner_id == user.id:
         return True
-    if not video.is_premium:
+    if not video.is_premium and not video.is_showcase:
         return True
     return user.profile.has_active_subscription()
 
