@@ -146,6 +146,7 @@ def get_featured_videos(request):
 
     videos = Video.objects.filter(
         is_premium=False,
+        is_showcase=False,
         status=VideoStatus.READY
     ).order_by('-created_at')[:limit]
     return Response(VideoSerializer(videos, many=True).data)
