@@ -11,19 +11,15 @@ from django.shortcuts import get_object_or_404
 
 from djstripe.models import Customer
 from djstripe.settings import djstripe_settings
-from rest_framework.authentication import SessionAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
-from rest_framework.views import APIView
-from rest_framework_simplejwt.authentication import JWTAuthentication
-
 import stripe # Was pip installed with 'djstripe'
 
 from . import services
 from .logs import logger
 from .choices import VideoStatus
-from .models import PaymentProvider, PaymentTransaction, PaymentStatus, PlaybackHistory, Video
+from .models import PaymentProvider, PaymentTransaction, PaymentStatus, Video
 from .payment_services import (
     MpesaClient,
     create_payment_transaction,
@@ -35,7 +31,7 @@ from .payment_services import (
     process_stripe_event,
     serialize_payment,
 )
-from .serializers import PlaybackHistorySerializer, VideoSerializer, PublicShowcaseVideoSerializer
+from .serializers import VideoSerializer, PublicShowcaseVideoSerializer
 
 stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
 
@@ -389,31 +385,3 @@ def stripe_callback(request):
         return Response({'error': 'Webhook processing failed.'}, status=500)
 
     return Response({'status': 'ok', 'event_type': event_type}, status=200)
-
-
-class PlaybackHistoryView(APIView):
-    """
-    Handles POST or PATCH request to update video watch progress.
-
-    Inheritance:
-    	APIView - Empowers this view with a set of predefined class attributes
-    		  from the 'Base of all views in REST Framework'.
-    """
-
-    permission_classes = [IsAuthenticated]
-    authentication_classes = [JWTAuthentication, SessionAuthentication]
-
-    def post(self, request, *args, **kwargs):
-        serializer = PlaybackHistorySerializer(data=request.data)
-        if serializer.is_valid():
-            video = serializer.validated_data['video']
-            progress = serializer.validated_data['watch_progress']
-
-            PlaybackHistory.objects.update_or_create(
-                user=request.user,
-                video=video,
-                defaults={'watch_progress': progress}
-            )
-            return Response({'status': 'success'}, status=200)
-
-        return Response(serializer.errors, status=400)
