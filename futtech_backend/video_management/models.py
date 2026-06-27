@@ -301,38 +301,3 @@ class Video(models.Model):
             self.slug = slug
 
         super().save(*args, **kwargs)
-
-
-class PlaybackHistory(models.Model):
-    """
-    Tracks the watch progress for a user on a specific video.
-
-    Inheritance:
-    	models.Model - Base class enabling access to the 'batteries-included'
-    	out-of-the-box 'BaseModel' class: 'The metaclass for all class models.'
-    """
-
-    user = models.ForeignKey(UserModel,
-                             on_delete=models.CASCADE)
-    video = models.ForeignKey(Video,
-                              on_delete=models.CASCADE)
-    watch_progress = models.PositiveIntegerField() # Store progress in seconds
-    last_watched_at = models.DateTimeField(auto_now=True)
-
-    class Meta:
-        # A user has one history record per video
-        unique_together = ('user', 'video')
-        verbose_name = 'Video watch progress'
-        verbose_name_plural = 'Videos watch progress'
-
-    def __str__(self):
-        """
-        Defines the 'string representation' of any instance of
-        the 'PlaybackHistory' class.
-
-        Return:
-        	A description of WHO watched WHAT and for what DURATION.
-        """
-        return '{} watched {} for {}s'.format(self.user.username,
-                                              self.video.title,
-                                              self.watch_progress)
