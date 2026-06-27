@@ -1,27 +1,12 @@
 #!/usr/bin/env python3
 """
-'serializers.py' defines a subclass of 'djangorestframework' meant to be
-		 attached to the 'PlaybackHistory' model in order to
-		 convert every I/O of the 'video' and 'watch_progress' fields.
+'serializers.py' contains definitions of Serializers for
+                 video metadata and public showcase responses.
 """
 
 from rest_framework.serializers import ModelSerializer, SerializerMethodField
-from .models import Video, PlaybackHistory
+from .models import Video
 from .services import build_embed_url
-
-
-class PlaybackHistorySerializer(ModelSerializer):
-    """
-    Handles validation and serialization of request data
-    aimed at the PlaybackHistory Django model.
-
-    Inheritance:
-    	ModelSerializer - Base class for all DRF serializer classes.
-    """
-
-    class Meta:
-        model = PlaybackHistory
-        fields = ['video', 'watch_progress']
 
 
 class VideoSerializer(ModelSerializer):
