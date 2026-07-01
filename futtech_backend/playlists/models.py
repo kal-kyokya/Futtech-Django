@@ -48,3 +48,13 @@ class Playlist(models.Model):
 
     class Meta:
         ordering = ['-created_at']
+        indexes = [
+            models.Index(fields=['owner', '-created_at']),
+            models.Index(fields=['is_public', '-created_at']),
+        ]
+        constraints = [
+            models.UniqueConstraint(
+                fields=['owner', 'name'],
+                name='unique_playlist_name_per_owner',
+            ),
+        ]
