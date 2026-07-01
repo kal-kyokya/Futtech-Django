@@ -6,6 +6,7 @@ can render playlist cards/details without extra per-video requests.
 """
 
 from rest_framework import serializers
+from rest_framework.validators import UniqueTogetherValidator
 from .models import Playlist
 from video_management.models import Video
 
@@ -51,6 +52,7 @@ class PlaylistSerializer(serializers.ModelSerializer):
     # Videos are attached through M2M relations from dedicated endpoints/admin.
     videos = VideoSerializer(many=True,
                              read_only=True)
+    owner = serializers.PrimaryKeyRelatedField(read_only=True, default=serializers.CurrentUserDefault())
 
     class Meta:
         """
@@ -67,3 +69,10 @@ class PlaylistSerializer(serializers.ModelSerializer):
         extra_kwargs = {
             'owner': {'read_only': True},
         }
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Playlist.objects.all(),
+                fields=['owner', 'name'],
+                message='You already have a playlist with this name.',
+            ),
+        ]
