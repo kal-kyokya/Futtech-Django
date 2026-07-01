@@ -181,3 +181,15 @@ class PlaylistViewSetTests(TestCase):
         self.assertTrue(
             Playlist.objects.filter(pk=self.owner_playlist.pk).exists(),
         )
+
+
+    def test_duplicate_playlist_name_for_same_owner_is_rejected(self):
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.post(
+            reverse('playlist-list'),
+            {'name': self.owner_playlist.name},
+            format='json',
+        )
+        
+        self.assertEqual(response.status_code, 400)
+        self.assertIn('non_field_errors', response.data)
