@@ -4,9 +4,9 @@
                  video metadata and public showcase responses.
 """
 
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework import serializers
+from rest_framework.serializers import ModelSerializer
 from .models import Video
-from .services import build_embed_url
 
 
 class VideoSerializer(ModelSerializer):
@@ -20,7 +20,6 @@ class VideoSerializer(ModelSerializer):
 
 
 class PublicShowcaseVideoSerializer(ModelSerializer):
-    embed_url = SerializerMethodField()
 
     class Meta:
         model = Video
@@ -36,11 +35,4 @@ class PublicShowcaseVideoSerializer(ModelSerializer):
             'category',
             'is_drone',
             'is_analysis',
-            'embed_url',
         ]
-
-    def get_embed_url(self, obj):
-        if obj.status != 'ready' or not obj.video_library_id or not obj.bunny_video_id:
-            return None
-
-        return build_embed_url(obj.video_library_id, obj.bunny_video_id)
