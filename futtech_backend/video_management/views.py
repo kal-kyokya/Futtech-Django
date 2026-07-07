@@ -11,7 +11,7 @@ from django.shortcuts import get_object_or_404
 
 from djstripe.models import Customer
 from djstripe.settings import djstripe_settings
-from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from rest_framework.decorators import api_view, authentication_classes, permission_classes, throttle_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 import stripe # Was pip installed with 'djstripe'
@@ -32,6 +32,7 @@ from .payment_services import (
     serialize_payment,
 )
 from .serializers import VideoSerializer, PublicShowcaseVideoSerializer
+from futtech_backend.throttles import AuthBurstRateThrottle
 
 stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
 
@@ -247,6 +248,7 @@ def create_portal_session(request):
 
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
+@throttle_classes([AuthBurstRateThrottle])
 def initiate_checkout(request):
     provider = (request.data.get('provider') or '').upper()
     if provider not in {PaymentProvider.MPESA, PaymentProvider.STRIPE}:
