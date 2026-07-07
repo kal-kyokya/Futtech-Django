@@ -212,6 +212,7 @@ class PaymentTransaction(models.Model):
             models.Index(fields=['provider', 'status']),
             models.Index(fields=['provider_checkout_request_id']),
             models.Index(fields=['external_reference']),
+            models.Index(fields=['user', '-created_at']),
         ]
 
     def __str__(self):
