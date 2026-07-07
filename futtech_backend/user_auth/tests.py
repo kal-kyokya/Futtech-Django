@@ -6,6 +6,7 @@
 from django.contrib.auth import get_user_model
 from django.test import override_settings
 from django.urls import reverse
+from django.core.cache import cache
 from rest_framework.test import APITestCase, APIClient
 
 
@@ -24,6 +25,18 @@ TEST_PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
     PASSWORD_HASHERS=TEST_PASSWORD_HASHERS,
     SECRET_KEY='test-secret-key',
     SECURE_SSL_REDIRECT=False,
+    REST_FRAMEWORK={
+        'DEFAULT_AUTHENTICATION_CLASSES': (
+            'rest_framework_simplejwt.authentication.JWTAuthentication',
+        ),
+        'DEFAULT_PERMISSION_CLASSES': (
+            'rest_framework.permissions.IsAuthenticated',
+        ),
+        'DEFAULT_THROTTLE_RATES': {
+            'login': '1000/min',
+            'auth_burst': '1000/min',
+        },
+    },
 )
 class AuthTestBase(APITestCase):
     """
@@ -31,6 +44,7 @@ class AuthTestBase(APITestCase):
     """
 
     def setUp(self):
+        cache.clear()
         self.client = APIClient()
         self.user_model = get_user_model()
         self.registration_url = reverse('user-registration')
@@ -196,7 +210,7 @@ class LoginTests(AuthTestBase):
         response = self.login_user(user.email, 'WrongPassword!')
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.data['detail'], 'Invalid password.')
+        self.assertEqual(response.data['detail'], 'Invalid email or password.')
 
     def test_login_inactive_user_returns_401(self):
         user = self.create_user(is_active=False)
@@ -204,7 +218,7 @@ class LoginTests(AuthTestBase):
         response = self.login_user(user.email, self.default_password)
 
         self.assertEqual(response.status_code, 401)
-        self.assertEqual(response.data['detail'], 'User account is disabled.')
+        self.assertEqual(response.data['detail'], 'Invalid email or password.')
 
     def test_login_invalid_json_returns_400(self):
         response = self.client.post(
