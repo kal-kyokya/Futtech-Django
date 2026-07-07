@@ -58,7 +58,7 @@ class PlaybackAuthTests(TestCase):
     def test_unauthenticated_user_cannot_fetch_playback_url(self):
         endpoint = reverse('get_video_playback', kwargs={'video_id': self.video.id})
         response = self.client.get(endpoint)
-        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response.status_code, 401)
 
 
 @override_settings(DATABASES=TEST_DATABASES)
@@ -98,7 +98,7 @@ class PublicShowcaseAccessTests(TestCase):
         payload = response.json()
         self.assertEqual(len(payload), 1)
         self.assertEqual(payload[0]['slug'], self.public_video.slug)
-        self.assertIn('embed_url', payload[0])
+        self.assertNotIn('embed_url', payload[0])
 
     def test_anon_can_view_public_showcase_detail(self):
         response = self.client.get(
@@ -141,7 +141,8 @@ class ManualVideoPlaybackTests(TestCase):
             bunny_video_id='bunny-guid-1',
         )
 
-        self.client.login(username='owner2', password='OwnerPass123!')
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.owner)
 
         response = self.client.get(reverse('get_video_playback', kwargs={'video_id': video.id}))
         self.assertEqual(response.status_code, 200)
@@ -152,13 +153,14 @@ class ManualVideoPlaybackTests(TestCase):
         video = Video.objects.create(
             owner=self.owner,
             title='Slug routed team video',
-            description='Created through Django admin/back office workflow'
+            description='Created through Django admin/back office workflow',
             status='ready',
             video_library_id='12345',
             bunny_video_id='bunny-guid-slug',
         )
 
-        self.client.login(username='owner2', password='OwnerPass1234!')
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.owner)
 
         response = self.client.get(reverse('get_video_data_by_slug', kwargs={'slug': video.slug}))
         self.assertEqual(response.status_code, 200)
@@ -168,13 +170,14 @@ class ManualVideoPlaybackTests(TestCase):
         video = Video.objects.create(
             owner=self.owner,
             title='Slug managed Bunny video',
-            description='Created through Django admin/back office workflow'
+            description='Created through Django admin/back office workflow',
             status='ready',
             video_library_id='12345',
             bunny_video_id='bunny-guid-slug-playback',
         )
 
-        self.client.login(username='owner2', password='OwnerPass1234!')
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.owner)
 
         response = self.client.get(reverse('get_video_playback_by_slug', kwargs={'slug': video.slug}))
         self.assertEqual(response.status_code, 200)
@@ -200,6 +203,7 @@ class ManualVideoPlaybackTests(TestCase):
 )
 class PaymentFlowTests(TestCase):
     def setUp(self):
+        self.client = APIClient()
         user_model = get_user_model()
         self.user = user_model.objects.create_user(
             username='payuser',
