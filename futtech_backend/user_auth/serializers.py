@@ -173,16 +173,16 @@ class UserLoginSerializer(serializers.Serializer):
         try:
             user = UserModel.objects.get(email__iexact=email)
         except UserModel.DoesNotExist:
-            raise AuthenticationFailed('Invalid email.')
+            raise AuthenticationFailed('Invalid email or password.')
 
         if not user.is_active:
-            raise AuthenticationFailed('User account is disabled.')
+            raise AuthenticationFailed('Invalid email or password.')
 
         # Authenticate the user using a Django built-in authentication function
-        authenticated_user = authenticate(username=user,
+        authenticated_user = authenticate(username=user.get_username(),
                                           password=password)
         if not authenticated_user:
-            raise AuthenticationFailed(f'Invalid password.')
+            raise AuthenticationFailed(f'Invalid email or password.')
 
         return {
             'user': authenticated_user,

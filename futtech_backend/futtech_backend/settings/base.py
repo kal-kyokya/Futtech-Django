@@ -205,7 +205,7 @@ REST_FRAMEWORK = {
     'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
     'PAGE_SIZE': 20,
     'DEFAULT_THROTTLE_RATES': {
-        'login': ose.environ.get('LOGIN_THROTTLE_RATE', '3/min'),
+        'login': os.environ.get('LOGIN_THROTTLE_RATE', '3/min'),
         'auth_burst': os.environ.get('AUTH_BURST_THROTTLE_RATE', '12/min'),
     },
 }
