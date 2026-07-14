@@ -101,7 +101,7 @@ def custom_exception_handler(exc, context):
             {
                 "status": status.HTTP_500_INTERNAL_SERVER_ERROR,
                 "title": _STATUS_TITLES[status.HTTP_500_INTERNAL_SERVER_ERROR],
-                "detail": "An unexpected error occured.",
+                "detail": "An unexpected error occurred.",
             },
             status=status.HTTP_500_INTERNAL_SERVER_ERROR,
         )
