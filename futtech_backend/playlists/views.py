@@ -8,9 +8,10 @@ owners can mutate playlist records.
 
 from django.db import models
 from rest_framework import viewsets, permissions
+from rest_framework.decorators import action
 from rest_framework.response import Response
 from .models import Playlist
-from .serializers import PlaylistSerializer
+from .serializers import PlaylistSerializer, VideoSerializer
 from .pagination import PlaylistPagination
 from .permissions import IsOwnerOrReadOnly
 
@@ -62,6 +63,23 @@ class PlaylistViewSet(viewsets.ModelViewSet):
 
         return queryset
 
+
+    @action(detail=True, methods=['get'])
+    def videos(self, request, pk=None):
+        """
+        Return paginated videos for a playlist the user can access.
+        """
+
+        playlist = self.get_object()
+        queryset = playlist.videos.select_related('owner').order_by('-created_at')
+        page = self.paginate_queryset(queryset)
+
+        if page is not None:
+            serializer = VideoSerializer(page, many=True)
+            return self.get_paginated_response(serializer.data)
+
+        serializer = VideoSerializer(queryset, many=True)
+        return Response(serializer.data)
 
     def list(self, request, *args, **kwargs):
         """
