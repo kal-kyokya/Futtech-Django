@@ -5,6 +5,7 @@ API views for video metadata, public showcase and private Bunny playback.
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseForbidden, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
@@ -41,14 +42,29 @@ def _can_access_video(user, video):
         return True
     if not video.is_premium and not video.is_showcase:
         return True
+
+    try:
+        profile = user.profile
+    except ObjectDoesNotExist:
+        logger.warning(
+            'Denying premium/showcase video %s to user %s because no profile exists.',
+            video.pk,
+            user.pk,
+        )
+        return False
+
     return user.profile.has_active_subscription()
 
+def _video_queryset():
+    return Video.objects.select_related('owner', 'owner__profile')
+
+
 def _get_video_by_slug(slug):
-    return Video.objects.get(slug=slug)
+    return _video_queryset().get(slug=slug)
 
 
 def _get_video_by_id(video_id):
-    return Video.objects.get(pk=video_id)
+    return _video_queryset().get(pk=video_id)
 
 
 def _get_video_response(request, video):
@@ -141,7 +157,7 @@ def get_featured_videos(request):
     # Keep limits sane and non-negative to avoid unexpected query slices.
     limit = max(1, min(limit, 50))
 
-    videos = Video.objects.filter(
+    videos = _video_queryset().filter(
         is_premium=False,
         is_showcase=False,
         status=VideoStatus.READY
@@ -160,7 +176,7 @@ def get_public_showcase(request):
 
     limit = max(1, min(limit, 30))
 
-    videos = Video.objects.filter(
+    videos = _video_queryset().filter(
         is_showcase=True,
         status=VideoStatus.READY,
     ).order_by('title')[:limit]
@@ -173,7 +189,7 @@ def get_public_showcase(request):
 @permission_classes([AllowAny])
 def get_public_showcase_detail(request, slug):
     video = get_object_or_404(
-        Video,
+        _video_queryset(),
         slug=slug,
         is_showcase=True,
         status=VideoStatus.READY,
@@ -299,8 +315,8 @@ def initiate_checkout(request):
             }, status=202)
         except Exception as err:
             logger.exception('M-Pesa initiation failed: %s', err)
-            mark_payment_result(payment, PaymentStatus.FAILED, error_message='Failed to intiate M-Pesa STK push.')
-            return Response({'error': 'Unable to intiate M-Pesa at this time. Please try again.'}, status=502)
+            mark_payment_result(payment, PaymentStatus.FAILED, error_message='Failed to initiate M-Pesa STK push.')
+            return Response({'error': 'Unable to initiate M-Pesa at this time. Please try again.'}, status=502)
 
     try:
         session = create_stripe_checkout_session(payment, request)
