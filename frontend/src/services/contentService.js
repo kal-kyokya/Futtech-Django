@@ -187,7 +187,7 @@ class ContentService {
 	}
 
 	try {
-	    const response = await apiClient.get(`/playlists/${playlistId}/videos/}`, {
+	    const response = await apiClient.get(`/playlists/${playlistId}/videos/`, {
 		params: { page, limit },
 	    });
 
