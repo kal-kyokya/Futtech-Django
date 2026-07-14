@@ -16,6 +16,13 @@ urlpatterns = [
          name='playlist-list'
     ),
     path(
+        '<int:pk>/videos/',
+        PlaylistViewSet.as_view({
+            'get': 'videos',
+        }),
+        name='playlist-videos',
+    ),
+    path(
         '<int:pk>/',
         PlaylistViewSet.as_view({
             'get': 'retrieve',
