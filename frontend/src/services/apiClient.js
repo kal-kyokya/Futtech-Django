@@ -22,10 +22,18 @@ const apiClient = axios.create({
  * Skip refresh recursion on auth endpoints to avoid infinite retry loops
  * (e.g. failed login should surface to UI, not trigger refresh).
  */
-const isAuthEndpoint = (url = '') =>
-      url.includes('/auth/login') ||
-      url.includes('/auth/register') ||
-      url.includes('/auth/refresh');
+const isAuthEndpoint = (url = '') => (
+    url.includes('/auth/login') ||
+	url.includes('/auth/register') ||
+	url.includes('/auth/refresh') ||
+	url.includes('/auth/token/refresh')
+);
+
+const setAuthorizationHeader = (config, token) => {
+    config.headers = config.headers || {};
+    config.headers.Authorization = `Bearer ${token}`;
+    config.headers.Accept = 'application/json';
+};
 
 /**
  * Normalize heterogenous backend/network failures into one UI-friendly shape.
@@ -90,8 +98,7 @@ apiClient.interceptors.request.use(
     (config) => {
 	const token = tokenService.getAccessToken();
 	if (token) {
-	    config.headers.Authorization = `Bearer ${token}`;
-	    config.headers.Accept = 'application/json';
+	    setAuthorizationHeader(config, token);
 	}
 
 	return config;
@@ -131,6 +138,11 @@ apiClient.interceptors.response.use(
 	    return Promise.reject(error);
 	}
 
+	if (!originalRequest) {
+	    error.normalized = normalizedError(error);
+	    return Promise.reject(error);
+	}
+
 	// Check if error is 401 and we haven't already tried to refresh
 	if (error.response?.status === 401 && !originalRequest._retry) {
 
@@ -139,7 +151,7 @@ apiClient.interceptors.response.use(
 		return new Promise((resolve, reject) => {
 		    subscribeTokenRefresh({ resolve, reject });
 		}).then((token) => {
-		    originalRequest.headers.Authorization = `Bearer ${token}`;
+		    setAuthorizationHeader(originalRequest, token);
 		    return apiClient(originalRequest);
 		});
 	    }
@@ -164,7 +176,7 @@ apiClient.interceptors.response.use(
 		flushRefreshSubscribers({ token: access });
 
 		// Retry the original request
-		originalRequest.headers.Authorization = `Bearer ${access}`;
+		setAuthorizationHeader(originalRequest, access);
 		return apiClient(originalRequest);
 
 	    } catch (refreshError) {
