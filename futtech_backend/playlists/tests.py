@@ -9,6 +9,7 @@ from django.urls import reverse
 from rest_framework.test import APIClient
 
 from .models import Playlist
+from video_management.models import Video
 
 
 TEST_DATABASES = {
@@ -77,6 +78,31 @@ class PlaylistViewSetTests(TestCase):
         self.assertIn(self.owner_playlist.name, playlist_names)
         self.assertIn(self.public_playlist.name, playlist_names)
         self.assertNotIn(self.hidden_playlist.name, playlist_names)
+
+
+    def test_playlist_videos_returns_paginated_accessible_videos(self):
+        """
+        Accessible playlist video lists should support frontend pagination.
+        """
+
+        video = Video.objects.create(
+            owner=self.owner,
+            title='First touch Drill',
+            status='ready',
+            video_library_id='12345',
+            bunny_video_id='playlist-video-guid',
+        )
+        self.owner_playlist.videos.add(video)
+
+        self.client.force_authenticate(user=self.owner)
+        response = self.client.get(
+            reverse('playlist-videos', args=[self.owner_playlist.pk]),
+            {'page': 1, 'limit': 10}
+        )
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['count'], 1)
+        self.assertEqual(response.data['results'][0]['slug'], video.slug)
 
     def test_create_playlist_assigns_owner(self):
         """
