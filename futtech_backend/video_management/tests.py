@@ -184,6 +184,34 @@ class ManualVideoPlaybackTests(TestCase):
         self.assertIn('embed_url', response.json())
         self.assertIn('bunny-guid-slug-playback', response.json()['embed_url'])
 
+
+    def test_premium_video_without_profile_returns_forbidden_not_error(self):
+        user_model = get_user_model()
+        viewer = user_model.objects.create_user(
+            username='viewer-without-profile',
+            email='viewer-without-profile@example.com',
+            password='ViewerPass123!',
+        )
+        premium_video = Video.objects.create(
+            owner=self.owner,
+            title='Premium team review',
+            status='ready',
+            is_premium=True,
+            video_library_id='12345',
+            bunny_video_id='premium-guid-1',
+        )
+
+        self.client = APIClient()
+        self.client.force_authenticate(user=viewer)
+
+        response = self.client.get(
+            reverse(
+                'get_video_playback',
+                kwargs={'video_id': premium_video.id}
+            )
+        )
+        self.assertEqual(response.status_code, 403)
+
     def test_video_slug_is_generated_for_manual_admin_records(self):
         video = Video.objects.create(
             owner=self.owner,
