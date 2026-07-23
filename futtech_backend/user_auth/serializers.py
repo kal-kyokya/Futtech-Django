@@ -308,3 +308,11 @@ class CurrentUserSerializer(serializers.ModelSerializer):
             'birthday', 'phone', 'location', 'active_footballer',
             'access_expires_at', 'team'
         ]
+
+
+class GoogleSignInSerializer(serializers.Serializer):
+    """
+    Validates a Google ID token issued to this application.
+    """
+
+    credential = serializers.CharField(write_only=True)
