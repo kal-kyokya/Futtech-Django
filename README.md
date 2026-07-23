@@ -150,8 +150,8 @@ The login and registration pages display **Sign in with Google** when `VITE_GOOG
 | Metric | Description |
 | ------ | --------- |
 | Repo Created | Saturday, 15th March 2025 |
-| Last Update | Wednesday, 10th February 2026 |
+| Last Update | Thursday, July 23rd 2026 |
 | GitHub Repository | [kal-kyokya/Futtech/](https://github.com/kal-kyokya/Futtech-Django) |
 | Official Link | [Futtech](https://www.futtech.kalkyokya.tech/) |
 | Medium Blog Posts | [Futtech-Django](https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5), [Futtech - MERN version](https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5) |
-| GitHub Commits | 735 |
+| GitHub Commits | 1080 |
