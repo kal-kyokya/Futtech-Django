@@ -25,6 +25,7 @@ import {
 import authService from '../../services/authService';
 import { normalizeError } from '../../services/apiClient';
 import AuthLayout from '../../components/auth/AuthLayout';
+import GoogleSignInButton from '../../components/auth/GoogleSignInButton';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -55,16 +56,14 @@ const Login = () => {
 	}
     }, [location.state, location.pathname, navigate]);
 
-    const handleSignIn = async (e) => {
-	e.preventDefault(); // Prevents form reload and allows data submission
-
+    const completeLogin = async (loginRequest) => {
 	authDispatch(loginStart());
 	userDispatch(updateStart());
 	videoDispatch(getVideosStart());
 	playlistDispatch(getPlaylistsStart());
 
 	try {
-	    const result = await authService.login({ email, password });
+	    const result = await loginRequest();
 
 	    if (!result.success) {
 		const normalizedError = result.error || normalizeError(new Error('Login failed'));
@@ -111,6 +110,23 @@ const Login = () => {
 	    videoDispatch(getVideosFailure());
 	    playlistDispatch(getPlaylistsFailure());
 	}
+    };
+
+    const handleSign = async(e) {
+	e.preventDefault();
+	await completeLogin(() => authService.login({ email, password }));
+    };
+
+    const handleGoogleSuccess = async ({ credential }) => {
+	if (!credential) {
+	    authDispatch(loginFailure({ message: 'Google did not return a sign-in credential.' }));
+	    return;
+	}
+	await completeLogin(() => authService.loginWithGoogle(credential));
+    };
+
+    const handleGoogleError = () => {
+	authDispatch(loginFailure({ message: 'Google Sign-In was cancelled or failed' }));
     };
 
     return (
@@ -167,6 +183,14 @@ const Login = () => {
 		<button type='submit' disabled={isFetching}>
 		    Sign In
 		</button>
+
+		<div className='authDivider'>or</div>
+
+		<GoogleSignInButton
+		    onSuccess={handleGoogleSuccess}
+		    onError={handleGoogleError}
+		    disabled={isFetching}
+		/>
 
 		{notice && (
 		    <div className='userPrompt'>
