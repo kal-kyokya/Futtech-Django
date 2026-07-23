@@ -282,3 +282,33 @@
  	}
     }
 }
+
+.register {
+    .authDivider {
+	align-items: center;
+	color: $color-text-muted;
+	display: flex;
+	gap: $space-2;
+	justify-content: center;
+	margin-top: $space-3;
+	font-size: $font-size-sm;
+
+	&::before,
+	&::after {
+	    background: rgba(255, 255, 255, 0.2);
+	    content: '';
+	    flex: 1;
+	    height: 1px;
+	}
+    }
+
+    .googleSignIn,
+    .googleSignIn > div {
+	width: 100%;
+    }
+
+    .googleSignIn--disabled {
+	opacity: 0.55;
+	pointer-events: none;
+    }
+}
