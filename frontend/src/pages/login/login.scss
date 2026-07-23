@@ -78,3 +78,30 @@
 	min-height: 29rem;
     }
 }
+
+.authDivider {
+    align-items: center;
+    color: $color-text-muted;
+    display: flex;
+    gap: $space-2;
+    justify-content: center;
+    font-size: $font-size-sm;
+
+    &::before,
+    &::after {
+	background: $color-border;
+	content: '';
+	flex: 1;
+	height: 1px;
+    }
+}
+
+.googleSignIn,
+.googleSignIn > div {
+    width: 100%;
+}
+
+.googleSignIn--disabled {
+    opacity: 0.55;
+    pointer-events: none;
+}
