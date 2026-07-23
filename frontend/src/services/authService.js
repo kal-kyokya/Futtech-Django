@@ -82,6 +82,30 @@ class AuthService {
 	}
     }
 
+    async loginWithGoogle(credential) {
+
+	try {
+	    const response = await apiClient.post('/auth/google', { credential });
+	    const { message, access, user } = response.data;
+
+	    tokenService.setAccessToken(access);
+
+	    const playlistsPromise = this.fetchInitialContent();
+	    return {
+		user,
+		message,
+		success: true,
+		playlistsPromise,
+	    };
+	} catch (error) {
+	    const normalized = error?.normalized || normalizeError(error);
+	    return {
+		success: false,
+		error: normalized,
+	    };
+	}
+    }
+
     // Handles the log out workflow
     async logout() {
 	try {
