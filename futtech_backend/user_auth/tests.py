@@ -7,6 +7,7 @@ from django.contrib.auth import get_user_model
 from django.test import override_settings
 from django.urls import reverse
 from django.core.cache import cache
+from unittest.mock import Mock, patch
 from rest_framework.test import APITestCase, APIClient
 
 
@@ -52,6 +53,7 @@ class AuthTestBase(APITestCase):
         self.refresh_url = reverse('token-refresh')
         self.logout_url = reverse('user-logout')
         self.me_url = reverse('get-current-user')
+        self.google_url = reverse('google-sign-in')
 
         self.default_password = 'StrongPass123!'
         self.registration_payload = {
@@ -230,6 +232,23 @@ class LoginTests(AuthTestBase):
 
         self.assertEqual(response.status_code, 400)
 
+
+class GoogleSignInTests(AuthTestBase):
+    """
+    Covers Google Sign-In account creation and safe email linking.
+    """
+
+    def google_login(self, payload, credential='google-id-token'):
+        key = Mock(key='public-key')
+        with patch('user_auth.views.jwt.PyJWKClient') as jwk_client, \
+             patch('user_auth.views.jwt.decode', return_value=payload):
+            jwk_client.return_value.get_signing_key_from_jwt.return_value = key
+            return self.client.post(
+                self.google_url,
+                {'credential': credential},
+                format='json',
+                secure=True,
+            )
 
 class TokenRefreshTests(AuthTestBase):
     """
