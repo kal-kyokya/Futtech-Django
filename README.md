@@ -97,6 +97,55 @@ Request flow (UI → API  → DB → UI state):
 
 For auth behavior (register/login/persistence/logout), prefer the Mermaid diagrams above as source of truth.
 
+## Google Sign-In setup
+
+Futtech supports email/password authentication and Google Sign-In through Google Identity Services. The frontend receives a Google ID token, send it to the Django API, and the backend validates the token before issuing the existing JWT access token plus HttpOnly refresh-token cookie.
+
+### Create Google OAuth credentials
+
+1. Open the [Google Cloud Console](https://console.cloud.google.com/).
+2. Create or select a project.
+3. Go to **APIs & Services > OAuth consent screen** and configure the consent screen for your app.
+4. Go to **APIs & Services > Credentials > Create credentials > OAuth client ID**.
+5. Choose **Web application**.
+6. Add authorized JavaScript origins for every frontend origin that will render the Google button, for example:
+   - `http:localhost:5174`
+   - your production frontend origin, such as `https://app.example.com`
+7. Save the generated OAuth client ID. A client secret is not required for this ID-token flow.
+
+### Required environment variables
+
+Set the same web OAuth client ID in both applications:
+
+```bash
+# Django backend
+GOOGLE_OAUTH_CLIENT_ID=your-google-web-client-id.apps.googleusercontent.com
+
+# Vite frontend
+VITE_GOOGLE_OAUTH_CLIENT_ID=your-google-web-client-id.apps.googleusercontent.com
+```
+
+Keep the existing production cookie/session settings in place (`DOMAIN_NAME`, `CSRF_TRUSTED_ORIGINS`, `CORS_ALLOWED_ORIGINS`, secure HTTPS hosting) so the refresh cookie can be stored safely by the browser.
+
+### Local development
+
+1. Add `http://localhost:5174` to the OAuth client's authorized JavaScript origins.
+2. Put `GOOGLE_OAUTH_CLIENT_ID` in the backend `.env` file used by `futtech_backend/manage.py`.
+3. Put `VITE_GOOGLE_OAUTH_CLIENT_ID` in `frontend/.env.local`.
+4. Install dependencies, migrate, and start both apps:
+
+```bash
+cd futtech_backend
+python manage.py migrate
+python manage.py runserver
+
+cd ../frontend
+npm install
+npm run dev
+```
+
+The login and registration pages display **Sign in with Google** when `VITE_GOOGLE_OAUTH_CLIENT_ID` is set. The backend creates a user for first-time verified Google emails, links future Google sign-ins through a `SocialAccount`, and safely links to an existing active user with the same verified email instead of creating a duplicate account.
+
 ## 📈 **Extra Information**
 | Metric | Description |
 | ------ | --------- |
