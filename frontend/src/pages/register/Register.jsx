@@ -14,6 +14,7 @@ import ServicesSection from '../../components/landing/ServicesSection';
 import AboutValueSection from '../../components/landing/AboutValueSection';
 import DifferentiationSection from '../../components/landing/DifferentiationSection';
 import BottomCtaSection from '../../components/landing/BottomCtaSection';
+import GoogleSignInButton from '../../components/auth/GoogleSignInButton';
 
 const Register = () => {
     const [email, setEmail] = useState('');
@@ -51,6 +52,27 @@ const Register = () => {
 	} else {
 	    dispatch(registrationFailure({ message: 'Invalid Email.' }));
 	}
+    };
+
+    const handleGoogleSuccess = async ({ credential }) => {
+	if (!credential) {
+	    dispatch(registrationFailure({ message: 'Google did not return a sign-in credential.' }));
+	    return;
+	}
+
+	dispatch(registrationStart());
+	const result = await authService.loginWithGoogle(credential);
+	if (!result.success) {
+	    dispatch(registrationFailure(result.error || normalizeError(new Error('Google Sign-In failed.'))));
+	    return;
+	}
+
+	dispatch(registrationSuccess(result.user));
+	navigate('/drone-videos', { replace: true });
+    };
+
+    const handleGoogleError = () => {
+	dispatch(registrationFailure({ message: 'Google Sign-In was cancelled or failed.' }));
     };
 
     const handleRegister = async (e) => {
@@ -219,6 +241,15 @@ const Register = () => {
 			    </button>
 			</div>
 		    )}
+		    
+		    <div className='authDivider'>or</div>
+
+		    <GoogleSignInButton
+			onSuccess={handleGoogleSuccess}
+			onError={handleGoogleError}
+			disabled={isFetching}
+			text='signup_with'
+		    />
 		</section>
 
 		<BottomCtaSection />

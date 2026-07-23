@@ -126,7 +126,7 @@ const Login = () => {
     };
 
     const handleGoogleError = () => {
-	authDispatch(loginFailure({ message: 'Google Sign-In was cancelled or failed' }));
+	authDispatch(loginFailure({ message: 'Google Sign-In was cancelled or failed.' }));
     };
 
     return (
