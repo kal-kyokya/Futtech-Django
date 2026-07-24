@@ -271,6 +271,24 @@ class GoogleSignInTests(AuthTestBase):
         self.assertEqual(user.profile.avatar_url, 'https://example.com/avatar.png')
         self.assertIsNotNone(response.cookies.get('refresh_token'))
 
+    @override_settings(GOOGLE_OAUTH_CLIENT_ID='test-client-id.apps.googleusercontent.com')
+    def test_google_sign_in_links_existing_email(self):
+        existing_user = self.create_user(email='player@example.com', username='player')
+
+        response = self.google_login({
+            'iss': 'https://accounts.google.com',
+            'sub': 'google-456',
+            'email': 'player@example.com',
+            'email_verified': True,
+            'name': 'Existing Player',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['user']['id'], existing_user.id)
+        self.assertEqual(self.user_model.objects.filter(email='player@example.com').count(), 1)
+        self.assertEqual(existing_user.social_accounts.get().provider_user_id, 'google-456')
+
+
 class TokenRefreshTests(AuthTestBase):
     """
     Covers refresh token behavior.
