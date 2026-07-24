@@ -13,6 +13,7 @@ from .views import (
     RefreshTokenCookieView,
     LogoutView,
     GetCurrentUserView,
+    GoogleSignInView,
 )
 
 
@@ -23,6 +24,9 @@ urlpatterns = [
     path('login/',
          ObtainTokenCookieView.as_view(),
          name='user-login'),
+    path('google/',
+         GoogleSignInView.as_view(),
+         name='google-sign-in'),
     path('token/refresh/',
          RefreshTokenCookieView.as_view(),
          name='token-refresh'),
