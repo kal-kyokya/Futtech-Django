@@ -17,7 +17,7 @@ export const updateUser = async (user, token, dispatch) => {
 
 	dispatch(updateUserSuccess(res.data));
     } catch (err) {
-	console.log(err);
+	console.error(err);
     }
 
     dispatch(updateUserFailure());

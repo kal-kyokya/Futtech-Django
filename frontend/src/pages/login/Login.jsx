@@ -112,8 +112,8 @@ const Login = () => {
 	}
     };
 
-    const handleSign = async(e) {
-	e.preventDefault();
+    const handleSignIn = async (event) => {
+	event.preventDefault();
 	await completeLogin(() => authService.login({ email, password }));
     };
 

@@ -95,7 +95,7 @@ const User = () => {
 
 	    navigate('/user');
 	} catch (err) {
-	    console.log(err.response.data);
+	    console.error(err.response.data);
 	}
 
 	dispatch(updateUserFailure());

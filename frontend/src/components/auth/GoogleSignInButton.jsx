@@ -26,7 +26,7 @@ const loadGoogleScript = () => new Promise(() => {
 });
 
 const GoogleSignInButton = ({ onSuccess, onError, disabled = false, text = 'signin_with' }) => {
-    const buttonRef = useref(null);
+    const buttonRef = useRef(null);
     const [ready, setReady] = useState(false);
     const clientId = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
 

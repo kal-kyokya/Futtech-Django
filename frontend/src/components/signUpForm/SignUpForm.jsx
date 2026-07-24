@@ -40,7 +40,7 @@ const SignUpForm = () => {
 
 	    // Handle successful registration
 	    // e.g., Store tokens, redirect user
-	    console.log('Registration successful:', responseData);
+	    console.error('Registration successful:', responseData);
 
 	} catch (error) {
 	    // Handle network errors
