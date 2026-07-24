@@ -208,6 +208,109 @@ class GoogleSignInView(APIView):
     Authenticates Google Identity Services ID tokens and links users by email.
     """
 
+    permission_classes = (AllowAny,)
+    serializer_class = GoogleSignInSerializer
+    throttle_classes = [LoginRateThrottle]
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+
+        client_id = getattr(settings, 'GOOGLE_OAUTH_CLIENT_ID', '')
+        if not client_id:
+            return Response(
+                {'detail': 'Google Sign-In is not configured.'},
+                status=status.HTTP_503_SERVICE_UNAVAILABLE,
+            )
+
+        try:
+            credential = serializer.validated_data['credential']
+            signing_key = jwt.PyJWKClient(
+                'https://www.googleapis.com/oauth2/v3/certs'
+            ).get_signing_key_from_jwt(credential)
+            payload = jwt.decode(
+                credential,
+                signing_key.key,
+                algorithms=['RS256'],
+                audience=client_id,
+                options={'require': ['exp', 'iat', 'sub', 'aud']},
+            )
+        except jwt.PyJWTError:
+            return Response(
+                {'detail': 'Google credential is invalid or expired.'},
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+
+        if payload.get('iss') not in {'accounts.google.com', 'https://accounts.google.com'}:
+            return Response({'detail': 'Invalid Google token issuer.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        if not payload.get('email_verified'):
+            return Response({'detail': 'Google account email is not verified.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        google_id = payload.get('sub')
+        email = get_user_model().objects.normalize_email(payload.get('email', ''))
+        if not google_id or not email:
+            return Response({'detail': 'Google credential is missing required identity data.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        name = payload.get('name') or ''
+        picture = payload.get('picture') or ''
+        UserModel = get_user_model()
+
+        with transaction.atomic():
+            social_account = (
+                SocialAccount.objects.select_related('user')
+                .filter(provider=SocialAccount.PROVIDER_GOOGLE, provider_user_id=google_id)
+                .first()
+            )
+
+            if social_account:
+                user = social_account.user
+            else:
+                user = UserModel.objects.filter(email__iexact=email).first()
+                if not user:
+                    user = UserModel.objects.create_user(
+                        username=_unique_username(email, name),
+                        email=email,
+                        password=None,
+                        first_name=payload.get('given_name', '')[:150],
+                        last_name=payload.get('family_name', '')[:150],
+                    )
+                    user.set_unusable_password()
+                    user.save(update_fields=['password'])
+
+                social_account = SocialAccount.objects.create(
+                    user=user,
+                    provider=SocialAccount.PROVIDER_GOOGLE,
+                    provider_user_id=google_id,
+                    email=email,
+                    name=name,
+                    picture_url=picture,
+                )
+
+            if not user.is_active:
+                return Response({'detail': 'Invalid email or password.'}, status=status.HTTP_401_UNAUTHORIZED)
+
+            profile, _ = UserProfile.objects.get_or_create(user=user)
+            if picture and not profile.avatar_url:
+                profile.avatar_url = picture
+                profile.save(update_fields=['avatar_url'])
+
+            changed_fields = []
+            if social_account.email != email:
+                social_account.email = email
+                changed_fields.append('email')
+            if social_account.name != name:
+                social_account.name = name
+                changed_fields.append('name')
+            if social_account.picture_url != picture:
+                social_account.picture_url = picture
+                changed_fields.append('picture_url')
+            if changed_fields:
+                changed_fields.append('updated_at')
+                social_account.save(update_fields=changed_fields)
+
+        return _token_response(user, 'User logged in with Google successfully')
+
 
 class RefreshTokenCookieView(TokenRefreshView):
     """
