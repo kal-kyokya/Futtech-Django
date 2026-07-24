@@ -243,12 +243,33 @@ class GoogleSignInTests(AuthTestBase):
         with patch('user_auth.views.jwt.PyJWKClient') as jwk_client, \
              patch('user_auth.views.jwt.decode', return_value=payload):
             jwk_client.return_value.get_signing_key_from_jwt.return_value = key
-            return self.client.post(
-                self.google_url,
-                {'credential': credential},
-                format='json',
-                secure=True,
-            )
+            return self.client.post(self.google_url,
+                                    {'credential': credential},
+                                    format='json',
+                                    secure=True,
+                                    )
+
+    @override_settings(GOOGLE_OAUTH_CLIENT_ID='test-client-id.apps.googleusercontent.com')
+    def test_google_sign_in_creates_user_and_social_account(self):
+        response = self.google_login({
+            'iss': 'https://accounts.google.com',
+            'sub': 'google-123',
+            'email': 'player@example.com',
+            'email_verified': True,
+            'name': 'Google Player',
+            'given_name': 'Google',
+            'family_name': 'Player',
+            'picture': 'https://example.com/avatar.png',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.data['message'], 'User logged in with Google successfully')
+        self.assertIn('access', response.data)
+        user = self.user_model.objects.get(email='player@example.com')
+        self.assertFalse(user.has_usable_password())
+        self.assertEqual(user.social_accounts.get().provider_user_id, 'google-123')
+        self.assertEqual(user.profile.avatar_url, 'https://example.com/avatar.png')
+        self.assertIsNotNone(response.cookies.get('refresh_token'))
 
 class TokenRefreshTests(AuthTestBase):
     """
