@@ -13,19 +13,74 @@ from rest_framework.views import APIView
 from futtech_backend.throttles import LoginRateThrottle
 
 from django.conf import settings
+from django.contrib.auth import get_user_model
+from django.db import transaction
+from django.utils.text import slugify
+import jwt
 
 from .serializers import (
     UserRegistrationSerializer,
     UserLoginSerializer,
     UserUpdateSerializer,
     CurrentUserSerializer,
+    GoogleSignInSerializer,
 )
 
 from video_management.models import UserProfile
+from .models import SocialAccount
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from rest_framework_simplejwt.views import TokenRefreshView
+
+
+def _user_payload(user):
+    """
+    Returns the frontend's common authenticated-user response shape.
+    """
+
+    return {
+        'id': user.id,
+        'username': user.username,
+        'email': user.email,
+    }
+
+
+def _token_response(user, message, http_status=status.HTTP_200_OK):
+    """
+    Issues the same JWT pair, and refresh cookie used by password auth.
+    """
+
+    refresh = RefreshToken.for_user(user)
+    response = Response(
+        {
+            'message': message,
+            'access': str(refresh.access_token),
+            'user': _user_payload(user),
+        },
+        status=http_status,
+    )
+    response.set_cookie(
+        key='refresh_token',
+        value=str(refresh),
+        **_refresh_cookie_options(),
+    )
+    return response
+
+
+def _unique_username(email, name=''):
+    UserModel = get_user_model()
+    base = slugify(name) or email.split('@')[0]
+    base = slugify(base) or 'google-user'
+    username = base[:150]
+    counter = 1
+
+    while UserModel.objects.filter(username__iexact=username).exists():
+        suffix = f'-{counter}'
+        username = f'{base[:150 - len(suffix)]}{suffix}'
+        counter += 1
+
+    return username
 
 
 def _refresh_cookie_options():
@@ -81,11 +136,7 @@ class UserRegistrationView(generics.CreateAPIView):
         response_data = {
             'message': 'User registered successfully',
             'access': str(refresh.access_token),
-            'user': {
-                'id': user.id,
-                'username': user.username,
-                'email': user.email,
-            },
+            'user': _user_payload(user),
         }
 
         headers = self.get_success_headers(serializer.data)
@@ -137,11 +188,7 @@ class ObtainTokenCookieView(APIView):
             {
                 'message': 'User logged in successfully',
                 'access': str(refresh.access_token),
-                'user': {
-                    'id': user.id,
-                    'username': user.username,
-                    'email': user.email,
-                },
+                'user': _user_payload(user),
             },
             status=status.HTTP_200_OK
         )
@@ -154,6 +201,12 @@ class ObtainTokenCookieView(APIView):
         )
 
         return response
+
+
+class GoogleSignInView(APIView):
+    """
+    Authenticates Google Identity Services ID tokens and links users by email.
+    """
 
 
 class RefreshTokenCookieView(TokenRefreshView):
