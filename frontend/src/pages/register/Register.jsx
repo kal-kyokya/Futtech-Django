@@ -71,7 +71,10 @@ const Register = () => {
 	navigate('/drone-videos', { replace: true });
     };
 
-    const handleGoogleError = () => {
+    const handleGoogleError = (error) => {
+	if (error?.silent) {
+	    return;
+	}
 	dispatch(registrationFailure({ message: 'Google Sign-In was cancelled or failed.' }));
     };
 
