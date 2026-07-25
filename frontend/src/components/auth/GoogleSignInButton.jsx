@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 
 const GOOGLE_SCRIPT_ID = 'google-identity-services';
+const GOOGLE_SCRIPT_SRC = 'https://accounts.google.com/gsi/client';
 
-const loadGoogleScript = () => new Promise(() => {
+const loadGoogleScript = () => new Promise((resolve, reject) => {
     if (window.google?.accounts?.id) {
 	resolve();
 	return;
@@ -10,6 +11,11 @@ const loadGoogleScript = () => new Promise(() => {
 
     const existingScript = document.getElementById(GOOGLE_SCRIPT_ID);
     if (existingScript) {
+	if (existingScript.dataset.loaded === 'true') {
+	    resolve();
+	    return;
+	}
+
 	existingScript.addEventListener('load', resolve, { once: true });
 	existingScript.addEventListener('error', reject, { once: true });
 	return;
@@ -17,10 +23,13 @@ const loadGoogleScript = () => new Promise(() => {
 
     const script = document.createElement('script');
     script.id = GOOGLE_SCRIPT_ID;
-    script.src = 'https://account.google.com/gsi/client';
+    script.src = GOOGLE_SCRIPT_SRC;
     script.async = true;
     script.defer = true;
-    script.onload = resolve;
+    script.onload = () => {
+	script.dataset.loaded = 'true';
+	resolve();
+    };
     script.onerror = reject;
     document.head.appendChild(script);
 });
@@ -28,6 +37,7 @@ const loadGoogleScript = () => new Promise(() => {
 const GoogleSignInButton = ({ onSuccess, onError, disabled = false, text = 'signin_with' }) => {
     const buttonRef = useRef(null);
     const [ready, setReady] = useState(false);
+    const [loadFailed, setLoadFailed] = useState(false);
     const clientId = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
 
     useEffect(() => {
@@ -36,11 +46,16 @@ const GoogleSignInButton = ({ onSuccess, onError, disabled = false, text = 'sign
 	}
 
 	let cancelled = false;
+	setReady(false);
+	setLoadFailed(false);
+
 	loadGoogleScript()
 	    .then(() => {
 		if (cancelled || !buttonRef.current) {
 		    return;
 		}
+
+		buttonRef.current.innerHTML = '';
 		window.google.accounts.id.initialize({
 		    client_id: clientId,
 		    callback: onSuccess,
@@ -55,7 +70,8 @@ const GoogleSignInButton = ({ onSuccess, onError, disabled = false, text = 'sign
 	    })
 	    .catch(() => {
 		if (!cancelled) {
-		    onError?.();
+		    setLoadFailed(true);
+		    onError?.({ silent: true });
 		}
 	    });
 
@@ -69,8 +85,11 @@ const GoogleSignInButton = ({ onSuccess, onError, disabled = false, text = 'sign
     }
 
     return (
-	<div classname={disabled || !ready ? 'googleSignIn googleSignIn--disabled' : 'googleSignIn'}>
+	<div className={disabled || !ready ? 'googleSignIn googleSignIn--disabled' : 'googleSignIn'}>
 	    <div ref={buttonRef} />
+	    {loadFailed && (
+		<p className='fieldError'>Google Sign-In is currently unavailable.</p>
+	    )}
 	</div>
     );
 };
