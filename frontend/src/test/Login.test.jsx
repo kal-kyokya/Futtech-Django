@@ -20,6 +20,7 @@ const TestRoutes = () => (
     <Routes>
 	<Route path='/login' element={<Login />} />
 	<Route path='/' element={<HomeStub />} />
+	<Route path='/drone-videos' element={<HomeStub />} />
     </Routes>
 );
 
