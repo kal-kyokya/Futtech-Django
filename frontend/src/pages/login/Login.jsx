@@ -125,7 +125,10 @@ const Login = () => {
 	await completeLogin(() => authService.loginWithGoogle(credential));
     };
 
-    const handleGoogleError = () => {
+    const handleGoogleError = (error) => {
+	if (error?.silent) {
+	    return;
+	}
 	authDispatch(loginFailure({ message: 'Google Sign-In was cancelled or failed.' }));
     };
 
