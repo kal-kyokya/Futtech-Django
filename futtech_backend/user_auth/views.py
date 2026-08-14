@@ -216,7 +216,10 @@ class GoogleSignInView(APIView):
         serializer = self.serializer_class(data=request.data)
         serializer.is_valid(raise_exception=True)
 
-        client_id = getattr(settings, 'GOOGLE_OAUTH_CLIENT_ID', '')
+        client_id = (
+            getattr(settings, 'GOOGLE_OAUTH_CLIENT_ID', '')
+            or getattr(settings, 'GOOGLE_CLIENT_ID', '')
+        )
         if not client_id:
             return Response(
                 {'detail': 'Google Sign-In is not configured.'},
