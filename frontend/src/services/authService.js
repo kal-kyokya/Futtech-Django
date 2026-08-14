@@ -85,7 +85,7 @@ class AuthService {
     async loginWithGoogle(credential) {
 
 	try {
-	    const response = await apiClient.post('/auth/google', { credential });
+	    const response = await apiClient.post('/auth/google/', { credential });
 	    const { message, access, user } = response.data;
 
 	    tokenService.setAccessToken(access);
