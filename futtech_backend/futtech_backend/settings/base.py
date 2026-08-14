@@ -255,4 +255,7 @@ CSRF_COOKIE_SAMESITE = 'Lax'
 SECURE_REFERRER_POLICY = 'same-origin'
 
 # Google Identity Services OAuth client ID used to verify frontend ID tokens.
-GOOGLE_OAUTH_CLIENT_ID = os.environ.get('GOOGLE_OAUTH_CLIENT_ID', '')
+GOOGLE_OAUTH_CLIENT_ID = os.environ.get(
+    'GOOGLE_OAUTH_CLIENT_ID',
+    os.environ.get('GOOGLE_CLIENT_ID', ''),
+)
