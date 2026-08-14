@@ -25,6 +25,7 @@ const apiClient = axios.create({
 const isAuthEndpoint = (url = '') => (
     url.includes('/auth/login') ||
 	url.includes('/auth/register') ||
+	url.includes('/auth/google') ||
 	url.includes('/auth/refresh') ||
 	url.includes('/auth/token/refresh')
 );
@@ -139,7 +140,7 @@ apiClient.interceptors.response.use(
 	}
 
 	if (!originalRequest) {
-	    error.normalized = normalizedError(error);
+	    error.normalized = normalizeError(error);
 	    return Promise.reject(error);
 	}
 
