@@ -40,10 +40,29 @@ describe('GoogleSignInButton', () => {
 	await waitFor(() => {
 	    expect(window.google.accounts.id.initialize).toHaveBeenCalledWith({
 		client_id: 'test-client-id.apps.googleusercontent.com',
-		callback: onSuccess,
+		callback: expect.any(Function),
 	    });
 	});
 	expect(screen.getByRole('button', { name: /sign in with google/i })).toBeImTheDocument();
+    });
+
+
+    it('initializes Google Identity Services once for the same client id across rerenders', async () => {
+	vi.stubEnv('VITE_GOOGLE_OAUTH_CLIENT_ID', 'test-client-id.apps.googleusercontent.com');
+
+	const { rerender } = render(<GoogleSignInButton onSuccess={vi.fn()} text='signin_with' />);
+	completeGoogleScriptLoad();
+
+	await waitFor(() => {
+	    expect(window.google.accounts.id.initialize).toHaveBeenCalledTimes(1);
+	});
+
+	rerender(<GoogleSignInButton onSuccess={vi.fn()} text='continue_with' />);
+
+	await waitFor(() => {
+	    expect(window.google.accounts.id.renderButton).toHaveBeenCalledTimes(2);
+	});
+	expect(window.google.accounts.id.initialize).toHaveBeenCalledTimes(1);
     });
 
     it('does not show the cancellation message when the script fails to load', async () => {
