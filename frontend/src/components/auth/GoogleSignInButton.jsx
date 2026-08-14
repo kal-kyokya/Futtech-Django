@@ -3,6 +3,10 @@ import { useEffect, useRef, useState } from 'react';
 const GOOGLE_SCRIPT_ID = 'google-identity-services';
 const GOOGLE_SCRIPT_SRC = 'https://accounts.google.com/gsi/client';
 
+let initializedClientId = null;
+let initializedGoogleAccountsId = null;
+let activeCredentialCallback = null;
+
 const loadGoogleScript = () => new Promise((resolve, reject) => {
     if (window.google?.accounts?.id) {
 	resolve();
@@ -34,11 +38,35 @@ const loadGoogleScript = () => new Promise((resolve, reject) => {
     document.head.appendChild(script);
 });
 
+const initializeGoogleIdentity = (clientId) => {
+    const googleAccountsId = window.google.accounts.id;
+    if (initializedClientId === clientId && initializedGoogleAccountsId === googleAccountsId) {
+	return;
+    }
+
+    googleAccountsId.initialize({
+	client_id: clientId,
+	callback: (response) => activeCredentialCallback?.(response),
+    });
+    initializedClientId = clientId;
+    initializedGoogleAccountsId = googleAccountsId;
+};
+
 const GoogleSignInButton = ({ onSuccess, onError, disabled = false, text = 'signin_with' }) => {
     const buttonRef = useRef(null);
     const [ready, setReady] = useState(false);
     const [loadFailed, setLoadFailed] = useState(false);
     const clientId = import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID;
+
+    useEffect(() => {
+	activeCredentialCallback = onSuccess;
+
+	return () => {
+	    if (activeCredentialCallback === onSuccess) {
+		activeCredentialCallback = null;
+	    }
+	};
+    }, [onSuccess]);
 
     useEffect(() => {
 	if (!clientId) {
@@ -55,11 +83,8 @@ const GoogleSignInButton = ({ onSuccess, onError, disabled = false, text = 'sign
 		    return;
 		}
 
+		initializeGoogleIdentity(clientId);
 		buttonRef.current.innerHTML = '';
-		window.google.accounts.id.initialize({
-		    client_id: clientId,
-		    callback: onSuccess,
-		});
 		window.google.accounts.id.renderButton(buttonRef.current, {
 		    theme: 'outline',
 		    size: 'large',
@@ -78,7 +103,7 @@ const GoogleSignInButton = ({ onSuccess, onError, disabled = false, text = 'sign
 	return () => {
 	    cancelled = true;
 	};
-    }, [clientId, onError, onSuccess, text]);
+    }, [clientId, onError, text]);
 
     if (!clientId) {
 	return null;
