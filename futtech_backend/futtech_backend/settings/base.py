@@ -188,6 +188,18 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Default domain name
 
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME')
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://127.0.0.1:5174')
+
+EMAIL_BACKEND = os.environ.get(
+    'EMAIL_BACKEND',
+    'django.core.mail.backends.console.EmailBackend',
+)
+EMAIL_HOST = os.environ.get('EMAIL_HOST', '')
+EMAIL_PORT = int(os.environ.get('EMAIL_PORT', '587'))
+EMAIL_USE_TLS = os.environ.get('EMAIL_USE_TLS', 'true').lower() in {'1', 'true', 'yes'}
+EMAIL_HOST_USER = os.environ.get('EMAIL_HOST_USER', '')
+EMAIL_HOST_PASSWORD = os.environ.get('EMAIL_HOST_PASSWORD', '')
+DEFAULT_FROM_EMAIL = os.environ.get('DEFAULT_FROM_EMAIL', 'Futtech <no-reply@futtech.local>')
 
 # dj-stripe migrations need this setting in every environment, including tests
 DJSTRIPE_FOREIGN_KEY_TO_FIELD = 'id'
