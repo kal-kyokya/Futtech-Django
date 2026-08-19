@@ -74,3 +74,9 @@ Use these flowcharts before changing auth code:
 - Confirm backend list response shape (`count`, `next`, `results`).
 - Confirm reducer action payloads match backend IDs/fields.
 - Verify user ownership/public visibility assumptions in backend queryset.
+
+## Welcome email testing
+
+The backend sends a welcome email only after successful account creation through nornal registration or first-time Google Sign-In. Local development defaults to Django's console email backend, so messages are printed to the backend process instead of being delivered to real inboxes.
+
+To test with another local or production mail backend, set the backend email variables from `futtech_backend/env.sample`. Keep SMTP/API credentials in backend environment variables only; do not expose them through Vite frontend variables.
