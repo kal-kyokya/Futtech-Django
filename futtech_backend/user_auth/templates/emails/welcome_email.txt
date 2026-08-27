@@ -1,0 +1,12 @@
+Hi {{ display_name }},
+
+Welcome to Futtech!
+
+Futtech is a football training platform built to help players access tools, training content, and video workflows that support their development.
+
+Your account is ready. Visit Futtech to continue setting up your profile and start exploring:
+{{ frontend_url }}
+
+We're glad to have you with us.
+
+The Futtech Team
