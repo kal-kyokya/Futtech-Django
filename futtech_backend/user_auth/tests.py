@@ -7,6 +7,8 @@ from django.contrib.auth import get_user_model
 from django.test import override_settings
 from django.urls import reverse
 from django.core.cache import cache
+from django.core import mail
+from django.core.mail.backends.base import BaseEmailBackend
 from unittest.mock import Mock, patch
 from rest_framework.test import APITestCase, APIClient
 
@@ -21,10 +23,18 @@ TEST_DATABASES = {
 TEST_PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
 
 
+class FailingEmailBackend(BaseEmailBackend):
+    def send_messages(self, email_messages):
+        raise RuntimError('Simulated email provider failure')
+
+
 @override_settings(
     DATABASES=TEST_DATABASES,
     PASSWORD_HASHERS=TEST_PASSWORD_HASHERS,
     SECRET_KEY='test-secret-key',
+    EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
+    DEFAULT_FROM_EMAIL='Futtech <test@example.com>',
+    FRONTEND_URL='https://futtech.example.test',
     SECURE_SSL_REDIRECT=False,
     REST_FRAMEWORK={
         'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -46,6 +56,7 @@ class AuthTestBase(APITestCase):
 
     def setUp(self):
         cache.clear()
+        mail.outbox = []
         self.client = APIClient()
         self.user_model = get_user_model()
         self.registration_url = reverse('user-registration')
@@ -132,6 +143,11 @@ class RegistrationTests(AuthTestBase):
         refresh_cookie = response.cookies.get('refresh_token')
         self.assertIsNotNone(refresh_cookie)
         self.assertTrue(refresh_cookie.value)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, [self.registration_payload['email']])
+        self.assertEqual(mail.outbox[0].subject, 'Welcome to Futtech!')
+        self.assertIn('Hi newuser', mail.outbox[0].body)
+        self.assertIn('https://futtech.example.test', mail.outbox[0].body)
 
     def test_registration_duplicate_email_returns_field_error(self):
         self.create_user(email=self.registration_payload['email'])
@@ -155,6 +171,29 @@ class RegistrationTests(AuthTestBase):
 
         self.assertEqual(response.status_code, 400)
         self.assert_field_error(response, 'username', 'already exists')
+
+    @override_settings(EMAIL_BACKEND='user_auth.tests.FailingEmailBackend')
+    def test_registration_succeeds_when_welcome_email_fails(self):
+        response = self.register_user()
+
+        self.asssertEqual(response.status_code, 201)
+        self.assertTrue(
+            self.user_model.objects.filter(
+                email=self.registration_payload['email']
+            ).exists()
+        )
+
+    def test_duplicate_registration_does_not_send_welcome_email(self):
+        self.register_user()
+        mail.outbox = []
+
+        response = self.register_user({
+            **self.registration_payload,
+            'username': 'anotheruser',
+        })
+
+        self.assertEqual(response.status_code, 400)
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_registration_missing_password_returns_field_errors(self):
         response = self.register_user({
@@ -205,6 +244,7 @@ class LoginTests(AuthTestBase):
         refresh_cookie = response.cookies.get('refresh_token')
         self.assertIsNotNone(refresh_cookie)
         self.assertTrue(refresh_cookie.value)
+        self.assertEqual(len(mail.outbox), 0)
 
     def test_login_with_invalid_credentials_returns_401(self):
         user = self.create_user()
@@ -270,6 +310,9 @@ class GoogleSignInTests(AuthTestBase):
         self.assertEqual(user.social_accounts.get().provider_user_id, 'google-123')
         self.assertEqual(user.profile.avatar_url, 'https://example.com/avatar.png')
         self.assertIsNotNone(response.cookies.get('refresh_token'))
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ['player@example.com'])
+        self.assertIn('Hi Google Player', mail.outbox[0].body)
 
     @override_settings(GOOGLE_OAUTH_CLIENT_ID='test-client-id.apps.googleusercontent.com')
     def test_google_sign_in_links_existing_email(self):
@@ -287,6 +330,23 @@ class GoogleSignInTests(AuthTestBase):
         self.assertEqual(response.data['user']['id'], existing_user.id)
         self.assertEqual(self.user_model.objects.filter(email='player@example.com').count(), 1)
         self.assertEqual(existing_user.social_accounts.get().provider_user_id, 'google-456')
+        self.assertEqual(len(mail.outbox), 0)
+
+    @override_settings(GOOGLE_OAUTH_CLIENT_ID='test-client-id.apps.googleusercontent.com')
+    def test_google_sign_in_existing_social_account_sends_no_welcome_email(self):
+        self.test_google_sign_in_creates_user_and_social_account()
+        mail.outbox = []
+
+        response = self.google_login({
+            'iss': 'https://accounts.google.com',
+            'sub': 'google-123',
+            'email': 'player@example.com',
+            'email_verified': True,
+            'name': 'Google Player',
+        })
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(len(mail.outbox), 0)
 
 
 class TokenRefreshTests(AuthTestBase):
