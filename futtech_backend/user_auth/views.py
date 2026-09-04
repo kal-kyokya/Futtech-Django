@@ -28,6 +28,7 @@ from .serializers import (
 
 from video_management.models import UserProfile
 from .models import SocialAccount
+from .emails import send_welcome_email
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
@@ -130,6 +131,7 @@ class UserRegistrationView(generics.CreateAPIView):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         user = serializer.save()
+        send_welcome_email(user)
 
         refresh = RefreshToken.for_user(user)
 
@@ -266,6 +268,7 @@ class GoogleSignInView(APIView):
                 .first()
             )
 
+            new_user_created = False
             if social_account:
                 user = social_account.user
             else:
@@ -280,6 +283,7 @@ class GoogleSignInView(APIView):
                     )
                     user.set_unusable_password()
                     user.save(update_fields=['password'])
+                    new_user_created = True
 
                 social_account = SocialAccount.objects.create(
                     user=user,
@@ -311,6 +315,10 @@ class GoogleSignInView(APIView):
             if changed_fields:
                 changed_fields.append('updated_at')
                 social_account.save(update_fields=changed_fields)
+
+
+        if new_user_created:
+            send_welcome_email(user)
 
         return _token_response(user, 'User logged in with Google successfully')
 
