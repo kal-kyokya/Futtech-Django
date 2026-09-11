@@ -155,3 +155,42 @@ The login and registration pages display **Sign in with Google** when `VITE_GOOG
 | Official Link | [Futtech](https://www.futtech.kalkyokya.tech/) |
 | Medium Blog Posts | [Futtech-Django](https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5), [Futtech - MERN version](https://medium.com/@kal-kyokya/the-futtech-startup-a-journey-of-engineering-prototyping-debugging-entrepreneurship-e3bfb91d2de5) |
 | GitHub Commits | 1130 |
+
+## Futtech XI
+
+Futtech XI is a self-contained, evidence-aware football intelligence demonstration. It uses four explicit, typed agent hand-offs so research facts cannot silently become tactical claims.
+
+```text
+User → POST /api/futtech-xi/analyze → Researcher → Tactical Analyst
+                                      └────────────→ Content Strategist → Chief Analyst → Report
+```
+
+- **Researcher:** matches a query to a small curated dataset, labels the source, and records limitations.
+- **Tactical Analyst:** consumes research only; it separates observations from interpretations.
+- **Content Strategist:** turns the supported analysis into three short-form ideas and one serious tactical format.
+- **Chief Analyst:** quality-controls claims by retaining only findings with matching confirmed evidence, then synthesizes the final report.
+
+The API is public for the demo: `POST /api/futtech-xi/analyze` with `{"query": "Analyze Barcelona's attacking strengths."}`. `GET /healthz` provides a Cloud Run health check. The minimal UI is at `/futtech-xi`; set `VITE_FUTTECH_XI_API_URL` only when the backend is not local.
+
+### Run Futtech XI locally
+
+```bash
+cd futtech_backend
+DJANGO_SETTINGS_MODULE=futtech_backend.settings.dev python manage.py runserver
+# in a second shell
+cd frontend && npm run dev
+```
+
+Run the focused tests with `cd futtech_backend && DJANGO_SETTINGS_MODULE=futtech_backend.settings.dev python manage.py test futtech_xi`.
+
+### Docker and Cloud Run
+
+```bash
+docker build -f Dockerfile.futtech-xi -t futtech-xi .
+docker run --rm -p 8080:8080 -e PORT=8080 -e DJANGO_SETTINGS_MODULE=futtech_backend.settings.dev futtech-xi
+
+gcloud run deploy futtech-xi --source . --region=YOUR_REGION --project=YOUR_PROJECT --allow-unauthenticated --port=8080
+```
+
+Use a production settings module and set the existing Django configuration in Cloud Run before a production deployment. The deployed service URL is `https://YOUR_FUTTECH_XI_SERVICE_URL`. This implementation intentionally uses no live provider or LLM key: it is a deterministic curated demonstration, not a source for current scores, injuries, standings, or player statitics.
+Future improvements: connect a licensed football data provider and an approved JarvisCore LLM runner while preserving the same typed contracts and Chief Analyst evidence gate.
