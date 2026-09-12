@@ -33,7 +33,7 @@ class FuttechXIOrchestrator:
         research = self._run(self.researcher, query) 
         tactical = self._run(self.tactician, research) 
         content = self._run(self.strategist, research, tactical) 
-        chief = self._run(self.chief, research, tactical, content) 
+        report = self._run(self.chief, research, tactical, content) 
 
         return {
             "status": "completed",
@@ -44,5 +44,5 @@ class FuttechXIOrchestrator:
                 tactical.to_dict(),
                 content.to_dict()
             ],
-            "report": report.to_dict()
+            "report": report.to_dict(),
         }
