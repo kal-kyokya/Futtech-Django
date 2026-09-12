@@ -32,7 +32,7 @@ from futtech_xi.views import healthz
 
 urlpatterns = [
     path('healthz', healthz, name='healthz'),
-    path('api/futtech-xi/', include('futtech_xi.urls')),
+    path('api/v2/futtech-xi/', include('futtech_xi.urls')),
     path('admin/', admin.site.urls),
     path('stripe/', include(
         'djstripe.urls',
