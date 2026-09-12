@@ -152,6 +152,11 @@ const Login = () => {
 				<span>Public Showcase</span>
 			    </button>
 			</Link>
+			<Link to='/futtech-xi' className='link'>
+			    <button className='button--secondary'>
+				<span>Futtech XI</span>
+			    </button>
+			</Link>
 			<Link to='/register' className='link'>
 			    <button className='button--primary'>
 				<span>Register</span>
