@@ -82,6 +82,7 @@ INSTALLED_APPS = [
     'video_management.apps.VideoManagementConfig',
     'playlists.apps.PlaylistsConfig',
     'tenants.apps.TenantsConfig',
+    'futtech_xi.apps.FuttechXIConfig',
 ]
 
 MIDDLEWARE = [
