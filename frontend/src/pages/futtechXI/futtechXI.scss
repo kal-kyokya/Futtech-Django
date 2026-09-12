@@ -1,0 +1,108 @@
+.xi-page {
+    min-height: 100vh;
+    padding: 48px 20px;
+    background: #07150d;
+    color: #eff9ef;
+    font-family: Arial, sans-serif;
+}
+
+.xi-card {
+    max-width: 920px;
+    margin: auto;
+}
+
+.xi-eyebrow {
+    color: #9de04a;
+    font-size: .75rem;
+    font-weight: bold;
+    letter-spacing: .11em;
+}
+
+.xi-page h1 {
+    font-size: clamp(2rem, 6vw, 4rem);
+    margin: 8px 0;
+}
+
+.xi-page p {
+    line-height: 1.55;
+}
+
+.xi-page form {
+    margin-top: 28px;
+    display: grid;
+    gap: 10px;
+}
+
+.xi-page textarea {
+    min-height: 100px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #53715c;
+    font: inherit;
+}
+
+.xi-page button {
+    width: fit-content;
+    padding: 12px 20px;
+    border: 0;
+    border-radius: 8px;
+    background: #9de04a;
+    color: #102210;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.xi-page button:disabled {
+    opacity: .7;
+}
+
+.xi-report {
+    margin-top: 30px;
+    padding: 24px;
+    background: #102819;
+    border-radius: 12px;
+}
+
+.xi-head {
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:center;
+}
+
+.xi-head strong {
+    background:#9de04a;
+    color:#102210;
+    border-radius:999px;
+    padding:9px 12px;
+    white-space:nowrap;
+}
+
+.xi-ideas {
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:12px;
+}
+
+.xi-ideas article {
+    background:#173822;
+    padding:14px;
+    border-radius:8px;
+}
+
+.xi-ideas h4 {
+    margin:6px 0;
+}
+
+.xi-ideas small {
+    color:#9de04a;
+    text-transform:uppercase;
+}
+
+.xi-status {
+    color:#bcd9c0;
+}
+
+.xi-error {
+    color:#ffaaa5;
+}
