@@ -2,7 +2,7 @@ import './futtechXI.scss';
 import { useState } from 'react';
 import PublicHeader from '../../components/publicHeader/PublicHeader';
 
-const API = `${import.meta.env.VITE_FUTTECH_XI_API_URL || 'http://127.0.0.1:8000'}/api/futtech-xi/analyze`;
+const API = `${import.meta.env.VITE_API_BASE_URL || 'http://127.0.0.1:8000'}/futtech-xi/analyze`;
 const INITIAL_QUERY = "Analyze Barcelona's attacking strengths and suggest three content ideas";
 
 export default function Futtech() {
