@@ -1,7 +1,7 @@
 .xi-page {
     min-height: 100vh;
     padding: 48px 20px;
-    background: #07150d;
+    background: linear-gradient(180deg, #0d1c23 0%, #122731 45%, #0d1c23 100%);
     color: #eff9ef;
     font-family: Arial, sans-serif;
 }
@@ -12,7 +12,7 @@
 }
 
 .xi-eyebrow {
-    color: #9de04a;
+    color: #7fd1ff;
     font-size: .75rem;
     font-weight: bold;
     letter-spacing: .11em;
@@ -46,8 +46,8 @@
     padding: 12px 20px;
     border: 0;
     border-radius: 8px;
-    background: #9de04a;
-    color: #102210;
+    background: #00a3ff;
+    color: #001019;
     font-weight: bold;
     cursor: pointer;
 }
@@ -59,7 +59,7 @@
 .xi-report {
     margin-top: 30px;
     padding: 24px;
-    background: #102819;
+    background: #00a3ff;
     border-radius: 12px;
 }
 
@@ -71,8 +71,8 @@
 }
 
 .xi-head strong {
-    background:#9de04a;
-    color:#102210;
+    background: #00a3ff;
+    color: #001019;
     border-radius:999px;
     padding:9px 12px;
     white-space:nowrap;
@@ -85,7 +85,7 @@
 }
 
 .xi-ideas article {
-    background:#173822;
+    background: #00a3ff;
     padding:14px;
     border-radius:8px;
 }
@@ -95,7 +95,7 @@
 }
 
 .xi-ideas small {
-    color:#9de04a;
+    color:#7fd1ff;
     text-transform:uppercase;
 }
 

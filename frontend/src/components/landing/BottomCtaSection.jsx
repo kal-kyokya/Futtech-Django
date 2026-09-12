@@ -8,7 +8,7 @@ const BottomCtaSection = () => (
 	</h2>
 	<a
 	    className='button button--primary'
-	    href='#registration-form'
+	    href='https://www.futtech.kalkyokya.tech/futtech-xi'
 	>
 	    Start Your First Analysis
 	</a>

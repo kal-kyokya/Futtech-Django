@@ -144,6 +144,12 @@ const Register = () => {
 			    <span>Public Showcase</span>
 			</Link>
 			<Link
+			    to='/futtech-xi'
+			    className='button button--secondary'
+			>
+			    <span>Futtech XI</span>
+			</Link>
+			<Link
 			    to='/about'
 			    className='button button--secondary'
 			>

@@ -11,7 +11,7 @@ const PublicHeader = () => (
 		src='/logo.png'
 		alt='Futtech logo'
 	    />
-	    <span>Futtech Showcase</span>
+	    <span>Futtech Explore</span>
 	</Link>
 
 	<nav className='publicHeader__nav'>
@@ -20,6 +20,12 @@ const PublicHeader = () => (
 		className='button button--secondary'
 	    >
 		<span>Showcase</span>
+	    </Link>
+	    <Link
+		to='/futtech-xi'
+		className='button button--secondary'
+	    >
+		<span>Futtech XI</span>
 	    </Link>
 	    <Link
 		to='/home'

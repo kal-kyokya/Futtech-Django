@@ -14,9 +14,9 @@ const HeroSection = () => (
 	    <div className='heroSection__actions'>
 		<a
 		    className='button button--primary'
-		    href='#registration-form'
+		    href='https://www.futtech.kalkyokya.tech/futtech-xi'
 		>
-		    Get Your Video Analyzed
+		    Chat with Ndoto, our AI football focus model.
 		</a>
 		<a
 		    className='button button--secondary'
