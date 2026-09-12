@@ -22,6 +22,7 @@ import Playlists from './pages/playlists/Playlists';
 import Pricing from './pages/pricing/Pricing';
 import Showcase from './pages/showcase/Showcase';
 import ShowcaseVideo from './pages/showcaseVideo/ShowcaseVideo';
+import FuttechXI from './pages/futtechXI/FuttechXI';
 
 
 const App = () => {
@@ -86,6 +87,7 @@ const App = () => {
 		<Route path='showcase' element={<Showcase />} />
 		<Route path='showcase/:slug' element={<ShowcaseVideo />} />
 		<Route path='about' element={<About />} />
+		<Route path='futtech-xi' element={<FuttechXI />} />
 		<Route path='home' element={
 			   <PrivateRoute isReady={authReady}>
 			       <Home />
