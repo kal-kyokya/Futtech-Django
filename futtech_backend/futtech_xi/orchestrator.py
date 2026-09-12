@@ -1,6 +1,6 @@
 import logging
 from concurrent.futures import ThreadPoolExecutor, TimeoutError
-from .agents import ChiefAnalystAgent, ContentStrategisAgent, ResearchAgent, TacticalAnalystAgent
+from .agents import ChiefAnalystAgent, ContentStrategistAgent, ResearcherAgent, TacticalAnalystAgent
 
 logger = logging.getLogger(__name__)
 

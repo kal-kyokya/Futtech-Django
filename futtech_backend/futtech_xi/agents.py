@@ -110,7 +110,7 @@ class ChiefAnalystAgent(DeterministicAgent):
     capabilities = ["quality-control", "report-synthesis"]
     name = "chief-analyst"
 
-    def run(self, research: Researchresult, tactical: TacticalResult, content: ContentResult) -> FinalReport:
+    def run(self, research: ResearchResult, tactical: TacticalResult, content: ContentResult) -> FinalReport:
         # QC: retain only findings with an exact confirmed evidence claim, and downgrade failed/degraded hand-offs.
         supported = {item.claim for item in research.evidence if item.confirmed}
         findings = [item for item in research.findings if item in supported]
