@@ -29,7 +29,7 @@ export default function Futtech() {
 					 });
 	    const data = await response.json();
 
-	    if (!reponse.ok) throw new Error(data.detail || 'Unable to complete analysis.');
+	    if (!response.ok) throw new Error(data.detail || 'Unable to complete analysis.');
 	    setResult(data);
 	    setState('done');
 	} catch (err) {
@@ -70,8 +70,8 @@ export default function Futtech() {
 		       }
 
 		       {error &&
-			<p className="xi-erro">
-			    {error}
+			<p className="xi-error">
+			    There is a: {error}
 			</p>}
 
 		       {result &&
