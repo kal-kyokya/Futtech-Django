@@ -57,6 +57,9 @@ class FuttechXITests(SimpleTestCase):
         self.assertEqual(200, response.status_code)
         self.assertEqual("completed", response.data["status"])
 
+        payload = response.json()
+        self.assertEqual(payload["report"]["match"], "FC Barcelona (curated demonstration profile)")
+
     def test_agent_failure_is_safe(self):
         class Broken:
             name = "researcher"
