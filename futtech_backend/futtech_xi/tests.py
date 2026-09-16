@@ -50,9 +50,9 @@ class FuttechXITests(SimpleTestCase):
         self.assertEqual(self.client.get("/healthz").status_code, 200)
 
     def test_api_validation_and_demo(self):
-        self.assertEqual(400, self.client.post("/api/futtech-xi/analyze", {}, format="json").status_code)
+        self.assertEqual(400, self.client.post("/api/v2/futtech-xi/analyze", {}, format="json").status_code)
 
-        response = self.client.post("/api/futtech-xi/analyze", {"query": "Analyze Barcelona's attacking strengths."}, format="json")
+        response = self.client.post("/api/v2/futtech-xi/analyze", {"query": "Analyze Barcelona's attacking strengths."}, format="json")
 
         self.assertEqual(200, response.status_code)
         self.assertEqual("completed", response.data["status"])
