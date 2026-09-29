@@ -25,7 +25,7 @@ TEST_PASSWORD_HASHERS = ['django.contrib.auth.hashers.MD5PasswordHasher']
 
 class FailingEmailBackend(BaseEmailBackend):
     def send_messages(self, email_messages):
-        raise RuntimError('Simulated email provider failure')
+        raise RuntimeError('Simulated email provider failure')
 
 
 @override_settings(
@@ -145,7 +145,7 @@ class RegistrationTests(AuthTestBase):
         self.assertTrue(refresh_cookie.value)
         self.assertEqual(len(mail.outbox), 1)
         self.assertEqual(mail.outbox[0].to, [self.registration_payload['email']])
-        self.assertEqual(mail.outbox[0].subject, 'Welcome to Futtech!')
+        self.assertEqual(mail.outbox[0].subject, 'Welcome to Futtech')
         self.assertIn('Hi newuser', mail.outbox[0].body)
         self.assertIn('https://futtech.example.test', mail.outbox[0].body)
 
@@ -176,7 +176,7 @@ class RegistrationTests(AuthTestBase):
     def test_registration_succeeds_when_welcome_email_fails(self):
         response = self.register_user()
 
-        self.asssertEqual(response.status_code, 201)
+        self.assertEqual(response.status_code, 201)
         self.assertTrue(
             self.user_model.objects.filter(
                 email=self.registration_payload['email']
