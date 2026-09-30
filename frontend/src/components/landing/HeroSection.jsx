@@ -6,8 +6,11 @@ const HeroSection = () => (
 	<div className='heroSection__content'>
 	    <p className='heroSection__badge'>Football Video Analysis</p>
 	    <h1 id='hero-heading'>
-		Football Video Analysis | Match Breakdown, Player Analysis, Drone Footage &amp; High-Performance Edits
+		Football Video Analysis
 	    </h1>
+	    <h2 id='hero-heading'>
+		Match Breakdown,<br /> Player Analysis,<br /> Drone Footage &amp;<br /> High-Performance Edits
+	    </h2>
 	    <p className='heroSection__subheadline'>
 		We help football players, coaches and content creators turn raw match footage into clear, actionable insights.
 	    </p>
@@ -16,7 +19,7 @@ const HeroSection = () => (
 		    className='button button--primary'
 		    href='https://www.futtech.kalkyokya.tech/futtech-xi'
 		>
-		    Chat with Ndoto, our AI football focus model.
+		    Chat with Ndoto, your AI football-focused agent.
 		</a>
 		<a
 		    className='button button--secondary'
