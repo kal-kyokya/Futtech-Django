@@ -68,7 +68,7 @@ const Register = () => {
 	}
 
 	dispatch(registrationSuccess(result.user));
-	navigate('/drone-videos', { replace: true });
+	navigate('/login');
     };
 
     const handleGoogleError = (error) => {
