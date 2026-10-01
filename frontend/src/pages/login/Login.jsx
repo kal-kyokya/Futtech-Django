@@ -174,6 +174,13 @@ const Login = () => {
 				<span>Futtech XI</span>
 			    </button>
 			</Link>
+			<Link
+			    to='/about'
+			    className='button button--secondary'
+			    onClick={closeMobileMenu}
+			>
+			    <span>About</span>
+			</Link>
 			<Link to='/register' className='link' onClick={closeMobileMenu}>
 			    <button className='button--primary'>
 				<span>Register</span>
