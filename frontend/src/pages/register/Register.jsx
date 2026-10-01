@@ -21,6 +21,7 @@ const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const { dispatch,
 	    isFetching,
@@ -29,6 +30,7 @@ const Register = () => {
     const navigate = useNavigate();
     const emailRef = useRef(null);
     const fieldErrors = registrationError?.fields || {};
+    const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
     useEffect(() => (
 	() => dispatch(clearUserError())
@@ -136,22 +138,40 @@ const Register = () => {
 			alt='Logo of the Futtech Company'
 		    />
 
-		    <div className='topActions'>
+		    <button
+			type='button'
+			className={`topMenuToggle ${isMobileMenuOpen ? 'active' : ''}`}
+			aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+			aria-expanded={isMobileMenuOpen}
+			aria-controls='register-header-navigation'
+			onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
+		    >
+			<span />
+			<span />
+			<span />
+		    </button>
+		    <div
+			id='register-navigation'
+			className={`topActions ${isMobileMenuOpen ? 'active' : ''}`}
+		    >
 			<Link
 			    to='/showcase'
 			    className='button button--secondary'
+			    onClick={closeMobileMenu}
 			>
 			    <span>Public Showcase</span>
 			</Link>
 			<Link
 			    to='/futtech-xi'
 			    className='button button--secondary'
+			    onClick={closeMobileMenu}
 			>
 			    <span>Futtech XI</span>
 			</Link>
 			<Link
 			    to='/about'
 			    className='button button--secondary'
+			    onClick={closeMobileMenu}
 			>
 			    <span>About</span>
 			</Link>
