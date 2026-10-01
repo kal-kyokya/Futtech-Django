@@ -61,8 +61,84 @@
     }
 }
 
+.publicHeader__menuToggle {
+    display: none;
+}
+
 .publicHeader__cta {
     border: 1px solid rgba(255, 255, 255, 0.35);
     padding: 0.35rem 0.8rem;
     border-radius: 999px;
+}
+
+// Match the authenticated navbar's mobile breakpoint and active-menu transition.
+@media (max-width: 767px) {
+    .publicHeader {
+	padding: 0.75rem 1rem;
+	position: relative;
+    }
+
+    .publicHeader__menuToggle {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	gap: 0.3rem;
+	width: 2.75rem;
+	height: 2.75rem;
+	padding: 0.5rem;
+	border: 2px solid grey;
+	border-radius: 5px;
+	background-color: #0d1c23;
+	cursor: pointer;
+
+	span {
+	    display: block;
+	    width: 100%;
+	    height: 2px;
+	    background: #fff;
+	    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
+	}
+
+	&.active {
+	    span:nth-child(1) {
+		transform: translateY(0.425rem) rotate(-45deg);
+	    }
+
+	    span:nth-child(2) {
+		opacity: 0;
+	    }
+
+	    span:nth-child(3) {
+		transform: translateY(-0.425rem) rotate(45deg);
+	    }
+	}
+    }
+
+    .publicHeader__nav {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	width: 100%;
+	padding: 1rem;
+	box-sizing: border-box;
+	background-color: rgba(13, 28, 35, 0.98);
+	border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	gap: 0.75rem;
+	transform: translateX(100%);
+	visibility: hidden;
+	transition: transform 0.3s ease-in-out, visibility 0s linear 0.3s;
+
+	&.active {
+	    transform: translateX(0);
+	    visibility: visible;
+	    transition-delay: 0s;
+	}
+
+	.button {
+	    width: 100%;
+	}
+    }
 }
