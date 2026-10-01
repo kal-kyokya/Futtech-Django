@@ -30,6 +30,7 @@ import GoogleSignInButton from '../../components/auth/GoogleSignInButton';
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const { dispatch: authDispatch,
 	    isFetching,
@@ -44,6 +45,7 @@ const Login = () => {
     const location = useLocation();
     const fieldErrors = loginError?.fields || {};
     const [notice, setNotice] = useState('');
+    const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
     useEffect(() => (
 	() => authDispatch(clearAuthError())
@@ -146,18 +148,33 @@ const Login = () => {
 			    alt='Logo of the Futtech Company'
 			/>
 		    </Link>
-		    <div className='topActions'>
-			<Link to='/showcase' className='link'>
+	    <button
+		type='button'
+		className={`publicHeader__menuToggle ${isMobileMenuOpen ? 'active' : ''}`}
+		aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+		aria-expanded={isMobileMenuOpen}
+		aria-controls='public-header-navigation'
+		onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
+	    >
+		<span />
+		<span />
+		<span />
+	    </button>
+		    <div
+			id='login-navigation'
+			className={`topActions ${isMobileMenuOpen ? 'active' : ''}`}
+		    >
+			<Link to='/showcase' className='link' onClick={closeMobileMenu}>
 			    <button className='button--secondary'>
 				<span>Public Showcase</span>
 			    </button>
 			</Link>
-			<Link to='/futtech-xi' className='link'>
+			<Link to='/futtech-xi' className='link' onClick={closeMobileMenu}>
 			    <button className='button--secondary'>
 				<span>Futtech XI</span>
 			    </button>
 			</Link>
-			<Link to='/register' className='link'>
+			<Link to='/register' className='link' onClick={closeMobileMenu}>
 			    <button className='button--primary'>
 				<span>Register</span>
 			    </button>
