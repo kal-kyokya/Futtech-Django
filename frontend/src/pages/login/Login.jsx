@@ -148,18 +148,18 @@ const Login = () => {
 			    alt='Logo of the Futtech Company'
 			/>
 		    </Link>
-	    <button
-		type='button'
-		className={`publicHeader__menuToggle ${isMobileMenuOpen ? 'active' : ''}`}
-		aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-		aria-expanded={isMobileMenuOpen}
-		aria-controls='public-header-navigation'
-		onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
-	    >
-		<span />
-		<span />
-		<span />
-	    </button>
+		    <button
+			type='button'
+			className={`topMenuToggle ${isMobileMenuOpen ? 'active' : ''}`}
+			aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+			aria-expanded={isMobileMenuOpen}
+			aria-controls='login-header-navigation'
+			onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
+		    >
+			<span />
+			<span />
+			<span />
+		    </button>
 		    <div
 			id='login-navigation'
 			className={`topActions ${isMobileMenuOpen ? 'active' : ''}`}
