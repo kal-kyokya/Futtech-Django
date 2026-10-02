@@ -13,6 +13,22 @@ const goToPasswordStep = async (user) => {
 };
 
 describe('Registration', () => {
+    it('toggles the registration navigation menu without navigating', async () => {
+	const user = userEvent.setup();
+	renderWithProviders(<Register />, { route: '/register', path: '/register' });
+
+	const menuButton = screen.getByRole('button', { name: 'Open navigation menu' });
+	expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+
+	await user.click(menuButton);
+	expect(menuButton).toHaveAttribute('aria-expanded', 'true');
+	expect(document.getElementById('register-navigation')).toHaveClass('active');
+
+	await user.click(menuButton);
+	expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+	expect(document.getElementById('register-navigation')).not.toHaveClass('active');
+    });
+
     it('shows email already used field error on 400', async () => {
 	// Override the default handler to simulate field errors.
 	server.use(
