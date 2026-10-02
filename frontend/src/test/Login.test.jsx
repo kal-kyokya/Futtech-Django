@@ -25,6 +25,22 @@ const TestRoutes = () => (
 );
 
 describe('Login', () => {
+    it('toggles the login navigation menu without navigating', async () => {
+	const user = userEvent.setup();
+	renderWithProviders(<TestRoutes />, { route: '/login', path: null });
+
+	const menuButton = screen.getByRole('button', { name: 'Open navigation menu' });
+	expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+
+	await user.click(menuButton);
+	expect(menuButton).toHaveAttribute('aria-expanded', 'true');
+	expect(document.getElementById('login-navigation')).toHaveClass('active');
+
+	await user.click(menuButton);
+	expect(menuButton).toHaveAttribute('aria-expanded', 'false');
+	expect(document.getElementById('login-navigation')).not.toHaveClass('active');
+    });
+
     it('shows invalid credentials message on 401 and stays logged out',
        async () => {
 	   // Simulate backend 401 with a human-readable error.
