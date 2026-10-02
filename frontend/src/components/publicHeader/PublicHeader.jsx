@@ -52,6 +52,13 @@ const PublicHeader = () => {
 		    <span>Futtech XI</span>
 		</Link>
 		<Link
+		    to='/about'
+		    className='button button--secondary'
+		    onClick={closeMobileMenu}
+		>
+		    <span>About</span>
+		</Link>
+		<Link
 		    to='/home'
 		    className='button button--secondary'
 		    onClick={closeMobileMenu}
