@@ -47,13 +47,14 @@ export default function Futtech() {
 		       <p>Ask a football question. The workflow separates curated evidence, tactical interpretation, content production, and quality control.</p>
 
 		       <form onSubmit={submit}>
-			   <label htmlFor="football-question">Football question</label>
+			   <label htmlFor="football-question">Football question (Demo: Click 'Analyze with...')</label>
 			   <textarea
 			       id="football-question"
 			       value={query}
 			       onChange={e => setQuery(e.target.value)}
 			       minLength="8"
 			       required
+			       readonly
 			   />
 			   <button disabled={state === 'loading'}>
 			       {state === 'loading' ?
