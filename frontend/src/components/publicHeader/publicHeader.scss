@@ -127,12 +127,10 @@
 	flex-direction: column;
 	align-items: stretch;
 	gap: 0.75rem;
-	transform: translateX(100%);
 	visibility: hidden;
 	transition: transform 0.3s ease-in-out, visibility 0s linear 0.3s;
 
 	&.active {
-	    transform: translateX(0);
 	    visibility: visible;
 	    transition-delay: 0s;
 	}
