@@ -99,7 +99,6 @@ const Navbar = () => {
 				  onClick={toggleMobileMenu}
 			>
 			    <MenuIcon />
-			    <span>Menu</span>
 			</div>
 
 
