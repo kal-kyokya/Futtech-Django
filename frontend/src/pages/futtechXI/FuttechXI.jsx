@@ -54,7 +54,7 @@ export default function Futtech() {
 			       onChange={e => setQuery(e.target.value)}
 			       minLength="8"
 			       required
-			       readonly
+			       disabled
 			   />
 			   <button disabled={state === 'loading'}>
 			       {state === 'loading' ?
