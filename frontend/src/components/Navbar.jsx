@@ -77,6 +77,9 @@ const Navbar = () => {
 			<Link to='/showcase' className='link desktop-nav-item'> {/* Add a class for specific hiding */}
 			    <span>Public Showcase</span>
 			</Link>
+			<Link to='/futtech-xi' className='link desktop-nav-item'>
+			    <span>Futtech XI</span>
+			</Link>
 			<Link to='/videos' className='link desktop-nav-item'>
 			    <span>Videos</span>
 			</Link>
@@ -151,6 +154,9 @@ const Navbar = () => {
 		<ul>
 		    <li>
 			<a onClick={() => handleNavLinkClick('/showcase')}>Public Showcase</a>
+		    </li>
+		    <li>
+			<a onClick={() => handleNavLinkClick('/futtech-xi')}>Futtech XI</a>
 		    </li>
 		    <li>
 			<a onClick={() => handleNavLinkClick('/videos')}>Videos</a>
