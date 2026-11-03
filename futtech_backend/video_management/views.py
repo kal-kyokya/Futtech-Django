@@ -5,7 +5,7 @@ API views for video metadata, public showcase and private Bunny playback.
 
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.core.exceptions import ObjectDoesNotExist
+from django.core.exceptions import ObjectDoesNotExist, ImproperlyConfigured
 from django.http import HttpResponseForbidden, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.shortcuts import get_object_or_404
@@ -27,12 +27,11 @@ from .payment_services import (
     create_stripe_checkout_session,
     get_checkout_price,
     mark_payment_result,
-    normalize_kenyan_phone,
     parse_mpesa_callback,
     process_stripe_event,
     serialize_payment,
 )
-from .serializers import VideoSerializer, PublicShowcaseVideoSerializer
+from .serializers import VideoSerializer, PublicShowcaseVideoSerializer, PublicShowcaseDetailSerializer, CheckoutRequestSerializer
 from futtech_backend.throttles import AuthBurstRateThrottle
 
 stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
@@ -87,6 +86,9 @@ def _get_playback_response(request, video):
             services.refresh_video_status(video)
         except Exception as err:
             logger.error("Could not sync Bunny status for %s: %s", video.id, err)
+
+    if video.status != VideoStatus.READY:
+        return JsonResponse({'error': 'Video is not ready for playback.', 'status': video.status}, status=409)
 
     embed_url = services.build_embed_url(video.video_library_id, video.bunny_video_id)
     return JsonResponse({"embed_url": embed_url, "status": video.status})
@@ -178,6 +180,7 @@ def get_public_showcase(request):
 
     videos = _video_queryset().filter(
         is_showcase=True,
+        is_premium=False,
         status=VideoStatus.READY,
     ).order_by('title')[:limit]
 
@@ -192,10 +195,11 @@ def get_public_showcase_detail(request, slug):
         _video_queryset(),
         slug=slug,
         is_showcase=True,
+        is_premium=False,
         status=VideoStatus.READY,
     )
 
-    return Response(PublicShowcaseVideoSerializer(video).data)
+    return Response(PublicShowcaseDetailSerializer(video).data)
 
 
 @login_required
@@ -237,6 +241,17 @@ def get_subscription_confirmation(request):
 
     session = stripe.checkout.Session.retrieve(session_id)
     user = request.user
+    if (
+        str(session.get('client_reference_id')) != str(user.pk)
+        or session.get('status') != 'complete'
+        or session.get('payment_status') != 'paid'
+        or not PaymentTransaction.objects.filter(
+            user=user,
+            provider=PaymentProvider.STRIPE,
+            provider_transaction_id=session_id,
+        ).exists()
+    ):
+        return JsonResponse({'error': 'Checkout session does not belong to a completed payment for this user'}, status=403)
     customer_id = session.get('customer')
 
     # Ensure match between he who initiated the session and a user in our DB
@@ -266,11 +281,17 @@ def create_portal_session(request):
 @permission_classes([IsAuthenticated])
 @throttle_classes([AuthBurstRateThrottle])
 def initiate_checkout(request):
-    provider = (request.data.get('provider') or '').upper()
-    if provider not in {PaymentProvider.MPESA, PaymentProvider.STRIPE}:
-        return Response({'error': 'Unsupported payment provider.'}, status=400)
-
-    amount, currency = get_checkout_price(provider)
+    serializer = CheckoutRequestSerializer(data=request.data)
+    serializer.is_valid(raise_exception=True)
+    provider = serializer.validated_data['provider']
+    try:
+        amount, currency = get_checkout_price(provider)
+    except ImproperlyConfigured:
+        return Response({'error': 'Payment pricing is not configured correctly.'}, status=503)
+    if provider == PaymentProvider.MPESA and not settings.MPESA_CALLBACK_URL:
+        return Response({'error': 'M-Pesa checkout is not configured.'}, status=503)
+    if provider == PaymentProvider.STRIPE and not settings.STRIPE_FALLBACK_PRICE_ID:
+        return Response({'error': 'Stripe checkout is not configured.'}, status=503)
     payment = create_payment_transaction(
         user=request.user,
         provider=provider,
@@ -280,18 +301,8 @@ def initiate_checkout(request):
     )
 
     if provider == PaymentProvider.MPESA:
-        phone_number = request.data.get('phone_number', '')
-        try:
-            normalized_phone = normalize_kenyan_phone(phone_number)
-        except ValueError as err:
-            payment.status = PaymentStatus.FAILED
-            payment.error_message = str(err)
-            payment.save(update_fields=['status', 'error_message', 'updated_at'])
-            return Response({'error': str(err)}, status=400)
-
+        normalized_phone = serializer.validated_data['phone_number']
         callback_url = settings.MPESA_CALLBACK_URL
-        if not callback_url:
-            return Response({'error': 'MPESA_CALLBACK_URL is not configured.'}, status=500)
 
         try:
             payment.status = PaymentStatus.PROCESSING
@@ -305,6 +316,8 @@ def initiate_checkout(request):
                 transaction_desc='Futtech Subscription',
                 callback_url=callback_url,
             )
+            if str(mpesa_response.get('ResponseCode')) != '0' or not mpesa_response.get('CheckoutRequestID'):
+                raise ValueError('M-Pesa did not accept the checkout request.')
             payment.provider_checkout_request_id = mpesa_response.get('CheckoutRequestID', '')
             payment.provider_transaction_id = mpesa_response.get('MerchantRequestID', '')
             payment.metadata = {**payment.metadata, 'mpesa_initiate_response': mpesa_response}
@@ -349,7 +362,10 @@ def payment_status(request, transaction_id):
 @permission_classes([AllowAny])
 def mpesa_callback(request):
     payload = request.data if isinstance(request.data, dict) else {}
-    parsed = parse_mpesa_callback(payload)
+    try:
+        parsed = parse_mpesa_callback(payload)
+    except ValueError:
+        return Response({'error': 'Invalid M-Pesa callback.'}, status=400)
     checkout_request_id = parsed.get('checkout_request_id')
     if not checkout_request_id:
         return Response({'ResultCode': 0, 'ResultDesc': 'Accepted'}, status=200)
@@ -361,6 +377,18 @@ def mpesa_callback(request):
     if not payment:
         logger.warning('M-Pesa callback could not map checkout request id %s', checkout_request_id)
         return Response({'ResultCode': 0, 'ResultDesc': 'Accepted'}, status=200)
+
+    try:
+        verified = MpesaClient().query_stk_status(checkout_request_id)
+    except Exception:
+        logger.exception('Could not verify M-Pesa checkout status')
+        return Response({'error': 'Payment verification unavailable.'}, status=503)
+    if (
+        not isinstance(verified, dict)
+        or verified.get('CheckoutRequestID') != checkout_request_id
+        or str(verified.get('ResultCode', '')) != parsed['result_code']
+    ):
+        return Response({'error': 'Payment result could not be verified.'}, status=400)
 
     callback_metadata = {
         'mpesa_callback': payload,
