@@ -6,27 +6,33 @@ Provider-agnostic payment orchestration services.
 import base64
 import datetime
 import secrets
-from decimal import Decimal
+import re
+from decimal import Decimal, InvalidOperation
+from uuid import UUID
 
 import requests
 import stripe
 from django.conf import settings
 from django.core.cache import cache
+from django.core.exceptions import ImproperlyConfigured
 from django.db import transaction
 from django.utils import timezone
+from djstripe.settings import djstripe_settings
 
 from .logs import logger
 from .models import PaymentProvider, PaymentStatus, PaymentTransaction, UserProfile
 
 
 def normalize_kenyan_phone(phone_number: str) -> str:
-    cleaned = ''.join(ch for ch in (phone_number or '') if ch.isdigit())
+    if not isinstance(phone_number, str) or re.search(r'[^0-9\s()+-]', phone_number):
+        raise ValueError('Phone number must be a valid Kenyan mobile number')
+    cleaned = re.sub(r'[\s()+-]', '', phone_number)
     if cleaned.startswith('0') and len(cleaned) == 10:
         cleaned = f'254{cleaned[1:]}'
-    if cleaned.startswith('7') and len(cleaned) == 9:
+    if cleaned.startswith(('7', '1')) and len(cleaned) == 9:
         cleaned = f'254{cleaned}'
-    if not (cleaned.startswith('2547') and len(cleaned) == 12):
-        raise ValueError('Phone number must be valid Kenyan Safaricom mobile number')
+    if not (cleaned.startswith(('2547', '2541')) and len(cleaned) == 12):
+        raise ValueError('Phone number must be valid Kenyan mobile number')
     return cleaned
 
 
@@ -91,21 +97,54 @@ class MpesaClient:
         response.raise_for_status()
         return response.json()
 
+    def query_stk_status(self, checkout_request_id: str):
+        """
+        Verify a callback against Daraja using server-held credentials.
+        """
+        timestamp = timezone.now().strftime('%Y%m%d%H%M%S')
+        password = base64.b64encode(
+            f'{settings.MPESA_SHORTCODE}{settings.MPESA_PASSKEY}{timestamp}'.encode()
+        ).decode()
+        response = requests.post(
+            f'{self.base_url}/mpesa/stkpushquery/v1/query',
+            headers={'Authorization': f'Bearer {self.get_access_token()}'},
+            json={
+                'BusinessShortCode': settings.MPESA_SHORTCODE,
+                'Password': password,
+                'Timestamp': timestamp,
+                'CheckoutRequestID': checkout_request_id,
+            },
+            timeout=getattr(settings, 'MPESA_TIMEOUT_SECONDS', 30),
+        )
+        response.raise_for_status()
+        return response.json()
+
 
 def get_checkout_price(provider: str) -> tuple[Decimal, str]:
-    if provider == PaymentProvider.MPESA:
-        amount = Decimal(str(getattr(settings, 'PAYMENT_SUBSCRIPTION_PRICE_KES', '1500')))
-        return amount, 'KES'
-
-    amount = Decimal(str(getattr(settings, 'PAYMENT_SUBSCRIPTION_PRICE_USD', '15')))
-    return amount, 'USD'
+    if provider not in PaymentProvider.values:
+        raise ValueError('Unsupported payment provider.')
+    currency = 'KES' if provider == PaymentProvider.MPESA else 'USD'
+    name = f'PAYMENT_SUBSCRIPTION_PRICE_{currency}'
+    try:
+        amount = Decimal(str(getattr(settings, name)))
+        if not amount.is_finite() or not 0 < amount < decimal('100000000'):
+            raise ValueError
+        if amount != amount.quantize(Decimal('0.01')):
+            raise ValueError
+        if provider == PaymentProvider.MPESA and amount != amount.to_integral_value():
+            raise ValueError
+    except (AttributeError, InvalidOperation, ValueError):
+        raise ImproperlyConfigured(f'{name} must be a positive supported payment amount.') from None
+        return amount, currency
 
 
 @transaction.atomic
 def fulfill_transaction(payment: PaymentTransaction):
-    if payment.fulfilled_at:
+    payment = PaymentTransaction.objects.select_for_update().get(pk=payment.pk)
+    if payment.fulfilled_at or payment.status != PaymentStatus.SUCCEEDED:
         return
 
+    UserProfile.objects.get_or_create(user=payment.user)
     profile = UserProfile.objects.select_for_update().get(user=payment.user)
     now = timezone.now()
     days = int(getattr(settings, 'PAYMENT_SUBSCRIPTION_DAYS', 30))
@@ -119,22 +158,22 @@ def fulfill_transaction(payment: PaymentTransaction):
 
 @transaction.atomic
 def mark_payment_result(payment: PaymentTransaction, status: str, provider_transaction_id: str = '', error_code: str = '', error_message: str = '', metadata: dict | None = None):
-    if payment.status == PaymentStatus.SUCCEEDED and status == PaymentStatus.SUCCEEDED:
+    payment = PaymentTransaction.objects.select_for_update().get(pk=payment.pk)
+    if payment.status == PaymentStatus.SUCCEEDED:
         return payment
 
     payment.status = status
     if provider_transaction_id:
         payment.provider_transaction_id = provider_transaction_id
-    if error_code:
-        payment.error_code = error_code
-    if error_message:
-        payment.error_message = error_message
+    payment.error_code = error_code
+    payment.error_message = error_message
     if metadata:
         payment.metadata = {**payment.metadata, **metadata}
     payment.save()
 
     if status == PaymentStatus.SUCCEEDED:
         fulfill_transaction(payment)
+        payment.refresh_from_db()
 
     return payment
 
