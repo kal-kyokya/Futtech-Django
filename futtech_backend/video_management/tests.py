@@ -272,7 +272,9 @@ class PaymentFlowTests(TestCase):
         )
         self.assertEqual(response.status_code, 400)
 
-    def test_mpesa_callback_success_is_idempotent_and_fulfills(self):
+    @patch('video_management.views.MpesaClient.query_stk_status')
+    def test_mpesa_callback_success_is_idempotent_and_fulfills(self, query_status):
+        query_status.return_value = {'CheckoutRequestID': 'ws_CO_123', 'ResultCode': 0}
         tx = PaymentTransaction.objects.create(
             user=self.user,
             provider=PaymentProvider.MPESA,
@@ -312,7 +314,9 @@ class PaymentFlowTests(TestCase):
         self.assertIsNotNone(tx.fulfilled_at)
         self.assertIsNotNone(profile.access_expires_at)
 
-    def test_mpesa_callback_failed_does_not_fulfill(self):
+    @patch('video_management.views.MpesaClient.query_stk_status')
+    def test_mpesa_callback_failed_does_not_fulfill(self, query_status):
+        query_status.return_value = {'CheckoutRequestID': 'ws_CO_999', 'ResultCode': 1032}
         tx = PaymentTransaction.objects.create(
             user=self.user,
             provider=PaymentProvider.MPESA,
