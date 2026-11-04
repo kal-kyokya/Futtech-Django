@@ -189,6 +189,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Default domain name
 
 DOMAIN_NAME = os.environ.get('DOMAIN_NAME')
+TENANT_BASE_DOMAIN = os.environ.get('TENANT_BASE_DOMAIN', DOMAIN_NAME or 'localhost').lstrip('.')
 FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://127.0.0.1:5174')
 
 EMAIL_BACKEND = os.environ.get(
@@ -208,6 +209,7 @@ DJSTRIPE_FOREIGN_KEY_TO_FIELD = 'id'
 # DRF's Authentication configuration
 
 REST_FRAMEWORK = {
+    'NUM_PROXIES': int(os.environ.get('DRF_NUM_PROXIES', '0')),
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
@@ -219,6 +221,8 @@ REST_FRAMEWORK = {
     'PAGE_SIZE': 20,
     'DEFAULT_THROTTLE_RATES': {
         'login': os.environ.get('LOGIN_THROTTLE_RATE', '3/min'),
+        'registration': os.environ.get('REGISTRATION_THROTTLE_RATE', '5/hour'),
+        'token_refresh': os.environ.get('TOKEN_REFRESH_THROTTLE_RATE', '60/min'),
         'auth_burst': os.environ.get('AUTH_BURST_THROTTLE_RATE', '12/min'),
     },
 }
@@ -240,7 +244,9 @@ BUNNY_STREAM_EMBED_TOKEN_KEY = os.environ.get('BUNNY_STREAM_EMBED_TOKEN_KEY', ''
 # Provider-agnostic payment defaults
 PAYMENT_SUBSCRIPTION_DAYS = int(os.environ.get('PAYMENT_SUBSCRIPTION_DAYS', '30'))
 PAYMENT_SUBSCRIPTION_PRICE_KES = os.environ.get('PAYMENT_SUBSCRIPTION_PRICE_KES', '1500')
-PAYMENT_SUBSCRIPTION_USD = os.environ.get('PAYMENT_SUBSCRIPTION_USD', '15')
+PAYMENT_SUBSCRIPTION_PRICE_USD = os.environ.get(
+    'PAYMENT_SUBSCRIPTION_PRICE_USD', os.environ.get('PAYMENT_SUBSCRIPTION_USD', '15')
+)
 
 # Stripe fallback settings
 STRIPE_FALLBACK_PRICE_ID = os.environ.get('STRIPE_FALLBACK_PRICE_ID', '')
