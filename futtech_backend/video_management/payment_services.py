@@ -32,7 +32,7 @@ def normalize_kenyan_phone(phone_number: str) -> str:
     if cleaned.startswith(('7', '1')) and len(cleaned) == 9:
         cleaned = f'254{cleaned}'
     if not (cleaned.startswith(('2547', '2541')) and len(cleaned) == 12):
-        raise ValueError('Phone number must be valid Kenyan mobile number')
+        raise ValueError('Phone number must be a valid Kenyan mobile number')
     return cleaned
 
 
@@ -127,7 +127,7 @@ def get_checkout_price(provider: str) -> tuple[Decimal, str]:
     name = f'PAYMENT_SUBSCRIPTION_PRICE_{currency}'
     try:
         amount = Decimal(str(getattr(settings, name)))
-        if not amount.is_finite() or not 0 < amount < decimal('100000000'):
+        if not amount.is_finite() or not 0 < amount < Decimal('100000000'):
             raise ValueError
         if amount != amount.quantize(Decimal('0.01')):
             raise ValueError
@@ -135,7 +135,7 @@ def get_checkout_price(provider: str) -> tuple[Decimal, str]:
             raise ValueError
     except (AttributeError, InvalidOperation, ValueError):
         raise ImproperlyConfigured(f'{name} must be a positive supported payment amount.') from None
-        return amount, currency
+    return amount, currency
 
 
 @transaction.atomic
@@ -192,14 +192,26 @@ def create_payment_transaction(*, user, provider: str, amount: Decimal, currency
 
 
 def parse_mpesa_callback(payload: dict):
-    body = payload.get('Body', {}).get('stkCallback', {})
+    try:
+        body = payload['Body']['stkCallback']
+        if not isinstance(body, dict):
+            raise ValueError('Invalid M-Pesa callback.')
+    except (KeyError, TypeError):
+        raise ValueError('Invalid M-Pesa callback.') from None
     merchant_request_id = body.get('MerchantRequestID', '')
     checkout_request_id = body.get('CheckoutRequestID', '')
     result_code = str(body.get('ResultCode', ''))
     result_desc = body.get('ResultDesc', '')
 
-    metadata_items = body.get('CallbackMetadata', {}).get('Item', []) or []
-    metadata_map = {item.get('Name'): item.get('Value') for item in metadata_items if item.get('Name')}
+    if not isinstance(checkout_request_id, str) or not checkout_request_id or not result_code:
+        raise ValueError('Invalid M-Pesa callback identifiers.')
+    callback_metadata = body.get('CallbackMetadata') or {}
+    if not isinstance(callback_metadata, dict):
+        raise ValueError('Invalid M-Pesa callback metadata.')
+    metadata_items = callback_metadata.get('Item') or []
+    if not isinstance(metadata_items, list) or any(not isinstance(item, dict) for item in metadata_items):
+        raise ValueError('Invalid M-Pesa callback metadata.')
+    metadata_map = {item['Name']: item.get('Value') for item in metadata_items if isinstance(item.get('Name'), str)}
 
     mpesa_receipt = str(metadata_map.get('MpesaReceiptNumber', ''))
     return {
@@ -213,7 +225,7 @@ def parse_mpesa_callback(payload: dict):
 
 
 def create_stripe_checkout_session(payment: PaymentTransaction, request):
-    stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
+    stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
     if not getattr(settings, 'STRIPE_FALLBACK_PRICE_ID', ''):
         raise ValueError('Stripe fallback is not configured. Missing STRIPE_FALLBACK_PRICE_ID.')
 
@@ -228,6 +240,8 @@ def create_stripe_checkout_session(payment: PaymentTransaction, request):
             'payment_transaction_id': str(payment.id),
             'purpose': payment.purpose,
         },
+        subscription_data={'metadata': {'payment_transaction_id': str(payment.id)}},
+        idempotency_key=payment.idempotency_key,
         success_url=success_url,
         cancel_url=cancel_url,
     )
@@ -239,37 +253,66 @@ def create_stripe_checkout_session(payment: PaymentTransaction, request):
 
 
 def process_stripe_event(payload: bytes, signature: str):
-    stripe.api_key = settings.STRIPE_TEST_SECRET_KEY
-    event = stripe.webhook.construct_event(
+    stripe.api_key = djstripe_settings.STRIPE_SECRET_KEY
+    webhook_secret = getattr(settings, 'DJSTRIPE_WEBHOOK_SECRET', '')
+    if not webhook_secret or not signature:
+        raise ValueError('Stripe webhook verification is not configured or signature is missing.')
+    event = stripe.Webhook.construct_event(
         payload=payload,
         sig_header=signature,
-        secret=settings.DJSTRIPE_WEBHOOK_SECRET
+        secret=webhook_secret,
     )
 
     event_type = event['type']
     obj = event['data']['object']
 
-    payment = None
+    transaction_id = None
     if event_type.startswith('checkout.session'):
         transaction_id = obj.get('metadata', {}).get('payment_transaction_id')
-        if transaction_id:
-            payment = PaymentTransaction.objects.filter(id=transaction_id, provider=PaymentProvider.STRIPE).first()
-    elif event_type == 'invoice.paid':
-        metadata = obj.get('lines', {}).get('data', [{}])[0].get('metadata', {}) if obj.get('lines') else {}
-        transaction_id = metadata.get('payment_transaction_id')
-        if transaction_id:
-            payment = PaymentTransaction.objects.filter(id=transaction_id, provider=PaymentProvider.STRIPE).first()
+    elif event_type in {'invoice.paid', 'invoice.payment_failed'}:
+        lines = obj.get('lines', {}).get('data') or []
+        transaction_id = lines[0].get('metadata', {}).get('payment_transaction_id') if lines else None
+
+    try:
+        transaction_id = UUID(str(transaction_id))
+    except (TypeError, ValueError):
+        return event_type
+    payment = PaymentTransaction.objects.filter(id=transaction_id, provider=PaymentProvider.STRIPE).first()
 
     if not payment:
         logger.info('Stripe event %s did not map to PaymentTransaction', event_type)
         return event_type
 
-    if event_type in {'checkout.session.completed', 'invoice.paid'}:
+    is_checkout = event_type.startswith('checkout.session')
+    if is_checkout:
+        if (
+            obj.get('id') != payment.provider_transaction_id
+            or str(obj.get('client_reference_id')) != str(payment.user_id)
+        ):
+            raise ValueError('Stripe checkout does not match the recorded payment.')
+    elif (
+        not payment.metadata.get('stripe_subscription_id')
+        or obj.get('subscription') != payment.metadata['stripe_subscription_id']
+        or obj.get('customer') != payment.metadata.get('stripe_customer_id')
+    ):
+        raise ValueError('Stripe invoice does not match the recorded subscription.')
+
+    if event_type in {'checkout.session.completed', 'checkout.session.async_payment_succeeded', 'invoice.paid'}:
+        settled = obj.get('payment_status') == 'paid' if is_checkout else obj.get('paid') is True
+        if not settled:
+            return event_type
+        if (
+            str(obj.get('currency', '')).upper() != payment.currency.upper()
+            or obj.get('amount_total' if is_checkout else 'amount_paid') != int(payment.amount * 100)
+        ):
+            raise ValueError('Stripe settlement amount or currency does not match the payment.')
+        metadata = {'stripe_event_type': event_type}
+        if is_checkout:
+            metadata.update(stripe_subscription_id=obj.get('subscription'), stripe_customer_id=obj.get('customer'))
         mark_payment_result(
             payment,
             PaymentStatus.SUCCEEDED,
-            provider_transaction_id=obj.get('id', ''),
-            metadata={'stripe_event_type': event_type},
+            metadata=metadata,
         )
     elif event_type in {'checkout.session.expired'}:
         mark_payment_result(payment, PaymentStatus.EXPIRED, metadata={'stripe_event_type': event_type})
