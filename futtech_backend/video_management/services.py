@@ -68,6 +68,8 @@ def refresh_video_status(video):
         video.status = "error"
     elif status in {0, 1}:
         video.status = "uploading"
+    elif status in {2, 3}:
+        video.status = "processing"
     else:
         video.status = "error"
 
