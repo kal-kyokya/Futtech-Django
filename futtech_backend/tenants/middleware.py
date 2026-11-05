@@ -1,3 +1,8 @@
+from ipaddress import ip_address
+from urllib.parse import urlsplit
+
+from django.conf import settings
+
 from .models import Tenant
 
 
@@ -8,12 +13,8 @@ class TenantMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        host = request.get_host().split(':')[0].lower()
-        labels = [label for label in host.split('.') if label]
-
-        subdomain = None
-        if len(labels) > 2:
-            subdomain = labels[1] if labels[0] == 'www' and len(labels) > 3 else labels[0]
+        host = (urlsplit('//' + request.get_host()).hostname or '').lower().rstrip('.')
+        subdomain = self._tenant_slug(host)
 
         tenant = None
         if subdomain:
@@ -23,3 +24,18 @@ class TenantMiddleware:
         request.tenant_slug = subdomain
 
         return self.get_response(request)
+
+    @staticmethod
+    def _tenant_slug(host):
+        try:
+            ip_address(host)
+            return None
+        except ValueError:
+            pass
+        base = getattr(settings, 'TENANT_BASE_DOMAIN', 'localhost').lower().strip('.')
+        if not base or not host.endswith('.' + base):
+            return None
+        labels = host[:-(len(base) + 1)].split('.')
+        if len(labels) == 2 and labels[0] == 'www':
+            labels = labels[1:]
+        return labels[0] if len(labels) == 1 and labels[0] != 'www' else None
