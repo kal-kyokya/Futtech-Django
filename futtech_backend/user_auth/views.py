@@ -10,11 +10,13 @@ from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.views import APIView
-from futtech_backend.throttles import LoginRateThrottle
+from futtech_backend.throttles import LoginRateThrottle, RegistrationRateThrottle, RefreshRateThrottle
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db import transaction
+from django.core.exceptions import ValidationError
+from django.core.validators import validate_email
 from django.utils.text import slugify
 import jwt
 
@@ -24,11 +26,13 @@ from .serializers import (
     UserUpdateSerializer,
     CurrentUserSerializer,
     GoogleSignInSerializer,
+    CookieTokenRefreshSerializer,
 )
 
 from video_management.models import UserProfile
 from .models import SocialAccount
 from .emails import send_welcome_email
+from .security import AuthOriginMixin
 
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
@@ -93,14 +97,14 @@ def _refresh_cookie_options():
     return {
         'domain': cookie_domain or None,
         'httponly': True,
-        'secure': True,
+        'secure': not settings.DEBUG,
         'samesite': 'Lax',
         'max_age': 7 * 24 * 60 * 60, # Matches 'REFRESH_TOKEN_LIFETIME' in settings
         'path': '/api/v2/auth/', # Limits cookie path to the auth endpoints
     }
 
 
-class UserRegistrationView(generics.CreateAPIView):
+class UserRegistrationView(AuthOriginMixin, generics.CreateAPIView):
     """
     Processes client-side requests for user registrations.
 
@@ -113,6 +117,7 @@ class UserRegistrationView(generics.CreateAPIView):
 
     serializer_class = UserRegistrationSerializer
     permission_classes = (AllowAny,)
+    throttle_classes = [RegistrationRateThrottle]
 
     # Overrides the 'create' method to include JWT access and refresh tokens
     def create(self, request, *args, **kwargs):
@@ -159,7 +164,7 @@ class UserRegistrationView(generics.CreateAPIView):
         return response
 
 
-class ObtainTokenCookieView(APIView):
+class ObtainTokenCookieView(AuthOriginMixin, APIView):
     """
     Handles HTTP requests for JWT access and refresh pairs while accepting
     email/password credentials instead of the default username/password.
@@ -205,7 +210,7 @@ class ObtainTokenCookieView(APIView):
         return response
 
 
-class GoogleSignInView(APIView):
+class GoogleSignInView(AuthOriginMixin, APIView):
     """
     Authenticates Google Identity Services ID tokens and links users by email.
     """
@@ -249,13 +254,18 @@ class GoogleSignInView(APIView):
         if payload.get('iss') not in {'accounts.google.com', 'https://accounts.google.com'}:
             return Response({'detail': 'Invalid Google token issuer.'}, status=status.HTTP_401_UNAUTHORIZED)
 
-        if not payload.get('email_verified'):
+        if payload.get('email_verified') is not True:
             return Response({'detail': 'Google account email is not verified.'}, status=status.HTTP_400_BAD_REQUEST)
 
         google_id = payload.get('sub')
-        email = get_user_model().objects.normalize_email(payload.get('email', ''))
-        if not google_id or not email:
+        email = payload.get('email')
+        if not isinstance(google_id, str) or not google_id or len(google_id) > 255 or not isinstance(email, str):
             return Response({'detail': 'Google credential is missing required identity data.'}, status=status.HTTP_400_BAD_REQUEST)
+        try:
+            validate_email(email)
+        except ValidationError:
+            return Response({'detail': 'Google credential has an invalid email.'}, status=status.HTTP_400_BAD_REQUEST)
+        email = get_user_model().objects.normalize_email(email)
 
         name = payload.get('name') or ''
         picture = payload.get('picture') or ''
@@ -272,7 +282,15 @@ class GoogleSignInView(APIView):
             if social_account:
                 user = social_account.user
             else:
-                user = UserModel.objects.filter(email__iexact=email).first()
+                matching_users = list(UserModel.objects.filter(email__iexact=email)[:2])
+                if len(matching_users) > 1:
+                    return Response({'detail': 'Sign in with your existing credentials.'}, status=status.HTTP_409_CONFLICT)
+                user = matching_users[0] if matching_users else None
+                if user and not user.is_active:
+                    return Response({'detail': 'Invalid email or password.'}, status=status.HTTP_401_UNAUTHORIZED)
+                email_domain = email.rsplit('@', 1)[1].lower()
+                if user and email_domain != 'gmail.com' and payload.get('hd') != email_domain:
+                    return Response({'detail': 'Sign in with your existing credentials to use this account.'}, status=status.HTTP_409_CONFLICT)
                 if not user:
                     user = UserModel.objects.create_user(
                         username=_unique_username(email, name),
@@ -323,7 +341,7 @@ class GoogleSignInView(APIView):
         return _token_response(user, 'User logged in with Google successfully')
 
 
-class RefreshTokenCookieView(TokenRefreshView):
+class RefreshTokenCookieView(AuthOriginMixin, TokenRefreshView):
     """
     Extends the DRF Simple JWT's built-in class-based that handles
     creation of new access-refresh token pairs, so as to set the
@@ -332,6 +350,9 @@ class RefreshTokenCookieView(TokenRefreshView):
     Inheritance:
     	TokenRefreshView - Handles creation of new access-refresh tokens.
     """
+
+    throttle_classes = [RefreshRateThrottle]
+    serializer_class = CookieTokenRefreshSerializer
 
     def post(self, request, *args, **kwargs):
         """
@@ -364,7 +385,7 @@ class RefreshTokenCookieView(TokenRefreshView):
         return response
 
 
-class LogoutView(APIView):
+class LogoutView(AuthOriginMixin, APIView):
     """
     Reads the refresh token from the request body or cookie,
     blacklists it when valid, and deletes the refresh cookie.
