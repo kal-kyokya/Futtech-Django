@@ -6,12 +6,14 @@
 """
 
 from django.db.models import Q
+from django.db import transaction
 from django.contrib.auth import get_user_model, authenticate
 from django.core.exceptions import ValidationError as DjangoValidationError
 from django.contrib.auth.password_validation import validate_password
 from rest_framework import serializers
 from rest_framework.exceptions import AuthenticationFailed
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.serializers import TokenRefreshSerializer
+from rest_framework_simplejwt.settings import api_settings as jwt_settings
 from video_management.models import UserProfile
 from video_management.choices import PlayerPosition, UserSex
 
@@ -29,19 +31,24 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
     	features enabling data validation and serialization/deserialization.
     """
 
-    email = serializers.EmailField(required=True)
-    username = serializers.CharField(required=True)
+    email = serializers.EmailField(required=True, max_length=254)
+    username = serializers.CharField(
+        required=True, max_length=150,
+        validators=UserModel._meta.get_field('username').validators,
+    )
 
     # 'write_only=True' ensures these sensitive fields are used for input
     # and validation, but never serialized and returned in any API response.
     password = serializers.CharField(
         required=True,
         write_only=True,
+        trim_whitespace=False,
         style={'input_type': 'password'}
     )
     passwordConfirm = serializers.CharField(
         required=True,
         write_only=True,
+        trim_whitespace=False,
         style={'input_type': 'password'}
     )
 
@@ -108,7 +115,7 @@ class UserRegistrationSerializer(serializers.ModelSerializer):
 
         # Validate password strength with Django's built-in validation function
         try:
-            validate_password(attrs['password'])
+            validate_password(attrs['password'], user=UserModel(username=username, email=email))
         except (DjangoValidationError, serializers.ValidationError) as err:
             messages = getattr(err, 'messages', [str(err)])
             raise serializers.ValidationError({
@@ -153,7 +160,7 @@ class UserLoginSerializer(serializers.Serializer):
 
     # Uses email instead of username to keep the app professional
     email = serializers.EmailField()
-    password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True, trim_whitespace=False)
 
     def validate(self, attrs):
         """
@@ -172,7 +179,9 @@ class UserLoginSerializer(serializers.Serializer):
 
         try:
             user = UserModel.objects.get(email__iexact=email)
-        except UserModel.DoesNotExist:
+        except (UserModel.DoesNotExist, UserModel.MultipleObjectsReturned):
+            # Match Django's unknown-user password hashing cost.
+            UserModel().set_password(password)
             raise AuthenticationFailed('Invalid email or password.')
 
         if not user.is_active:
@@ -194,18 +203,18 @@ class UserUpdateSerializer(serializers.Serializer):
     Validates and applies editable user/profile updates.
     """
 
-    username = serializers.CharField(required=False)
-    firstName = serializers.CharField(required=False, source='first_name')
-    lastName = serializers.CharField(required=False, source='last_name')
-    email = serializers.EmailField(required=False)
-    profilePic = serializers.URLField(required=False, allow_blank=True, allow_null=True, source='avatar_url')
+    username = serializers.CharField(required=False, max_length=150, validators=UserModel._meta.get_field('username').validators)
+    firstName = serializers.CharField(required=False, source='first_name', max_length=150)
+    lastName = serializers.CharField(required=False, source='last_name', max_length=150)
+    email = serializers.EmailField(required=False, max_length=254)
+    profilePic = serializers.URLField(required=False, allow_blank=True, allow_null=True, source='avatar_url', max_length=512)
     bio = serializers.CharField(required=False, allow_blank=True, allow_null=True)
     position = serializers.ChoiceField(required=False, choices=PlayerPosition.choices)
-    profession = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    profession = serializers.CharField(required=False, allow_blank=True, allow_null=True, max_length=255)
     sex = serializers.ChoiceField(required=False, choices=UserSex.choices)
     birthday = serializers.DateField(required=False, allow_null=True)
-    phone = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    location = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    phone = serializers.CharField(required=False, allow_blank=True, allow_null=True, max_length=13)
+    location = serializers.CharField(required=False, allow_blank=True, allow_null=True, max_length=168)
 
     @staticmethod
     def _normalize_text_choice(value, choices):
@@ -227,7 +236,7 @@ class UserUpdateSerializer(serializers.Serializer):
         return value
 
     def to_internal_value(self, data):
-        mutable = dict(data)
+        mutable = data.copy()
 
         if 'position' in mutable:
             mutable['position'] = self._normalize_text_choice(
@@ -259,6 +268,7 @@ class UserUpdateSerializer(serializers.Serializer):
             raise serializers.ValidationError('A user with this email already exists.')
         return normalized
 
+    @transaction.atomic
     def update(self, instance, validated_data):
         user = instance
         profile = self.context['profile']
@@ -316,3 +326,14 @@ class GoogleSignInSerializer(serializers.Serializer):
     """
 
     credential = serializers.CharField(write_only=True)
+
+
+class CookieTokenRefreshSerializer(TokenRefreshSerializer):
+    def validate(self, attrs):
+        token = self.token_class(attrs['refresh'])
+        if not token.get(jwt_settings.USER_ID_CLAIM):
+            raise AuthenticationFailed('No active account found for the given token.')
+        try:
+            return super().validate(attrs)
+        except (UserModel.DoesNotExist, ValueError, TypeError, DjangoValidationError):
+            raise AuthenticationFailed('No active account found for the given token.') from None
