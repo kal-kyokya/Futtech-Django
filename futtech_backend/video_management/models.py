@@ -139,12 +139,14 @@ class UserProfile(models.Model):
         # Include a 10-day grace period for subscriptions past due
         if self.subscription.status == 'past_due':
             current_time = timezone.now()
-            period_end = datetime.datetime.fromtimestamp(
-                self.subscription.current_period_end,
-                tz=datetime.timezone.utc
-            )
-            days_past_due = (current_time - period_end).days
-            return days_past_due <= 10
+            try:
+                period_end = datetime.datetime.fromtimestamp(
+                    self.subscription.current_period_end,
+                    tz=datetime.timezone.utc,
+                )
+            except (TypeError, ValueError, OverflowError, OSError):
+                return False
+            return current_time <= period_end + datetime.timedelta(days=10)
 
         return self.subscription.status == 'active'
 
