@@ -322,6 +322,7 @@ class GoogleSignInTests(AuthTestBase):
             'iss': 'https://accounts.google.com',
             'sub': 'google-456',
             'email': 'player@example.com',
+            'hd': 'example.com',
             'email_verified': True,
             'name': 'Existing Player',
         })
