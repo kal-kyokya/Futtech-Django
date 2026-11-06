@@ -1,5 +1,7 @@
 import './app.scss';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
+import { AuthContext } from './contexts/authContext/AuthContext';
+import { UserContext } from './contexts/userContext/UserContext';
 import {
     createBrowserRouter,
     createRoutesFromElements,
@@ -27,17 +29,21 @@ import FuttechXI from './pages/futtechXI/FuttechXI';
 
 const App = () => {
     const [authReady, setAuthReady] = useState(false);
+    const { dispatch: authDispatch } = useContext(AuthContext);
+    const { dispatch: userDispatch } = useContext(UserContext);
 
     useEffect(() => {
-	try {
-	    AuthService.rehydrate(); // Query localStorage ; Single Source of Truth
-	} catch (error) {
-	    console.error('Auth rehydration failed:', error);
-	} finally {
-	    // Never leave the app shell blocked on the loading fallback.
-	    setAuthReady(true);
-	}
-    }, []);
+        let cancelled = false;
+        AuthService.restoreSession().then((user) => {
+            if (cancelled) return;
+            if (user) {
+                authDispatch({ type: 'LOGIN_SUCCESS', payload: user });
+                userDispatch({ type: 'REGISTRATION_SUCCESS', payload: user });
+            }
+            setAuthReady(true);
+        });
+        return () => { cancelled = true; };
+    }, [authDispatch, userDispatch]);
 
     const renderPublic = (component) => {
 	if (!authReady) {
