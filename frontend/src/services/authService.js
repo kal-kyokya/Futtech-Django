@@ -6,6 +6,10 @@
 
 import apiClient, { normalizeError } from './apiClient';
 import tokenService from './tokenService';
+import contentService from './contentService';
+import axios from 'axios';
+
+let restoration = null;
 
 
 /**
@@ -15,6 +19,30 @@ import tokenService from './tokenService';
  *		 effective management of authentication processes.
  */
 class AuthService {
+
+    restoreSession() {
+        if (restoration) return restoration;
+        const base = import.meta.env.VITE_API_BASE_URL || '/api/v2';
+        restoration = (async () => {
+            try {
+                const { data } = await axios.post(`${base}/auth/token/refresh/`, {}, {
+                    withCredentials: true, timeout: 10000,
+                });
+                if (typeof data.access !== 'string' || !data.access) throw new Error('Missing access token');
+                contentService.clearCache();
+                tokenService.setAccessToken(data.access);
+                const response = await axios.get(`${base}/auth/me/`, {
+                    withCredentials: true, timeout: 10000,
+                    headers: { Authorization: `Bearer ${data.access}` },
+                });
+                return response.data;
+            } catch {
+                tokenService.clearAccessToken();
+                return null;
+            }
+        })().finally(() => { restoration = null; });
+        return restoration;
+    }
 
     /**
      * Asynchronous function.
@@ -29,7 +57,8 @@ class AuthService {
 	    const { message, access, user } = response.data;
 
 	    // Stores the access token in memory
-	    tokenService.setAccessToken(access);
+	    contentService.clearCache();
+            tokenService.setAccessToken(access);
 
 	    // Fetches initial content
 	    const playlistsPromise = this.fetchInitialContent();
@@ -62,7 +91,8 @@ class AuthService {
 	    const { message, access, user } = response.data;
 
 	    // Stores the access token in memory
-	    tokenService.setAccessToken(access);
+	    contentService.clearCache();
+            tokenService.setAccessToken(access);
 
 	    // Immediately fetches the initial content (playlists)
 	    const playlistsPromise = this.fetchInitialContent();
@@ -88,7 +118,8 @@ class AuthService {
 	    const response = await apiClient.post('/auth/google/', { credential });
 	    const { message, access, user } = response.data;
 
-	    tokenService.setAccessToken(access);
+	    contentService.clearCache();
+            tokenService.setAccessToken(access);
 
 	    const playlistsPromise = this.fetchInitialContent();
 	    return {
