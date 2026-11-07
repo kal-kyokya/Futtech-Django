@@ -7,7 +7,7 @@ import axios from 'axios';
 import tokenService from './tokenService';
 
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || '/api/v2';
 
 // Create the Axios instance
 const apiClient = axios.create({
@@ -59,6 +59,7 @@ export const normalizeError = (error) => {
 	const nonFieldErrors = data.non_field_errors;
 	const message = data.detail
 	      || data.message
+              || data.error
 	      || (Array.isArray(nonFieldErrors)
 		  ? nonFieldErrors.join(', ')
 		  : nonFieldErrors)
@@ -66,7 +67,7 @@ export const normalizeError = (error) => {
 	const fields = data.fields
 	      || Object.fromEntries(
 		  Object.entries(data)
-		      .filter(([key]) => !['detail', 'message', 'status', 'title', 'code', 'non_field_errors'].includes(key))
+                      .filter(([key]) => !['detail', 'message', 'error', 'status', 'title', 'code', 'non_field_errors'].includes(key))
 		      .map(([key, value]) => [
 			  key,
 			  Array.isArray(value)
@@ -146,6 +147,7 @@ apiClient.interceptors.response.use(
 
 	// Check if error is 401 and we haven't already tried to refresh
 	if (error.response?.status === 401 && !originalRequest._retry) {
+            originalRequest._retry = true;
 
 	    if (isRefreshing) {
 		// Avoid racing multiple refresh calls; replay once token arrives.
@@ -157,7 +159,6 @@ apiClient.interceptors.response.use(
 		});
 	    }
 
-	    originalRequest._retry = true;
 	    isRefreshing = true;
 
 	    try {
@@ -169,6 +170,9 @@ apiClient.interceptors.response.use(
 		);
 
 		const { access } = response.data;
+                if (typeof access !== 'string' || !access) {
+                    throw new Error('Token refresh response did not include an access token.');
+                }
 
 		// Update the access token
 		tokenService.setAccessToken(access);
