@@ -10,26 +10,22 @@
  *
  * 'TokenService' encapsulates the attributes and methods required for
  * 		  effective creation of a secure token storage mechanism.
+ *
+ * 		  Access tokens live only in memory.
+ * 		  The HttpOnly cookie restores sessions.
  */
-class TokenService {
+export class TokenService {
 
     // Creates an instance of the TokenService class.
     constructor() {
 	this.accessToken = null; // Keep in memory for security
-	this.storageKey = 'futtech_access_token';
-    }
-
-    /**
-     * Avails the browser's local storage for client-side manipulations.
-     *
-     * @returns {Object} localStorage - Malleable object representation.
-     */
-    getStorage() {
-	if (typeof window === 'undefined') {
-	    return null;
+	this.listeners = new Set();
+	// Remove tokens persisted by older application versions.
+	try {
+	    window.localStorage.removeItem('futtech_access_token');
+	} catch {
+	    // Memory-only authentication also works when storage is unavailable.
 	}
-
-	return window.localStorage;
     }
 
     /**
@@ -38,18 +34,8 @@ class TokenService {
      * @param {String} token - The backend-generated access token.
      */
     setAccessToken(token) {
-	this.accessToken = token;
-
-	const storage = this.getStorage();
-	if (!storage) {
-	    return;
-	}
-
-	if (token) {
-	    storage.setItem(this.storageKey, token);
-	} else {
-	    storage.removeItem(this.storageKey);
-	}
+	this.accessToken = typeof token === 'string' && token ? token : null;
+	this.listeners.forEach((listener) => listener(this.accessToken));
     }
 
     /**
@@ -58,11 +44,6 @@ class TokenService {
      * @returns {String} the access token tied to this class instanciation.
      */
     getAccessToken() {
-	if (this.accessToken) {
-	    return this.accessToken;
-	}
-
-	this.rehydrate();
 	return this.accessToken;
     }
 
@@ -72,35 +53,21 @@ class TokenService {
      * @returns {Boolean} true if it exists or converts 'null' values to false.
      */
     hasTokens() {
-	return !!(this.getAccessToken());
+	return Boolean(this.accessToken);
     }
 
-    /**
-     * Verifies the existence of a token in 'localStorage'
-     * and rewrites the in-memory 'accessToken' variable.
-     *
-     * @returns {String} the access token's value as per localStorage.
-     */
     rehydrate() {
-	const storage = this.getStorage();
-	if (!storage) {
-	    return null;
-	}
-
-	const storedToken = storage.getItem(this.storageKey);
-	this.accessToken = storedToken;
-
-	return storedToken;
+	return this.accessToken;
     }
 
     // Clears the access token (logout)
     clearAccessToken() {
-	this.accessToken = null;
+	this.setAccessToken(null);
+    }
 
-	const storage = this.getStorage();
-	if (storage) {
-	    storage.removeItem(this.storageKey);
-	}
+    subscribe(listener) {
+	this.listeners.add(listener);
+	return () => this.listeners.delete(listener);
     }
 }
 
