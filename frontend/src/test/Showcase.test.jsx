@@ -40,10 +40,10 @@ describe('Showcase page', () => {
 
 	await user.click(menuButton);
 	expect(menuButton).toHaveAttribute('aria-expanded', 'true');
-	expect(document.getElementById('navigation')).toHaveClass('active');
+	expect(document.getElementById(menuButton.getAttribute('aria-controls'))).toHaveClass('active');
 
 	await user.click(menuButton);
 	expect(menuButton).toHaveAttribute('aria-expanded', 'false');
-	expect(document.getElementById('navigation')).not.toHaveClass('active');
+	expect(document.getElementById(menuButton.getAttribute('aria-controls'))).not.toHaveClass('active');
     });
 });
