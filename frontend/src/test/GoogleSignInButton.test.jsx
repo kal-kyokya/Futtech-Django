@@ -43,7 +43,7 @@ describe('GoogleSignInButton', () => {
 		callback: expect.any(Function),
 	    });
 	});
-	expect(screen.getByRole('button', { name: /sign in with google/i })).toBeImTheDocument();
+	expect(screen.getByRole('button', { name: /sign in with google/i })).toBeInTheDocument();
     });
 
 
