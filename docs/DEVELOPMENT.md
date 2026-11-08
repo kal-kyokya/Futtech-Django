@@ -103,3 +103,22 @@ M-Pesa pricing must be a positive whole KES amount. Live credentials belong only
 Google can link an existing account when the verified email is Gmail or its domain matches Google's signed `hd` claim. Other existing email identities must use their existing credentials. Ambiguous email matches are rejected.
 
 ## Frontend design and validation
+
+The shared palette, spacing, focus states, controls, and typrography live in `frontend/src/app.scss`. Component styles reference these CSS custom properties; `frontend/src/styles/theme.js` aligns Material UI surfaces with the same theme.
+`SiteHeader` supplies public and member navigation. Landing and member heroes share a responsive 16:9 video frame. Pages load lazily behind a React error boundary. Use the system font stack; no external font download is required.
+
+From `frontend/`:
+
+```bash
+npm ci
+npm run lint
+npm run format:check
+npm test -- --run --maxWorkers=2
+npm run build
+npx playwright install chromium
+npm run test:browser
+```
+
+When using an existing managed Chromium binary instead of a download browser:
+`PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium npm run test:browser`.
+The browser suite checks all routes at desktop, tablet, and mobile sizes, runs WCAG accessibility checks, and exercises navigation, account forms, and checkout UI states. Its API, Google, and video fixtures deliberately do not validate live OAuth, streaming, or payment providers. Screenshots and failure traces are saved in `frontend/test-results/` and uploaded by CI. The video preview fixture is a compressed frame from the repository's existing `turf.mp4`.
