@@ -1,45 +1,308 @@
-@use './styles/tokens' as *;
-@use './styles/mixins' as *;
-
 :root {
-    --main-color: #0D1C23;
-    color: $color-text;
-    scroll-behavior: smooth;
+  color-scheme: dark;
+  --color-bg: #0f172a;
+  --color-surface: #172236;
+  --color-elevated: #1e293b;
+  --color-input: #111b2e;
+  --color-border: #334155;
+  --color-primary: #2563eb;
+  --color-primary-hover: #1d4ed8;
+  --color-on-primary: #fff;
+  --color-link: #93c5fd;
+  --color-secondary: #a5b4fc;
+  --color-success: #86efac;
+  --color-danger: #fca5a5;
+  --color-text: #f1f5f9;
+  --color-muted: #a8b6cb;
+  --color-overlay: rgb(15 23 42 / 96%);
+  --shadow-card: 0 16px 48px rgb(0 0 0 / 15%);
+  --radius: 1rem;
+  --page-width: 1200px;
+  --page-gutter: clamp(1.25rem, 4vw, 3rem);
+  --section-space: clamp(3rem, 6vw, 5.5rem);
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --main-color: var(--color-bg);
+  font-family:
+    Inter,
+    ui-sans-serif,
+    system-ui,
+    -apple-system,
+    BlinkMacSystemFont,
+    'Segoe UI',
+    sans-serif;
+  color: var(--color-text);
+  background: var(--color-bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
 }
-
 *,
 *::before,
 *::after {
-    box-sizing: border-box;
-    margin: 0;
-    font-family: 'Poppins', sans-serif;
+  box-sizing: border-box;
 }
-
 body {
-    margin: 0;
-    min-height: 100vh;
-    color: $color-text;
-    background-color: $color-bg;
-    line-height: 1.5;
-    overflow-x: hidden;
+  margin: 0;
+  min-width: 320px;
+  line-height: 1.65;
 }
-
-img {
-    max-width: 100%;
-    height: auto;
-    display: block;
+h1,
+h2,
+h3,
+h4,
+p,
+ul {
+  margin: 0;
 }
-
-.main-wrapper,
-page {
-    @include page-container;
+h1,
+h2,
+h3,
+h4 {
+  line-height: 1.2;
+  letter-spacing: -0.035em;
+  font-weight: 650;
+  text-wrap: balance;
 }
-
-.card {
-    @include app-card;
+h1 {
+  font-size: clamp(2rem, 4.5vw, 3.5rem);
 }
-
+h2 {
+  font-size: clamp(1.5rem, 3vw, 2.25rem);
+}
+h3 {
+  font-size: 1.125rem;
+}
+p {
+  color: var(--color-muted);
+}
+a {
+  color: var(--color-link);
+  text-underline-offset: 0.25em;
+}
 .link {
-    color: inherit;
-    text-decoration: none;
+  color: inherit;
+  text-decoration: none;
+}
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+button,
+input,
+select,
+textarea {
+  font: inherit;
+}
+button,
+a,
+input,
+select,
+textarea,
+summary {
+  -webkit-tap-highlight-color: transparent;
+}
+button {
+  cursor: pointer;
+}
+button,
+.button,
+.heroAction {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.65rem 1.125rem;
+  border: 1px solid var(--color-border);
+  border-radius: 0.625rem;
+  color: var(--color-text);
+  background: var(--color-elevated);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s;
+}
+button:hover:not(:disabled),
+.button:hover {
+  border-color: var(--color-link);
+}
+.button--primary,
+button[type='submit'],
+.heroAction.primary {
+  background: var(--color-primary);
+  border-color: var(--color-primary);
+  color: var(--color-on-primary);
+}
+.button--primary:hover,
+button[type='submit']:hover:not(:disabled),
+.heroAction.primary:hover {
+  background: var(--color-primary-hover);
+}
+.button--secondary,
+.heroAction.secondary {
+  background: transparent;
+}
+button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+:focus-visible {
+  outline: 3px solid var(--color-link);
+  outline-offset: 4px;
+}
+input:not([type='checkbox'], [type='radio']),
+select,
+textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 46px;
+  border: 1px solid var(--color-border);
+  border-radius: 0.625rem;
+  background: var(--color-input);
+  color: var(--color-text);
+  padding: 0.75rem 0.875rem;
+}
+input::placeholder,
+textarea::placeholder {
+  color: var(--color-muted);
+  opacity: 0.85;
+}
+input[aria-invalid='true'] {
+  border-color: var(--color-danger);
+}
+textarea {
+  resize: vertical;
+}
+label {
+  font-size: 0.875rem;
+  font-weight: 550;
+}
+input:disabled,
+textarea:disabled {
+  color: var(--color-muted);
+  cursor: not-allowed;
+}
+svg {
+  flex-shrink: 0;
+}
+.page-container,
+.main-wrapper {
+  width: min(100%, var(--page-width));
+  margin-inline: auto;
+  padding-inline: var(--page-gutter);
+}
+.card {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  background: var(--color-surface);
+}
+.fieldError,
+[role='alert'] {
+  color: var(--color-danger);
+  font-size: 0.875rem;
+}
+.fieldError:empty {
+  display: none;
+}
+.status-message,
+.userPrompt {
+  padding: 1rem;
+  background: var(--color-elevated);
+  border: 1px solid var(--color-border);
+  border-radius: 0.625rem;
+}
+.eyebrow {
+  display: block;
+  font-size: 0.75rem;
+  letter-spacing: 0.16em;
+  font-weight: 650;
+  text-transform: uppercase;
+  color: var(--color-link);
+}
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+.skip-link {
+  position: fixed;
+  top: -100px;
+  left: 1rem;
+  z-index: 100;
+  background: var(--color-surface);
+  padding: 0.75rem;
+  border-radius: 0.5rem;
+}
+.skip-link:focus {
+  top: 1rem;
+}
+.auth-loading {
+  display: grid;
+  place-items: center;
+  min-height: 40vh;
+  color: var(--color-muted);
+}
+.empty-state {
+  padding: 2rem;
+  border: 1px dashed var(--color-border);
+  border-radius: var(--radius);
+  text-align: center;
+  color: var(--color-muted);
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    animation: none !important;
+    transition: none !important;
+  }
+}
+.authDivider {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--color-muted);
+  font-size: 0.75rem;
+  margin: 1.25rem 0;
+}
+.authDivider::before,
+.authDivider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: var(--color-border);
+}
+.googleSignIn {
+  width: 100%;
+  min-height: 44px;
+  padding: 0.5rem;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-elevated);
+}
+.googleSignIn > div {
+  display: flex;
+  justify-content: center;
+  min-width: 0;
+}
+.googleSignIn--disabled {
+  opacity: 0.6;
+  pointer-events: none;
 }
