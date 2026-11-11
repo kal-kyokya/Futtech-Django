@@ -1,0 +1,183 @@
+.register {
+    min-height: 100vh;
+}
+.registerMain {
+    max-width: var(--page-width);
+    margin: auto;
+    padding: 0 var(--page-gutter);
+}
+.landingSection {
+    padding-block: var(--section-space);
+    border-bottom: 1px solid var(--color-border);
+}
+.heroSection {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    align-items: center;
+    gap: clamp(2rem, 5vw, 4.5rem);
+    padding-block: clamp(3rem, 7vw, 6rem);
+}
+.heroSection h1 {
+    font-size: clamp(2.75rem, 5.2vw, 4.35rem);
+    line-height: 1.08;
+    letter-spacing: -0.055em;
+    margin: 1.25rem 0;
+}
+.heroSection h1 span {
+    color: var(--color-link);
+}
+.heroSection__subheadline {
+    font-size: 1.0625rem;
+    line-height: 1.8;
+    max-width: 31rem;
+}
+.heroSection__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2rem;
+}
+.heroSection__footnote {
+    font-size: 0.75rem;
+    margin-top: 1.25rem;
+}
+.heroSection__preview {
+    margin: 0;
+    min-width: 0;
+    border: 1px solid var(--color-border);
+    border-radius: var(--radius);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+}
+.heroSection__previewHeading {
+    padding: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    font-size: 0.6875rem;
+    color: var(--color-muted);
+}
+.heroSection__previewHeading .eyebrow {
+    font-size: 0.625rem;
+    letter-spacing: 0.1em;
+}
+.heroSection__previewFrame {
+    aspect-ratio: 16/9;
+    background: var(--color-input);
+}
+.heroSection__preview iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+    display: block;
+}
+.heroSection figcaption {
+    padding: 1rem;
+    color: var(--color-muted);
+    font-size: 0.75rem;
+}
+.heroSection figcaption span {
+    color: var(--color-text);
+}
+.aboutValue {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    align-items: start;
+    gap: 3rem;
+}
+.aboutValue h2 {
+    max-width: 22rem;
+}
+.servicesSection__grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 2rem;
+}
+.serviceCard {
+    background: var(--color-surface);
+    border: 1px solid var(--color-border);
+    padding: 1.5rem;
+    border-radius: var(--radius);
+}
+.serviceCard__icon {
+    display: inline-block;
+    font-size: 0.75rem;
+    color: var(--color-link);
+    margin-bottom: 2rem;
+    font-variant-numeric: tabular-nums;
+}
+.serviceCard h3 {
+    margin-bottom: 0.75rem;
+}
+.serviceCard p {
+    font-size: 0.875rem;
+}
+.differentiationSection {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+}
+.differentiationSection ul {
+    color: var(--color-muted);
+    padding-left: 1.25rem;
+    display: grid;
+    gap: 1rem;
+}
+.conversionSection {
+    max-width: 620px;
+    margin: var(--section-space) auto;
+    padding: clamp(1.5rem, 4vw, 3rem);
+    border: 1px solid var(--color-border);
+    background: var(--color-surface);
+    border-radius: var(--radius);
+    scroll-margin-top: 100px;
+}
+.conversionSection .landingSection__header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+.conversionSection h2 {
+    font-size: 1.75rem;
+    margin-bottom: 0.75rem;
+}
+.membership {
+    display: grid;
+    gap: 0.75rem;
+}
+.membership label {
+    margin-top: 0.5rem;
+}
+.membership button {
+    margin-top: 0.5rem;
+    background: var(--color-primary);
+    color: var(--color-on-primary);
+    border-color: var(--color-primary);
+}
+.membership .fieldError {
+    margin: 0;
+}
+.bottomCtaSection {
+    text-align: center;
+    border: 0;
+}
+.bottomCtaSection h2 {
+    max-width: 32rem;
+    margin: 0 auto 1.5rem;
+}
+@media (max-width: 900px) {
+    .heroSection {
+	grid-template-columns: 1fr;
+    }
+    .heroSection__content {
+	max-width: 650px;
+    }
+    .heroSection__preview {
+	width: 100%;
+    }
+    .servicesSection__grid {
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
