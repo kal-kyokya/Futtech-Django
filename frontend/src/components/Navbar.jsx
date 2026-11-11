@@ -1,185 +1,41 @@
-import { useState, useEffect } from 'react';
-import './navbar.scss';
-import SearchIcon from '@mui/icons-material/Search';
-import NotificationsNoneIcon from '@mui/icons-material/NotificationsNone';
-import ArrowDropDownIcon from '@mui/icons-material/ArrowDropDown';
-import { Link, useNavigate, useLocation } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { UserContext } from '../contexts/userContext/UserContext';
 import { AuthContext } from '../contexts/authContext/AuthContext';
 import { logOut as userLogOut } from '../contexts/userContext/UserActions';
 import { logOut as authLogOut } from '../contexts/authContext/AuthActions';
-import MenuIcon from '@mui/icons-material/Menu';
 import authService from '../services/authService';
 import tokenService from '../services/tokenService';
+import SiteHeader from './layout/SiteHeader';
 
-const Navbar = () => {
-    const [isScrolled, setIsScrolled] = useState(false);
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-    const { user, dispatch: userDispatch } = useContext(UserContext);
+export default function Navbar() {
+    const { dispatch: userDispatch } = useContext(UserContext);
     const { dispatch: authDispatch } = useContext(AuthContext);
+    const [loggingOut, setLoggingOut] = useState(false);
     const navigate = useNavigate();
-    const location = useLocation();
 
-    // Using useEffect for window.onscroll to prevent
-    // potential memory leaks and ensure cleanup
-    useEffect(() => {
-	const handleScroll = () => {
-	    setIsScrolled(window.pageYOffset === 0 ? false : true);
-	};
+    const handleLogout = async () => {
+	if (loggingOut) return;
 
-	window.addEventListener('scroll', handleScroll);
+	setLoggingOut(true);
 
-	return () => {
-	    window.removeEventListener('scroll', handleScroll); // Cleanup on unmount
-	};
-    }, []);
+	await authService.logout();
+	tokenService.clearAccessToken();
 
-    const handleLogOut = async () => {
-	const result = await authService.logout();
-	if (!result.success) {
-	    console.warn(result.error);
+	try {
+	    localStorage.setItem('videos', JSON.stringify([]));
+	} catch {
+	    /* Storage may be blocked. */
 	}
 
-	tokenService.clearAccessToken();
-	localStorage.setItem('videos', JSON.stringify([]));
 	userDispatch(userLogOut());
 	authDispatch(authLogOut());
-	setIsMobileMenuOpen(false); // Close Mobile menu on logout
+
 	navigate('/login', {
 	    replace: true,
 	    state: { notice: 'Logged out successfully.' },
 	});
     };
 
-    const toggleMobileMenu = () => {
-	setIsMobileMenuOpen(!isMobileMenuOpen); // Toggle the state
-    };
-
-    // Helper function to navigate and close menu
-    const handleNavLinkClick = (path) => {
-	navigate(path);
-	setIsMobileMenuOpen(false); // Close mobile menu after navigation
-    };
-
-    return (
-	<> {/* Use a React Fragment to wrap multiple top-level elements */}
-	    <div className={isScrolled ? 'navbar scrolled' : 'navbar'}>
-		<div className='container'>
-		    <div className='left'>
-			<Link className='link' to='/home'>
-			    <img src='/logo.png'
-				 alt='Logo of the Futtech Company'
-			    />
-			</Link>
-
-			{/* Desktop Navigation Links - These will be hidden by CSS on mobile */}
-			<Link to='/showcase' className='link desktop-nav-item'> {/* Add a class for specific hiding */}
-			    <span>Public Showcase</span>
-			</Link>
-			<Link to='/futtech-xi' className='link desktop-nav-item'>
-			    <span>Futtech XI</span>
-			</Link>
-			<Link to='/videos' className='link desktop-nav-item'>
-			    <span>Videos</span>
-			</Link>
-			<Link to='/drone-videos' className='link desktop-nav-item'>
-			    <span>Drone Footages</span>
-			</Link>
-			<Link to='/ai-analysis' className='link desktop-nav-item'>
-			    <span>AI-driven Analysis</span>
-			</Link>
-			<Link to='/about' className='link desktop-nav-item'>
-			    <span>About</span>
-			</Link>
-		    </div>
-
-		    {/* Authenticated utility actions */}
-		    <div className='right'>
-
-			{/* Hamburger Menu Icon - Visible on mobile via CSS */}
-			<div className='hamburger-menu'
-				  onClick={toggleMobileMenu}
-			>
-			    <MenuIcon />
-			</div>
-
-
-			{/* Hide search and Notification on Mobile */}
-			<SearchIcon className='icon desktop-nav-item'/>
-			<NotificationsNoneIcon className='icon desktop-nav-item'/>
-
-			<Link className='link'
-			      to='/profile'>
-			    <img className='navbarImg'
-				 src={user?.profilePic || '/BlankProfile.png'}
-				 alt='Profile Picture'
-			    />
-			</Link>
-
-			<div className='manage'>
-			    <ArrowDropDownIcon className='optionIcon'/>
-			    <div className='hiddenOptions'>
-				{ location.pathname !== '/profile' ? (
-				    <Link className='link'
-					      to='/profile'
-					  onClick={() => setIsMobileMenuOpen(false)}>  {/* Close menu if open */}
-					<div className='options'>
-					    Profile
-					</div>
-				    </Link>
-				) : (
-				    <Link className='link'
-					      to='/'
-					  onClick={() => setIsMobileMenuOpen(false)}>  {/* Close menu if open */}
-					<div className='options'>
-					    Home
-					</div>
-				    </Link>
-				)}
-
-				<div className='options'
-				     onClick={handleLogOut}
-				>
-				    Logout
-				</div>
-			    </div>
-			</div>
-		    </div>
-		</div>
-	    </div>
-
-	    {/* Mobile Navigation Menu - Conditionally rendered/styled based on isMobileMenuOpen state */}
-	    <div className={`mobile-menu ${isMobileMenuOpen ? 'active' : 'hidden'}`}>
-		<ul>
-		    <li>
-			<a onClick={() => handleNavLinkClick('/showcase')}>Public Showcase</a>
-		    </li>
-		    <li>
-			<a onClick={() => handleNavLinkClick('/futtech-xi')}>Futtech XI</a>
-		    </li>
-		    <li>
-			<a onClick={() => handleNavLinkClick('/videos')}>Videos</a>
-		    </li>
-		    <li>
-			<a onClick={() => handleNavLinkClick('/drone-videos')}>Drone Footages</a>
-		    </li>
-		    <li>
-			<a onClick={() => handleNavLinkClick('/ai-analysis')}>AI-driven Analysis</a>
-		    </li>
-		    <li>
-			<a onClick={() => handleNavLinkClick('/about')}>About</a>
-		    </li>
-		</ul>
-
-		<a onClick={handleLogOut}
-		   className='mobile-connect-button'
-		>
-		    Logout
-		</a>
-	    </div>
-	</>
-    );
-};
-
-export default Navbar;
+    return <SiteHeader member onLogout={handleLogout} loggingOut={loggingOut} />;
+}
