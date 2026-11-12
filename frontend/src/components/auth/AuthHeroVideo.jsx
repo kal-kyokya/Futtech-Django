@@ -1,4 +1,8 @@
-const AuthHeroVideo = ({ video, title = 'Futtech Preview', className = '' }) => (
+const AuthHeroVideo = ({
+    video,
+    title = 'Futtech Preview',
+    className = '',
+}) => (
     <section className={`authHeroVideo ${className}`.trim()} aria-label={title}>
 	<h3>{title}</h3>
 	<div className='authHeroVideo__frame'>
