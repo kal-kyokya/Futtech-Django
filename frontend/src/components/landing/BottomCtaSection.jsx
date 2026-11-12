@@ -1,17 +1,13 @@
+import { Link } from 'react-router-dom';
 const BottomCtaSection = () => (
     <section
 	className='landingSection bottomCtaSection'
 	aria-labelledby='bottom-cta-heading'
     >
-	<h2 id='bottom-cta-heading'>
-	    If you are looking for someone who understands football beyond the surface level and can translate it into high-quality video content, We are ready to help.
-	</h2>
-	<a
-	    className='button button--primary'
-	    href='https://www.futtech.kalkyokya.tech/futtech-xi'
-	>
+	<h2 id='bottom-cta-heading'>Make your next match a step forward.</h2>
+	<Link className='button button--primary' to='/futtech-xi'>
 	    Start Your First Analysis
-	</a>
+	</Link>
     </section>
 );
 
