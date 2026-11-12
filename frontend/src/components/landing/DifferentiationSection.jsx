@@ -3,11 +3,22 @@ const DifferentiationSection = () => (
 	className='landingSection differentiationSection'
 	aria-labelledby='differentiation-heading'
     >
-	<h2 id='differentiation-heading'>We don't just edit — We extract meaning from the game.</h2>
+	<h2 id='differentiation-heading'>
+	    We don&#39;t just edit — We extract meaning from the game.
+	</h2>
 	<ul>
-	    <li>Football intelligence to decode key moments and patterns, not just visuals.</li>
-	    <li>Analytical thinking that turns footage into specific, coachable decisions.</li>
-	    <li>Performance-focused output designed for development, scouting, and content impact.</li>
+	    <li>
+		Football intelligence to decode key moments and patterns, not just
+		visuals.
+	    </li>
+	    <li>
+		Analytical thinking that turns footage into specific, coachable
+		decisions.
+	    </li>
+	    <li>
+		Performance-focused output designed for development, scouting, and
+		content impact.
+	    </li>
 	</ul>
     </section>
 );
