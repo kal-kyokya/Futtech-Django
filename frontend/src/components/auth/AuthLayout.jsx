@@ -12,14 +12,12 @@ const AuthLayout = ({
 }) => (
     <div className={`authPage ${pageClassName}`.trim()}>
 	{header}
-	<div className='authPage__container'>
+	<main id='main-content' tabIndex={-1} className='authPage__container'>
 	    <div className='authPage__panelGrid'>
 		<AuthHeroVideo video={videoLink} title={videoTitle} />
-		<AuthFormCard className={formClassName}>
-		    {children}
-		</AuthFormCard>
+		<AuthFormCard className={formClassName}>{children}</AuthFormCard>
 	    </div>
-	</div>
+	</main>
     </div>
 );
 
