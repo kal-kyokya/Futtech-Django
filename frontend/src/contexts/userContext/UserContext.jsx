@@ -1,35 +1,40 @@
 import { createContext, useReducer, useEffect } from 'react';
 import UserReducer from './UserReducer';
 import tokenService from '../../services/tokenService';
-
-const storedUser = JSON.parse(localStorage.getItem('user'));
-const hasAccessToken = tokenService.hasTokens();
+import { readStoredUser, writeStoredUser } from '../../services/userStorage';
 
 const INITIAL_STATE = {
     isFetching: false,
-    error: false,
-    user: hasAccessToken ?
-	{
-	    ...storedUser,
-	    'accessToken': tokenService.getAccessToken()
-	} : null,
-    loggedOut: false
+    error: null,
+    user: null,
+    loggedOut: false,
 };
+
+const initialState = () => ({
+    ...INITIAL_STATE,
+    user: tokenService.hasTokens() ? readStoredUser() : null,
+});
 
 export const UserContext = createContext(INITIAL_STATE);
 
 export const UserContextProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(UserReducer, INITIAL_STATE);
+    const [state, dispatch] = useReducer(
+	UserReducer,
+	INITIAL_STATE,
+	initialState,
+    );
 
     useEffect(() => {
-	localStorage.setItem('user', JSON.stringify(state.user));
+	writeStoredUser(state.user);
     }, [state.user]);
 
-    useEffect(() => {
-	if (!tokenService.hasTokens() && state.user) {
-	    dispatch({ type: 'LOGOUT' });
-	}
-    }, [state.user]);
+    useEffect(
+	() =>
+	tokenService.subscribe((token) => {
+            if (!token) dispatch({ type: 'LOGOUT' });
+	}),
+	[],
+    );
 
     return (
 	<UserContext.Provider
@@ -38,10 +43,10 @@ export const UserContextProvider = ({ children }) => {
 		isFetching: state.isFetching,
 		error: state.error,
 		loggedOut: state.loggedOut,
-		dispatch
+		dispatch,
 	    }}
 	>
-	    { children }
+	    {children}
 	</UserContext.Provider>
     );
 };
