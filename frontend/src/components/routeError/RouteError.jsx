@@ -1,27 +1,25 @@
+import { Component } from 'react';
 import './routeError.scss';
-import { Link, useRouteError } from 'react-router-dom';
 
-const RouteError = () => {
-    const error = useRouteError();
-    const message = error?.statusText || error?.message || 'Unexpected error.';
-
-    return (
-	<div className='routeError'>
-	    <div className='routeError__card'>
-		<h1>
-		    Something went wrong
-		</h1>
-		<p>
-		    {message}
-		</p>
-		<Link to='/'
-		      className='routeError__link'
-		>
-		    Let's go Home — Home page
-		</Link>
-	    </div>
-	</div>
-    );
-};
-
-export default RouteError;
+// Declarative routes need a React boundary for render and lazy import failures.
+export default class RouteError extends Component {
+    state = { failed: false };
+    static getDerivedStateFromError() {
+	return { failed: true };
+    }
+    render() {
+	if (!this.state.failed) return this.props.children;
+	return (
+	    <main className='routeError' role='alert'>
+		<div className='routeError__card'>
+		    <p className='eyebrow'>LET’S GET YOU BACK ON TRACK</p>
+		    <h1>Something went wrong</h1>
+		    <p>We couldn’t load this page. Please return home and try again.</p>
+		    <a href='/' className='routeError__link button button--primary'>
+			Return home
+		    </a>
+		</div>
+	    </main>
+	);
+    }
+}
