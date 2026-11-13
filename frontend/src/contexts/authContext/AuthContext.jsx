@@ -1,5 +1,5 @@
 /**
- * Auth context keeps, session-scoped UI, auth states in sync with token storage.
+ * Auth context keeps, session-scoped, UI, auth states in sync with token storage.
  *
  * Source of truth split:
  * - access token => tokenService
@@ -8,33 +8,41 @@
 import { createContext, useReducer, useEffect } from 'react';
 import AuthReducer from './AuthReducer';
 import tokenService from '../../services/tokenService';
-import { readStoredUser, writeStoredUser } from '../..services/userStorage';
-
-const storedUser = JSON.parse(localStorage.getItem('user'));
-const hasAccessToken = tokenService.hasTokens();
+import { readStoredUser, writeStoredUser } from '../../services/userStorage';
 
 const INITIAL_STATE = {
     isFetching: false,
     error: null,
-    user: hasAccessToken ? storedUser : null,
+    user: null,
     loggedOut: false,
 };
+
+const initialState = () => ({
+    ...INITIAL_STATE,
+    user: tokenService.hasTokens() ? readStoredUser() : null,
+});
 
 export const AuthContext = createContext(INITIAL_STATE);
 
 export const AuthContextProvider = ({ children }) => {
-    const [state, dispatch] = useReducer(AuthReducer, INITIAL_STATE);
+    const [state, dispatch] = useReducer(
+	AuthReducer,
+	INITIAL_STATE,
+	initialState,
+    );
 
     useEffect(() => {
-	localStorage.setItem('user', JSON.stringify(state.user));
+	writeStoredUser(state.user);
     }, [state.user]);
 
-    useEffect(() => {
-	if (!tokenService.hasTokens() && state.user) {
+    useEffect(
+	() =>
+	tokenService.subscribe((token) => {
 	    // Prevent stale persisted user data from appearing authenticated.
-	    dispatch({ type: 'LOGOUT' });
-	}
-    }, [state.user]);
+	    if (!token) dispatch({ type: 'LOGOUT' });
+	}),
+	[],
+    );
 
     return (
 	<AuthContext.Provider
@@ -43,10 +51,10 @@ export const AuthContextProvider = ({ children }) => {
 		isFetching: state.isFetching,
 		error: state.error,
 		loggedOut: state.loggedOut,
-		dispatch
+		dispatch,
 	    }}
 	>
-	    { children }
+	    {children}
 	</AuthContext.Provider>
     );
 };
