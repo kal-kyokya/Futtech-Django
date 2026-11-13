@@ -7,93 +7,102 @@
 
 const PlaylistReducer = (state, action) => {
     switch (action.type) {
-      case 'CREATE_PLAYLIST_START':
+    case 'RESET_PLAYLISTS':
+	return { playlists: [], isFetching: false, error: false };
+    case 'CREATE_PLAYLIST_START':
 	return {
-	    ...state,
-	    isFetching: true,
-	    error: false,
+            ...state,
+            isFetching: true,
+            error: false,
 	};
 
-      case 'CREATE_PLAYLIST_SUCCESS':
+    case 'CREATE_PLAYLIST_SUCCESS':
 	return {
-	    playlists: [ ...state.playlists, action.payload ],
-	    isFetching: false,
-	    error: false,
+            playlists: [...state.playlists, action.payload],
+            isFetching: false,
+            error: false,
 	};
 
-      case 'CREATE_PLAYLIST_FAILURE':
+    case 'CREATE_PLAYLIST_FAILURE':
 	return {
-	    ...state,
-	    isFetching: false,
-	    error: true,
+            ...state,
+            isFetching: false,
+            error: true,
 	};
 
-      case 'GET_PLAYLISTS_START':
+    case 'GET_PLAYLISTS_START':
 	return {
-	    playlists: [],
-	    isFetching: true,
-	    error: false,
+            playlists: [],
+            isFetching: true,
+            error: false,
 	};
 
-      case 'GET_PLAYLISTS_SUCCESS':
+    case 'GET_PLAYLISTS_SUCCESS':
 	return {
-	    playlists: action.payload,
-	    isFetching: false,
-	    error: false,
+            playlists: action.payload,
+            isFetching: false,
+            error: false,
 	};
 
-      case 'GET_PLAYLISTS_FAILURE':
+    case 'GET_PLAYLISTS_FAILURE':
 	return {
-	    playlists: [],
-	    isFetching: false,
-	    error: true,
+            playlists: [],
+            isFetching: false,
+            error: true,
 	};
 
-      case 'UPDATE_PLAYLIST_START':
+    case 'UPDATE_PLAYLIST_START':
 	return {
-	    ...state,
-	    isFetching: true,
-	    error: false,
+            ...state,
+            isFetching: true,
+            error: false,
 	};
 
-      case 'UPDATE_PLAYLIST_SUCCESS':
+    case 'UPDATE_PLAYLIST_SUCCESS':
 	return {
-	    playlists: state.playlists.map(
-		(playlist) => playlist._id === action.payload._id ? action.payload : playlist
-	    ),
-	    isFetching: false,
-	    error: false,
+            playlists: state.playlists.map((playlist) =>
+		(playlist.id ?? playlist._id) ===
+		    (action.payload.id ?? action.payload._id)
+		    ? action.payload
+		    : playlist,
+            ),
+            isFetching: false,
+            error: false,
 	};
 
-      case 'UPDATE_PLAYLIST_FAILURE':
+    case 'UPDATE_PLAYLIST_FAILURE':
 	return {
-	    ...state,
-	    isFetching: false,
-	    error: true,
+            ...state,
+            isFetching: false,
+            error: true,
 	};
 
-      case 'DELETE_PLAYLIST_START':
+    case 'DELETE_PLAYLIST_START':
 	return {
-	    ...state,
-	    isFetching: true,
-	    error: false,
+            ...state,
+            isFetching: true,
+            error: false,
 	};
 
-      case 'DELETE_PLAYLIST_SUCCESS':
+    case 'DELETE_PLAYLIST_SUCCESS':
 	return {
-	    playlists: state.playlists.filter((playlist) => playlist._id !== action.payload._id),
-	    isFetching: false,
-	    error: false,
+            playlists: state.playlists.filter(
+		(playlist) =>
+		(playlist.id ?? playlist._id) !==
+		    (action.payload?.id ?? action.payload?._id ?? action.payload),
+            ),
+            isFetching: false,
+            error: false,
 	};
 
-      case 'DELETE_PLAYLIST_FAILURE':
+    case 'DELETE_PLAYLIST_FAILURE':
 	return {
-	    ...state,
-	    isFetching: false,
-	    error: true,
+            ...state,
+            isFetching: false,
+            error: true,
 	};
 
-      default:
+    default:
 	return { ...state };
     }
 };
