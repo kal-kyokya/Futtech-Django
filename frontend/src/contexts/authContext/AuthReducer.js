@@ -38,7 +38,7 @@ const AuthReducer = (state, action) => {
 	return {
 	    ...state,
 	    error: null,
-	}
+	};
 
       case 'LOGOUT':
 	return {
