@@ -1,5 +1,5 @@
 /**
- * Auth context keeps session-scoped UI auth state in sync with token storage.
+ * Auth context keeps, session-scoped UI, auth states in sync with token storage.
  *
  * Source of truth split:
  * - access token => tokenService
@@ -8,6 +8,7 @@
 import { createContext, useReducer, useEffect } from 'react';
 import AuthReducer from './AuthReducer';
 import tokenService from '../../services/tokenService';
+import { readStoredUser, writeStoredUser } from '../..services/userStorage';
 
 const storedUser = JSON.parse(localStorage.getItem('user'));
 const hasAccessToken = tokenService.hasTokens();
