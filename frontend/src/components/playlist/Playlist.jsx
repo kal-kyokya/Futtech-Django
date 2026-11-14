@@ -1,10 +1,6 @@
-// --- frontend/src/components/playlist/Playlist.jsx ---
-
 import './playlist.scss';
-import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
-import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useRef } from 'react';
 import PlaylistItem from '../playlistItem/PlaylistItem';
-import { useRef, useState } from 'react';
 
 const Playlist = ({ playlist }) => {
     const playlistRef = useRef();
