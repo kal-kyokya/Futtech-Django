@@ -19,9 +19,13 @@ describe('Payment component', () => {
 
 	expect(screen.getByText('M-Pesa (Recommended)')).toBeTruthy();
 	expect(screen.getByText('Stripe (Fallback)')).toBeTruthy();
-	expect(screen.getByRole('button', { name: 'Pay with M-Pesa' })).toBeTruthy();
+	expect(
+	    screen.getByRole('button', { name: 'Pay with M-Pesa' })
+	).toBeTruthy();
 
 	await user.click(screen.getByText('Stripe (Fallback)'));
-	expect(screen.getByRole('button', { name: 'Continue with Stripe' })).toBeTruthy();
+	expect(
+	    screen.getByRole('button', { name: 'Continue with Stripe' })
+	).toBeTruthy();
     });
 });
