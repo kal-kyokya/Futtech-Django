@@ -1,88 +1,33 @@
-@use '../../styles/tokens' as *;
-@use '../../styles/mixins' as *;
-
-$arrow-width-mobile: 2.25rem;
-$arrow-width-desktop: 3rem;
-
 .playlist {
-    width: 100%;
-    margin: $space-6 0;
-
-    .playlistTitle {
-	display: block;
-	margin-inline: $arrow-width-mobile $space-4;
-	margin-bottom: $space-2;
-	color: $color-text;
-	font-size: $font-size-sm;
-	font-weight: 500;
-	white-space: nowrap; // Prevent title from wrapping
-	overflow: hidden;
-	text-overflow: ellipsis; // Add ellipsis for long titles
-    }
-
-    .wrapper {
-	position: relative;
-	width: 100%;
-	overflow: hidden; // Hide overflow to prevent scrollbars appearing prematurely
-
-	.sliderArrow {
-	    position: absolute;
-	    top: 0;
-	    bottom: 0;
-	    z-index: 99;
-	    width: $arrow-width-mobile; // Base width for arrows
-	    display: flex; // Use flex to center arrow icon
-	    align-items: center;
-	    justify-content: center;
-	    background-color: rgb(1, 1, 1, 0.5);
-	    cursor: pointer;
-
-	    &.left {
-		left: 0;
-	    }
-
-	    &.right {
-		right: 0;
-	    }
-
-	    // Style for the actual MUI Icon within the arrow div
-	    .MuiSvgIcon-root {
-		font-size: 1.8rem; // Larger icon size for easier clicking
-	    }
-	}
-
-	.container {
-	    display: flex;
-	    width: max-content;
-	    margin: $space-2 0 $space-2 $arrow-width-mobile; // Base margins
-	    padding: 0.625rem;
-	    transform: translateX(0);
-	    transition: transform 0.5s ease;
-	}
-    }
+    margin-block: 2rem;
+    min-width: 0;
 }
-
-@include tablet-up {
-    .playlist {
-	margin: $space-8 0;
-
-	.playlistTitle {
-	    margin-inline: $arrow-width-desktop $space-6;
-	    font-size: $font-size-md;
-	}
-
-	.wrapper {
-	    .sliderArrow {
-		width: $arrow-width-desktop;
-
-		.MuiSvgIcon-root {
-		    font-size: 2.5rem;
-		}
-	    }
-
-	    .container {
-		margin-left: $arrow-width-desktop; // Same as the width of a 'sliderArrow'
-	    }
-	}
+.playlist__heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.playlist__controls {
+    display: flex;
+    gap: 0.5rem;
+}
+.playlist__controls button {
+    width: 44px;
+    padding: 0.5rem;
+}
+.playlist__track {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(240px, 31%);
+    gap: 1rem;
+    overflow-x: auto;
+    padding: 0.25rem 0.25rem 1rem;
+    scroll-snap-type: x mandatory;
+}
+@media (max-width: 600px) {
+    .playlist__track {
+        grid-auto-columns: 85%;
     }
 }
