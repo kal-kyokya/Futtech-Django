@@ -1,11 +1,10 @@
 import './playlistItem.scss';
-import { useContext, useMemo, useState } from 'react';
+import { useContext, useMemo } from 'react';
 import { Link } from 'react-router-dom';
 import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import resolveVideoThumbnail from '../../utils/videoThumbnail';
 
 const PlaylistItem = ({ videoId, video: playlistVideo, index }) => {
-    const [isHovered, setIsHovered] = useState(false);
     const { videos } = useContext(VideoContext);
 
     const video = useMemo(() => {
@@ -15,7 +14,7 @@ const PlaylistItem = ({ videoId, video: playlistVideo, index }) => {
 
 	const lookupId = String(videoId ?? playlistVideo ?? '');
 	return Array.isArray(videos)
-	    ? videos.find((item) => (item.id || item._id) === lookupId) || null
+	    ? videos.find((item) => String(item.id || item._id) === lookupId) || null
 	    : null;
     }, [playlistVideo, videoId, videos]);
 
@@ -26,33 +25,25 @@ const PlaylistItem = ({ videoId, video: playlistVideo, index }) => {
 
     if (!video) {
 	return (
-	    <div className='playlistItem playlistItem--loading'
-		 aria-hidden='true'
-	    >
+	    <div className='playlistItem playlistItem--loading' aria-hidden='true'>
 		<div className='playlistItemPlaceholder' />
 	    </div>
 	);
     }
 
     return (
-	<Link to={`/watch/${watchSlug}`}
-	      state={ { video, origin: 'playlist' } }
-	      className='link playlistItemLink'
-	      aria-label={`Watch ${video.title || 'video'}`}
+	<Link
+	    to={`/watch/${watchSlug}`}
+	    state={{ video, origin: 'playlist' }}
+	    className='link playlistItemLink'
+	    aria-label={`Watch ${video.title || 'video'}`}
 	>
-	    <article
-		className='playlistItem'
-		style={{
-		    transform: isHovered ? 'scale(1.2)' : 'scale(1)',
-		    zIndex: isHovered ? 10 : 1
-		}}
-		onMouseEnter={ () => setIsHovered(true) }
-		onMouseLeave={ () => setIsHovered(false) }
-	    >
+	    <article className='playlistItem'>
 		{thumbnailSrc ? (
-		    <img src={thumbnailSrc}
-			 alt={`${video.title || 'Video'} thumbnail`}
-			 loading='lazy'
+		    <img
+			src={thumbnailSrc}
+			alt={`${video.title || 'Video'} thumbnail`}
+			loading='lazy'
 		    />
 		) : (
 		    <div className='playlistItemFallback' aria-hidden='true'>
