@@ -1,158 +1,78 @@
 import './newPlaylist.scss';
-import { useState, useContext } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { PlaylistContext } from '../../contexts/playlistContext/PlaylistContext';
-import { VideoContext } from '../../contexts/videoContext/VideoContext';
 import {
-    createPlaylistStart, createPlaylistSuccess, createPlaylistFailure,
+    createPlaylistStart,
+    createPlaylistSuccess,
+    createPlaylistFailure,
 } from '../../contexts/playlistContext/PlaylistActions';
 import Navbar from '../../components/Navbar';
-import apiClient from '../../services/apiClient';
+import apiClient, { normalizeError } from '../../services/apiClient';
+import contentService from '../../services/contentService';
 
-const NewPlaylist = () => {
-    const [playlist, setPlaylist] = useState({
-	title: '', category: '',
-	subCategory: '', thumbnail: null,
-	content: [],
-    });
+export default function NewPlaylist() {
+    const [name, setName] = useState('');
+    const [error, setError] = useState('');
+    const { dispatch, isFetching } = useContext(PlaylistContext);
     const navigate = useNavigate();
-
-    const { dispatch } = useContext(PlaylistContext);
-    const { videos } = useContext(VideoContext);
-
-    const handleChange = (e) => {
-	const { name, value, files } = e.target;
-	const fieldValue = name === 'thumbnail' && files ? files[0] : value;
-
-	setPlaylist((prev) => ({
-	    ...prev,
-	    [name]: fieldValue,
-	}));
-    };
-
-    const handleSelect = (e) => {
-	const selectedValues = Array.from(
-	    e.target.selectedOptions,
-	    (option) => option.value,
-	);
-
-	setPlaylist((prev) => ({
-	    ...prev,
-	    [e.target.name]: selectedValues,
-	}));
-    };
-
-    const handleSubmit = async (e) => {
-	e.preventDefault();
+    const submit = async (event) => {
+	event.preventDefault();
+	if (isFetching) return;
 	dispatch(createPlaylistStart());
-
+	setError('');
 	try {
-	    const payload = {
-		title: playlist.title,
-		category: playlist.category,
-		subCategory: playlist.subCategory,
-		content: playlist.content
-	    };
-
-	    const response = await apiClient.post('/playlists/', payload);
-
-	    dispatch(createPlaylistSuccess(response.data));
+	    const { data } = await apiClient.post('/playlists/', { name });
+	    contentService.clearCache();
+	    dispatch(createPlaylistSuccess(data));
 	    navigate('/playlists');
-	} catch (error) {
-	    console.error('Failed to create playlist: ', error);
+	} catch (failure) {
+	    const normalized = normalizeError(failure);
+	    setError(normalized.fields?.name || normalized.message);
 	    dispatch(createPlaylistFailure());
 	}
     };
-
     return (
 	<>
 	    <Navbar />
-
-	    <div className='newPlaylist'>
-		<h1 className='newPlaylistTitle'>New Playlist</h1>
-
-		<form className='newPlaylistForm' onSubmit={handleSubmit}>
-		    <div className='newPlaylistTop'>
-			<div className='newPlaylistLeft'>
-			    <div className='newPlaylistItem'>
-				<label>Title</label>
-				<input type='text'
-				       placeholder='Playlist title'
-				       className='newPlaylistInput'
-				       name='title'
-				       value={playlist.title}
-				       onChange={handleChange}
-				       required
-				/>
-			    </div>
-			    <div className='newPlaylistItem'>
-				<label>Category</label>
-				<input type='text'
-				       placeholder='Category'
-				       className='newPlaylistInput'
-				       name='category'
-				       value={playlist.category}
-				       onChange={handleChange}
-				/>
-			    </div>
-			    <div className='newPlaylistItem'>
-				<label>Sub-category</label>
-				<input type='text'
-				       placeholder='Sub-category'
-				       className='newPlaylistInput'
-				       name='subCategory'
-				       value={playlist.subCategory}
-				       onChange={handleChange}
-				/>
-			    </div>
-			    <div className='newPlaylistItem'>
-				<label>Thumbnail</label>
-				<input type='file'
-				       id='thumbnail'
-				       name='thumbnail'
-				       accept='image/*'
-				       onChange={handleChange}
-				/>
-			    </div>
-			</div>
-
-			<div className='newPlaylistRight'>
-			    <div className='newPlaylistItem'>
-				<label>Playlist Content</label>
-				<select className='newPlaylistSelect'
-					multiple
-					name='content'
-					value={playlist.content}
-					onChange={handleSelect}
-					style={ { height: '260px' } }
-				>
-				    {
-					Array.isArray(videos) &&
-					    videos.length > 0 &&
-					    videos.map((video) => (
-						<option key={video._id}
-							value={video.id}
-						>
-						    {video.title}
-						</option>
-					    ))
-				    }
-				</select>
-			    </div>
-			</div>
-		    </div>
-
-		    <div className='newPlaylistBottom'>
-			<button className='newPlaylistButton'
-				type='submit'
-			>
-			    Create
-			</button>
-		    </div>
+	    <main
+		id='main-content'
+		tabIndex={-1}
+		className='newPlaylist page-container'
+	    >
+		<p className='eyebrow'>ORGANIZE YOUR FOOTAGE</p>
+		<h1>New playlist</h1>
+		<p>
+		    Give your collection a name. Your new playlist starts empty and
+		    private.
+		</p>
+		<form
+		    className='card newPlaylistForm'
+		    onSubmit={submit}
+		    aria-busy={isFetching}
+		>
+		    <label htmlFor='playlist-name'>Playlist name</label>
+		    <input
+			id='playlist-name'
+			name='name'
+			value={name}
+			onChange={(event) => setName(event.target.value)}
+			placeholder='For example, First touch drills'
+			maxLength={255}
+			required
+			aria-invalid={Boolean(error)}
+			aria-describedby={error ? 'playlist-error' : undefined}
+		    />
+		    {error && (
+			<p id='playlist-error' role='alert'>
+			    {error}
+			</p>
+		    )}
+		    <button type='submit' disabled={isFetching}>
+			{isFetching ? 'Creating…' : 'Create playlist'}
+		    </button>
 		</form>
-	    </div>
+	    </main>
 	</>
     );
-};
-
-export default NewPlaylist;
+}
