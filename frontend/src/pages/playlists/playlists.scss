@@ -1,40 +1,14 @@
 .playlists {
-    margin-top: 78px;
+    padding-block: 3rem var(--section-space);
 }
-
-.playlistsCell {
-    display: flex;
-    align-items: center;
-
-    .profile {
-	width: 45px;
-	height: 45px;
-	border: 1px solid grey;
-	border-radius: 50%;
-	object-fit: contain;
-	cursor: pointer;
-	background-color: white;
-	margin-right: 10px;
-    }
+.playlists .eyebrow {
+    margin-bottom: 0.75rem;
 }
-
-.managePlaylist {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-
-    .deleteIcon {
-	color: rgb(192, 0, 0);
-	cursor: pointer;
-    }
-
-    .managePlaylistButton {
-	border: none;
-	border-radius: 6px;
-	background-color: #028ECA;
-	color: white;
-	padding: 6px 13px;
-	cursor: pointer;
-	margin-right: 13px;
-    }
+.playlistTable {
+    overflow: hidden;
+    border: 1px solid var(--color-border);
+}
+.playlistTable button {
+    padding: 0.5rem;
+    background: transparent;
 }
