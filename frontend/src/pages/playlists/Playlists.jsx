@@ -2,90 +2,109 @@ import './playlists.scss';
 import { DataGrid } from '@mui/x-data-grid';
 import Paper from '@mui/material/Paper';
 import DeleteOutlineIcon from '@mui/icons-material/DeleteOutline';
-import { Link } from 'react-router-dom';
 import { useState, useContext, useEffect } from 'react';
 import { PlaylistContext } from '../../contexts/playlistContext/PlaylistContext';
 import { UserContext } from '../../contexts/userContext/UserContext';
 import {
-    getPlaylistsStart, getPlaylistsSuccess, getPlaylistsFailure
+    getPlaylistsStart,
+    getPlaylistsSuccess,
+    deletePlaylistStart,
+    deletePlaylistSuccess,
+    deletePlaylistFailure,
 } from '../../contexts/playlistContext/PlaylistActions';
 import Navbar from '../../components/Navbar';
-import axios from 'axios';
+import contentService from '../../services/contentService';
 
 const Playlists = () => {
-    const { playlists, dispatch } = useContext(PlaylistContext);
+    const { playlists, dispatch, isFetching } = useContext(PlaylistContext);
     const { user } = useContext(UserContext);
-    const baseURL = import.meta.env.VITE_API_BASE_URL;
+    const [paginationModel, setPaginationModel] = useState({
+	page: 0,
+	pageSize: 10,
+    });
+    const [rowCount, setRowCount] = useState(0);
+    const [error, setError] = useState('');
+
+    useEffect(() => {
+	let cancelled = false;
+	dispatch(getPlaylistsStart());
+	contentService
+	    .fetchPlaylists(paginationModel.page + 1, paginationModel.pageSize)
+	    .then((data) => {
+		if (cancelled) return;
+		dispatch(getPlaylistsSuccess(data.playlists));
+		setRowCount(data.totalCount);
+	    });
+	return () => {
+	    cancelled = true;
+	};
+    }, [dispatch, paginationModel]);
 
     const handleDelete = async (id) => {
+	setError('');
 	dispatch(deletePlaylistStart());
-
-	try {
-	    await axios.delete(`${baseURL}/playlists/` + id, {
-		headers: {
-		    'auth-token': user.accessToken
-		}
-	    });
-
+	if (await contentService.deletePlaylist(id)) {
 	    dispatch(deletePlaylistSuccess(id));
-	} catch (err) {
-	    console.error(err);
+	    setRowCount((count) => Math.max(0, count - 1));
+	} else {
 	    dispatch(deletePlaylistFailure());
+	    setError('Unable to delete this playlist.');
 	}
     };
 
     const columns = [
-	{ field: '_id', headerName: 'ID', width: 119 },
-	{ field: 'playlist', headerName: 'Playlist', width: 195, renderCell: (params) => {
-	    return (
-		<div className='playlistsCell'>
-		    <img className='profile' src={ params.row.thumbnail }
-			 alt='Playlist Thumbnail'
-		    />
-		    { params.row.title }
-		</div>
-	    );}
-	},
-	{ field: 'category', headerName: 'Category', width: 121 },
-	{ field: 'subCategory', headerName: 'Sub-category', width: 140 },
-	{ field: 'createdAt', headerName: 'Created', width: 105 },
+	{ field: 'name', headerName: 'Playlist', flex: 1, minWidth: 195 },
+	{ field: 'description', headerName: 'Description', flex: 2, minWidth: 200 },
+	{ field: 'is_public', headerName: 'Public', type: 'boolean', width: 100 },
 	{
-	    field: 'manage', headerName: 'Manage', width: 91, renderCell: (params) => {
-		return (
-		    <div className='managePlaylist'>
-			<Link to={ '/playlists/get' + params.row._id }
-			      className='link'>
-			    <button className='managePlaylistButton'>Edit</button>
-			</Link>
-			<DeleteOutlineIcon className='deleteIcon'
-					   onClick={ () => handleDelete(params.row._id) }/>
-		    </div>
-		);
-	    }
+	    field: 'manage',
+	    headerName: 'Manage',
+	    width: 100,
+	    sortable: false,
+	    renderCell: ({ row }) =>
+            row.owner === user?.id ? (
+		<button
+		    type='button'
+		    aria-label={`Delete ${row.name}`}
+		    onClick={() => handleDelete(row.id)}
+		>
+		    <DeleteOutlineIcon />
+		</button>
+            ) : null,
 	},
     ];
-
-    const paginationModel = { page: 0, pageSize: 10 };
-
 
     return (
 	<>
 	    <Navbar />
-
-	    <div className='playlists'>
-		<Paper sx={{ height: '100%', width: '100%' }}>
+	    <main
+		id='main-content'
+		tabIndex={-1}
+		className='playlists page-container'
+	    >
+		<div className='section-heading'>
+		    <div>
+			<p className='eyebrow'>YOUR COLLECTIONS</p>
+			<h1>Playlists</h1>
+		    </div>
+		</div>
+		{error && <p role='alert'>{error}</p>}
+		<Paper className='playlistTable' sx={{ height: 560, width: '100%' }}>
 		    <DataGrid
-			rows={ playlists }
-			columns={ columns }
+			rows={playlists}
+			columns={columns}
+			loading={isFetching}
 			disableRowSelectionOnClick
-			checkboxSelection		    
-			initialState={{ pagination: { paginationModel } }}
+			paginationMode='server'
+			paginationModel={paginationModel}
+			onPaginationModelChange={setPaginationModel}
+			rowCount={rowCount}
 			pageSizeOptions={[10, 15]}
 			sx={{ border: 0 }}
 			getRowId={(row) => row._id}
 		    />
 		</Paper>
-	    </div>
+	    </main>
 	</>
     );
 };
