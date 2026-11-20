@@ -1,5 +1,4 @@
-import './register.scss';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { normalizeError } from '../../services/apiClient';
 import authService from '../../services/authService';
 import { useState, useRef, useContext, useEffect } from 'react';
@@ -8,12 +7,14 @@ import {
     registrationStart,
     registrationSuccess,
     registrationFailure,
-    clearUserError } from '../../contexts/userContext/UserActions';
+    clearUserError,
+} from '../../contexts/userContext/UserActions';
 import HeroSection from '../../components/landing/HeroSection';
 import ServicesSection from '../../components/landing/ServicesSection';
 import AboutValueSection from '../../components/landing/AboutValueSection';
 import DifferentiationSection from '../../components/landing/DifferentiationSection';
 import BottomCtaSection from '../../components/landing/BottomCtaSection';
+import PublicHeader from '../../components/publicHeader/PublicHeader';
 import GoogleSignInButton from '../../components/auth/GoogleSignInButton';
 
 const Register = () => {
@@ -21,21 +22,27 @@ const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
-    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-    const { dispatch,
-	    isFetching,
-	    error: registrationError } = useContext(UserContext);
+    const {
+	dispatch,
+	isFetching,
+	error: registrationError,
+    } = useContext(UserContext);
 
     const navigate = useNavigate();
-    const emailRef = useRef(null);
+
+    const { hash } = useLocation();
+    useEffect(() => {
+	if (hash === '#registration-form')
+	    document
+	    .getElementById('registration-form')
+	?.scrollIntoView?.({ block: 'start' });
+    }, [hash]);
+
     const fieldErrors = registrationError?.fields || {};
-    const closeMobileMenu = () => setIsMobileMenuOpen(false);
+    useEffect(() => () => dispatch(clearUserError()), [dispatch]);
 
-    useEffect(() => (
-	() => dispatch(clearUserError())
-    ), [dispatch]);
-
+    const emailRef = useRef(null);
     const handleStart = () => {
 	const emailRegEx = /^[a-zA-Z0-9_.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -58,14 +65,22 @@ const Register = () => {
 
     const handleGoogleSuccess = async ({ credential }) => {
 	if (!credential) {
-	    dispatch(registrationFailure({ message: 'Google did not return a sign-in credential.' }));
+	    dispatch(
+		registrationFailure({
+		    message: 'Google did not return a sign-in credential.',
+		})
+	    );
 	    return;
 	}
 
 	dispatch(registrationStart());
 	const result = await authService.loginWithGoogle(credential);
 	if (!result.success) {
-	    dispatch(registrationFailure(result.error || normalizeError(new Error('Google Sign-In failed.'))));
+	    dispatch(
+		registrationFailure(
+		    result.error || normalizeError(new Error('Google Sign-In failed.')),
+		)
+	    );
 	    return;
 	}
 
@@ -77,7 +92,11 @@ const Register = () => {
 	if (error?.silent) {
 	    return;
 	}
-	dispatch(registrationFailure({ message: 'Google Sign-In was cancelled or failed.' }));
+	dispatch(
+	    registrationFailure({
+		message: 'Google Sign-In was cancelled or failed.',
+	    }),
+	);
     };
 
     const handleRegister = async (e) => {
@@ -85,10 +104,12 @@ const Register = () => {
 	dispatch(registrationStart());
 
 	if (password !== passwordConfirm) {
-	    dispatch(registrationFailure({
+	    dispatch(
+		registrationFailure({
 		message: 'Passwords do not match.',
 		fields: { passwordConfirm: 'Passwords do not match.' },
-	    }));
+		}),
+	    );
 	    return;
 	}
 
@@ -101,9 +122,13 @@ const Register = () => {
 	    });
 
 	    if (!result.success) {
-		const normalizedError = result.error || normalizeError(new Error('Registration failed.'));
+		const normalizedError =
+		      result.error || normalizeError(new Error('Registration failed.'));
 
-		if (normalizedError?.fields?.email || normalizedError?.fields?.username) {
+		if (
+		    normalizedError?.fields?.email ||
+			normalizedError?.fields?.username
+		) {
 		    setEmail('');
 		    setUsername('');
 		    setPassword('');
@@ -130,64 +155,8 @@ const Register = () => {
 
     return (
 	<div className='register'>
-	    <header className='top'>
-		<div className='wrapper'>
-		    <img
-			className='logo'
-			src='/logo.png'
-			alt='Logo of the Futtech Company'
-		    />
-
-		    <button
-			type='button'
-			className={`topMenuToggle ${isMobileMenuOpen ? 'active' : ''}`}
-			aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
-			aria-expanded={isMobileMenuOpen}
-			aria-controls='register-header-navigation'
-			onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
-		    >
-			<span />
-			<span />
-			<span />
-		    </button>
-		    <div
-			id='register-navigation'
-			className={`topActions ${isMobileMenuOpen ? 'active' : ''}`}
-		    >
-			<Link
-			    to='/showcase'
-			    className='button button--secondary'
-			    onClick={closeMobileMenu}
-			>
-			    <span>Public Showcase</span>
-			</Link>
-			<Link
-			    to='/futtech-xi'
-			    className='button button--secondary'
-			    onClick={closeMobileMenu}
-			>
-			    <span>Futtech XI</span>
-			</Link>
-			<Link
-			    to='/about'
-			    className='button button--secondary'
-			    onClick={closeMobileMenu}
-			>
-			    <span>About</span>
-			</Link>
-			<Link
-			    to='/login'
-			    className='link'
-			>
-			    <button className='logIn'>
-				<span>Log In</span>
-			    </button>
-			</Link>
-		    </div>
-		</div>
-	    </header>
-
-	    <main className='registerMain'>
+	    <PublicHeader navigationId='register-navigation' />
+	    <main className='registerMain' id='main-content' tabIndex={-1}>
 		<HeroSection />
 		<AboutValueSection />
 		<ServicesSection />
@@ -199,12 +168,25 @@ const Register = () => {
 		    aria-labelledby='registration-heading'
 		>
 		    <div className='landingSection__header'>
-			<h2 id='registration-heading'>Get started with your first analysis</h2>
+			<h2 id='registration-heading'>
+			    Get started with your first analysis
+			</h2>
 			<p>Create your Futtech account and send your footage for review.</p>
 		    </div>
 
+		    {import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID && (
+			<>
+			    <GoogleSignInButton
+				onSuccess={handleGoogleSuccess}
+				onError={handleGoogleError}
+				disabled={isFetching}
+				text='signup_with'
+			    />
+			    <div className='authDivider'>or continue with email</div>
+			</>
+		    )}
 		    { !registrationError?.fields && registrationError?.message && (
-			<div className='userPrompt'>
+			<div className='userPrompt' role='alert'>
 			    {registrationError.message}
 			</div>
 		    )}
@@ -273,12 +255,6 @@ const Register = () => {
 		    
 		    <div className='authDivider'>or</div>
 
-		    <GoogleSignInButton
-			onSuccess={handleGoogleSuccess}
-			onError={handleGoogleError}
-			disabled={isFetching}
-			text='signup_with'
-		    />
 		</section>
 
 		<BottomCtaSection />
