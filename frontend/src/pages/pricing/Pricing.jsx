@@ -1,97 +1,95 @@
-import useState from 'react';
-import axios from 'axios';
+import { useEffect, useRef, useState } from 'react';
 import Navbar from '../../components/Navbar';
 import Payment from '../../components/payment/Payment';
 import apiClient from '../../services/apiClient';
 
 const terminalStates = new Set(['SUCCEEDED', 'FAILED', 'CANCELED', 'EXPIRED']);
-
-const Pricing = () => {
+export default function Pricing() {
     const [pending, setPending] = useState(false);
     const [statusMessage, setStatusMessage] = useState('');
     const [amountKes, setAmountKes] = useState('1500.00');
-    const pollIntervalRef = useRef(null);
-
-    const clearPoll = () => {
-	if (pollIntervalRef.current) {
-	    clearInterval(pollIntervalRef.current);
-	    pollIntervalRef.current = null;
-	}
-    };
-
-    useEffect(() => () => clearPoll(), []);
-
-    const pollStatus = () => {
-	clearPoll();
-	pollIntervalRef.current = setInterval(async () => {
+    const timeout = useRef(null);
+    const active = useRef(true);
+    useEffect(() => {
+	active.current = true;
+	return () => {
+	    active.current = false;
+	    clearTimeout(timeout.current);
+	};
+    }, []);
+    const pollStatus = (transactionId) => {
+	timeout.current = setTimeout(async () => {
 	    try {
-		const response = await apiClient.get(`/payments/checkout/status/${transactionId}`);
-		const payment = response.data;
-		if (payment.status === 'SUCCEEDED') {
-		    SetStatusMessage('Payment confirmed. Your subscription is now active.');
-		} else if (payment.status === 'FAILED') {
-		    SetStatusMessage(payment.error_message || 'Payment failed. Please try again or use Stripe fallback.');
-		} else if (payment.status === 'EXPIRED' || payment.status === 'CANCELED') {
-		    setStatusMessage('Payment was not completed. Please try again.')
-		} else {
-		    setStatusMessage('Awaiting M-Pesa confirmation.');
-		}
-
-		if (terminalStates.has(payment.status)) {
-		    setPending(false);
-		    clearPoll();
-		}
-	    } catch (error) {
+		const { data: payment } = await apiClient.get(
+		    `/payments/checkout/status/${transactionId}/`,
+		);
+		if (!active.current) return;
+		const messages = {
+		    SUCCEEDED: 'Payment confirmed. Your subscription is now active.',
+		    FAILED:
+		    payment.error_message ||
+			'Payment failed. Please try again or use Stripe fallback.',
+		    EXPIRED: 'Payment was not completed. Please try again.',
+		    CANCELED: 'Payment was not completed. Please try again.',
+		};
+		setStatusMessage(
+		    messages[payment.status] || 'Awaiting M-Pesa confirmation.',
+		);
+		if (terminalStates.has(payment.status)) setPending(false);
+		else pollStatus(transactionId);
+	    } catch {
+		if (!active.current) return;
 		setPending(false);
-		setStatusMessage('Could not check payment status. Please refresh and try again.');
-		clearPoll();
+		setStatusMessage(
+		    'Could not check payment status. Please refresh and try again.',
+		);
 	    }
 	}, 3000);
     };
-
     const initiateCheckout = async (provider, phoneNumber = '') => {
-	if (pending) {
-	    return;
-	}
-
+	if (pending) return;
+	setPending(true);
+	setStatusMessage('Initializing payment…');
 	try {
-	    setPending(true);
-	    setStatusMessage('Initializing payment...');
-	    const response = await apiClient.post('payments/checkout/initiate', {
-		provider,
-		phone_number: phoneNumber,
-	    });
-
-	    const payment = response.data;
-	    if (paymount.amount && provider === 'MPESA') {
-		setAmountKes(payment.amount);
-	    }
-
+	    const { data: payment } = await apiClient.post(
+		'/payments/checkout/initiate/',
+		{ provider, phone_number: phoneNumber },
+	    );
+	    if (!active.current) return;
+	    if (payment.amount && provider === 'MPESA') setAmountKes(payment.amount);
 	    if (provider === 'STRIPE' && payment.redirect_url) {
-		window.location.aasign(payment.redirect_url);
+		window.location.assign(payment.redirect_url);
 		return;
 	    }
-
-	    setStatusMessage(payment.message || 'Check your phone and enter your M-Pesa PIN.');
+	    setStatusMessage(
+		payment.message || 'Check your phone and enter your M-Pesa PIN.',
+	    );
 	    pollStatus(payment.transaction_id);
 	} catch (error) {
+	    if (!active.current) return;
 	    setPending(false);
-	    setStatusMessage(error?.response?.data?.error || 'Payment initiation failed. Please retry.');
+	    setStatusMessage(
+		error?.response?.data?.error ||
+		    'Payment initiation failed. Please retry.',
+	    );
 	}
     };
-
     return (
 	<>
 	    <Navbar />
-	    <Payment
-		amountKes={amountKes}
-		onMpesaPay={(phoneNumber) => initiateCheckout('MPESA', phoneNumber)}
-		onStripePay={() => initiateCheckout('STRIPE')}
-		pending={pending}
-		statusMessage={statusMessage}
-	    />
+	    <main
+		id='main-content'
+		tabIndex={-1}
+		className='page-container checkoutPage'
+	    >
+		<Payment
+		    amountKes={amountKes}
+		    onMpesaPay={(phone) => initiateCheckout('MPESA', phone)}
+		    onStripePay={() => initiateCheckout('STRIPE')}
+		    pending={pending}
+		    statusMessage={statusMessage}
+		/>
+	    </main>
 	</>
     );
-};
-
-export default Pricing;
+}
