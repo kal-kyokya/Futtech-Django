@@ -1,28 +1,19 @@
-.showcaseVideoPage {
-    min-height: 100vh;
-    background: #0d1c23;
-    color: #fff;
-}
-
 .showcaseVideo {
-    max-width: 980px;
-    margin: 0 auto;
-    padding: 1.1rem;
-
-    h1 {
-        margin: 0.6rem 0;
-    }
+    padding-block: 2rem var(--section-space);
+    max-width: 1080px;
 }
-
 .showcaseVideo__back {
-    color: #89d7ff;
+    display: inline-block;
+    margin-bottom: 1.5rem;
+    color: var(--color-link);
 }
-
+.showcaseVideo h1 {
+    margin-block: 2rem 1rem;
+}
 .showcaseVideo__note {
-    color: rgba(105, 105, 105, 1);
-    margin: 2.5rem 0;
+    margin-top: 1.5rem;
+    font-size: 0.875rem;
 }
-
 .showcaseVideo__error {
-    color: #ff9f9f;
+    color: var(--color-danger);
 }
