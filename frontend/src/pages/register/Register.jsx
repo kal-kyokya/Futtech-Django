@@ -35,8 +35,8 @@ const Register = () => {
     useEffect(() => {
 	if (hash === '#registration-form')
 	    document
-	    .getElementById('registration-form')
-	?.scrollIntoView?.({ block: 'start' });
+            .getElementById('registration-form')
+        ?.scrollIntoView?.({ block: 'start' });
     }, [hash]);
 
     const fieldErrors = registrationError?.fields || {};
@@ -68,7 +68,7 @@ const Register = () => {
 	    dispatch(
 		registrationFailure({
 		    message: 'Google did not return a sign-in credential.',
-		})
+		}),
 	    );
 	    return;
 	}
@@ -79,7 +79,7 @@ const Register = () => {
 	    dispatch(
 		registrationFailure(
 		    result.error || normalizeError(new Error('Google Sign-In failed.')),
-		)
+		),
 	    );
 	    return;
 	}
@@ -106,8 +106,8 @@ const Register = () => {
 	if (password !== passwordConfirm) {
 	    dispatch(
 		registrationFailure({
-		message: 'Passwords do not match.',
-		fields: { passwordConfirm: 'Passwords do not match.' },
+		    message: 'Passwords do not match.',
+		    fields: { passwordConfirm: 'Passwords do not match.' },
 		}),
 	    );
 	    return;
@@ -185,76 +185,128 @@ const Register = () => {
 			    <div className='authDivider'>or continue with email</div>
 			</>
 		    )}
-		    { !registrationError?.fields && registrationError?.message && (
+		    {!registrationError?.fields && registrationError?.message && (
 			<div className='userPrompt' role='alert'>
 			    {registrationError.message}
 			</div>
 		    )}
 
-		    { email ? (
-			<form className='membership' onSubmit={handleRegister}>
-			    <input type='password'
-				   placeholder='Password'
-				   onChange={(e) => setPassword(e.target.value)}
-				   required
+		    {email ? (
+			<form
+			    key='password-step'
+			    className='membership'
+			    onSubmit={handleRegister}
+			>
+			    <label htmlFor='register-password'>Password</label>
+			    <input
+				type='password'
+				id='register-password'
+				autoComplete='new-password'
+				aria-invalid={Boolean(fieldErrors.password)}
+				aria-describedby={
+				    fieldErrors.password ? 'register-password-error' : undefined
+				}
+				placeholder='Password'
+				onChange={(e) => setPassword(e.target.value)}
+				required
 			    />
 			    {fieldErrors.password && (
-				<div className='fieldError'>
+				<div
+				    className='fieldError'
+				    id='register-password-error'
+				    role='alert'
+				>
 				    {fieldErrors.password}
 				</div>
 			    )}
-			    <input type='password'
-				   placeholder='Confirm password'
-				   onChange={(e) => setPasswordConfirm(e.target.value)}
-				   required
+			    <label htmlFor='register-confirm'>Confirm password</label>
+			    <input
+				type='password'
+				id='register-confirm'
+				autoComplete='new-password'
+				aria-invalid={Boolean(fieldErrors.passwordConfirm)}
+				aria-describedby={
+				    fieldErrors.passwordConfirm
+					? 'register-confirm-error'
+					: undefined
+				}
+				placeholder='Confirm password'
+				onChange={(e) => setPasswordConfirm(e.target.value)}
+				required
 			    />
 			    {fieldErrors.passwordConfirm && (
-				<div className='fieldError'>
+				<div
+				    className='fieldError'
+				    id='register-confirm-error'
+				    role='alert'
+				>
 				    {fieldErrors.passwordConfirm}
 				</div>
 			    )}
 
-			    <button className='finish'
-				    type='submit'
-				    disabled={isFetching}
-			    >
-				<span>Start</span>
+			    <button className='finish' type='submit' disabled={isFetching}>
+				<span>{isFetching ? 'Creating account…' : 'Start'}</span>
 			    </button>
 			</form>
-
 		    ) : (
-			<div className='membership'>
-			    <input type='email'
-				   placeholder='Email address'
-				   ref={emailRef}
-				   required
+			<form
+			    key='identity-step'
+			    className='membership'
+			    onSubmit={(event) => {
+				event.preventDefault();
+				handleStart();
+			    }}
+			>
+			    <label htmlFor='register-email'>Email address</label>
+			    <input
+				type='email'
+				id='register-email'
+				autoComplete='email'
+				aria-invalid={Boolean(fieldErrors.email)}
+				aria-describedby={
+				    fieldErrors.email ? 'register-email-error' : undefined
+				}
+				placeholder='Email address'
+				ref={emailRef}
+				required
 			    />
 			    {fieldErrors.email && (
-				<div className='fieldError'>
+				<div
+				    className='fieldError'
+				    id='register-email-error'
+				    role='alert'
+				>
 				    {fieldErrors.email}
 				</div>
 			    )}
-			    <input type='text'
-				   placeholder='Username'
-				   onChange={(e) => setUsername(e.target.value)}
-				   required
+			    <label htmlFor='register-username'>Username</label>
+			    <input
+				type='text'
+				id='register-username'
+				autoComplete='username'
+				aria-invalid={Boolean(fieldErrors.username)}
+				aria-describedby={
+				    fieldErrors.username ? 'register-username-error' : undefined
+				}
+				placeholder='Username'
+				onChange={(e) => setUsername(e.target.value)}
+				required
 			    />
 			    {fieldErrors.username && (
-				<div className='fieldError'>
+				<div
+				    className='fieldError'
+				    id='register-username-error'
+				    role='alert'
+				>
 				    {fieldErrors.username}
 				</div>
 			    )}
 
-			    <button className='getStarted'
-				    type='button'
-				    onClick={handleStart}>
+			    <button className='getStarted' type='submit'>
 				<span>Get Started</span>
 			    </button>
-			</div>
+			</form>
 		    )}
-		    
-		    <div className='authDivider'>or</div>
-
 		</section>
 
 		<BottomCtaSection />
