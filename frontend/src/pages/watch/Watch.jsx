@@ -35,11 +35,11 @@ const Watch = () => {
 		    stateVideo?.slug,
 		    stateVideo?.id,
 		    stateVideo?._id,
-		].filter(
-		    Boolean
-		).filter(
-		    (identifier, index, all) => all.indexOf(identifier) === index
-		);
+		]
+		      .filter(Boolean)
+		      .filter(
+			  (identifier, index, all) => all.indexOf(identifier) === index,
+		      );
 
 		let lastError = null;
 
@@ -48,7 +48,9 @@ const Watch = () => {
 			const videoRes = await apiClient.get(`/video/${identifier}/`);
 			setVideo(videoRes.data);
 
-			const playbackRes = await apiClient.get(`/video/${identifier}/playback/`);
+			const playbackRes = await apiClient.get(
+			    `/video/${identifier}/playback/`,
+			);
 			setEmbedUrl(playbackRes.data.embed_url);
 			return;
 		    } catch (err) {
@@ -62,7 +64,10 @@ const Watch = () => {
 		throw lastError || new Error('Video not found');
 	    } catch (err) {
 		console.error('Failed to fetch video data', err);
-		setError(err?.response?.data?.error || 'Could not load video. It may be private or does not exist.');
+		setError(
+		    err?.response?.data?.error ||
+			'Could not load video. It may be private or does not exist.',
+		);
 	    } finally {
 		setLoading(false);
 	    }
@@ -71,13 +76,36 @@ const Watch = () => {
 	fetchVideoData();
     }, [slug, state]);
 
-    if (loading) return <><Navbar /><div className='watch'>Loading video...</div></>
-    if (error) return <><Navbar /><div className='watch error'>{error}</div></>
-    if (!video) return <><Navbar /><div className='watch'>Video not found.</div></>
+    if (loading)
+	return (
+	    <>
+		<Navbar />
+		<div role='status' className='watch'>
+		    Loading video...
+		</div>
+	    </>
+	);
+    if (error)
+	return (
+	    <>
+		<Navbar />
+		<div role='alert' className='watch error'>
+		    {error}
+		</div>
+	    </>
+	);
+    if (!video)
+	return (
+	    <>
+		<Navbar />
+		<div className='watch'>Video not found.</div>
+	    </>
+	);
 
     return (
 	<>
-	    <div className='watch'>
+	    <Navbar />
+	    <main id='main-content' tabIndex={-1} className='watch page-container'>
 		<Link className='link' to='/home'>
 		    <div className='iconLeft'>
 			<ArrowBackIcon className='arrow' />
@@ -92,7 +120,7 @@ const Watch = () => {
 		    <p className='videoDescription'>{video.description}</p>
 		    {video.is_premium && <span className='premiumBadge'>Premium</span>}
 		</div>
-	    </div>
+	    </main>
 	</>
     );
 };
