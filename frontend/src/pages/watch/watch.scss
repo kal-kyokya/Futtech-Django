@@ -1,86 +1,30 @@
 .watch {
-    width: 100vw;
-    height: 100vh;
-    margin-top: 2.5rem;
-
-    .iconLeft {
-	display: flex;
-	align-items: center;
-	color: #89d7ff;
-	margin-bottom: 2.5rem;
-
-	.arrow {
-	    margin-right: 0.25rem;
-	}
-    }
-    
-    video {
-	width: 100%;
-	height: 100%;
-	object-fit: contain;
-	padding: 0;
-	background-color: #0D1C23;
-    }
-
-    .videoDetails {
-	display: flex;
-	flex-direction: column;
-	color: white;
-	padding: 0.75rem 2.5rem;
-	margin-bottom: 2.5rem;
-
-	.videoDetailsTop {
-	    display: flex;
-	    align-items: center;
-
-	    .profile {
-		width: 4rem;
-		height: 4rem;
-		border: 1px solid grey;
-		border-radius: 50%;
-		object-fit: cover;
-		cursor: pointer;
-		background-color: white;
-		margin-right: 1rem;
-	    }
-
-	    .videoInfos {
-		display: flex;
-		flex-direction: column;
-
-		.videoName {
-		    font-weight: 600;
-		    color: #028ECA;
-		}
-
-		.videoCategory {
-		    font-weight: 300;
-		}
-	    }
-	}
-
-	.videoDetailsBottom {
-	    margin-top: 1rem;
-
-	    .videoDetailsTitle {
-		color: rgba(255, 255, 255, 0.52);
-		font-weight: 300;
-	    }
-
-	    .videoDetailsDiv {
-		display: flex;
-		align-items: center;
-		margin: 0.75rem 0;
-		color: rgba(255, 255, 255, 0.78);
-
-		.videoDetailsIcon {
-		    margin-right: 1rem;
-		}
-
-		.videoDetailsContent {
-		    font-weight: 1rem;
-		}
-	    }
-	}
-    }
+    max-width: 1080px;
+    padding-block: 2rem var(--section-space);
+    margin-inline: auto;
+}
+.watch .iconLeft {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--color-link);
+    margin-bottom: 1.5rem;
+}
+.videoDetails {
+    padding-block: 2rem;
+}
+.videoTitle {
+    margin-bottom: 1rem;
+}
+.videoDescription {
+    max-width: 700px;
+}
+.premiumBadge {
+    display: inline-block;
+    padding: 0.25rem 0.75rem;
+    margin-top: 1rem;
+    color: var(--color-secondary);
+    border: 1px solid var(--color-border);
+    border-radius: 999px;
+    font-size: 0.75rem;
 }
