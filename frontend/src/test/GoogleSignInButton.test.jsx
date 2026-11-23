@@ -75,4 +75,42 @@ describe('GoogleSignInButton', () => {
 	expect(await screen.findByText('Google Sign-In is currently unavailable.')).toBeInTheDocument();
 	expect(onError).toHaveBeenCalledWith({ silent: true });
     });
+
+    it('keeps the provider button stable across callback changes and ignores disabled credentials', async () => {
+	vi.stubEnv(
+	    'VITE_GOOGLE_OAUTH_CLIENT_ID',
+	    'test-client-id.apps.googleusercontent.com',
+	);
+
+	const first = vi.fn();
+	const next = vi.fn();
+
+	const { rerender } = render(
+	    <GoogleSignInButton onSuccess={first} onError={vi.fn()} />,
+	);
+	completeGoogleScriptLoad();
+
+	await waitFor(() =>
+	    expect(window.google.accounts.id.renderButton).toHaveBeenCalledTimes(1),
+	);
+
+	const callback =
+	      window.google.accounts.id.initialize.mock.calls[0][0].callback;
+
+	rerender(
+	    <GoogleSignInButton onSuccess={next} onError={vi.fn()} disabled />,
+	);
+
+	callback({ credential: 'ignored' });
+
+	expect(first).not.toHaveBeenCalled();
+	expect(next).not.toHaveBeenCalled();
+
+	rerender(<GoogleSignInButton onSuccess={next} onError={vi.fn()} />);
+
+	callback({ credential: 'accepted' });
+
+	expect(next).toHaveBeenCalledWith({ credential: 'accepted' });
+	expect(window.google.accounts.id.renderButton).toHaveBeenCalledTimes(1);
+    });
 });
