@@ -1,19 +1,23 @@
+.showcaseVideoPage {
+    min-height: 100vh;
+    background: #0d1c23;
+    color: #fff;
+}
 .showcaseVideo {
-    padding-block: 2rem var(--section-space);
-    max-width: 1080px;
+    max-width: 980px;
+    margin: 0 auto;
+    padding: 1.1rem;
+    h1 {
+        margin: 0.6rem 0;
+    }
 }
 .showcaseVideo__back {
-    display: inline-block;
-    margin-bottom: 1.5rem;
-    color: var(--color-link);
-}
-.showcaseVideo h1 {
-    margin-block: 2rem 1rem;
+    color: #89d7ff;
 }
 .showcaseVideo__note {
-    margin-top: 1.5rem;
-    font-size: 0.875rem;
+    color: rgba(105, 105, 105, 1);
+    margin: 2.5rem 0;
 }
 .showcaseVideo__error {
-    color: var(--color-danger);
+    color: #ff9f9f;
 }
