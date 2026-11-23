@@ -1,17 +1,4 @@
-.homeMain {
-    max-width: var(--page-width);
-    margin: auto;
-    padding-inline: var(--page-gutter);
-}
-.homeLibrary {
-    padding-block: 3rem var(--section-space);
-}
-.section-heading {
-    display: flex;
-    justify-content: space-between;
-    gap: 1rem;
-    margin-bottom: 2rem;
-}
-.section-heading h2 {
-    margin-top: 0.75rem;
+.home {
+    background-color: var(--main-color);
+    overflow: hidden;
 }
