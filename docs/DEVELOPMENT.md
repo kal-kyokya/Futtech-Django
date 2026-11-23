@@ -3,7 +3,6 @@
 This guide focuses on local setup, debugging habits, and day-to-day commands.
 
 # Prerequisites
-
 - Python 3.11+
 - Node.js 18+
 - npm
@@ -28,8 +27,8 @@ python manage.py runserver
 cd frontend
 npm install
 npm run dev
-```
 
+```
 Set environment values before startup:
 
 - Backend: variables shown in `futtech_backend/env.sample`
@@ -53,6 +52,7 @@ cd frontend
 npm test -- --run
 npm run lint
 npm run build
+
 ```
 
 ## Debugging workflow
@@ -66,7 +66,6 @@ npm run build
 ## Auth debugging notes
 
 Use these flowcharts before changing auth code:
-
 - [Registration/Login/Auth persistence/Logout diagrams](./mermaid-flowcharts.md)
 
 ## Playlist debugging notes
@@ -77,35 +76,59 @@ Use these flowcharts before changing auth code:
 
 ## Welcome email testing
 
-The backend sends a welcome email only after successful account creation through normal registration or first-time Google Sign-In. Local development defaults to Django's console email backend, so messages are printed to the backend process instead of being delivered to real inboxes.
+The backend sends a welcome email only after successful account creation through nornal registration or first-time Google Sign-In. Local development defaults to Django's console email backend, so messages are printed to the backend process instead of being delivered to real inboxes.
 
 To test with another local or production mail backend, set the backend email variables from `futtech_backend/env.sample`. Keep SMTP/API credentials in backend environment variables only; do not expose them through Vite frontend variables.
 
 ## Validation and security configuration
 
-Use Python 3.12 and Node 24, matching CI. INstall frontend dependencies with `npm ci` to preserve the lockfile. The default backend test command exercises real migrations. For a faster local run that builds tables from models:
+Use Python 3.12 and Node 24, matching CI. Install frontend dependencies with
+`npm ci` to preserve the lockfile. The default backend test command exercises
+real migrations. For a faster local run that builds tables from models:
 
 ```bash
 cd futtech_backend
 DJANGO_SETTINGS_MODULE=futtech_backend.settings.test python manage.py test --noinput
 ```
 
-Set `VITE_API_BASE_URL=/api/v2` to use Vite's local API proxy. Access tokens stay in memory; reloads restore the session through the HttpOnly refresh cookie.
-Development permits credentialed requests from localhost or 127.0.0.1 on port 5174. Production requires HTTPS and explicit frontend origins in `CORS_ALLOWED_ORIGINS` and `CSRF_TRUSTED_ORIGINS`.
+Set `VITE_API_BASE_URL=/api/v2` to use Vite's local API proxy. Access tokens stay
+in memory; reloads restore the session through the HttpOnly refresh cookie.
+Development permits credentialed requests from localhost or 127.0.0.1 on port
+5174. Production requires HTTPS and explicit frontend origins in
+`CORS_ALLOWED_ORIGINS` and `CSRF_TRUSTED_ORIGINS`.
 
-Set `TENANT_BASE_DOMAIN` to the trusted domain beneath which tenant hosts live (for example, `example.com` for `club.example.com`). Local development defaults to `localhost`. This setting controls branding resolution; it does not partition users, playlists, or videos into tenant databases.
+Set `TENANT_BASE_DOMAIN` to the trusted domain beneath which tenant hosts live
+(for example, `example.com` for `club.example.com`). Local development defaults
+to `localhost`. This setting controls branding resolution; it does not partition
+users, playlists, or videos into tenant databases.
 
-Authentication limits use `LOGIN_THROTTLE_RATE`, `REGISTRATION_THROTTLE_RATE`, and `TOKEN_REFRESH_THROTTLE_RATE`. Set `DRF_NUM_PROXIES` only to the number of trusted, sanitizing proxies in front of Django; zero ignores client-supplied forwarding headers. Use a shared cache for consistent limits across production workers.
+Authentication limits use `LOGIN_THROTTLE_RATE`, `REGISTRATION_THROTTLE_RATE`, and
+`TOKEN_REFRESH_THROTTLE_RATE`. Set `DRF_NUM_PROXIES` only to the number of trusted,
+sanitizing proxies in front of Django; zero ignores client-supplied forwarding
+headers. Use a shared cache for consistent limits across production workers.
 
-M-Pesa callbacks are verified through an authenticated Daraja STK status query; verification outages return 503 for retry and never grant access. Stripe require a valid signature and matching settlement amount, currency, and identity. Set `PAYMENT_SUBSCRIPTION_PRICE_USD` to the configured Stripe checkout total; the legacy `PAYMENT_SUBSCRIPTION_USD` environment name remains a fallback.
-M-Pesa pricing must be a positive whole KES amount. Live credentials belong only in backend environment settings.
+M-Pesa callbacks are verified through an authenticated Daraja STK status query;
+verification outages return 503 for retry and never grant access. Stripe events
+require a valid signature and matching settlement amount, currency, and checkout
+identity. Set `PAYMENT_SUBSCRIPTION_PRICE_USD` to the configured Stripe checkout
+total; the legacy `PAYMENT_SUBSCRIPTION_USD` environment name remains a fallback.
+M-Pesa pricing must be a positive whole KES amount. Live credentials belong only
+in backend environment settings.
 
-Google can link an existing account when the verified email is Gmail or its domain matches Google's signed `hd` claim. Other existing email identities must use their existing credentials. Ambiguous email matches are rejected.
+Google can link an existing account when the verified email is Gmail or its
+domain matches Google's signed `hd` claim. Other existing email identities must
+use their existing credentials. Ambiguous email matches are rejected.
 
 ## Frontend design and validation
 
-The shared palette, spacing, focus states, controls, and typrography live in `frontend/src/app.scss`. Component styles reference these CSS custom properties; `frontend/src/styles/theme.js` aligns Material UI surfaces with the same theme.
-`SiteHeader` supplies public and member navigation. Landing and member heroes share a responsive 16:9 video frame. Pages load lazily behind a React error boundary. Use the system font stack; no external font download is required.
+The original CSS/SCSS from the parent of UI-review commit `8e467c2` is restored
+verbatim, including its original colors, typography, and page styles.
+`frontend/src/styles/legacyCompatibility.scss` connects the retained JSX wrappers,
+shared navigation, accessible controls, and native carousel to those legacy styles.
+It uses the original Sass tokens; the review's Material UI skin is removed.
+Prettier intentionally ignores the restored stylesheets so formatting commands do
+not rewrite that historical CSS. JSX formatting, lint, regression tests, lazy
+loading, and functional bug fixes remain in place.
 
 From `frontend/`:
 
@@ -119,6 +142,11 @@ npx playwright install chromium
 npm run test:browser
 ```
 
-When using an existing managed Chromium binary instead of a download browser:
+When using an existing managed Chromium binary instead of a downloaded browser:
 `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium npm run test:browser`.
-The browser suite checks all routes at desktop, tablet, and mobile sizes, runs WCAG accessibility checks, and exercises navigation, account forms, and checkout UI states. Its API, Google, and video fixtures deliberately do not validate live OAuth, streaming, or payment providers. Screenshots and failure traces are saved in `frontend/test-results/` and uploaded by CI. The video preview fixture is a compressed frame from the repository's existing `turf.mp4`.
+The browser suite checks all routes at desktop, tablet, and mobile sizes, runs
+WCAG accessibility checks, and exercises navigation, account forms, and checkout
+UI states. Its API, Google, and video fixtures deliberately do not validate live
+OAuth, streaming, or payment providers. Screenshots and failure traces are saved
+in `frontend/test-results/` and uploaded by CI. The video preview fixture is a
+compressed frame from the repository's existing `turf.mp4`.
