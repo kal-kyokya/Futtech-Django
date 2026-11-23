@@ -1,0 +1,398 @@
+// Bridge retained accessible JSX to the pre-review design. Original stylesheets
+// are restored verbatim; this file only covers new wrappers and class names.
+@use './tokens' as *;
+@use './mixins' as *;
+@use '../components/publicHeader/publicHeader';
+@use '../pages/register/register';
+:root {
+  --color-bg: #{$color-bg};
+  --color-surface: #{$color-bg-elevated};
+  --color-elevated: #{$color-bg-elevated};
+  --color-input: #{$color-bg-input};
+  --color-border: #{$color-border};
+  --color-primary: #{$color-primary};
+  --color-primary-hover: #{$color-link};
+  --color-on-primary: #{$color-primary-green};
+  --color-link: #{$color-link};
+  --color-secondary: #{$color-primary};
+  --color-success: #{$color-primary};
+  --color-danger: #{$color-danger};
+  --color-text: #{$color-text};
+  --color-muted: #{$color-text-muted};
+  --radius: #{$radius-lg};
+  --shadow-card: #{$shadow-card};
+  --page-width: #{$container-max-width};
+  --page-gutter: #{$container-pad-mobile};
+  --section-space: #{$space-5};
+}
+.page-container {
+  @include page-container;
+}
+.eyebrow {
+  color: $color-primary;
+  font-size: $font-size-sm;
+}
+.fieldError,
+[role='alert'] {
+  color: $color-danger;
+}
+.status-message,
+.empty-state {
+  padding: $space-4;
+  color: $color-text-muted;
+}
+:focus-visible {
+  outline: 2px solid $color-link;
+  outline-offset: 3px;
+}
+.sr-only,
+.skip-link:not(:focus) {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.skip-link:focus {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 200;
+  padding: $space-3;
+  background: $color-bg;
+  color: $color-text;
+}
+.auth-loading {
+  padding: $space-8;
+  text-align: center;
+}
+// Reuse the original public header's appearance for the consolidated header.
+.siteHeader {
+  @extend .publicHeader;
+}
+.siteHeader__brand {
+  @extend .publicHeader__brand;
+  color: $color-text;
+  text-decoration: none;
+}
+.siteHeader__nav {
+  @extend .publicHeader__nav;
+}
+.siteHeader__toggle {
+  @extend .publicHeader__menuToggle;
+  align-items: center;
+  justify-content: center;
+}
+.siteHeader__inner {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-4;
+}
+.siteHeader__nav a {
+  color: $color-text;
+  text-decoration: none;
+}
+.siteHeader__nav a[aria-current='page'] {
+  text-decoration: underline;
+  text-underline-offset: 0.25rem;
+}
+.siteHeader__actions {
+  display: flex;
+  align-items: center;
+  gap: $space-3;
+}
+.siteHeader__actions button,
+.siteHeader__more summary {
+  cursor: pointer;
+  font: inherit;
+  color: $color-text;
+}
+.siteHeader__actions button {
+  background: transparent;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  padding: $space-2;
+}
+.siteHeader__more {
+  position: relative;
+}
+.siteHeader__moreMenu {
+  position: absolute;
+  z-index: 30;
+  min-width: 12rem;
+  padding: $space-3;
+  background: $color-bg;
+  border: 1px solid $color-border;
+}
+.siteHeader__moreMenu a {
+  display: block;
+  padding: $space-2;
+}
+.siteHeader--member {
+  position: fixed;
+  inset: 0 0 auto;
+  width: 100%;
+}
+.siteHeader__brand svg,
+.button svg {
+  vertical-align: middle;
+}
+// The member hero now shares the landing component; use the legacy landing skin.
+.homeMain {
+  @extend .register;
+  padding: 90px $space-4 $space-5;
+}
+.homeMain .heroSection {
+  margin-bottom: $space-5;
+}
+.heroSection__preview {
+  margin: 0;
+  min-width: 0;
+}
+.heroSection__previewHeading,
+.heroSection figcaption {
+  padding-block: $space-2;
+  font-size: $font-size-xs;
+  color: $color-text-muted;
+}
+.heroSection__previewHeading {
+  display: flex;
+  gap: $space-3;
+  justify-content: space-between;
+}
+.heroSection__footnote {
+  margin-top: $space-3;
+  font-size: $font-size-sm;
+}
+.section-heading {
+  margin-bottom: $space-5;
+}
+.section-heading h1,
+.section-heading h2 {
+  margin-top: $space-2;
+}
+.conversionSection {
+  scroll-margin-top: 90px;
+}
+// Keep native, keyboard-accessible scrolling with the original thumbnail cards.
+.playlist__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: $space-3;
+  margin-bottom: $space-2;
+}
+.playlist__heading h3 {
+  color: $color-text;
+  font-size: $font-size-md;
+  font-weight: 500;
+}
+.playlist__controls {
+  display: flex;
+  gap: $space-2;
+}
+.playlist__controls button {
+  min-width: 2.25rem;
+  min-height: 2.25rem;
+  background: $color-bg-elevated;
+  color: $color-text;
+  border: 1px solid $color-border;
+  cursor: pointer;
+}
+.playlist__track {
+  display: flex;
+  gap: $space-2;
+  overflow-x: auto;
+  padding: $space-2;
+}
+.playlist__track > * {
+  flex: 0 0 auto;
+}
+// The retained main/form wrappers did not exist in the old page markup.
+.watch {
+  margin-top: 75px;
+}
+.playlistTable {
+  overflow-x: auto;
+}
+.playlists > .section-heading {
+  padding: $space-4;
+}
+.newPlaylist {
+  margin-top: 78px;
+  padding-block: $space-5;
+}
+.newPlaylistForm {
+  max-width: 36rem;
+  margin-top: $space-5;
+  display: flex;
+  flex-direction: column;
+  gap: $space-3;
+}
+.newPlaylistForm input {
+  min-height: 2rem;
+  padding: $space-2;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+}
+.newPlaylistForm button {
+  align-self: flex-start;
+  padding: $space-2 $space-5;
+  background: $color-bg;
+  color: $color-text;
+  border: 1px solid $color-border;
+  border-radius: $radius-sm;
+  cursor: pointer;
+}
+.userUpdateInput {
+  max-width: 100%;
+}
+// Restore the former checkout's inline black/green appearance as class styles.
+.checkoutPage {
+  padding-top: 90px;
+}
+.paymentCard {
+  max-width: 520px;
+  margin: 1.5rem auto;
+  padding: 1rem;
+  background: #111;
+  color: #fff;
+  border-radius: 12px;
+}
+.paymentCard h1 {
+  font-size: 1.5rem;
+}
+.paymentCard p {
+  margin-block: $space-3;
+}
+.paymentProviders {
+  display: flex;
+  flex-wrap: wrap;
+  gap: $space-2;
+  margin-block: $space-3;
+}
+.paymentProviders button {
+  background: #333;
+  color: #fff;
+  border: 0;
+  padding: 0.5rem 0.75rem;
+  border-radius: 8px;
+}
+.paymentProviders [aria-pressed='true'] {
+  background: #2e7d32;
+}
+.paymentCard input {
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background: #1f1f1f;
+  color: #fff;
+}
+.paymentCard button[type='submit'] {
+  margin-top: 1rem;
+  width: 100%;
+  background: #2e7d32;
+  color: #fff;
+  border: 0;
+  padding: 0.7rem;
+  border-radius: 8px;
+}
+.paymentCard button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+@media (max-width: 1023px) {
+  .siteHeader__toggle {
+    display: flex;
+    flex-shrink: 0;
+    width: 2.75rem;
+    height: 2.75rem;
+    padding: 0.5rem;
+    background: $color-bg;
+    color: $color-text;
+    border: 2px solid $color-border;
+    border-radius: $radius-sm;
+  }
+  .siteHeader__nav {
+    position: absolute;
+    inset: 100% 0 auto;
+    width: 100%;
+    padding: $space-4;
+    background: $color-bg;
+    border-bottom: 1px solid $color-border;
+    display: none;
+    flex-direction: column;
+    align-items: stretch;
+    gap: $space-3;
+    max-height: calc(100dvh - 70px);
+    overflow-y: auto;
+  }
+  .siteHeader__nav.active {
+    display: flex;
+    visibility: visible;
+  }
+  .siteHeader__actions {
+    flex-wrap: wrap;
+    justify-content: space-between;
+  }
+  .siteHeader__moreMenu {
+    position: static;
+  }
+}
+@media (max-width: 767px) {
+  .siteHeader--member {
+    position: fixed;
+  }
+  .page-container {
+    width: 100%;
+  }
+  .userContainer,
+  .userUpdate,
+  .userUpdateLeft,
+  .userUpdateItem {
+    min-width: 0;
+  }
+  .homeMain {
+    padding-inline: $space-3;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+    scroll-behavior: auto !important;
+  }
+}
+// The original registration button selector also matches the retained nav toggle.
+.siteHeader .siteHeader__toggle {
+  display: none;
+}
+@media (max-width: 1023px) {
+  .siteHeader .siteHeader__toggle {
+    display: flex;
+  }
+}
+// Keep readable feedback on the retained controls without changing the old skin.
+.showcaseVideo .showcaseVideo__note {
+  color: $color-text-muted;
+}
+.user
+  .userContainer
+  .userUpdate
+  .userUpdateForm
+  .userUpdateRight
+  button.userUpdateButton {
+  color: $color-bg;
+}
+@media (min-width: 768px) and (max-width: 1023px) {
+  .authPage__panelGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
