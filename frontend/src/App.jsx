@@ -1,7 +1,6 @@
 import './app.scss';
+import './styles/legacyCompatibility.scss';
 import { lazy, Suspense, useContext, useEffect, useState } from 'react';
-import { ThemeProvider } from '@mui/material/styles';
-import theme from './styles/theme';
 import { AuthContext } from './contexts/authContext/AuthContext';
 import { UserContext } from './contexts/userContext/UserContext';
 import {
@@ -14,8 +13,8 @@ import {
 import AuthService from './services/authService';
 import PrivateRoute from './components/privateRoute/PrivateRoute';
 import RouteError from './components/routeError/RouteError';
-
 const About = lazy(() => import('./pages/about/About'));
+
 const Register = lazy(() => import('./pages/register/Register'));
 const Login = lazy(() => import('./pages/login/Login'));
 const Home = lazy(() => import('./pages/home/Home'));
@@ -45,17 +44,17 @@ const App = () => {
     const { dispatch: userDispatch } = useContext(UserContext);
 
     useEffect(() => {
-        let cancelled = false;
-        AuthService.restoreSession().then((user) => {
+	let cancelled = false;
+	AuthService.restoreSession().then((user) => {
 	    if (cancelled) return;
 	    if (user) {
 		authDispatch({ type: 'LOGIN_SUCCESS', payload: user });
 		userDispatch({ type: 'REGISTRATION_SUCCESS', payload: user });
 	    }
-            setAuthReady(true);
-        });
+	    setAuthReady(true);
+	});
 	return () => {
-            cancelled = true;
+	    cancelled = true;
 	};
     }, [authDispatch, userDispatch]);
 
@@ -64,7 +63,7 @@ const App = () => {
 	    return <div className='auth-loading'>Loading...</div>;
 	}
 
-        return AuthService.isAuthenticated() ? <Home /> : component;
+	return AuthService.isAuthenticated() ? <Home /> : component;
     };
 
     const renderLanding = () => {
@@ -72,18 +71,18 @@ const App = () => {
 	    return <div className='auth-loading'>Loading...</div>;
 	}
 
-        return AuthService.isAuthenticated() ? (
-            <PrivateRoute isReady={authReady}>
+	return AuthService.isAuthenticated() ? (
+	    <PrivateRoute isReady={authReady}>
 		<Home category='videos' />
-            </PrivateRoute>
-        ) : (
-            <Register />
-        );
+	    </PrivateRoute>
+	) : (
+	    <Register />
+	);
     };
 
     const routes = (
-        <Routes>
-            <Route path='/' element={<RootLayout />}>
+	<Routes>
+	    <Route path='/' element={<RootLayout />}>
 		<Route index element={renderLanding()} />
 		<Route path='register' element={renderPublic(<Register />)} />
 		<Route path='login' element={renderPublic(<Login />)} />
@@ -172,27 +171,24 @@ const App = () => {
 		    }
 		/>
 		<Route path='*' element={<Navigate to='/' replace />} />
-            </Route>
-        </Routes>
+	    </Route>
+	</Routes>
     );
 
     return (
-        <ThemeProvider theme={theme}>
-            <RouteError>
-		<BrowserRouter>
-		    <Suspense
-			fallback={
-			    <div className='auth-loading' role='status'>
-				Loading page…
-			    </div>
-			}
-		    >
-			{routes}
-		    </Suspense>
-		</BrowserRouter>
-            </RouteError>
-        </ThemeProvider>
+	<RouteError>
+	    <BrowserRouter>
+		<Suspense
+		    fallback={
+			<div className='auth-loading' role='status'>
+			    Loading page…
+			</div>
+		    }
+		>
+		    {routes}
+		</Suspense>
+	    </BrowserRouter>
+	</RouteError>
     );
 };
-
 export default App;
