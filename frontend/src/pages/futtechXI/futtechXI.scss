@@ -1,94 +1,92 @@
 .xi-page {
-    max-width: 1000px;
+    min-height: 100vh;
+    padding: 48px 20px;
+    background: linear-gradient(180deg, #0d1c23 0%, #122731 45%, #0d1c23 100%);
+    color: #eff9ef;
+    font-family: Arial, sans-serif;
+}
+.xi-card {
+    max-width: 920px;
     margin: auto;
-    padding: var(--section-space) var(--page-gutter);
 }
-.xi-card > h1 {
-    margin-block: 1rem;
-    max-width: 700px;
+.xi-eyebrow {
+    color: #7fd1ff;
+    font-size: .75rem;
+    font-weight: bold;
+    letter-spacing: .11em;
 }
-.xi-card > p {
-    max-width: 670px;
+.xi-page h1 {
+    font-size: clamp(2rem, 6vw, 4rem);
+    margin: 8px 0;
+}
+.xi-page p {
+    line-height: 1.55;
 }
 .xi-page form {
+    margin-top: 28px;
     display: grid;
-    gap: 1rem;
-    padding: clamp(1.25rem, 3vw, 2rem);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
-    margin-block: 2rem;
+    gap: 10px;
 }
 .xi-page textarea {
-    min-height: 120px;
+    min-height: 100px;
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #53715c;
+    font: inherit;
+    color: lightslategrey;
 }
 .xi-page button {
-    justify-self: start;
+    width: fit-content;
+    padding: 12px 20px;
+    border: 0;
+    border-radius: 8px;
+    background: #00a3ff;
+    color: #001019;
+    font-weight: bold;
+    cursor: pointer;
+}
+.xi-page button:disabled {
+    opacity: .7;
 }
 .xi-report {
-    margin-top: 2rem;
-    padding: clamp(1.25rem, 3vw, 2rem);
-    background: var(--color-surface);
-    border: 1px solid var(--color-border);
-    border-radius: var(--radius);
+    margin-top: 30px;
+    padding: 24px;
+    background: repeating-linear-gradient(45deg, black, transparent 27px);
+    border-radius: 12px;
 }
 .xi-head {
-    display: flex;
-    gap: 1.5rem;
-    justify-content: space-between;
-    align-items: start;
-    flex-wrap: wrap;
-}
-.xi-head h2 {
-    margin-top: 0.75rem;
+    display:flex;
+    justify-content:space-between;
+    gap:20px;
+    align-items:center;
 }
 .xi-head strong {
-    font-size: 0.75rem;
-    color: var(--color-success);
-}
-.xi-report h3 {
-    margin-block: 2rem 1rem;
-}
-.xi-report ul {
-    padding-left: 1.25rem;
-    color: var(--color-muted);
-}
-.xi-report li {
-    margin-block: 0.5rem;
+    background: #00a3ff;
+    color: #001019;
+    border-radius:999px;
+    padding:9px 12px;
+    white-space:nowrap;
 }
 .xi-ideas {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 1rem;
+    display:grid;
+    grid-template-columns:repeat(auto-fit,minmax(190px,1fr));
+    gap:12px;
 }
 .xi-ideas article {
-    padding: 1.25rem;
-    background: var(--color-input);
-    border-radius: 0.75rem;
+    background: #0D1C23;
+    padding: 14px;
+    border-radius: 8px;
 }
 .xi-ideas h4 {
-    margin-block: 0.75rem;
+    margin:6px 0;
 }
-.xi-ideas p {
-    font-size: 0.875rem;
-    margin-top: 0.5rem;
-}
-.xi-ideas small,
-.xi-eyebrow {
-    color: var(--color-link);
-    font-size: 0.75rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
+.xi-ideas small {
+    color:#7fd1ff;
+    text-transform:uppercase;
 }
 .xi-status {
-    margin-top: 1.25rem;
-    color: var(--color-muted);
+    color:#bcd9c0;
 }
 .xi-error {
-    color: var(--color-danger);
-}
-@media (max-width: 540px) {
-    .xi-ideas {
-        grid-template-columns: 1fr;
-    }
+    color:#ffaaa5;
 }
