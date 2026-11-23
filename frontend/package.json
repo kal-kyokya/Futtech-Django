@@ -9,9 +9,9 @@
     "lint": "eslint src --report-unused-disable-directives --max-warnings 0",
     "preview": "vite preview",
     "test": "vitest",
-    "test:watch": "vitest --watch"
-    "test:browser": "playwright test"
-    "format": "prettier --write src"
+    "test:watch": "vitest --watch",
+    "test:browser": "playwright test",
+    "format": "prettier --write src",
     "format:check": "prettier --check src"
   },
   "dependencies": {
@@ -23,7 +23,7 @@
     "axios": "^1.8.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
-    "react-router-dom": "^7.3.0",
+    "react-router-dom": "^7.3.0"
   },
   "devDependencies": {
     "@axe-core/playwright": "^4.14.0",
