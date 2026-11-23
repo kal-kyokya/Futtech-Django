@@ -10,26 +10,22 @@
     top: 0;
     z-index: 20;
 }
-
 .publicHeader__brand {
     display: inline-flex;
     align-items: center;
     gap: 0.65rem;
     font-weight: 700;
     letter-spacing: 0.02em;
-
     img {
         width: 36px;
         height: 36px;
         object-fit: contain;
     }
 }
-
 .publicHeader__nav {
     display: flex;
     align-items: center;
     gap: 1rem;
-
     .button {
  	min-height: 2rem;
 	padding: 0.30rem;
@@ -42,42 +38,35 @@
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
-
 	&:hover {
 	    transform: translateY(-2px);
 	}
     }
-
     .button--primary {
 	background: #05F283;
 	color: #052414;
 	box-shadow: 0 10px 30px rgba(5, 242, 131, 0.35);
     }
-
     .button--secondary {
 	background: transparent;
 	color: #FFFFFF;
 	border: 1px solid rgba(255, 255, 255, 0.4);
     }
 }
-
 .publicHeader__menuToggle {
     display: none;
 }
-
 .publicHeader__cta {
     border: 1px solid rgba(255, 255, 255, 0.35);
     padding: 0.35rem 0.8rem;
     border-radius: 999px;
 }
-
 // Match the authenticated navbar's mobile breakpoint and active-menu transition.
 @media (max-width: 767px) {
     .publicHeader {
 	padding: 0.75rem 1rem;
 	position: relative;
     }
-
     .publicHeader__menuToggle {
 	display: flex;
 	flex-direction: column;
@@ -90,7 +79,6 @@
 	border-radius: 5px;
 	background-color: #0d1c23;
 	cursor: pointer;
-
 	span {
 	    display: block;
 	    width: 100%;
@@ -98,22 +86,18 @@
 	    background: #fff;
 	    transition: transform 0.3s ease-in-out, opacity 0.3s ease-in-out;
 	}
-
 	&.active {
 	    span:nth-child(1) {
 		transform: translateY(0.425rem) rotate(-45deg);
 	    }
-
 	    span:nth-child(2) {
 		opacity: 0;
 	    }
-
 	    span:nth-child(3) {
 		transform: translateY(-0.425rem) rotate(45deg);
 	    }
 	}
     }
-
     .publicHeader__nav {
 	position: absolute;
 	top: 100%;
@@ -129,12 +113,10 @@
 	gap: 0.75rem;
 	visibility: hidden;
 	transition: transform 0.3s ease-in-out, visibility 0s linear 0.3s;
-
 	&.active {
 	    visibility: visible;
 	    transition-delay: 0s;
 	}
-
 	.button {
 	    width: 100%;
 	}
