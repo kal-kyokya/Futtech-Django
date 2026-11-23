@@ -1,5 +1,4 @@
 import ArrowUpRight from '../layout/ArrowUpRight';
-import './landing.scss';
 import { Link } from 'react-router-dom';
 
 export default function HeroSection({ member = false, category }) {
@@ -9,7 +8,7 @@ export default function HeroSection({ member = false, category }) {
 	    aria-labelledby='hero-heading'
 	>
 	    <div className='heroSection__content'>
-		<p className='eyebrow'>
+		<p className='eyebrow heroSection__badge'>
 		    {member ? 'YOUR FOOTBALL WORKSPACE' : 'SEE THE GAME DIFFERENTLY'}
 		</p>
 		<h1 id='hero-heading'>
