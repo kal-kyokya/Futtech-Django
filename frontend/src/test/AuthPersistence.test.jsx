@@ -24,7 +24,7 @@ const CurrentUserGate = () => {
 		tokenService.clearAccessToken();
 		setStatus('unauthorized');
 		navigate('/login', { replace: true });
-		return
+		return;
 	    }
 
 	    setUser(result);
@@ -63,16 +63,17 @@ describe('Auth persistence and /me', () => {
 
 	renderWithProviders(<TestRoutes />, { route: '/', path: null });
 
-	expect(await screen.findByText('Welcome test@example.com')).toBeInTheDocument();
+	expect(
+	    await screen.findByText('Welcome test@example.com'),
+	).toBeInTheDocument();
     });
 
     it('clears token and redirects to login on /me 401', async () => {
 	// Simulate an expired session from the backend.
 	server.use(
-	    http.get('*/auth/me', async () => HttpResponse.json(
-		{ detail: 'Unauthorized' },
-		{ status: 401 },
-	    )),
+	    http.get('*/auth/me', async () =>
+		HttpResponse.json({ detail: 'Unauthorized' }, { status: 401 }),
+	    ),
 	);
 
 	seedAuthState({
