@@ -1,7 +1,6 @@
 import ArrowUpRight from './ArrowUpRight';
 import { useEffect, useRef, useState } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
-import './siteHeader.scss';
 
 export default function SiteHeader({
     member = false,
@@ -13,17 +12,14 @@ export default function SiteHeader({
     const toggle = useRef(null);
     const more = useRef(null);
     const { pathname } = useLocation();
-
     useEffect(() => {
 	setOpen(false);
 	if (more.current) more.current.open = false;
     }, [pathname]);
-
     const close = () => {
 	setOpen(false);
 	if (more.current) more.current.open = false;
     };
-
     const links = member
 	  ? [
               ['/home', 'Overview'],
@@ -37,10 +33,9 @@ export default function SiteHeader({
               ['/futtech-xi', 'Futtech XI'],
               ['/about', 'About'],
 	  ];
-
     return (
 	<header
-	    className='siteHeader'
+	    className={`siteHeader${member ? ' siteHeader--member' : ''}`}
 	    onKeyDown={(event) => {
 		if (event.key === 'Escape') {
 		    const moreWasOpen = more.current?.open;
@@ -50,7 +45,6 @@ export default function SiteHeader({
 		}
 	    }}
 	>
-
 	    <div className='siteHeader__inner'>
 		<Link
 		    to={member ? '/home' : '/'}
@@ -62,7 +56,6 @@ export default function SiteHeader({
 			futtech<span className='siteHeader__dot'>.</span>
 		    </span>
 		</Link>
-
 		<button
 		    ref={toggle}
 		    className='siteHeader__toggle'
@@ -85,14 +78,18 @@ export default function SiteHeader({
 			/>
 		    </svg>
 		</button>
-
 		<nav
 		    id={navigationId}
 		    aria-label='Main navigation'
 		    className={`siteHeader__nav ${open ? 'active' : ''}`}
 		>
 		    {links.map(([path, label]) => (
-			<NavLink key={path} to={path} onClick={close}>
+			<NavLink
+			    key={path}
+			    to={path}
+			    onClick={close}
+			    className='button button--secondary'
+			>
 			    {label}
 			</NavLink>
 		    ))}
@@ -107,7 +104,12 @@ export default function SiteHeader({
 				    ['/new-playlist', 'New playlist'],
 				    ['/pricing-page', 'Subscription'],
 				].map(([path, label]) => (
-				    <NavLink key={path} to={path} onClick={close}>
+				    <NavLink
+					key={path}
+					to={path}
+					onClick={close}
+					className='button button--secondary'
+				    >
 					{label}
 				    </NavLink>
 				))}
