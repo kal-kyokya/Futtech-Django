@@ -1,0 +1,4 @@
+# Keep the restored legacy styles byte-for-byte identical to the pre-review version.
+src/**/*.scss
+src/**/*.css
+!src/styles/legacyCompatibility.scss
