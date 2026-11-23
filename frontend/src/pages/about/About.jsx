@@ -12,7 +12,16 @@ const About = () => {
 
 	    <main id='main-content' tabIndex={-1} className='about'>
 		<div className='aboutTitle'>
-		    <h1>Futtech</h1>
+		    <h1>Futtech by{' '}
+			<a
+			    href='https://www.kalkyokya.tech'
+			    target='_blank'
+			    rel='noopener noreferrer'
+			>
+			    Jean-Paul De Marie KYOKYA
+			</a>
+		    </h1>
+
 		    <em>
 			A Journey of Engineering, Prototyping, Debugging & Entrepreneurship
 		    </em>
@@ -37,7 +46,7 @@ const About = () => {
 		    footage is captured, analyzed, published by the Futtech team, and
 		    delivered back to users with a modern streaming and payments stack—
 		    <a
-			href='http://www.futtech.kalkyokya.tech'
+			href='https://www.futtech.kalkyokya.tech'
 			target='_blank'
 			rel='noopener noreferrer'
 		    >
