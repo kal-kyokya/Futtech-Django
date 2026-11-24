@@ -9,21 +9,17 @@ const PublicHeader = () => {
 
     return (
 	<header className='publicHeader'>
-	    <Link
-		to='/showcase'
-		className='publicHeader__brand link'
-	    >
-		<img
-		    src='/logo.png'
-		    alt='Futtech logo'
-		/>
+	    <Link to='/showcase' className='publicHeader__brand link'>
+		<img src='/logo.png' alt='Futtech logo' />
 		<span>Futtech Explore</span>
 	    </Link>
 
 	    <button
 		type='button'
 		className={`publicHeader__menuToggle ${isMobileMenuOpen ? 'active' : ''}`}
-		aria-label={isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'}
+		aria-label={
+		    isMobileMenuOpen ? 'Close navigation menu' : 'Open navigation menu'
+		}
 		aria-expanded={isMobileMenuOpen}
 		aria-controls='public-header-navigation'
 		onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
