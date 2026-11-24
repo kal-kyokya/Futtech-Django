@@ -29,19 +29,18 @@ import {
 import authService from '../../services/authService';
 import { normalizeError } from '../../services/apiClient';
 import AuthLayout from '../../components/auth/AuthLayout';
-import PublicHeader from '../../components/publicHeader/PublicHeader';
 import GoogleSignInButton from '../../components/auth/GoogleSignInButton';
 
 const Login = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const {
 	dispatch: authDispatch,
 	isFetching,
 	error: loginError,
     } = useContext(AuthContext);
-
     const { dispatch: videoDispatch } = useContext(VideoContext);
     const { dispatch: playlistDispatch } = useContext(PlaylistContext);
     const { dispatch: userDispatch } = useContext(UserContext);
@@ -50,6 +49,7 @@ const Login = () => {
     const location = useLocation();
     const fieldErrors = loginError?.fields || {};
     const [notice, setNotice] = useState('');
+    const closeMobileMenu = () => setIsMobileMenuOpen(false);
 
     useEffect(() => () => authDispatch(clearAuthError()), [authDispatch]);
 
@@ -72,10 +72,12 @@ const Login = () => {
 	    if (!result.success) {
 		const normalizedError =
 		      result.error || normalizeError(new Error('Login failed'));
+
 		authDispatch(loginFailure(normalizedError));
 		userDispatch(updateFailure(normalizedError));
 		videoDispatch(getVideosFailure());
 		playlistDispatch(getPlaylistsFailure());
+
 		return;
 	    }
 
@@ -85,6 +87,7 @@ const Login = () => {
 	    if (result.playlistsPromise) {
 		try {
 		    const { playlists, featured } = await result.playlistsPromise;
+
 		    if (Array.isArray(featured)) {
 			videoDispatch(getVideosSuccess(featured));
 		    } else {
@@ -105,11 +108,12 @@ const Login = () => {
 		videoDispatch(getVideosSuccess([]));
 		playlistDispatch(getPlaylistsSuccess([]));
 	    }
-
+	    
 	    navigate('/drone-videos', { replace: true });
 	} catch (error) {
 	    const normalizedError = error?.normalized || normalizeError(error);
 	    console.error('Login failed: ', normalizedError);
+
 	    authDispatch(loginFailure(normalizedError));
 	    userDispatch(updateFailure(normalizedError));
 	    videoDispatch(getVideosFailure());
@@ -129,6 +133,7 @@ const Login = () => {
 		    message: 'Google did not return a sign-in credential.',
 		}),
 	    );
+
 	    return;
 	}
 	await completeLogin(() => authService.loginWithGoogle(credential));
@@ -138,6 +143,7 @@ const Login = () => {
 	if (error?.silent) {
 	    return;
 	}
+
 	authDispatch(
 	    loginFailure({ message: 'Google Sign-In was cancelled or failed.' }),
 	);
@@ -148,69 +154,104 @@ const Login = () => {
 	    pageClassName='login'
 	    videoTitle='Watch Futtech in action'
 	    videoLink='https://iframe.mediadelivery.net/embed/603147/eb570499-3ce6-4736-9dc4-0c6ae5d4ba93?loop=true'
-	    header={<PublicHeader navigationId='login-navigation' />}
-	>
-	    <form onSubmit={handleSignIn}>
-		<p className='eyebrow'>WELCOME BACK</p>
-		<h1>Sign In</h1>
-		<p className='authIntro'>Your next insight starts here.</p>
+	    header={
 
-		{import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID && (
-		    <>
-			<GoogleSignInButton
-			    onSuccess={handleGoogleSuccess}
-			    onError={handleGoogleError}
-			    disabled={isFetching}
+		<div className='top'>
+		    <Link to='/' className='link'>
+			<img
+			    className='logo'
+			    src='/logo.png'
+			    alt='Logo of the Futtech Company'
 			/>
-			<div className='authDivider'>or continue with email</div>
-		    </>
-		)}
-		<label htmlFor='login-email'>Email address</label>
+		    </Link>
+
+		    <button
+			type='button'
+			className={`topMenuToggle ${isMobileMenuOpen ? 'active' : ''}`}
+			aria-label={
+			    isMobileMenuOpen
+				? 'Close navigation menu'
+				: 'Open navigation menu'
+			}
+			aria-expanded={isMobileMenuOpen}
+			aria-controls='login-header-navigation'
+			onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
+		    >
+			<span />
+			<span />
+			<span />
+		    </button>
+
+		    <div
+			id='login-navigation'
+			className={`topActions ${isMobileMenuOpen ? 'active' : ''}`}
+		    >
+			<Link to='/showcase' className='link' onClick={closeMobileMenu}>
+			    <button className='button--secondary'>
+				<span>Public Showcase</span>
+			    </button>
+			</Link>
+			<Link to='/futtech-xi' className='link' onClick={closeMobileMenu}>
+			    <button className='button--secondary'>
+				<span>Futtech XI</span>
+			    </button>
+			</Link>
+			<Link
+			    to='/about'
+			    className='button button--secondary'
+			    onClick={closeMobileMenu}
+			>
+			    <span>About</span>
+			</Link>
+			<Link to='/register' className='link' onClick={closeMobileMenu}>
+			    <button className='button--primary'>
+				<span>Register</span>
+			    </button>
+			</Link>
+		    </div>
+		</div>
+	    }
+	>
+
+	    <form onSubmit={handleSignIn}>
+		<h1>Sign In</h1>
+
 		<input
-		    id='login-email'
-		    autoComplete='email'
-		    required
-		    aria-invalid={Boolean(fieldErrors.email)}
-		    aria-describedby={fieldErrors.email ? 'login-email-error' : undefined}
 		    type='email'
 		    placeholder='Email address'
 		    onChange={(e) => setEmail(e.target.value)}
 		/>
 		{fieldErrors.email && (
-		    <div className='fieldError' id='login-email-error'>
-			{fieldErrors.email}
-		    </div>
+		    <div className='fieldError'>{fieldErrors.email}</div>
 		)}
-		<label htmlFor='login-password'>Password</label>
 		<input
-		    id='login-password'
-		    required
-		    aria-invalid={Boolean(fieldErrors.password)}
-		    aria-describedby={
-			fieldErrors.password ? 'login-password-error' : undefined
-		    }
 		    type='password'
 		    placeholder='Password'
-		    autoComplete='current-password'
+		    autoComplete='Password'
 		    onChange={(e) => setPassword(e.target.value)}
 		/>
 		{fieldErrors.password && (
-		    <div className='fieldError' id='login-password-error'>
-			{fieldErrors.password}
-		    </div>
+		    <div className='fieldError'>{fieldErrors.password}</div>
 		)}
-
 		<button type='submit' disabled={isFetching}>
-		    {isFetching ? 'Signing in…' : 'Sign In'}
+		    Sign In
 		</button>
+		<div className='authDivider'>or</div>
+		<GoogleSignInButton
+		    onSuccess={handleGoogleSuccess}
+		    onError={handleGoogleError}
+		    disabled={isFetching}
+		/>
 
 		{notice && <div className='userPrompt'>{notice}</div>}
-
 		{loginError?.message && (
-		    <div className='userPrompt' role='alert'>
-			{loginError.message}
-		    </div>
+		    <div className='userPrompt'>{loginError.message}</div>
 		)}
+		<span className='resetPassword'>
+		    <Link to='/reset-password' className='link'>
+			<u>Forgot Password?</u>
+		    </Link>
+		</span>
 
 		<span className='text'>
 		    New to Futtech? Sign up
@@ -222,10 +263,21 @@ const Login = () => {
 			.
 		    </Link>
 		</span>
+
+		<div className='captcha'>
+		    <p className='small-1'>
+			<i>
+			    This page is protected by Google reCAPTCHA to ensure you&#39;re
+			    not a bot.
+			</i>
+		    </p>
+		    <p className='small-2'>
+			<i>Learn more.</i>
+		    </p>
+		</div>
 	    </form>
 	</AuthLayout>
     );
 };
 
 export default Login;
-
