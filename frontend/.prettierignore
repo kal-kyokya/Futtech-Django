@@ -1,4 +1,3 @@
-# Keep the restored legacy styles byte-for-byte identical to the pre-review version.
+# Preserve the original stylesheet source.
 src/**/*.scss
 src/**/*.css
-!src/styles/legacyCompatibility.scss
