@@ -1,5 +1,4 @@
 import './app.scss';
-import './styles/legacyCompatibility.scss';
 import { lazy, Suspense, useContext, useEffect, useState } from 'react';
 import { AuthContext } from './contexts/authContext/AuthContext';
 import { UserContext } from './contexts/userContext/UserContext';
