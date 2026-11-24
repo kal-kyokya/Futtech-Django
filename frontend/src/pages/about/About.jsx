@@ -1,37 +1,74 @@
 import './about.scss';
+import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import ArrowCircleUpOutlinedIcon from '@mui/icons-material/ArrowCircleUpOutlined';
-import PublicHeader from '../../components/publicHeader/PublicHeader';
+import { Link } from 'react-router-dom';
+import { useState, useEffect } from 'react';
 
 const About = () => {
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+	const handleScroll = () => {
+	    setIsScrolled(window.pageYOffset > 0);
+	};
+	window.addEventListener('scroll', handleScroll);
+
+	// Cleanup function: This runs when the component unmounts
+	return () => {
+	    window.removeEventListener('scroll', handleScroll);
+	};
+    }, []); // Empty dependency array means this effect runs once on mount and cleans up on unmount
+
     return (
 	<div id='page-top'>
-	    <PublicHeader />
-	    <a className='aboutAnchor' href='#page-top' aria-label='Back to top'>
-		<ArrowCircleUpOutlinedIcon />
-	    </a>
 
-	    <main id='main-content' tabIndex={-1} className='about'>
+	    {isScrolled && (
+		<a className='link aboutAnchor' href='#page-top'>
+		    <ArrowCircleUpOutlinedIcon className='aboutAnchorArrow' />
+		</a>
+	    )}
+
+	    <nav className={isScrolled ? 'aboutNav scrolled' : 'aboutNav'}>
+		<Link className='link' to='/home'>
+		    <span className='iconLeft'>
+			<ArrowBackIcon className='arrow' />
+			Home
+		    </span>
+		</Link>
+
+		<div className='socials'>
+		    <span>Detailed version:&ensp;</span>
+		    <a
+			href='https://medium.com/@kal-kyokya/futtech-a-journey-of-engineering-prototyping-debugging-entrepreneurship-6085b2958d32'
+			target='_blank'
+			rel='noopener noreferrer'
+		    >
+			<img
+			    alt='Medium badge'
+			    src='https://img.shields.io/badge/Medium-black?logo=medium&logoColor=white'
+			/>
+		    </a>
+		</div>
+	    </nav>
+
+	    <div className='about'>
 		<div className='aboutTitle'>
 		    <h1>Futtech by{' '}
 			<a
-			    href='https://www.kalkyokya.tech'
-			    target='_blank'
-			    rel='noopener noreferrer'
+                            href='https://www.kalkyokya.tech'
+                            target='_blank'
+                            rel='noopener noreferrer'
 			>
-			    Jean-Paul De Marie KYOKYA
+                            Jean-Paul De Marie KYOKYA
 			</a>
-		    </h1>
-
+                    </h1>
 		    <em>
 			A Journey of Engineering, Prototyping, Debugging & Entrepreneurship
 		    </em>
 		</div>
 
-		<img
-		    loading='lazy'
-		    src='/registerPage.webp'
-		    alt='Futtech Register page'
-		/>
+		<img src='/registerPage.png' alt='Futtech Register page' />
+
 		<p>
 		    Futtech is a startup that helps football players and coaches gain
 		    tactical awareness of their strengths and weaknesses through online
@@ -46,7 +83,7 @@ const About = () => {
 		    footage is captured, analyzed, published by the Futtech team, and
 		    delivered back to users with a modern streaming and payments stack—
 		    <a
-			href='https://www.futtech.kalkyokya.tech'
+			href='http://www.futtech.kalkyokya.tech'
 			target='_blank'
 			rel='noopener noreferrer'
 		    >
@@ -55,7 +92,7 @@ const About = () => {
 		    .
 		</p>
 
-		<h2>WHY FUTTECH</h2>
+		<h3>WHY FUTTECH</h3>
 		<p>
 		    Being a big fan of Football, this was an easy project focus to commit
 		    to. I am a hobbyist footballer, and recently learned that my father,
@@ -76,10 +113,10 @@ const About = () => {
 		    Instead of complaining, I decided to <b>build a solution</b>.
 		</p>
 
-		<h2>RESULTS</h2>
-		<h3>Flow of Data through the System</h3>
+		<h3>RESULTS</h3>
+
+		<h4>Flow of Data through the System</h4>
 		<img
-		    loading='lazy'
 		    src='/futtechArchitectureDiagram.png'
 		    alt="Futtech's Architectural Diagram"
 		/>
@@ -92,7 +129,7 @@ const About = () => {
 		    </em>
 		</p>
 
-		<h3>Technology Used</h3>
+		<h4>Technology Used</h4>
 		<p>
 		    Futtech began as a MERN experiment and has now transitioned to a{' '}
 		    <b>React + Django REST</b> architecture.
@@ -109,7 +146,7 @@ const About = () => {
 		    continue powering the client-side experience.
 		</p>
 
-		<h3>New Infrastructure in This Version</h3>
+		<h4>New Infrastructure in This Version</h4>
 		<ul>
 		    <li>
 			<b>Bunny Stream</b> for reliable video ingestion, processing, and
@@ -125,7 +162,7 @@ const About = () => {
 		    </li>
 		</ul>
 
-		<h3>Notable Features</h3>
+		<h4>Notable Features</h4>
 		<ul>
 		    <li>Google OAuth login/registration</li>
 		    <li>Upload and management of video content through Bunny Stream</li>
@@ -134,7 +171,7 @@ const About = () => {
 		    <li>Content update and deletion functionality</li>
 		</ul>
 
-		<h2>MOST DIFFICULT TECHNICAL CHALLENGE</h2>
+		<h3>MOST DIFFICULT TECHNICAL CHALLENGE</h3>
 		<p>
 		    I acquired the domain &#39;kalkyokya.tech&#39; in July 2024.
 		    <br />
@@ -172,8 +209,9 @@ const About = () => {
 		    </em>
 		</p>
 
-		<h2>LESSONS LEARNED</h2>
-		<h3>Technical Takeaways</h3>
+		<h3>LESSONS LEARNED</h3>
+
+		<h4>Technical Takeaways</h4>
 		<p>
 		    Migrating from MERN to Django reinforced the value of choosing backend
 		    frameworks based on domain complexity and operational needs.
@@ -183,14 +221,14 @@ const About = () => {
 		    and regional payment realities all matter.
 		</p>
 
-		<h3>What I Might Do Differently</h3>
+		<h4>What I Might Do Differently</h4>
 		<p>
 		    I would introduce automated integration tests for payment callbacks
 		    and streaming workflows earlier in the project lifecycle to reduce
 		    regression risk as the platform scales.
 		</p>
 
-		<h3>What I Learned About Myself</h3>
+		<h4>What I Learned About Myself</h4>
 		<p>
 		    I am willing to put in long hours to master full-cycle software
 		    development.
@@ -207,7 +245,7 @@ const About = () => {
 		    high-level abstractions.
 		</p>
 
-		<h3>How This Startup Informs My Engineering Path</h3>
+		<h4>How This Startup Informs My Engineering Path</h4>
 		<blockquote>
 		    &quot;Once you know what it is in life that you want to do, then the
 		    world basically becomes your library. Everything you view, you can
@@ -221,7 +259,7 @@ const About = () => {
 		    about.
 		</p>
 
-		<h3>Confirming or Questioning Prior Beliefs</h3>
+		<h4>Confirming or Questioning Prior Beliefs</h4>
 		<p>
 		    I reaffirmed that simple lines of code, combined thoughtfully, build
 		    powerful systems.
@@ -229,7 +267,7 @@ const About = () => {
 		    essential to building scalable, sustainable applications.
 		</p>
 
-		<h2>Closing Thoughts</h2>
+		<h3>Closing Thoughts</h3>
 		<p>
 		    The Django transition marks a new phase for Futtech: from prototype to
 		    a more production-ready football intelligence platform.
@@ -277,12 +315,8 @@ const About = () => {
 		    </a>
 		</p>
 
-		<img
-		    loading='lazy'
-		    src='/poa.webp'
-		    alt='Footballer standing beside a team bus'
-		/>
-	    </main>
+		<img src='/poa.JPEG' alt='Futtech Register page' />
+	    </div>
 	</div>
     );
 };
