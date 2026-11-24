@@ -121,15 +121,13 @@ use their existing credentials. Ambiguous email matches are rejected.
 
 ## Frontend design and validation
 
-The original CSS/SCSS from the parent of UI-review commit `8e467c2` is restored
-verbatim, including its original colors, typography, and page styles.
-`frontend/src/styles/legacyCompatibility.scss` connects the retained JSX wrappers,
-shared navigation, accessible controls, and native carousel to those legacy styles.
-It uses the original Sass tokens; the review's Material UI skin is removed.
-Prettier intentionally ignores the restored stylesheets so formatting commands do
-not rewrite that historical CSS. JSX formatting, lint, regression tests, lazy
-loading, and functional bug fixes remain in place.
-
+The original CSS/SCSS and page/component JSX from `a61f35b` (the parent of
+UI-review commit `8e467c2`) provide the application design again. The shared
+review header, replacement member hero, and compatibility stylesheet are removed.
+JSX retains standard formatting and nonvisual corrections for signed playback URLs,
+playlist creation/cache invalidation, playlist fetching, Google callbacks, and
+checkout polling. Backend security and session services remain unchanged.
+Prettier ignores the restored stylesheets to preserve their original source.
 From `frontend/`:
 
 ```bash
@@ -144,9 +142,9 @@ npm run test:browser
 
 When using an existing managed Chromium binary instead of a downloaded browser:
 `PLAYWRIGHT_CHROMIUM_EXECUTABLE=/usr/bin/chromium npm run test:browser`.
-The browser suite checks all routes at desktop, tablet, and mobile sizes, runs
-WCAG accessibility checks, and exercises navigation, account forms, and checkout
-UI states. Its API, Google, and video fixtures deliberately do not validate live
-OAuth, streaming, or payment providers. Screenshots and failure traces are saved
-in `frontend/test-results/` and uploaded by CI. The video preview fixture is a
-compressed frame from the repository's existing `turf.mp4`.
+The browser suite smoke-tests the restored routes at desktop, tablet, and mobile
+sizes, checks the original member navigation/banner/carousel, and exercises checkout
+and analysis flows. It does not assert the removed redesign's headings, keyboard
+menus, overflow guarantees, or WCAG compliance. API, Google, and video fixtures do
+not validate live OAuth, streaming, or payment providers. Screenshots and failure
+traces are saved in `frontend/test-results/` and uploaded by CI.
