@@ -1,26 +1,26 @@
 const SERVICES = [
     {
-	icon: '01',
+	icon: '📊',
 	title: 'Match Breakdown',
 	description: 'Team or individual performance analysis',
     },
     {
-	icon: '02',
+	icon: '🎬',
 	title: 'Player Highlight Reels',
-	description: 'For scouts, recruitment, and social media',
+	description: 'For scouts, recruitement, and social media',
     },
     {
-	icon: '03',
+	icon: '🧠',
 	title: 'Tactical Analysis Videos',
 	description: 'Focus on spacing, positioning, transitions',
     },
     {
-	icon: '04',
+	icon: '🏷️',
 	title: 'Training Session Review & Tagging',
 	description: 'Structured clips and moments for faster coaching feedback',
     },
     {
-	icon: '05',
+	icon: '📱',
 	title: 'Short-form Football Content',
 	description:
 	'Instagram Reels / TikTok Videos / YouTube Shorts optimized edits',
@@ -32,9 +32,11 @@ const ServicesSection = () => (
 	className='landingSection servicesSection'
 	aria-labelledby='services-heading'
     >
+
 	<div className='landingSection__header'>
 	    <h2 id='services-heading'>Services built for performance and growth</h2>
 	</div>
+
 	<div className='servicesSection__grid'>
 	    {SERVICES.map((service) => (
 		<article className='serviceCard' key={service.title}>
