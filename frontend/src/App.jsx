@@ -191,4 +191,5 @@ const App = () => {
 	</RouteError>
     );
 };
+
 export default App;
