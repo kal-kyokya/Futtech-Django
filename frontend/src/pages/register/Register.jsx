@@ -1,4 +1,5 @@
-import { useNavigate, useLocation } from 'react-router-dom';
+import './register.scss';
+import { Link, useNavigate } from 'react-router-dom';
 import { normalizeError } from '../../services/apiClient';
 import authService from '../../services/authService';
 import { useState, useRef, useContext, useEffect } from 'react';
@@ -14,7 +15,6 @@ import ServicesSection from '../../components/landing/ServicesSection';
 import AboutValueSection from '../../components/landing/AboutValueSection';
 import DifferentiationSection from '../../components/landing/DifferentiationSection';
 import BottomCtaSection from '../../components/landing/BottomCtaSection';
-import PublicHeader from '../../components/publicHeader/PublicHeader';
 import GoogleSignInButton from '../../components/auth/GoogleSignInButton';
 
 const Register = () => {
@@ -22,6 +22,7 @@ const Register = () => {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [passwordConfirm, setPasswordConfirm] = useState('');
+    const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
     const {
 	dispatch,
@@ -30,19 +31,12 @@ const Register = () => {
     } = useContext(UserContext);
 
     const navigate = useNavigate();
-
-    const { hash } = useLocation();
-    useEffect(() => {
-	if (hash === '#registration-form')
-	    document
-            .getElementById('registration-form')
-        ?.scrollIntoView?.({ block: 'start' });
-    }, [hash]);
-
+    const emailRef = useRef(null);
     const fieldErrors = registrationError?.fields || {};
+    const closeMobileMenu = () => setIsMobileMenuOpen(false);
+
     useEffect(() => () => dispatch(clearUserError()), [dispatch]);
 
-    const emailRef = useRef(null);
     const handleStart = () => {
 	const emailRegEx = /^[a-zA-Z0-9_.%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -70,11 +64,14 @@ const Register = () => {
 		    message: 'Google did not return a sign-in credential.',
 		}),
 	    );
+
 	    return;
 	}
 
 	dispatch(registrationStart());
+
 	const result = await authService.loginWithGoogle(credential);
+
 	if (!result.success) {
 	    dispatch(
 		registrationFailure(
@@ -92,6 +89,7 @@ const Register = () => {
 	if (error?.silent) {
 	    return;
 	}
+
 	dispatch(
 	    registrationFailure({
 		message: 'Google Sign-In was cancelled or failed.',
@@ -110,6 +108,7 @@ const Register = () => {
 		    fields: { passwordConfirm: 'Passwords do not match.' },
 		}),
 	    );
+
 	    return;
 	}
 
@@ -140,22 +139,83 @@ const Register = () => {
 	    }
 
 	    dispatch(registrationSuccess(result.user));
+
 	    navigate('/login');
 	} catch (error) {
 	    const normalizedError = error?.normalized || normalizeError(error);
+
 	    if (normalizedError?.fields?.email || normalizedError?.fields?.username) {
 		setEmail('');
 		setUsername('');
 		setPassword('');
 		setPasswordConfirm('');
 	    }
+
 	    dispatch(registrationFailure(normalizedError));
 	}
     };
 
     return (
 	<div className='register'>
-	    <PublicHeader navigationId='register-navigation' />
+	    <header className='top'>
+		<div className='wrapper'>
+		    <img
+			className='logo'
+			src='/logo.png'
+			alt='Logo of the Futtech Company'
+		    />
+
+		    <button
+			type='button'
+			className={`topMenuToggle ${isMobileMenuOpen ? 'active' : ''}`}
+			aria-label={
+			    isMobileMenuOpen
+				? 'Close navigation menu'
+				: 'Open navigation menu'
+			}
+			aria-expanded={isMobileMenuOpen}
+			aria-controls='register-header-navigation'
+			onClick={() => setIsMobileMenuOpen((isOpen) => !isOpen)}
+		    >
+			<span />
+			<span />
+			<span />
+		    </button>
+
+		    <div
+			id='register-navigation'
+			className={`topActions ${isMobileMenuOpen ? 'active' : ''}`}
+		    >
+			<Link
+			    to='/showcase'
+			    className='button button--secondary'
+			    onClick={closeMobileMenu}
+			>
+			    <span>Public Showcase</span>
+			</Link>
+			<Link
+			    to='/futtech-xi'
+			    className='button button--secondary'
+			    onClick={closeMobileMenu}
+			>
+			    <span>Futtech XI</span>
+			</Link>
+			<Link
+			    to='/about'
+			    className='button button--secondary'
+			    onClick={closeMobileMenu}
+			>
+			    <span>About</span>
+			</Link>
+			<Link to='/login' className='link'>
+			    <button className='logIn'>
+				<span>Log In</span>
+			    </button>
+			</Link>
+		    </div>
+		</div>
+	    </header>
+
 	    <main className='registerMain' id='main-content' tabIndex={-1}>
 		<HeroSection />
 		<AboutValueSection />
@@ -174,139 +234,76 @@ const Register = () => {
 			<p>Create your Futtech account and send your footage for review.</p>
 		    </div>
 
-		    {import.meta.env.VITE_GOOGLE_OAUTH_CLIENT_ID && (
-			<>
-			    <GoogleSignInButton
-				onSuccess={handleGoogleSuccess}
-				onError={handleGoogleError}
-				disabled={isFetching}
-				text='signup_with'
-			    />
-			    <div className='authDivider'>or continue with email</div>
-			</>
-		    )}
 		    {!registrationError?.fields && registrationError?.message && (
-			<div className='userPrompt' role='alert'>
-			    {registrationError.message}
-			</div>
+			<div className='userPrompt'>{registrationError.message}</div>
 		    )}
 
 		    {email ? (
-			<form
-			    key='password-step'
-			    className='membership'
-			    onSubmit={handleRegister}
-			>
-			    <label htmlFor='register-password'>Password</label>
+			<form className='membership' onSubmit={handleRegister}>
 			    <input
 				type='password'
-				id='register-password'
-				autoComplete='new-password'
-				aria-invalid={Boolean(fieldErrors.password)}
-				aria-describedby={
-				    fieldErrors.password ? 'register-password-error' : undefined
-				}
 				placeholder='Password'
 				onChange={(e) => setPassword(e.target.value)}
 				required
 			    />
 			    {fieldErrors.password && (
-				<div
-				    className='fieldError'
-				    id='register-password-error'
-				    role='alert'
-				>
-				    {fieldErrors.password}
-				</div>
+				<div className='fieldError'>{fieldErrors.password}</div>
 			    )}
-			    <label htmlFor='register-confirm'>Confirm password</label>
+
 			    <input
 				type='password'
-				id='register-confirm'
-				autoComplete='new-password'
-				aria-invalid={Boolean(fieldErrors.passwordConfirm)}
-				aria-describedby={
-				    fieldErrors.passwordConfirm
-					? 'register-confirm-error'
-					: undefined
-				}
 				placeholder='Confirm password'
 				onChange={(e) => setPasswordConfirm(e.target.value)}
 				required
 			    />
 			    {fieldErrors.passwordConfirm && (
-				<div
-				    className='fieldError'
-				    id='register-confirm-error'
-				    role='alert'
-				>
-				    {fieldErrors.passwordConfirm}
-				</div>
+				<div className='fieldError'>{fieldErrors.passwordConfirm}</div>
 			    )}
 
 			    <button className='finish' type='submit' disabled={isFetching}>
-				<span>{isFetching ? 'Creating account…' : 'Start'}</span>
+				<span>Start</span>
 			    </button>
 			</form>
 		    ) : (
-			<form
-			    key='identity-step'
-			    className='membership'
-			    onSubmit={(event) => {
-				event.preventDefault();
-				handleStart();
-			    }}
-			>
-			    <label htmlFor='register-email'>Email address</label>
+			<div className='membership'>
 			    <input
 				type='email'
-				id='register-email'
-				autoComplete='email'
-				aria-invalid={Boolean(fieldErrors.email)}
-				aria-describedby={
-				    fieldErrors.email ? 'register-email-error' : undefined
-				}
 				placeholder='Email address'
 				ref={emailRef}
 				required
 			    />
 			    {fieldErrors.email && (
-				<div
-				    className='fieldError'
-				    id='register-email-error'
-				    role='alert'
-				>
-				    {fieldErrors.email}
-				</div>
+				<div className='fieldError'>{fieldErrors.email}</div>
 			    )}
-			    <label htmlFor='register-username'>Username</label>
+
 			    <input
 				type='text'
-				id='register-username'
-				autoComplete='username'
-				aria-invalid={Boolean(fieldErrors.username)}
-				aria-describedby={
-				    fieldErrors.username ? 'register-username-error' : undefined
-				}
 				placeholder='Username'
 				onChange={(e) => setUsername(e.target.value)}
 				required
 			    />
 			    {fieldErrors.username && (
-				<div
-				    className='fieldError'
-				    id='register-username-error'
-				    role='alert'
-				>
-				    {fieldErrors.username}
-				</div>
+				<div className='fieldError'>{fieldErrors.username}</div>
 			    )}
 
-			    <button className='getStarted' type='submit'>
+			    <button
+				className='getStarted'
+				type='button'
+				onClick={handleStart}
+			    >
 				<span>Get Started</span>
 			    </button>
-			</form>
+			</div>
 		    )}
+
+		    <div className='authDivider'>or</div>
+
+		    <GoogleSignInButton
+			onSuccess={handleGoogleSuccess}
+			onError={handleGoogleError}
+			disabled={isFetching}
+			text='signup_with'
+		    />
 		</section>
 
 		<BottomCtaSection />
